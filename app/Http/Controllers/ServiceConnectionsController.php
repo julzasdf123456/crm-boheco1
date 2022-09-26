@@ -34,6 +34,7 @@ use App\Models\PreDefinedMaterialsMatrix;
 use App\Models\TransactionDetails;
 use App\Models\TransactionIndex;
 use App\Models\ServiceAccounts;
+use App\Models\BillDeposits;
 use App\Exports\ServiceConnectionApplicationsReportExport;
 use App\Exports\ServiceConnectionEnergizationReportExport;
 use Illuminate\Support\Facades\DB;
@@ -201,7 +202,12 @@ class ServiceConnectionsController extends AppBaseController
                         'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
                         'CRM_ServiceConnectionCrew.StationName as StationName',
                         'CRM_ServiceConnectionCrew.CrewLeader as CrewLeader',
-                        'CRM_ServiceConnectionCrew.Members as Members')
+                        'CRM_ServiceConnectionCrew.Members as Members',
+                        'CRM_ServiceConnections.ElectricianId',
+                        'CRM_ServiceConnections.ElectricianName',
+                        'CRM_ServiceConnections.ElectricianAddress',
+                        'CRM_ServiceConnections.ElectricianContactNo',
+                        'CRM_ServiceConnections.ElectricianAcredited',)
         ->where('CRM_ServiceConnections.id', $id)
         ->where(function ($query) {
             $query->where('CRM_ServiceConnections.Trash', 'No')
@@ -216,6 +222,20 @@ class ServiceConnectionsController extends AppBaseController
         $serviceConnectionMeter = ServiceConnectionMtrTrnsfrmr::where('ServiceConnectionId', $id)->first();
 
         $serviceConnectionTransactions = ServiceConnectionPayTransaction::where('ServiceConnectionId', $id)->first();
+
+        $laborWiringCharges = DB::table('CRM_ServiceConnectionMaterialPayables')
+            ->leftJoin('CRM_ServiceConnectionMaterialPayments', 'CRM_ServiceConnectionMaterialPayables.id', '=', 'CRM_ServiceConnectionMaterialPayments.Material')
+            ->where('CRM_ServiceConnectionMaterialPayments.ServiceConnectionId', $id)
+            ->select('CRM_ServiceConnectionMaterialPayables.Material',
+                'CRM_ServiceConnectionMaterialPayables.Rate',
+                'CRM_ServiceConnectionMaterialPayments.Quantity',
+                'CRM_ServiceConnectionMaterialPayments.Vat',
+                'CRM_ServiceConnectionMaterialPayments.Total'
+            )
+            ->get();
+
+        $billDeposit = BillDeposits::where('ServiceConnectionId', $id)
+            ->first();
 
         $materialPayments = DB::table('CRM_ServiceConnectionMaterialPayments')
                     ->leftJoin('CRM_ServiceConnectionMaterialPayables', 'CRM_ServiceConnectionMaterialPayments.Material', '=', 'CRM_ServiceConnectionMaterialPayables.id')
@@ -329,21 +349,24 @@ class ServiceConnectionsController extends AppBaseController
          */
         if(Auth::user()->hasAnyPermission(['view membership', 'sc view', 'Super Admin'])) {
             return view('service_connections.show', ['serviceConnections' => $serviceConnections, 
-                                                'serviceConnectionInspections' => $serviceConnectionInspections, 
-                                                'serviceConnectionMeter' => $serviceConnectionMeter, 
-                                                'serviceConnectionTransactions' => $serviceConnectionTransactions,
-                                                'materialPayments' => $materialPayments,
-                                                'particularPayments' => $particularPayments,
-                                                'totalTransactions' => $totalTransactions,
-                                                'timeFrame' => $timeFrame,
-                                                'serviceConnectionChecklistsRep' => $serviceConnectionChecklistsRep,
-                                                'serviceConnectionChecklists' => $serviceConnectionChecklists,
-                                                'billOfMaterialsSummary' => $billOfMaterialsSummary,
-                                                'structures' => $structures,
-                                                'conAss' => $conAss,
-                                                'materials' => $materials,
-                                                'poles' => $poles,
-                                                'transformers' => $transformers]);
+                'serviceConnectionInspections' => $serviceConnectionInspections, 
+                'serviceConnectionMeter' => $serviceConnectionMeter, 
+                'serviceConnectionTransactions' => $serviceConnectionTransactions,
+                'materialPayments' => $materialPayments,
+                'particularPayments' => $particularPayments,
+                'totalTransactions' => $totalTransactions,
+                'timeFrame' => $timeFrame,
+                'serviceConnectionChecklistsRep' => $serviceConnectionChecklistsRep,
+                'serviceConnectionChecklists' => $serviceConnectionChecklists,
+                'billOfMaterialsSummary' => $billOfMaterialsSummary,
+                'structures' => $structures,
+                'conAss' => $conAss,
+                'materials' => $materials,
+                'poles' => $poles,
+                'transformers' => $transformers,
+                'laborWiringCharges' => $laborWiringCharges,
+                'billDeposit' => $billDeposit,
+            ]);
         } else {
             return abort(403, "You're not authorized to view a service connection application.");
         }        
@@ -2416,22 +2439,18 @@ class ServiceConnectionsController extends AppBaseController
 
     public function relocationSearch(Request $request) {
         if ($request['params'] == null) {
-            $serviceAccounts = DB::table('Billing_ServiceAccounts')
-                        ->leftJoin('CRM_Towns', 'Billing_ServiceAccounts.Town', '=', 'CRM_Towns.id')
-                        ->leftJoin('CRM_Barangays', 'Billing_ServiceAccounts.Barangay', '=', 'CRM_Barangays.id')
-                        ->select('Billing_ServiceAccounts.ServiceAccountName', 'Billing_ServiceAccounts.id', 'Billing_ServiceAccounts.Purok', 'Billing_ServiceAccounts.OldAccountNo', 'CRM_Towns.Town', 'CRM_Barangays.Barangay', 'Billing_ServiceAccounts.AccountCount')
-                        ->orderBy('Billing_ServiceAccounts.ServiceAccountName')
-                        ->paginate(15);
+            $serviceAccounts = DB::connection('sqlsrvbilling')->table('AccountMaster')
+                        ->select('AccountMaster.*')
+                        ->orderBy('AccountNumber')
+                        ->paginate(20);
         } else {
-            $serviceAccounts = DB::table('Billing_ServiceAccounts')
-                        ->leftJoin('CRM_Towns', 'Billing_ServiceAccounts.Town', '=', 'CRM_Towns.id')
-                        ->leftJoin('CRM_Barangays', 'Billing_ServiceAccounts.Barangay', '=', 'CRM_Barangays.id')
-                        ->select('Billing_ServiceAccounts.ServiceAccountName', 'Billing_ServiceAccounts.id', 'Billing_ServiceAccounts.Purok', 'Billing_ServiceAccounts.OldAccountNo', 'CRM_Towns.Town', 'CRM_Barangays.Barangay', 'Billing_ServiceAccounts.AccountCount')
-                        ->where('Billing_ServiceAccounts.ServiceAccountName', 'LIKE', '%' . $request['params'] . '%')
-                        ->orWhere('Billing_ServiceAccounts.id', 'LIKE', '%' . $request['params'] . '%')
-                        ->orWhere('Billing_ServiceAccounts.OldAccountNo', 'LIKE', '%' . $request['params'] . '%')
-                        ->orderBy('Billing_ServiceAccounts.ServiceAccountName')
-                        ->paginate(15);
+            $serviceAccounts = DB::connection('sqlsrvbilling')->table('AccountMaster')
+                        ->select('AccountMaster.*')
+                        ->where('ConsumerName', 'LIKE', '%' . $request['params'] . '%')
+                        ->orWhere('AccountNumber', 'LIKE', '%' . $request['params'] . '%')
+                        ->orWhere('MeterNumber', 'LIKE', '%' . $request['params'] . '%')
+                        ->orderBy('AccountNumber')
+                        ->paginate(20);
         }     
 
         return view('/service_connections/relocation_search', [
@@ -2584,5 +2603,136 @@ class ServiceConnectionsController extends AppBaseController
         } else {
             return abort('Inspection not found!', 404);
         }
+    }
+
+    public function saveElectricianInfo(Request $request) {
+        $id = $request['id'];
+
+        $serviceConnection = ServiceConnections::find($id);
+
+        if ($serviceConnection != null) {
+            $serviceConnection->ElectricianId = $request['ElectricianId'];
+            $serviceConnection->ElectricianName = $request['ElectricianName'];
+            $serviceConnection->ElectricianAddress = $request['ElectricianAddress'];
+            $serviceConnection->ElectricianAcredited = $request['ElectricianAcredited'];
+            $serviceConnection->ElectricianContactNo = $request['ElectricianContactNo'];
+            $serviceConnection->save();
+        }
+
+        return response()->json('ok', 200);
+    }
+
+    public function printInvoice($id) {
+        $serviceConnections = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+            ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_ServiceConnections.StationCrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+            ->select('CRM_ServiceConnections.id as id',
+                        'CRM_ServiceConnections.AccountCount as AccountCount', 
+                        'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                        'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                        'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                        'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.AccountOrganization as AccountOrganization', 
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.ConnectionApplicationType as ConnectionApplicationType',
+                        'CRM_ServiceConnections.MemberConsumerId as MemberConsumerId',
+                        'CRM_ServiceConnections.BuildingType', 
+                        'CRM_ServiceConnections.Status as Status',  
+                        'CRM_ServiceConnections.Notes as Notes', 
+                        'CRM_ServiceConnections.Office', 
+                        'CRM_ServiceConnections.LongSpan', 
+                        'CRM_ServiceConnections.AccountType AS AccountTypeRaw', 
+                        'CRM_ServiceConnections.ORNumber as ORNumber', 
+                        'CRM_ServiceConnections.Sitio as Sitio', 
+                        'CRM_ServiceConnections.LoadCategory as LoadCategory', 
+                        'CRM_ServiceConnections.DateTimeOfEnergization as DateTimeOfEnergization', 
+                        'CRM_ServiceConnections.DateTimeLinemenArrived as DateTimeLinemenArrived', 
+                        'CRM_Towns.Town as Town',
+                        'CRM_Barangays.Barangay as Barangay',
+                        'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                        'CRM_ServiceConnectionCrew.StationName as StationName',
+                        'CRM_ServiceConnectionCrew.CrewLeader as CrewLeader',
+                        'CRM_ServiceConnectionCrew.Members as Members',
+                        'CRM_ServiceConnections.ElectricianId',
+                        'CRM_ServiceConnections.ElectricianName',
+                        'CRM_ServiceConnections.ElectricianAddress',
+                        'CRM_ServiceConnections.ElectricianContactNo',
+                        'CRM_ServiceConnections.ElectricianAcredited',)
+        ->where('CRM_ServiceConnections.id', $id)
+        ->where(function ($query) {
+            $query->where('CRM_ServiceConnections.Trash', 'No')
+                ->orWhereNull('CRM_ServiceConnections.Trash');
+        })
+        ->first(); 
+
+        $laborWiringCharges = DB::table('CRM_ServiceConnectionMaterialPayables')
+            ->leftJoin('CRM_ServiceConnectionMaterialPayments', 'CRM_ServiceConnectionMaterialPayables.id', '=', 'CRM_ServiceConnectionMaterialPayments.Material')
+            ->where('CRM_ServiceConnectionMaterialPayments.ServiceConnectionId', $id)
+            ->select('CRM_ServiceConnectionMaterialPayables.Material',
+                'CRM_ServiceConnectionMaterialPayables.Rate',
+                'CRM_ServiceConnectionMaterialPayments.Quantity',
+                'CRM_ServiceConnectionMaterialPayments.Vat',
+                'CRM_ServiceConnectionMaterialPayments.Total'
+            )
+            ->get();
+
+        $billDeposit = BillDeposits::where('ServiceConnectionId', $id)
+            ->first();
+
+        $totalTransactions = ServiceConnectionTotalPayments::where('ServiceConnectionId', $id)->first();
+
+        return view('/service_connections/print_invoice', [
+            'serviceConnections' => $serviceConnections,
+            'laborWiringCharges' => $laborWiringCharges,
+            'billDeposit' => $billDeposit,
+            'totalTransactions' => $totalTransactions,
+        ]);
+    }
+
+    public function inspectionFullReport() {
+        return view('/service_connections/inspection_report_full', [
+
+        ]);
+    }
+
+    public function getInspectionSummaryData(Request $request) {
+        $month = $request['ServicePeriod'];
+        $from = date('Y-m-d', strtotime($month));
+        $to = date('Y-m-d', strtotime($from . ' +1 month'));
+
+        $summary = DB::table('CRM_ServiceConnectionInspections')
+            ->leftJoin('users', 'CRM_ServiceConnectionInspections.Inspector', '=', 'users.id')
+            ->whereNotNull('CRM_ServiceConnectionInspections.Inspector')
+            ->select('users.name', 'users.id',
+                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND a.Status='FOR INSPECTION' AND a.Inspector=users.id AND (a.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS ForInspection"),
+                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND a.Status='Approved' AND a.Inspector=users.id AND (a.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS ApprovedThisMonth"),
+                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND a.Inspector=users.id AND (a.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Total"),
+                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND a.Inspector=users.id AND (a.created_at BETWEEN '" . date('Y-m-d') . "' AND '" . date('Y-m-d', strtotime('tomorrow')) . "')) AS Today"),
+                DB::raw("(SELECT AVG(DATEDIFF(day, b.DateOfApplication, a.DateOfVerification)) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND a.Inspector=users.id AND (a.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS AverageHours"),
+            )
+            ->groupBy('users.name', 'users.id')
+            ->get();
+
+        $days = round((strtotime($to) - strtotime($from)) / (60 * 60 * 24));
+
+        $output = "";
+        foreach($summary as $item) {
+            if ($item->name != null) {
+                $output .= "<tr>
+                                <td>" . $item->name . "</td>
+                                <td class='text-right'>" . $item->Today . "</td>
+                                <td class='text-right'>" . $item->ForInspection . "</td>
+                                <td class='text-right'>" . $item->ApprovedThisMonth . "</td>
+                                <th class='text-right text-success'>" . $item->Total . "</th>
+                                <td class='text-right'>" . $days . "</td>
+                                <th class='text-right text-primary'>" . ($item->Total != null && intval($item->Total) > 0 ? round(intval($item->Total)/$days, 2) : 0) . "</th>
+                            </tr>";
+            }            
+        }
+
+        return response()->json($output, 200);
     }
 }

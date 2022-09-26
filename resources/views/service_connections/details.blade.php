@@ -4,7 +4,7 @@
 <div class="row">
     {{-- CHECKLISTS --}}
     <div class="col-lg-6 col-md-6">
-        <div class="card card-primary card-outline">
+        <div class="card card-primary card-outline shadow-none">
             <div class="card-header border-0">
                 <h3 class="card-title">Requirements Checklist</h3>
                 <div class="card-tools">
@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        <div class="card card-primary card-outline">
+        <div class="card card-primary card-outline shadow-none">
             <div class="card-header border-0">
                 <h3 class="card-title">Station Crew Assigned</h3>
                 <div class="card-tools">
@@ -116,7 +116,7 @@
 
     {{-- TIMELINE --}}
     <div class="col-lg-6 col-md-6">
-        <div class="card card-primary card-outline">
+        <div class="card card-primary card-outline shadow-none">
             <div class="card-header border-0">
                 <h3 class="card-title">Timeframe</h3>
                 <div class="card-tools">

@@ -1,23 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h4 class="m-0">Service Connections Dashboard</h4>
-            </div>
-        </div>
-    </div>
-</div>
-
+<br>
 <div class="content">   
     {{-- OTHERS --}}
     <div class="row">
         <div class="col-md-12 col-lg-12">
-            <div class="card collapsed-card">
-                <div class="card-header">
+            <div class="card shadow-none">
+                <div class="card-header border-0">
                     <span class="card-title">Process Flow Monitoring</span>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -34,9 +24,7 @@
                         <div class="col-md-4 offset-md-3 col-lg-3 offset-lg-4" id="receivedDash" style="margin-bottom: 20px;">
                             <div class="small-box bg-info" style="margin: 0px;">
                                 <div class="inner">
-                                    <h3></h3>
-            
-                                    <p>Receiving of Applications</p>
+                                    <p class="text-center">Receiving of Applications</p>
                                 </div>
                             </div>
                         </div>
@@ -180,7 +168,7 @@
                 <div class="card-header border-0">
                     <div class="d-flex justify-content-between">
                         <h3 class="card-title"><i class="fas fa-paste ico-tab"></i>Inspection Report</h3>
-                        <a href="javascript:void(0);">View Report</a>
+                        <a href="{{ route('serviceConnections.inspection-full-report') }}">View Report</a>
                     </div>
                 </div>
                 <div class="card-body">

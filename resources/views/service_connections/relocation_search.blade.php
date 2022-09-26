@@ -23,22 +23,22 @@
     <div class="content px-3">
         <table class="table table-hover">
             <thead>
-                <th>Account ID</th>
-                <th>Legacy Account No.</th>
+                <th>AccountNumber</th>
                 <th>Service Account Name</th>
                 <th>Address</th>
+                <th>Meter Number</th>
                 <th></th>
             </thead>
             <tbody>
                 @foreach ($serviceAccounts as $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
-                        <td>{{ $item->OldAccountNo != null ? $item->OldAccountNo : '-' }}</td>
-                        <td>{{ $item->ServiceAccountName }} {{ $item->AccountCount != null ? '(# ' . $item->AccountCount . ')' : '' }}</td>                
-                        <td>{{ ServiceAccounts::getAddress($item) }}</td>
+                        <td>{{ $item->AccountNumber }}</td>
+                        <td>{{ $item->ConsumerName }}</td>                
+                        <td>{{ $item->ConsumerAddress }}</td>          
+                        <td>{{ $item->MeterNumber }}</td>
                         <td width="120">
                             <div class='btn-group'>
-                                <a href="{{ route('serviceConnections.create-relocation', [$item->id]) }}"
+                                <a href="{{ route('serviceConnections.create-relocation', [$item->AccountNumber]) }}"
                                 class='btn btn-primary btn-xs'>
                                     Relocate
                                 </a>

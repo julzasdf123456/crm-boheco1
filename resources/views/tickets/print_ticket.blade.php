@@ -3,6 +3,19 @@
     use App\Models\TicketsRepository;
 @endphp
 <style>
+     html, body {
+        font-family: sans-serif;
+        /* font-stretch: condensed; */
+        font-size: .95em;
+        overflow: visible;
+    }
+    
+    th, td {
+        font-family: sans-serif;
+        /* font-stretch: condensed; */
+        font-size: .78em;
+    }
+
     @media print {
         html, body {
             width: 100%;
@@ -32,6 +45,11 @@
             margin: 0 !important;
         }
 
+        .row {
+            width: 100%;
+            display: inline-flex;
+        }
+
         .col-3 {
             width: 25%;
         }
@@ -40,27 +58,16 @@
             width: 75%;
         }
 
-        .col-5 {
-            width: 50%;
+        .col-6 {
+            width: 48%;
         }
 
-        .row {
-            width: 100%;
-            display: inline;
+        .col-12 {
+            width: 98%;
         }
 
         table {
             width: 100%;
-        }
-
-        table th {
-            width: 25%;
-            padding: 5px 15px 2px 0px;
-        }
-
-        table td {
-            border-bottom: 1px solid #878787;
-            padding: 5px 15px 2px 0px;
         }
 
         .check-box {
@@ -102,33 +109,41 @@
 
     .row {
         width: 100%;
-        display: inline;
+        display: inline-flex;
     }
 
     .col-3 {
         width: 25%;
     }
 
+    .col-4 {
+        width: 31%;
+        padding-right: 10px;
+    }
+
     .col-7 {
         width: 75%;
     }
 
-    .col-5 {
-        width: 50%;
+    .col-6 {
+        width: 48%;
+    }
+
+    .col-12 {
+        width: 100%;
     }
 
     table {
         width: 100%;
+        border-collapse: collapse;
     }
 
-    table th {
-        width: 25%;
-        padding: 5px 15px 2px 0px;
-    }
-
-    table td {
-        border-bottom: 1px solid #878787;
-        padding: 5px 15px 2px 0px;
+    th, td {
+        border-top: 1px solid #cdcdcd;
+        border-bottom: 1px solid #cdcdcd;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        text-align: left;
     }
 
     .check-box {
@@ -139,186 +154,144 @@
 
 </style>
 <!-- AdminLTE -->
-<link rel="stylesheet" href="https://adminlte.io/themes/v3/dist/css/adminlte.min.css"/>
+{{-- <link rel="stylesheet" href="https://adminlte.io/themes/v3/dist/css/adminlte.min.css"/> --}}
 
 <div class="content px-3">
     <p class="center-text"><strong>{{ env('APP_COMPANY') }}</strong></p>
     <p class="center-text">{{ env('APP_ADDRESS') }}</p>
-    
-    <p class="center-text"><strong>SERVICE REQUEST FORM</strong></p>
-
-    <div class="divider"></div>
-
-    <div class="row">
-        <div class="col-sm-4">
-            <p>Ticket No: <u>{{ $tickets->id }}</u></p>
-            <p>Date Filed: <u>{{ date('F d, Y', strtotime($tickets->created_at)) }}</u></p>
-            <p>Time Filed: <u>{{ date('h:i A', strtotime($tickets->created_at)) }}</u></p>
-        </div>
-
-        <div class="col-sm-8">
-            <table>
-                <tr>
-                    <th style="width: 40%;">Member Consumer:</th>
-                    <td>{{ $tickets->ConsumerName }}</td>
-                </tr>
-                <tr>
-                    <th>Address:</th>
-                    <td>{{ Tickets::getAddress($tickets) }}</td>
-                </tr>
-                <tr>
-                    <th>Account Number:</th>
-                    <td>{{ $account != null ? $account->OldAccountNo : '-' }}</td>
-                </tr>
-                <tr>
-                    <th>Meter Number:</th>
-                    <td>{{ $tickets->CurrentMeterNo }}</td>
-                </tr>
-            </table>
-        </div>
-        
-    </div>
-
-    <div class="divider"></div>
+    <p class="center-text" style="margin-top: 8px !important; font-size: 1em;"><strong>TICKET INVOICE</strong></p>
 
     <div class="row">
         @php
             $parent = TicketsRepository::where('id', $tickets->ParentTicket)->first();
         @endphp
-        <div class="col-sm-6">
-            <p><strong>Complain Details</strong></p>
-            <table>
-                <tr>
-                    <th>Request/Complain: </th>
-                    <td>{{ $parent != null ? $parent->Name . ' - ' : '' }}{{ $tickets->Ticket }}</td>
-                </tr>
-                <tr>
-                    <th>Reason: </th>
-                    <td>{{ $tickets->Reason }}</td>
-                </tr>
-                <tr>
-                    <th>Notes: </th>
-                    <td>{{ $tickets->Notes }}</td>
-                </tr>
-                <tr>
-                    <th>Action Taken: </th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th style="color: transparent;">Action</th>
-                    <td></td>
-                </tr>
-            </table>
+        <table style="width: 100%;">
+            <tr>
+                <td>REQUEST/COMPLAINT</td>
+                <th>{{ $parent != null ? strtoupper($parent->Name) . ' - ' : '' }}{{ strtoupper($tickets->Ticket) }}</th>
+                <td>TICKET NO</td>
+                <th>{{ $tickets->id }}</th>
+            </tr>
+            <tr>
+                <td>CONSUMER NAME</td>
+                <th>{{ $tickets->ConsumerName }}</th>
+                <td>DATE FILED</td>
+                <th>{{ date('F d, Y h:i:s A', strtotime($tickets->created_at)) }}</th>
+            </tr>
+            <tr>
+                <td>ACCOUNT NO.</td>
+                <th>{{ $tickets->AccountNumber }}</th>
+                <td>D/T FIELD ARRIVAL</td>
+                <th></th>
+            </tr>
+            <tr>
+                <td>ADDRESS</td>
+                <th>{{ Tickets::getAddress($tickets) }}</th>
+                <td>D/T EXECUTED</td>
+                <th></th>
+            </tr>
+            <tr>
+                <td>CONTACT NO</td>
+                <th>{{ $tickets->ContactNumber }}</th>
+                <td>ENCODER</td>
+                <th>{{ $tickets->name }}</th>
+            </tr>
+            <tr>
+                <td>POLE NO.</td>
+                <th>{{ $tickets->PoleNumber }}</th>
+                <td>OR NUMBER</td>
+                <th>{{ $tickets->ORNumber }}</th>
+            </tr>
+            <tr>
+                <td>REPORTED BY</td>
+                <th>{{ $tickets->ReportedBy }}</th>
+                <td>OR DATE</td>
+                <th>{{ $tickets->ORDate != null ? date('F d, Y', strtotime($tickets->ORDate)) : '' }}</th>
+            </tr>
+            <tr>
+                <td>NEIGHBOR 1</td>
+                <th>{{ $tickets->Neighbor1 }}</th>
+                <td>NEIGHBOR 2</td>
+                <th>{{ $tickets->Neighbor2 }}</th>
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="row" style="margin-top: 10px;">
+        <div class="col-6">
+            <p class="center-text"><strong>CURRENT METER DETAILS</strong></p>
+            <div class="row">
+                <div class="col-6">
+                    <p>Serial No</p>
+                    <p>Brand</p>
+                    <p>Seal No.</p>
+                </div>
+                <div class="col-6">
+                    <p style="border-bottom: 1px solid #989898;">:  <strong>{{ $tickets->CurrentMeterNo }}</strong></p>
+                    <p style="border-bottom: 1px solid #989898;">:</p>
+                    <p style="border-bottom: 1px solid #989898;">:</p>
+                </div>
+            </div>
+
+            <i style="margin-top: 5px !important; padding-top: 5px !important;">Reason</i>
+            <p style="border: 1px solid #cdcdcd; border-radius: 4px; padding: 10px !important; margin-right: 10px !important; height: 20px;">{{ $tickets->Reason }}</p>
         </div>
 
-        <div class="col-sm-6">
-            <p><strong>Change Meter Details</strong></p>
-            <table>
-                <tr>
-                    <th>Pull Out Reading</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th style="width: 45%">New Meter Number</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>New Meter Brand</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>New Meter Kwh Start</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>Remarks</th>
-                    <td></td>
-                </tr>
-            </table>
+        <div class="col-6">
+            <p class="center-text"><strong>NEW METER DETAILS</strong></p>
+            <div class="row">
+                <div class="col-6">
+                    <p>Serial No</p>
+                    <p>Brand</p>
+                    <p>Seal No.</p>
+                </div>
+                <div class="col-6">
+                    <p style="border-bottom: 1px solid #989898;">:</p>
+                    <p style="border-bottom: 1px solid #989898;">:</p>
+                    <p style="border-bottom: 1px solid #989898;">:</p>
+                </div>
+            </div>
+
+            <i style="margin-top: 5px !important; padding-top: 5px !important;">Notes/Remarks</i>
+            <p style="border: 1px solid #cdcdcd; border-radius: 4px; padding: 10px !important; height: 20px;">{{ $tickets->Notes }}</p>
         </div>
     </div>
-    <br>
-    <p style="margin-bottom: 5px !important;"><i>Assessment</i></p>
 
-    <div class="row">
-        <div class="col-5">
+    <div class="row" style="margin-top: 10px; border-bottom: 1px solid #cdcdcd; padding-bottom: 10px; margin-bottom: 10px;">
+        <div class="col-6">
             <p><span class="check-box"></span>Executed</p>
-            <table>
-                <tr>
-                    <th>Timestamp:</th>
-                    <td></td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th>Remarks:</th>
-                    <td></td>
-                </tr>
-            </table>
         </div>
 
-        <div class="col-5">
+        <div class="col-6">
             <p><span class="check-box"></span>Not Executed</p>
-            <table>
-                <tr>
-                    <th>Timestamp:</th>
-                    <td></td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th>Reason:</th>
-                    <td></td>
-                </tr>
-            </table>
         </div>
     </div>
 
-    <br>
-    <div class="divider-dotted"></div>
-    <br>
-
-    <p class="center-text"><strong>{{ env('APP_COMPANY') }}</strong></p>
-    <p class="center-text">{{ env('APP_ADDRESS') }}</p>
-
-    <br>
-    
-    <p class="center-text"><strong>ACKNOWLEDGEMENT</strong></p>
-
-    <br>
-
-    <p>This is to acknowledge that we have received the request of Mr./Ms. <u>{{ $tickets->ConsumerName }}</u> on the _______ day of __________________ of the year 20____.</p>
-    <br>
-    <br>
-    <div class="row">
-        <div class="col-5">
-            <table>
-                <tr>
-                    <td></td>
-                </tr>
-            </table>
-            <p class="center-text"><i>MSD Coordinator</i></p>
+    <div class="row" style="margin-top: 10px;">
+        <div class="col-4">
+            <p style="border-bottom: 1px solid #858585" class="center-text">{{ $tickets->ConsumerName }}</p>
+            <p class="center-text"><i>CONSUMER NAME</i></p>
         </div>
 
-        <div class="col-5">
-            <table>
-                <tr>
-                    <td></td>
-                </tr>
-            </table>
-            <p class="center-text"><i>Date & Time</i></p>
+        <div class="col-4">
+            <p style="border-bottom: 1px solid #858585" class="center-text">{{ strtoupper($tickets->StationName) }}</p>
+            <p class="center-text"><i>SERVICEMAN</i></p>
+        </div>
+
+        <div class="col-4">
+            <p style="border-bottom: 1px solid #858585;" class="center-text"><span style="opacity: 0;">0</span></p>
+            <p class="center-text"><i>HEAD/SUPERVISOR/MANAGER</i></p>
         </div>
     </div>
-
-    <p class="center-text"><i>- Do What is Right -</i></p>
 </div>
 
 <script>
    window.onload = function() {
         window.print(); 
-
+        
         window.setTimeout(function(){
-            window.location.href = "{{ route('tickets.show', [$tickets->id]) }}";
-        }, 200);
+            window.history.go(-1)
+        }, 800);
     }
 </script>

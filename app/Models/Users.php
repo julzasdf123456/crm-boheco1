@@ -31,7 +31,9 @@ class Users extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $primaryKey = 'id';
 
+    public $incrementing = false;
 
     public $fillable = [
         'id',
@@ -40,7 +42,7 @@ class Users extends Model
         'employee_id',
         'email_verified_at',
         'password',
-        'remember_token'
+        'remember_token',
     ];
 
     /**
@@ -49,13 +51,13 @@ class Users extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        'id' => 'string',
         'name' => 'string',
         'email' => 'string',
         'employee_id' => 'string',
         'email_verified_at' => 'datetime',
         'password' => 'string',
-        'remember_token' => 'string'
+        'remember_token' => 'string',
     ];
 
     /**
@@ -64,6 +66,7 @@ class Users extends Model
      * @var array
      */
     public static $rules = [
+        'id' => 'string|max:255',
         'name' => 'nullable|string|max:255',
         'email' => 'required|string|max:255',
         'employee_id' => 'nullable|string|max:255',
@@ -71,7 +74,7 @@ class Users extends Model
         'password' => 'required|string|max:255',
         'remember_token' => 'nullable|string|max:100',
         'created_at' => 'nullable',
-        'updated_at' => 'nullable'
+        'updated_at' => 'nullable',
     ];
 
     

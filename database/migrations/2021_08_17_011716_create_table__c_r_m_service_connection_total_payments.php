@@ -23,6 +23,10 @@ class CreateTableCRMServiceConnectionTotalPayments extends Migration
             $table->string('TotalVat', 60)->nullable();
             $table->string('Total', 60)->nullable();
             $table->string('Notes', 1000)->nullable();
+            $table->string('ServiceConnectionFee', 60)->nullable();
+            $table->string('BillDeposit', 60)->nullable();
+            $table->string('WitholdableVat', 60)->nullable();
+            $table->string('LaborCharge', 60)->nullable();
             $table->timestamps();
         });
     }

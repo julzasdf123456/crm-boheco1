@@ -124,9 +124,9 @@ use Illuminate\Support\Facades\Auth;
                                 <i class="fas fa-print"> </i> Application Form
                             </a>
 
-                            <a class="btn btn-danger btn-xs" href="{{ route('serviceConnections.print-service-connection-contract', [$serviceConnections->id]) }}" class="text-danger" title="Print Service Connection Contract">
+                            {{-- <a class="btn btn-danger btn-xs" href="{{ route('serviceConnections.print-service-connection-contract', [$serviceConnections->id]) }}" class="text-danger" title="Print Service Connection Contract">
                                 <i class="fas fa-print"> </i> Contract
-                            </a>                        
+                            </a>                         --}}
                         @endif
                     </div>
                 </div> 

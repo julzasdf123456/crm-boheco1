@@ -10,7 +10,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-user-check"></i></span>
                 </div>
-                {!! Form::select('Inspector', $inspectors, $serviceConnectionInspections==null ? null : $serviceConnectionInspections->Inspector, ['class' => 'form-control']) !!}
+                {!! Form::select('Inspector', $inspectors, $serviceConnectionInspections==null ? null : $serviceConnectionInspections->Inspector, ['class' => 'form-control form-control-sm']) !!}
             </div>
         </div>
     </div>  
@@ -31,7 +31,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-bolt"></i></span>
                 </div>
-                {!! Form::text('SEMainCircuitBreakerAsPlan', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255, 'placeholder' => 'Main Circuit Breaker in Amps']) !!}
+                {!! Form::text('SEMainCircuitBreakerAsPlan', null, ['class' => 'form-control form-control-sm','maxlength' => 255,'maxlength' => 255, 'placeholder' => 'Main Circuit Breaker in Amps']) !!}
             </div>
         </div>
     </div> 
@@ -50,7 +50,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-code-branch"></i></span>
                 </div>
-                {!! Form::text('SENoOfBranchesAsPlan', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255, 'placeholder' => 'SE No. Of Branches As Planned']) !!}
+                {!! Form::text('SENoOfBranchesAsPlan', null, ['class' => 'form-control form-control-sm','maxlength' => 255,'maxlength' => 255, 'placeholder' => 'SE No. Of Branches As Planned']) !!}
             </div>
         </div>
     </div> 
@@ -69,7 +69,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-text-width"></i></span>
                 </div>
-                {!! Form::text('SDWSizeAsPlan', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255, 'placeholder' => 'Service Drop Wire Size (in mm)']) !!}
+                {!! Form::text('SDWSizeAsPlan', null, ['class' => 'form-control form-control-sm','maxlength' => 255,'maxlength' => 255, 'placeholder' => 'Service Drop Wire Size (in mm)']) !!}
             </div>
         </div>
     </div> 
@@ -87,7 +87,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-ruler"></i></span>
                 </div>
-                {!! Form::text('SDWLengthAsPlan', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255, 'placeholder' => 'Service Drop Wire Length (in meters)']) !!}
+                {!! Form::text('SDWLengthAsPlan', null, ['class' => 'form-control form-control-sm','maxlength' => 255,'maxlength' => 255, 'placeholder' => 'Service Drop Wire Length (in meters)']) !!}
             </div>
         </div>
     </div> 
@@ -108,7 +108,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-hard-hat"></i></span>
                 </div>
-                {!! Form::text('EngineerInchargeName', null, ['class' => 'form-control','maxlength' => 600,'maxlength' => 600, 'placeholder' => 'Name of Electrical Engineer In Charge']) !!}
+                {!! Form::text('EngineerInchargeName', null, ['class' => 'form-control form-control-sm','maxlength' => 600,'maxlength' => 600, 'placeholder' => 'Name of Electrical Engineer In Charge']) !!}
             </div>
         </div>
     </div> 
@@ -126,7 +126,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-hard-hat"></i></span>
                 </div>
-                {!! Form::select('EngineerInchargeTitle', ['PEE' => 'PEE', 'EE' => 'EE', 'RME' => 'RME'], null, ['class' => 'form-control']) !!}
+                {!! Form::select('EngineerInchargeTitle', ['PEE' => 'PEE', 'EE' => 'EE', 'RME' => 'RME'], null, ['class' => 'form-control form-control-sm']) !!}
             </div>
         </div>
     </div>  
@@ -144,7 +144,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-hard-hat"></i></span>
                 </div>
-                {!! Form::text('EngineerInchargeLicenseNo', null, ['class' => 'form-control','maxlength' => 600,'maxlength' => 600, 'placeholder' => 'License Number of Electrical Engineer In Charge']) !!}
+                {!! Form::text('EngineerInchargeLicenseNo', null, ['class' => 'form-control form-control-sm','maxlength' => 600,'maxlength' => 600, 'placeholder' => 'License Number of Electrical Engineer In Charge']) !!}
             </div>
         </div>
     </div> 
@@ -162,7 +162,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-hard-hat"></i></span>
                 </div>
-                {!! Form::text('EngineerInchargeLicenseValidity', null, ['class' => 'form-control','id'=>'EngineerInchargeLicenseValidity']) !!}
+                {!! Form::text('EngineerInchargeLicenseValidity', null, ['class' => 'form-control form-control-sm','id'=>'EngineerInchargeLicenseValidity']) !!}
             </div>
         </div>
     </div> 
@@ -190,7 +190,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-phone"></i></span>
                 </div>
-                {!! Form::text('EngineerInchargeContactNo', null, ['class' => 'form-control','maxlength' => 600,'maxlength' => 600, 'placeholder' => 'Contact Number of Electrical Engineer In Charge']) !!}
+                {!! Form::text('EngineerInchargeContactNo', null, ['class' => 'form-control form-control-sm','maxlength' => 600,'maxlength' => 600, 'placeholder' => 'Contact Number of Electrical Engineer In Charge']) !!}
             </div>
         </div>
     </div> 
@@ -209,7 +209,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-comments"></i></span>
                 </div>
-                {!! Form::text('Notes', null, ['class' => 'form-control','maxlength' => 100,'maxlength' => 100, 'placeholder' => 'Notes or Comments']) !!}
+                {!! Form::text('Notes', null, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100, 'placeholder' => 'Notes or Comments']) !!}
             </div>
         </div>
     </div> 

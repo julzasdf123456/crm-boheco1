@@ -21,7 +21,7 @@
         @include('adminlte-templates::common.errors')
 
         <div class="row">
-            <div class="col-lg-7 col-md-6">
+            <div class="col-lg-8 col-md-12">
                 <div class="card">
                     {!! Form::open(['route' => 'tickets.store']) !!}
                     <div class="card-body">                
@@ -39,7 +39,8 @@
                             <input type="hidden" value="{{ env("APP_LOCATION") }}" name="Office">
 
                             @if ($serviceAccount != null)  
-                                <input type="hidden" value="{{ $serviceAccount->id }}" name="AccountNumber">
+                                <input type="hidden" value="{{ $serviceAccount->AccountNumber }}" name="AccountNumber">
+                                <input type="hidden" value="{{ $serviceAccount->Pole }}" name="PoleNumber">
                             @endif  
                             
                         </div>
@@ -54,7 +55,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-5 col-md-6">
+            <div class="col-lg-4 col-md-12">
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                         <span class="card-title">Ticket History <i class="text-muted">(newest to oldest)</i></span>

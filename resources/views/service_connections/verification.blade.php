@@ -11,7 +11,7 @@
 
 @if ($serviceConnectionInspections != null)
 
-@if ($serviceConnectionInspections->Status == 'FOR INSPECTION') 
+@if ($serviceConnectionInspections->Status == 'For Inspection') 
     <a href="{{ route('serviceConnections.bypass-approve-inspection', [$serviceConnectionInspections->id]) }}" class="btn btn-sm btn-warning" style="margin-bottom: 5px;"><i class="fas fa-check ico-tab"></i>Approve This Application</a>    
 @endif
 
@@ -22,13 +22,13 @@
         <div class="card-tools">
             @if($serviceConnectionInspections == null)
                 @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Inspector', 'Service Connection Assessor'])) 
-                    <a href="" class="btn btn-sm" title="Add Verification Details"><i class="fas fa-plus-square"></i></a>
+                    {{-- <a href="" class="btn btn-sm" title="Add Verification Details"><i class="fas fa-plus-square"></i></a> --}}
                 @endif
             @else
                 @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Inspector', 'Service Connection Assessor'])) 
-                    <a href="{{ route('serviceConnectionInspections.edit', [$serviceConnectionInspections->id]) }}" class="btn btn-sm" title="Update Verification Details">
+                    {{-- <a href="{{ route('serviceConnectionInspections.edit', [$serviceConnectionInspections->id]) }}" class="btn btn-sm" title="Update Verification Details">
                         <i class="fas fa-pen"></i>
-                    </a>
+                    </a> --}}
                 @endif
 
                 <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
@@ -37,7 +37,7 @@
     </div>
 
     <div class="card-body table-responsive p-0">
-        <table class="table table-valign-middle">
+        <table class="table table-sm table-hover table-valign-middle">
             <tbody>
                 <tr>
                     <td>Status</td>
@@ -68,13 +68,13 @@
         <div class="card-tools">
             @if($serviceConnectionInspections == null)
                 @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Inspector', 'Service Connection Assessor'])) 
-                    <a href="" class="btn btn-sm" title="Add Verification Details"><i class="fas fa-plus-square"></i></a>
+                    {{-- <a href="" class="btn btn-sm" title="Add Verification Details"><i class="fas fa-plus-square"></i></a> --}}
                 @endif
             @else
                 @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Inspector', 'Service Connection Assessor'])) 
-                    <a href="{{ route('serviceConnectionInspections.edit', [$serviceConnectionInspections->id]) }}" class="btn btn-sm" title="Update Verification Details">
+                    {{-- <a href="{{ route('serviceConnectionInspections.edit', [$serviceConnectionInspections->id]) }}" class="btn btn-sm" title="Update Verification Details">
                         <i class="fas fa-pen"></i>
-                    </a>
+                    </a> --}}
                 @endif
                 <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
             @endif
@@ -82,7 +82,7 @@
     </div>
 
     <div class="card-body table-responsive p-0">
-        <table class="table table-valign-middle">
+        <table class="table table-sm table-hover table-valign-middle">
             <thead>
                 <tr>
                     <th></th>
@@ -137,7 +137,7 @@
     </div>
 
     <div class="card-body table-responsive p-0">
-        <table class="table table-valign-middle">
+        <table class="table table-sm table-hover table-valign-middle">
             <thead>
                 <tr>
                     <th></th>
@@ -191,11 +191,10 @@
     </div>
 
     <div class="card-body table-responsive p-0">
-        <table class="table table-valign-middle">
+        <table class="table table-sm table-hover table-valign-middle">
             <thead>
                 <th>Structure</th>
                 <th>Location</th>
-                <td></td>
             </thead>
             <tbody>
                 <tr>
@@ -239,9 +238,9 @@
     </div>
 </div>
 @else 
-<p class="text-center"><i>No inspection data found!</i></p>
+<p class="text-center"><i>No inspection data found! Consumer has not completed the minimum requirements required.</i></p>
     @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Inspector', 'Service Connection Assessor'])) 
-        <a href="{{ route('serviceConnectionInspections.create-step-two', [$serviceConnections->id]) }}" class="btn btn-primary btn-sm" title="Add Verification Details"><i class="fas fa-pen ico-tab"></i>Create Verification</a>
+        {{-- <a href="{{ route('serviceConnectionInspections.create-step-two', [$serviceConnections->id]) }}" class="btn btn-primary btn-sm" title="Add Verification Details"><i class="fas fa-pen ico-tab"></i>Create Verification</a> --}}
     @endif
 @endif
 

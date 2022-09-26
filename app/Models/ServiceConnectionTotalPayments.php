@@ -46,7 +46,11 @@ class ServiceConnectionTotalPayments extends Model
         'Form2307FivePercent',
         'TotalVat',
         'Total',
-        'Notes'
+        'Notes',
+        'ServiceConnectionFee',
+        'BillDeposit',
+        'WitholdableVat',
+        'LaborCharge'
     ];
 
     /**
@@ -62,7 +66,11 @@ class ServiceConnectionTotalPayments extends Model
         'Form2307FivePercent' => 'string',
         'TotalVat' => 'string',
         'Total' => 'string',
-        'Notes' => 'string'
+        'Notes' => 'string',
+        'ServiceConnectionFee' => 'string',
+        'BillDeposit' => 'string',
+        'WitholdableVat' => 'string',
+        'LaborCharge' => 'string',
     ];
 
     /**
@@ -80,7 +88,11 @@ class ServiceConnectionTotalPayments extends Model
         'Total' => 'nullable|string|max:60',
         'Notes' => 'nullable|string|max:1000',
         'created_at' => 'nullable',
-        'updated_at' => 'nullable'
+        'updated_at' => 'nullable',
+        'ServiceConnectionFee' => 'nullable|string',
+        'BillDeposit' => 'nullable|string',
+        'WitholdableVat' => 'nullable|string',
+        'LaborCharge' => 'nullable|string',
     ];
 
     

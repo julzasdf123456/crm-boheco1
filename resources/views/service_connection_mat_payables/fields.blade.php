@@ -3,6 +3,7 @@
     {!! Form::label('Material', 'Material:') !!}
     {{-- {!! Form::text('Material', null, ['class' => 'form-control','maxlength' => 500,'maxlength' => 500]) !!} --}}
     {!! Form::select('Material', ['Lighting Outlets' => 'Lighting Outlets', 
+                                    'Circuit Breakers' => 'Circuit Breakers', 
                                     'Convenience Outlets' => 'Convenience Outlets', 
                                     'Service Entrance' => 'Service Entrance',
                                     'Street Light' => 'Street Light'], null, ['class' => 'form-control']) !!}

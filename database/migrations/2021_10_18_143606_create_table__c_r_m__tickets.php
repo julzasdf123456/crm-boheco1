@@ -48,6 +48,7 @@ class CreateTableCRMTickets extends Migration
             $table->string('NewMeterBrand')->nullable();
             $table->string('NewMeterReading')->nullable();
             $table->date('ServicePeriod')->nullable();
+            $table->string('PoleNumber')->nullable();
             $table->timestamps();
         });
     }

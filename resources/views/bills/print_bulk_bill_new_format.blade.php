@@ -152,7 +152,7 @@ $rate = Rates::where('ServicePeriod', $item->ServicePeriod)
 
 <div class="print-area">
     <div style="width: 100%;">
-        <img src="{{ URL::asset('imgs/noneco-official-logo.png'); }}" width="60px;" style="float: left;"> 
+        <img src="{{ URL::asset('imgs/company_logo.png'); }}" width="60px;" style="float: left;"> 
 
         <p class="text-center"><strong>{{ strtoupper(env('APP_COMPANY')) }}</strong></p>
         <p class="text-center">{{ env('APP_ADDRESS') }}  |  {{ env('APP_COMPANY_TIN') }}</p>

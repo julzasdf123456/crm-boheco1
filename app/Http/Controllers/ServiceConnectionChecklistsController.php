@@ -227,6 +227,9 @@ class ServiceConnectionChecklistsController extends AppBaseController
             $timeFrame->Status = 'Requirements Completed';
             $timeFrame->save();
 
+            $serviceConnection->Status = 'For Inspection';
+            $serviceConnection->save();
+
             return redirect(route('serviceConnectionInspections.create-step-two', [$id]));
         } else {
             // IF REQUIREMENTS AIN'T COMPLETE
@@ -239,6 +242,9 @@ class ServiceConnectionChecklistsController extends AppBaseController
             $timeFrame->Status = 'Incomplete Requirements';
             $timeFrame->Notes = 'Only submitted ' . $reqSubmitted;
             $timeFrame->save();
+
+            $serviceConnection->Status = 'Incomplete Requirements';
+            $serviceConnection->save();
 
             return redirect(route('serviceConnections.show', [$id]));
         }

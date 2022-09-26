@@ -83,31 +83,7 @@ class ServiceConnectionInspectionsController extends AppBaseController
 
                 $serviceConnection = ServiceConnections::find($input['ServiceConnectionId']);
 
-                if ($serviceConnection->LoadCategory == 'below 5kVa') {
-                    if ($serviceConnection->LongSpan == 'Yes') {
-                        $serviceConnection->Status = 'Forwarded To Planning';
-
-                        // CREATE Timeframes
-                        $timeFrame = new ServiceConnectionTimeframes;
-                        $timeFrame->id = IDGenerator::generateID();
-                        $timeFrame->ServiceConnectionId = $input['ServiceConnectionId'];
-                        $timeFrame->UserId = Auth::id();
-                        $timeFrame->Status = 'Forwarded To Planning';
-                        $timeFrame->Notes = 'For assigning of BoM and Staking.';
-                        $timeFrame->save();
-                    } else {
-                        $serviceConnection->Status = 'For Inspection';
-
-                        // CREATE Timeframes
-                        $timeFrame = new ServiceConnectionTimeframes;
-                        $timeFrame->id = IDGenerator::generateID();
-                        $timeFrame->ServiceConnectionId = $input['ServiceConnectionId'];
-                        $timeFrame->UserId = Auth::id();
-                        $timeFrame->Status = 'For Inspection';
-                        $timeFrame->Notes = 'Tickets for staking and inspection created!';
-                        $timeFrame->save();
-                    }            
-                } else {
+                if (floatval($serviceConnection->LoadCategory) > 15) {
                     $serviceConnection->Status = 'Forwarded To Planning';
 
                     // CREATE Timeframes
@@ -117,6 +93,17 @@ class ServiceConnectionInspectionsController extends AppBaseController
                     $timeFrame->UserId = Auth::id();
                     $timeFrame->Status = 'Forwarded To Planning';
                     $timeFrame->Notes = 'For assigning of BoM and Staking.';
+                    $timeFrame->save();       
+                } else {
+                    $serviceConnection->Status = 'For Inspection';
+
+                    // CREATE Timeframes
+                    $timeFrame = new ServiceConnectionTimeframes;
+                    $timeFrame->id = IDGenerator::generateID();
+                    $timeFrame->ServiceConnectionId = $input['ServiceConnectionId'];
+                    $timeFrame->UserId = Auth::id();
+                    $timeFrame->Status = 'For Inspection';
+                    $timeFrame->Notes = 'To be Inspected';
                     $timeFrame->save();
                 }
                 $serviceConnection->save();
@@ -140,18 +127,17 @@ class ServiceConnectionInspectionsController extends AppBaseController
                 //     $vatTotal = $vatTotal + floatval($transactions->Vat);
                 //     $overAllTotal = $overAllTotal + floatval($transactions->Total);
                 // }
-                $totalTransactions = new ServiceConnectionTotalPayments;
-                $totalTransactions->id = IDGenerator::generateIDandRandString();
-                $totalTransactions->ServiceConnectionId = $input['ServiceConnectionId'];
-                $totalTransactions->SubTotal = $subTotal;
-                $totalTransactions->TotalVat = $vatTotal;
-                $totalTransactions->Total = $overAllTotal;
-                $totalTransactions->save();
+                // $totalTransactions = new ServiceConnectionTotalPayments;
+                // $totalTransactions->id = IDGenerator::generateIDandRandString();
+                // $totalTransactions->ServiceConnectionId = $input['ServiceConnectionId'];
+                // $totalTransactions->SubTotal = $subTotal;
+                // $totalTransactions->TotalVat = $vatTotal;
+                // $totalTransactions->Total = $overAllTotal;
+                // $totalTransactions->save();
 
-                // return redirect()->action([ServiceConnectionsController::class, 'show'], [$input['ServiceConnectionId']]);
                 // return redirect()->action([App\Http\Controllers\ServiceConnectionMtrTrnsfrmrController::class, 'createStepThree'], [$input['ServiceConnectionId']]);
                 // return redirect(route('serviceConnectionMtrTrnsfrmrs.create-step-three', [$input['ServiceConnectionId']]));
-                return redirect()->action([ServiceConnectionsController::class, 'show'], [$input['ServiceConnectionId']]); 
+                return redirect(route('serviceConnectionPayTransactions.create-step-four', [$input['ServiceConnectionId']]));
             } else {
                 $serviceConnectionInspections = $this->serviceConnectionInspectionsRepository->create($input);
 
@@ -159,31 +145,7 @@ class ServiceConnectionInspectionsController extends AppBaseController
 
                 $serviceConnection = ServiceConnections::find($input['ServiceConnectionId']);
 
-                if ($serviceConnection->LoadCategory == 'below 5kVa') {
-                    if ($serviceConnection->LongSpan == 'Yes') {
-                        $serviceConnection->Status = 'Forwarded To Planning';
-
-                        // CREATE Timeframes
-                        $timeFrame = new ServiceConnectionTimeframes;
-                        $timeFrame->id = IDGenerator::generateID();
-                        $timeFrame->ServiceConnectionId = $input['ServiceConnectionId'];
-                        $timeFrame->UserId = Auth::id();
-                        $timeFrame->Status = 'Forwarded To Planning';
-                        $timeFrame->Notes = 'For assigning of BoM and Staking.';
-                        $timeFrame->save();
-                    } else {
-                        $serviceConnection->Status = 'For Inspection';
-
-                        // CREATE Timeframes
-                        $timeFrame = new ServiceConnectionTimeframes;
-                        $timeFrame->id = IDGenerator::generateID();
-                        $timeFrame->ServiceConnectionId = $input['ServiceConnectionId'];
-                        $timeFrame->UserId = Auth::id();
-                        $timeFrame->Status = 'For Inspection';
-                        $timeFrame->Notes = 'Tickets for staking and inspection created!';
-                        $timeFrame->save();
-                    }            
-                } else {
+                if (floatval($serviceConnection->LoadCategory) > 15) {
                     $serviceConnection->Status = 'Forwarded To Planning';
 
                     // CREATE Timeframes
@@ -193,6 +155,17 @@ class ServiceConnectionInspectionsController extends AppBaseController
                     $timeFrame->UserId = Auth::id();
                     $timeFrame->Status = 'Forwarded To Planning';
                     $timeFrame->Notes = 'For assigning of BoM and Staking.';
+                    $timeFrame->save();       
+                } else {
+                    $serviceConnection->Status = 'For Inspection';
+
+                    // CREATE Timeframes
+                    $timeFrame = new ServiceConnectionTimeframes;
+                    $timeFrame->id = IDGenerator::generateID();
+                    $timeFrame->ServiceConnectionId = $input['ServiceConnectionId'];
+                    $timeFrame->UserId = Auth::id();
+                    $timeFrame->Status = 'For Inspection';
+                    $timeFrame->Notes = 'To be Inspected';
                     $timeFrame->save();
                 }
                 $serviceConnection->save();
@@ -216,24 +189,21 @@ class ServiceConnectionInspectionsController extends AppBaseController
                 //     $vatTotal = $vatTotal + floatval($transactions->Vat);
                 //     $overAllTotal = $overAllTotal + floatval($transactions->Total);
                 // }
-                $totalTransactions = new ServiceConnectionTotalPayments;
-                $totalTransactions->id = IDGenerator::generateIDandRandString();
-                $totalTransactions->ServiceConnectionId = $input['ServiceConnectionId'];
-                $totalTransactions->SubTotal = $subTotal;
-                $totalTransactions->TotalVat = $vatTotal;
-                $totalTransactions->Total = $overAllTotal;
-                $totalTransactions->save();
+                // $totalTransactions = new ServiceConnectionTotalPayments;
+                // $totalTransactions->id = IDGenerator::generateIDandRandString();
+                // $totalTransactions->ServiceConnectionId = $input['ServiceConnectionId'];
+                // $totalTransactions->SubTotal = $subTotal;
+                // $totalTransactions->TotalVat = $vatTotal;
+                // $totalTransactions->Total = $overAllTotal;
+                // $totalTransactions->save();
 
-                // return redirect()->action([ServiceConnectionsController::class, 'show'], [$input['ServiceConnectionId']]);
                 // return redirect()->action([App\Http\Controllers\ServiceConnectionMtrTrnsfrmrController::class, 'createStepThree'], [$input['ServiceConnectionId']]);
                 // return redirect(route('serviceConnectionMtrTrnsfrmrs.create-step-three', [$input['ServiceConnectionId']]));
-                return redirect()->action([ServiceConnectionsController::class, 'show'], [$input['ServiceConnectionId']]); 
+                return redirect(route('serviceConnectionPayTransactions.create-step-four', [$input['ServiceConnectionId']]));
             }
         } else {
             return abort('ID Not found!', 404);
         }
-
-        
     }
 
     /**
@@ -333,7 +303,7 @@ class ServiceConnectionInspectionsController extends AppBaseController
     public function createStepTwo($scId) {
         $serviceConnection = ServiceConnections::find($scId);
 
-        $inspectors = User::where('id', env('AREA_INSPECTOR_ID'))->pluck('name', 'id'); // CHANGE PERMISSION TO WHATEVER VERIFIER NAME IS
+        $inspectors = User::role('Inspector')->pluck('name', 'id'); // CHANGE PERMISSION TO WHATEVER VERIFIER NAME IS
 
         $serviceConnectionInspections = null;
 

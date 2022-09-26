@@ -183,6 +183,33 @@
         .indent-td {
             padding-left: 28px !important;
         }
+
+        /* Tooltipj container */
+        .tooltipj {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+        }
+
+        /* Tooltipj text */
+        .tooltipj .tooltipjtext {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 6px;
+            
+            /* Position the tooltipj text - see examples below! */
+            position: absolute;
+            z-index: 1;
+        }
+
+        /* Show the tooltipj text when you mouse over the tooltipj container */
+        .tooltipj:hover .tooltipjtext {
+            visibility: visible;
+        }
     </style>
 
     @yield('third_party_stylesheets')

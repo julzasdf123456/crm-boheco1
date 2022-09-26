@@ -19,6 +19,7 @@ use App\Models\Readings;
 use App\Models\ServiceAccounts;
 use App\Models\BillingMeters;
 use App\Models\DisconnectionHistory;
+use App\Models\AccountMaster;
 use App\Exports\TicketSummaryReportDownloadExport;
 use Illuminate\Support\Facades\Auth;
 use Flash;
@@ -79,28 +80,26 @@ class TicketsController extends AppBaseController
         $tickets = $this->ticketsRepository->create($input);
 
         // FILTER METER RELATED TICKETS
-        $ticket = DB::table('CRM_TicketsRepository')
-            ->where('id', $tickets->Ticket)
-            ->whereIn('ParentTicket', ['1668541254365', '1668541254387', '1668541254387', '1668541254422', '1668541254427']) // Mother Meter, KWH Meter, KWH Meter Transfer, Disconnection, Reconnection
-            ->first(); 
+        // $ticket = DB::table('CRM_TicketsRepository')
+        //     ->where('id', $tickets->Ticket)
+        //     ->whereIn('ParentTicket', ['1668541254365', '1668541254387', '1668541254387', '1668541254422', '1668541254427']) // Mother Meter, KWH Meter, KWH Meter Transfer, Disconnection, Reconnection
+        //     ->first(); 
             
-        if ($ticket != null) {
-            // SAVE METER INFO
-            $accountMeterInfo = DB::table('Billing_ServiceAccounts')
-                ->where('id', $tickets->AccountNumber)
-                ->select('*')
-                ->first();
-
-            $meterInfo = BillingMeters::where('ServiceAccountId', $tickets->AccountNumber)
-                ->orderByDesc('created_at')
-                ->first();
+        // if ($ticket != null) {
             
-            if ($accountMeterInfo != null) {
-                $tickets->CurrentMeterBrand = $meterInfo != null ? $meterInfo->Brand : '-';
-                $tickets->CurrentMeterNo = $meterInfo != null ? $meterInfo->SerialNumber : '-';
-                $tickets->GeoLocation = $accountMeterInfo->Latitude != null ? ($accountMeterInfo->Latitude . ',' . $accountMeterInfo->Longitude) : null;
-                $tickets->save();
-            }
+        // }
+        // SAVE METER INFO
+        $accountMeterInfo = DB::connection('sqlsrvbilling')
+            ->table('AccountMaster')
+            ->where('AccountNumber', $tickets->AccountNumber)
+            ->select('*')
+            ->first();
+        
+        if ($accountMeterInfo != null) {
+            $tickets->CurrentMeterNo = $accountMeterInfo->MeterNumber;
+            // EDIT LATER
+            $tickets->GeoLocation = null;
+            $tickets->save();
         }
 
         Flash::success('Tickets saved successfully.');
@@ -252,12 +251,16 @@ class TicketsController extends AppBaseController
         }
 
         if(Auth::user()->hasAnyPermission(['tickets create', 'ticket update', 'Super Admin'])) {
+            $serviceAccount = null;
             return view('tickets.edit', [
                 'tickets' => $tickets, 
                 'towns' => $towns,
                 'parentTickets' => $parentTickets,
                 'crew' => $crew,
                 'cond' => $cond,
+                'left' => $left = null,
+                'right' => $right = null,
+                'serviceAccount' => $serviceAccount,
             ]);
         } else {
             return abort(403, "You're not authorized to update a ticket.");
@@ -440,8 +443,25 @@ class TicketsController extends AppBaseController
         }
     } 
 
-    public function createSelect() {
-        return view('/tickets/create_select');
+    public function createSelect(Request $request) {
+        if ($request['params'] == null) {
+            $serviceAccounts = DB::connection('sqlsrvbilling')->table('AccountMaster')
+                        ->select('AccountMaster.*')
+                        ->orderBy('AccountNumber')
+                        ->paginate(20);
+        } else {
+            $serviceAccounts = DB::connection('sqlsrvbilling')->table('AccountMaster')
+                        ->select('AccountMaster.*')
+                        ->where('ConsumerName', 'LIKE', '%' . $request['params'] . '%')
+                        ->orWhere('AccountNumber', 'LIKE', '%' . $request['params'] . '%')
+                        ->orWhere('MeterNumber', 'LIKE', '%' . $request['params'] . '%')
+                        ->orderBy('AccountNumber')
+                        ->paginate(20);
+        }  
+
+        return view('/tickets/create_select', [
+            'serviceAccounts' => $serviceAccounts,
+        ]);
     }
 
     public function getCreateAjax(Request $request) {
@@ -505,20 +525,31 @@ class TicketsController extends AppBaseController
 
     public function createNew($id) { // id is account number
         if ($id != null) {
-            $serviceAccount = DB::table('Billing_ServiceAccounts')
-                ->leftJoin('CRM_Towns', 'Billing_ServiceAccounts.Town', '=', 'CRM_Towns.id')
-                ->leftJoin('CRM_Barangays', 'Billing_ServiceAccounts.Barangay', '=', 'CRM_Barangays.id')
-                ->select('Billing_ServiceAccounts.ServiceAccountName', 
-                    'Billing_ServiceAccounts.id', 
-                    'CRM_Towns.Town', 
-                    'CRM_Barangays.Barangay', 
-                    'Billing_ServiceAccounts.Town as TownId',
-                    'Billing_ServiceAccounts.Barangay as BarangayId',
-                    'Billing_ServiceAccounts.Purok')
-                ->where('Billing_ServiceAccounts.id', $id)
+            $serviceAccount = DB::connection('sqlsrvbilling')
+                ->table('AccountMaster')
+                ->where('AccountNumber', $id)
+                ->select('AccountMaster.*')
                 ->first();
+
+            if ($serviceAccount != null) {
+                $left = AccountMaster::where('Route', $serviceAccount->Route)
+                    ->whereRaw("SequenceNumber < " . $serviceAccount->SequenceNumber)
+                    ->orderByDesc('SequenceNumber')
+                    ->first();
+
+                $right = AccountMaster::where('Route', $serviceAccount->Route)
+                    ->whereRaw("SequenceNumber > " . $serviceAccount->SequenceNumber)
+                    ->orderBy('SequenceNumber')
+                    ->first();
+            } else {
+                $left = null;
+
+                $right = null;
+            }
         } else {
             $serviceAccount = null;
+            $left = null;
+            $right = null;
         }
 
         $towns = Towns::orderBy('Town')->pluck('Town', 'id');
@@ -547,6 +578,8 @@ class TicketsController extends AppBaseController
 
         $cond = 'new';
 
+        $tickets = null;
+
         return view('tickets.create',   [
             'serviceAccount' => $serviceAccount,
             'towns' => $towns,
@@ -554,6 +587,9 @@ class TicketsController extends AppBaseController
             'crew' => $crew,
             'history' => $history,
             'cond' => $cond,
+            'left' => $left,
+            'right' => $right,
+            'tickets' => $tickets,
         ]);
     }
 
@@ -563,6 +599,7 @@ class TicketsController extends AppBaseController
                 ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
                 ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
                 ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->leftJoin('users', 'CRM_Tickets.UserId', '=', 'users.id')
                 ->where('CRM_Tickets.id', $id)
                 ->select('CRM_Tickets.id',
                     'CRM_Tickets.AccountNumber',
@@ -579,6 +616,7 @@ class TicketsController extends AppBaseController
                     'CRM_Tickets.ORNumber',
                     'CRM_Tickets.ORDate',
                     'CRM_Tickets.GeoLocation',
+                    'CRM_Tickets.PoleNumber',
                     'CRM_Tickets.Neighbor1',
                     'CRM_Tickets.Neighbor2',
                     'CRM_Tickets.Notes',
@@ -591,7 +629,8 @@ class TicketsController extends AppBaseController
                     'CRM_ServiceConnectionCrew.StationName',
                     'CRM_Tickets.created_at',
                     'CRM_Tickets.updated_at',
-                    'CRM_Tickets.Trash')
+                    'CRM_Tickets.Trash',
+                    'users.name')
                 ->first();
 
         if ($tickets->AccountNumber != null) {

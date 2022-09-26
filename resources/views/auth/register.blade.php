@@ -40,12 +40,20 @@
         <div class="card-body register-card-body">
             <p class="login-box-msg">Register a new membership</p>
 
+            @if ($errors->any())    
+                <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+                </ul>
+            @endif
+
             <form method="post" action="{{ route('register') }}">
                 @csrf
                 <div class="input-group mb-3">
                     <input type="text"
                            name="name"
-                           class="form-control @error('name') is-invalid @enderror"
+                           class="form-control form-control-sm @error('name') is-invalid @enderror"
                            value="{{ old('name') }}"
                            placeholder="Full name">
                     <div class="input-group-append">
@@ -59,7 +67,7 @@
                 <div class="input-group mb-3">
                     <input type="text"
                            name="username"
-                           class="form-control @error('username') is-invalid @enderror"
+                           class="form-control form-control-sm @error('username') is-invalid @enderror"
                            value="{{ old('username') }}"
                            placeholder="Username">
                     <div class="input-group-append">
@@ -74,7 +82,7 @@
                     <input type="email"
                            name="email"
                            value="{{ old('email') }}"
-                           class="form-control @error('email') is-invalid @enderror"
+                           class="form-control form-control-sm @error('email') is-invalid @enderror"
                            placeholder="Email">
                     <div class="input-group-append">
                         <div class="input-group-text"><span class="fas fa-envelope"></span></div>
@@ -85,9 +93,39 @@
                 </div>
 
                 <div class="input-group mb-3">
+                    <select name="department" class="form-control form-control-sm">
+                        <option value="ISD">ISD</option>
+                        <option value="ESD">ESD</option>
+                        <option value="OGM">OGM</option>
+                        <option value="OSD">OSD</option>
+                        <option value="PGD">PGD</option>
+                        <option value="SEEAD">SEEAD</option>
+                    </select>
+                    <div class="input-group-append">
+                        <div class="input-group-text"><span class="fas fa-code-branch"></span></div>
+                    </div>
+                    @error('department')
+                    <span class="error invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="input-group mb-3">
+                    <select name="office" class="form-control form-control-sm">
+                        <option value="MAIN OFFICE">MAIN OFFICE</option>
+                        <option value="SUB-OFFICE">SUB-OFFICE</option>
+                    </select>
+                    <div class="input-group-append">
+                        <div class="input-group-text"><span class="fas fa-code-branch"></span></div>
+                    </div>
+                    @error('office')
+                    <span class="error invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="input-group mb-3">
                     <input type="password"
                            name="password"
-                           class="form-control @error('password') is-invalid @enderror"
+                           class="form-control form-control-sm @error('password') is-invalid @enderror"
                            placeholder="Password">
                     <div class="input-group-append">
                         <div class="input-group-text"><span class="fas fa-lock"></span></div>
@@ -100,7 +138,7 @@
                 <div class="input-group mb-3">
                     <input type="password"
                            name="password_confirmation"
-                           class="form-control"
+                           class="form-control form-control-sm"
                            placeholder="Retype password">
                     <div class="input-group-append">
                         <div class="input-group-text"><span class="fas fa-lock"></span></div>
@@ -118,12 +156,12 @@
                     </div> --}}
                     <!-- /.col -->
                     <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                        <button type="submit" class="btn btn-primary btn-block btn-sm"><i class="fas fa-check-circle" style="margin-right: 10px;"></i>Register</button>
                     </div>
                     <!-- /.col -->
                 </div>
             </form>
-
+            <br>
             <a href="{{ route('login') }}" class="text-center">I already have a membership</a>
         </div>
         <!-- /.form-box -->

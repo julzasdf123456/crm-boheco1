@@ -192,7 +192,7 @@ use App\Models\IDGenerator;
 
                     <div class="radio-group-horizontal-sm">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="Indigent" checked>
+                            <input class="form-check-input" type="radio" name="Indigent" value="" checked>
                             <label class="form-check-label">No</label>
                         </div>
                         <div class="form-check">

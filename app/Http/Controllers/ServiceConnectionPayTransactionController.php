@@ -11,6 +11,9 @@ use App\Models\ServiceConnectionMatPayables;
 use App\Models\ServiceConnectionPayParticulars;
 use App\Models\ServiceConnectionMatPayments;
 use App\Models\ServiceConnections;
+use App\Models\Electricians;
+use App\Models\IDGenerator;
+use App\Models\BillDeposits;
 use App\Models\ServiceConnectionTotalPayments;
 use Illuminate\Support\Facades\DB;
 use Flash;
@@ -176,43 +179,111 @@ class ServiceConnectionPayTransactionController extends AppBaseController
                     'CRM_ServiceConnections.ContactNumber',
                     'CRM_ServiceConnections.BuildingType',
                     'CRM_ServiceConnections.DateOfApplication',
+                    'CRM_ServiceConnections.LoadCategory',
+                    'CRM_ServiceConnections.Phase',
+                    'CRM_ServiceConnections.Indigent',
+                    'CRM_ServiceConnections.AccountType',
+                    'CRM_ServiceConnections.ElectricianId',
+                    'CRM_ServiceConnections.ElectricianName',
+                    'CRM_ServiceConnections.ElectricianAddress',
+                    'CRM_ServiceConnections.ElectricianContactNo',
+                    'CRM_ServiceConnections.ElectricianAcredited',
+                    'CRM_ServiceConnectionAccountTypes.AccountType as AccountTypeName',
+                    'CRM_ServiceConnectionAccountTypes.Alias',
                     'CRM_Towns.Town',
                     'CRM_Barangays.Barangay')
             ->where('CRM_ServiceConnections.id', $scId)
             ->first();
 
-        $materials = ServiceConnectionMatPayables::where('BuildingType', $serviceConnection->BuildingType)->get();
-
-        $particulars = ServiceConnectionPayParticulars::all();
-
-        $materialPayments = DB::table('CRM_ServiceConnectionMaterialPayments')
-                    ->join('CRM_ServiceConnectionMaterialPayables', 'CRM_ServiceConnectionMaterialPayments.Material', '=', 'CRM_ServiceConnectionMaterialPayables.id')
-                    ->select('CRM_ServiceConnectionMaterialPayments.id',
-                            'CRM_ServiceConnectionMaterialPayments.Quantity',
-                            'CRM_ServiceConnectionMaterialPayments.Vat',
-                            'CRM_ServiceConnectionMaterialPayments.Total',
-                            'CRM_ServiceConnectionMaterialPayables.Material',
-                            'CRM_ServiceConnectionMaterialPayables.Rate',)
-                    ->where('CRM_ServiceConnectionMaterialPayments.ServiceConnectionId', $scId)
-                    ->get();
-
-        $particularPayments = DB::table('CRM_ServiceConnectionParticularPaymentsTransactions')
-                    ->join('CRM_ServiceConnectionPaymentParticulars', 'CRM_ServiceConnectionParticularPaymentsTransactions.Particular', '=', 'CRM_ServiceConnectionPaymentParticulars.id')
-                    ->select('CRM_ServiceConnectionParticularPaymentsTransactions.id',
-                            'CRM_ServiceConnectionParticularPaymentsTransactions.Amount',
-                            'CRM_ServiceConnectionParticularPaymentsTransactions.Vat',
-                            'CRM_ServiceConnectionParticularPaymentsTransactions.Total',
-                            'CRM_ServiceConnectionPaymentParticulars.Particular')
-                    ->where('CRM_ServiceConnectionParticularPaymentsTransactions.ServiceConnectionId', $scId)
-                    ->get();
-
         $totalPayments = ServiceConnectionTotalPayments::where('ServiceConnectionId', $scId)->first();
 
-        return view('service_connection_pay_transactions\create_step_four', ['serviceConnection' => $serviceConnection, 
-                                                                            'materials' => $materials, 
-                                                                            'particulars' => $particulars,
-                                                                            'materialPayments' => $materialPayments,
-                                                                            'particularPayments' => $particularPayments,
-                                                                            'totalPayments' => $totalPayments]);
+        $electricians = Electricians::orderBy('Name')->get();
+
+        $laborPayables = DB::table('CRM_ServiceConnectionMaterialPayables')
+            ->where('BuildingType', $serviceConnection->BuildingType)
+            ->select('CRM_ServiceConnectionMaterialPayables.*',
+                DB::raw("(SELECT TOP 1 Quantity FROM CRM_ServiceConnectionMaterialPayments WHERE Material=CRM_ServiceConnectionMaterialPayables.id AND ServiceConnectionId='" . $serviceConnection->id . "') Qty"),
+                DB::raw("(SELECT TOP 1 Vat FROM CRM_ServiceConnectionMaterialPayments WHERE Material=CRM_ServiceConnectionMaterialPayables.id AND ServiceConnectionId='" . $serviceConnection->id . "') Vat"),
+                DB::raw("(SELECT TOP 1 Total FROM CRM_ServiceConnectionMaterialPayments WHERE Material=CRM_ServiceConnectionMaterialPayables.id AND ServiceConnectionId='" . $serviceConnection->id . "') Total")      
+            )
+            ->orderBy('Material')
+            ->get();
+
+        $billDeposit = BillDeposits::where('ServiceConnectionId', $serviceConnection->id)
+            ->first();
+
+        return view('service_connection_pay_transactions\create_step_four', [
+            'serviceConnection' => $serviceConnection, 
+            'electricians' => $electricians,
+            'totalPayments' => $totalPayments,
+            'laborPayables' => $laborPayables,
+            'billDeposit' => $billDeposit,
+        ]);
+    }
+
+    public function saveWiringLabor(Request $request) {
+        $scId = $request['id'];
+        $materialId = $request['MaterialId'];
+        $qty = $request['Quantity'];
+        $vat = $request['VAT'];
+        $total = $request['Total'];
+
+        // DELETE PREV RECORD
+        ServiceConnectionMatPayments::where('ServiceConnectionId', $scId)->where('Material', $materialId)->delete();
+
+        // SAVE
+        $payment = new ServiceConnectionMatPayments;
+        $payment->id = IDGenerator::generateIDandRandString();
+        $payment->ServiceConnectionId = $scId;
+        $payment->Material = $materialId;
+        $payment->Quantity = $qty;
+        $payment->Vat = $vat;
+        $payment->Total = $total;
+        $payment->save();
+
+        return response()->json('ok', 200);
+    }
+
+    public function saveBillDeposits(Request $request) {
+        $scId = $request['id'];
+
+        BillDeposits::where('ServiceConnectionId', $scId)->delete();
+
+        $bd = new BillDeposits;
+        $bd->id = IDGenerator::generateIDandRandString();
+        $bd->ServiceConnectionId = $scId;
+        $bd->Load = $request['Load'];
+        $bd->PowerFactor = $request['PowerFactor'];
+        $bd->DemandFactor = $request['DemandFactor'];
+        $bd->Hours = $request['Hours'];
+        $bd->AverageRate = $request['AverageRate'];
+        $bd->AverageTransmission = $request['AverageTransmission'];
+        $bd->AverageDemand = $request['AverageDemand'];
+        $bd->BillDepositAmount = $request['BillDepositAmount'];
+        $bd->save();
+
+        return response()->json('ok', 200);
+    }
+
+    public function saveServiceConnectionTransaction(Request $request) {
+        $scId = $request['id'];
+
+        ServiceConnectionTotalPayments::where('ServiceConnectionId', $scId)->delete();
+
+        $total = new ServiceConnectionTotalPayments;
+        $total->id = IDGenerator::generateIDandRandString();
+        $total->ServiceConnectionId = $scId;
+        $total->SubTotal = $request['SubTotal'];
+        $total->Form2307TwoPercent = $request['Form2307TwoPercent'];
+        $total->Form2307FivePercent = $request['Form2307FivePercent'];
+        $total->TotalVat = $request['TotalVat'];
+        $total->Total = $request['Total'];
+        $total->ServiceConnectionFee = $request['ServiceConnectionFee'];
+        $total->BillDeposit = $request['BillDeposit'];
+        $total->WitholdableVat = $request['WitholdableVat'];
+        $total->LaborCharge = $request['LaborCharge'];
+        $total->save();
+
+        return response()->json('ok', 200);
     }
 }

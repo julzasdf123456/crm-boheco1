@@ -50,6 +50,11 @@ class CreateTableCRMServiceConnections extends Migration
             $table->string('AccountNumber')->nullable();
             $table->string('Indigent')->nullable();
             $table->string('Phase')->nullable();
+            $table->string('ElectricianId')->nullable();
+            $table->string('ElectricianName')->nullable();
+            $table->string('ElectricianAddress')->nullable();
+            $table->string('ElectricianContactNo')->nullable();
+            $table->string('ElectricianAcredited')->nullable();
             $table->timestamps();
         });
     }

@@ -2,169 +2,139 @@
 @php
     use App\Models\TicketsRepository;
     use App\Models\Tickets;
+    use App\Models\Towns;
+    use App\Models\BarangayProxies;
+
+    // ANALYZE ADDRESS
+    if ($serviceAccount != null) {
+        $townDef = explode(",", $serviceAccount->ConsumerAddress);
+        $townFinal = "";
+        if (trim($townDef[count($townDef)-1]) == 'ALBUR') {
+            $townFinal = 'ALBURQUERQUE';
+        } elseif (trim($townDef[count($townDef)-1]) == 'CATIGBI-AN') {
+            $townFinal = 'CATIGBIAN';
+        } elseif (trim($townDef[count($townDef)-1]) == 'CABILAO') {
+            $townFinal = 'LOON';
+        } elseif (trim($townDef[count($townDef)-1]) == 'S. ISIDRO') {
+            $townFinal = 'SAN ISIDRO';
+        } elseif (trim($townDef[count($townDef)-1]) == 'SAN ISIDRRO') {
+            $townFinal = 'SAN ISIDRO';
+        } elseif (trim($townDef[count($townDef)-1]) == 'BOHOL') {
+            $townFinal = 'DIMIAO';
+        }  else {
+            $townFinal = trim($townDef[count($townDef)-1]);
+        }
+
+        // GET TOWN
+        $townAnalyzed = Towns::where('Town', 'LIKE', '%' . $townFinal . '%')->first();
+
+        // GET BARANGAY
+        $brgyRaw = count($townDef) > 1 ? trim($townDef[count($townDef)-2]) : '';
+        $brgyProxy = BarangayProxies::where('Barangay', $brgyRaw)
+            ->where('TownId', $townAnalyzed != null ? $townAnalyzed->id : '0')
+            ->first();
+    } else {
+        $townFinal = "";
+    }
+    
 @endphp
+
+<div class="form-group col-sm-12">
+    <div class="row">
 @if ($cond == 'new')
-    <div class="form-group col-sm-12">
-        <div class="row">
+            <div class="col-lg-3 col-md-4">
+                <div class="form-group">
+                    {!! Form::label('ConsumerName', 'Consumer Name:') !!}
+                    {!! Form::text('ConsumerName', $serviceAccount==null ? '' : $serviceAccount->ConsumerName, ['class' => 'form-control form-control-sm','maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name']) !!}                    
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-4">
+                <div class="form-group">
+                    {!! Form::label('Town', 'Town') !!}
+                    {!! Form::select('Town', $towns, $serviceAccount==null ? '' : ($townAnalyzed != null ? $townAnalyzed->id : ''), ['class' => 'form-control form-control-sm']) !!}
+                </div>
+            </div>
+
+            <!-- Barangay Field -->
             <div class="col-lg-3 col-md-5">
+                <div class="form-group">
+                    {!! Form::label('Barangay', 'Barangay') !!}
+                    {!! Form::select('Barangay', [], null, ['class' => 'form-control form-control-sm',]) !!}
+                </div>
+            </div>
+@else
+        <div class="col-lg-3 col-md-4">
+            <div class="form-group">
                 {!! Form::label('ConsumerName', 'Consumer Name:') !!}
+                {!! Form::text('ConsumerName', $tickets->ConsumerName, ['class' => 'form-control form-control-sm','maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name']) !!}                    
             </div>
+        </div>
 
-            <div class="col-lg-9 col-md-7">
-                <div class="input-group input-group-sm">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
-                    </div>
-                    {!! Form::text('ConsumerName', $serviceAccount==null ? '' : $serviceAccount->ServiceAccountName, ['class' => 'form-control','maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name']) !!}
-                </div>
-            </div>  
-        </div> 
-    </div>
-
-    <!-- Town Field -->
-    <div class="form-group col-sm-12">
-        <div class="row">
-            <div class="col-lg-3 col-md-5">
+        <div class="col-lg-3 col-md-4">
+            <div class="form-group">
                 {!! Form::label('Town', 'Town') !!}
+                {!! Form::select('Town', $towns, $tickets->Town, ['class' => 'form-control form-control-sm']) !!}
             </div>
+        </div>
 
-            <div class="col-lg-9 col-md-7">
-                <div class="input-group input-group-sm">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                    </div>
-                    {!! Form::select('Town', $towns, $serviceAccount==null ? '' : $serviceAccount->TownId, ['class' => 'form-control']) !!}
-                </div>
+        <!-- Barangay Field -->
+        <div class="col-lg-3 col-md-5">
+            <div class="form-group">
+                {!! Form::label('Barangay', 'Barangay') !!}
+                {!! Form::select('Barangay', [], $tickets->Barangay, ['class' => 'form-control form-control-sm',]) !!}
             </div>
-        </div>    
-    </div>
-@else
-    <div class="form-group col-sm-12">
-        <div class="row">
-            <div class="col-lg-3 col-md-5">
-                {!! Form::label('ConsumerName', 'Consumer name:') !!}
-            </div>
-
-            <div class="col-lg-9 col-md-7">
-                <div class="input-group input-group-sm">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
-                    </div>
-                    {!! Form::text('ConsumerName', $tickets->ConsumerName, ['class' => 'form-control','maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name']) !!}
-                </div>
-            </div>  
-        </div> 
-    </div>
-
-    <!-- Town Field -->
-    <div class="form-group col-sm-12">
-        <div class="row">
-            <div class="col-lg-3 col-md-5">
-                {!! Form::label('Town', 'Town') !!}
-            </div>
-
-            <div class="col-lg-9 col-md-7">
-                <div class="input-group input-group-sm">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                    </div>
-                    {!! Form::select('Town', $towns, $tickets->Town, ['class' => 'form-control']) !!}
-                </div>
-            </div>
-        </div>    
-    </div>
+        </div>
 @endif
 
-<!-- Barangay Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
+        <!-- Sitio Field -->
         <div class="col-lg-3 col-md-5">
-            {!! Form::label('Barangay', 'Barangay') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                </div>
-                {!! Form::select('Barangay', [], null, ['class' => 'form-control',]) !!}
-            </div>
-        </div>
-    </div>    
-</div>
-
-
-@if ($cond == 'new')
-    <!-- Sitio Field -->
-    <div class="form-group col-sm-12">
-        <div class="row">
-            <div class="col-lg-3 col-md-5">
+            <div class="form-group">
                 {!! Form::label('Sitio', 'Sitio') !!}
+                {!! Form::text('Sitio', null, ['class' => 'form-control form-control-sm','maxlength' => 1000,'maxlength' => 1000, 'placeholder' => 'Sitio']) !!}
             </div>
+        </div>
 
-            <div class="col-lg-9 col-md-7">
-                <div class="input-group input-group-sm">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                    </div>
-                    {!! Form::text('Sitio', $serviceAccount==null ? '' : $serviceAccount->Purok, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000, 'placeholder' => 'Sitio']) !!}
-                </div>
-            </div>
-        </div> 
-    </div>
-@else
-    <!-- Sitio Field -->
-    <div class="form-group col-sm-12">
-        <div class="row">
-            <div class="col-lg-3 col-md-5">
-                {!! Form::label('Purok', 'Sitio') !!}
-            </div>
-
-            <div class="col-lg-9 col-md-7">
-                <div class="input-group input-group-sm">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                    </div>
-                    {!! Form::text('Sitio', $tickets->Sitio, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000, 'placeholder' => 'Sitio']) !!}
-                </div>
-            </div>
-        </div> 
-    </div>
-@endif
-
-<!-- Contactnumber Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
+        <!-- Contactnumber Field -->
         <div class="col-lg-3 col-md-5">
-            {!! Form::label('ContactNumber', 'Contact Number:') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                </div>
-                {!! Form::text('ContactNumber', "0", ['class' => 'form-control','maxlength' => 100,'maxlength' => 100, 'placeholder' => 'Contact Number']) !!}
+            <div class="form-group">
+                {!! Form::label('ContactNumber', 'Contact Number:') !!}
+                {!! Form::text('ContactNumber', "0", ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100, 'placeholder' => 'Contact Number']) !!}
             </div>
         </div>
-    </div> 
-</div>
 
-<div class="divider"></div>
-<br>
-
-<!-- Ticket Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
+        <!-- Neighbor1 Field -->
         <div class="col-lg-3 col-md-5">
-            {!! Form::label('Ticket', 'Ticket Type:') !!}
+            <div class="form-group">
+                {!! Form::label('Neighbor1', 'Neighbor1:') !!}
+                {!! Form::text('Neighbor1', $left != null ? $left->ConsumerName : ($tickets != null && $tickets->Neighbor1 != null ? $tickets->Neighbor1 : ''), ['class' => 'form-control form-control-sm', 'placeholder' => 'Neighbor 1']) !!}
+            </div>
         </div>
 
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                </div>
+        <!-- Neighbor2 Field -->
+        <div class="col-lg-3 col-md-5">
+            <div class="form-group">
+                {!! Form::label('Neighbor 2', 'Neighbor 2:') !!}
+                {!! Form::text('Neighbor2', $right != null ? $right->ConsumerName : ($tickets != null && $tickets->Neighbor2 != null ? $tickets->Neighbor2 : ''), ['class' => 'form-control form-control-sm', 'placeholder' => 'Neighbor 2']) !!}
+            </div>
+        </div>
+
+        <!-- Crewassigned Field -->
+        <div class="col-lg-3 col-md-5">
+            <div class="form-group">
+                {!! Form::label('CrewAssigned', 'Crew Assigned:') !!}
+                {!! Form::select('CrewAssigned', $crew, null, ['class' => 'form-control form-control-sm',]) !!}
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="divider"></div>
+        </div>
+
+        <!-- Ticket Field -->
+        <div class="col-lg-3 col-md-5">
+            <div class="form-group">
+                {!! Form::label('Ticket', 'Ticket Type:') !!}
                 <select class="custom-select select2"  name="Ticket">
                     @foreach ($parentTickets as $items)
                         <optgroup label="{{ $items->Name }}">
@@ -172,198 +142,70 @@
                                 $ticketsRep = TicketsRepository::where('ParentTicket', $items->id)->whereNotIn('Id', Tickets::getMeterRelatedComplainsId())->orderBy('Name')->get();
                             @endphp
                             @foreach ($ticketsRep as $item)
-                                <option value="{{ $item->id }}">{{ $item->Name }}</option>
+                                <option value="{{ $item->id }}" {{ $tickets != null && $tickets->Ticket==$item->id ? 'selected' : '' }}>{{ $item->Name }}</option>
                             @endforeach
                         </optgroup>
                     @endforeach
                 </select>
             </div>
         </div>
-    </div> 
-</div>
 
-<!-- Reason Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
+        <!-- Reportedby Field -->
         <div class="col-lg-3 col-md-5">
-            {!! Form::label('Reason', 'Reason:') !!}
+            <div class="form-group">
+                {!! Form::label('ReportedBy', 'Reported By:') !!}
+                {!! Form::text('ReportedBy', null, ['class' => 'form-control form-control-sm','maxlength' => 200,'maxlength' => 200, 'placeholder' => 'Personnel who reported']) !!}
+            </div>
         </div>
 
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-file-video"></i></span>
-                </div>
-                {!! Form::textarea('Reason', null, ['class' => 'form-control','maxlength' => 2000,'maxlength' => 2000, 'placeholder' => 'Reason', 'rows' => 2]) !!}
+        <!-- Ornumber Field -->
+        <div class="col-lg-3 col-md-5">
+            <div class="form-group">
+                {!! Form::label('ORNumber', 'OR Number:') !!}
+                {!! Form::text('ORNumber', null, ['class' => 'form-control form-control-sm','maxlength' => 200,'maxlength' => 200, 'placeholder' => 'OR Number']) !!}
+            </div>
+        </div>
+
+        <!-- Ordate Field -->
+        <div class="col-lg-3 col-md-5">
+            <div class="form-group">
+                {!! Form::label('ORDate', 'OR Date:') !!}
+                {!! Form::text('ORDate', null, ['class' => 'form-control form-control-sm', 'placeholder' => 'OR Date']) !!}
+
+                @push('page_scripts')
+                    <script type="text/javascript">
+                        $('#ORDate').datetimepicker({
+                            format: 'YYYY-MM-DD',
+                            useCurrent: true,
+                            sideBySide: true
+                        })
+                    </script>
+                @endpush
+            </div>
+        </div>
+
+        <!-- Reason Field -->
+        <div class="col-lg-6 col-md-6">
+            <div class="form-group">
+                {!! Form::label('Reason', 'Reason:') !!}
+                {!! Form::textarea('Reason', null, ['class' => 'form-control form-control-sm','maxlength' => 2000,'maxlength' => 2000, 'placeholder' => 'Reason', 'rows' => 2]) !!}
+            </div>
+        </div>
+
+        <!-- Notes Field -->
+        <div class="col-lg-6 col-md-6">
+            <div class="form-group">
+                {!! Form::label('Notes', 'Notes/Remarks:') !!}
+                {!! Form::textarea('Notes', null, ['class' => 'form-control form-control-sm','maxlength' => 2000,'maxlength' => 2000, 'placeholder' => 'Notes/Remarks', 'rows' => 2]) !!}
             </div>
         </div>
     </div> 
 </div>
 
-<!-- Reportedby Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('ReportedBy', 'Reported By:') !!}
-        </div>
 
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-user-check"></i></span>
-                </div>
-                {!! Form::text('ReportedBy', null, ['class' => 'form-control','maxlength' => 200,'maxlength' => 200, 'placeholder' => 'Personnel who reported']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<!-- Crewassigned Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('CrewAssigned', 'Crew Assigned:') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-hard-hat"></i></span>
-                </div>
-                {!! Form::select('CrewAssigned', $crew, null, ['class' => 'form-control',]) !!}
-            </div>
-        </div>
-    </div>    
-</div>
-
-{{-- <div class="divider"></div>
-<br>
-
-<!-- Ornumber Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('ORNumber', 'Ornumber:') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-money-check"></i></span>
-                </div>
-                {!! Form::text('ORNumber', null, ['class' => 'form-control','maxlength' => 200,'maxlength' => 200, 'placeholder' => 'OR Number']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<!-- Ordate Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('ORDate', 'Ordate:') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-money-check"></i></span>
-                </div>
-                {!! Form::text('ORDate', null, ['class' => 'form-control', 'placeholder' => 'OR Date']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-@push('page_scripts')
-    <script type="text/javascript">
-        $('#ORDate').datetimepicker({
-            format: 'YYYY-MM-DD',
-            useCurrent: true,
-            sideBySide: true
-        })
-    </script>
-@endpush
-
-<div class="divider"></div>
-<br> --}}
-
-{{-- GEOLOCATION IS FETCHED FROM SERVICE ACCOUNTS --}}
-
-<!-- Neighbor1 Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('Neighbor1', 'Neighbor1:') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-street-view"></i></span>
-                </div>
-                {!! Form::text('Neighbor1', null, ['class' => 'form-control', 'placeholder' => 'Neighbor 1']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<!-- Neighbor2 Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('Neighbor2', 'Neighbor2:') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-street-view"></i></span>
-                </div>
-                {!! Form::text('Neighbor2', null, ['class' => 'form-control', 'placeholder' => 'Neighbor 2']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<!-- Crewassigned Field -->
-{{-- <div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('CrewAssigned', 'Crew Assigned:') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-hard-hat"></i></span>
-                </div>
-                {!! Form::select('CrewAssigned', $crew, null, ['class' => 'form-control',]) !!}
-            </div>
-        </div>
-    </div>    
-</div> --}}
-
-<!-- Notes Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('Notes', 'Notes:') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-file-video"></i></span>
-                </div>
-                {!! Form::textarea('Notes', null, ['class' => 'form-control','maxlength' => 2000,'maxlength' => 2000, 'placeholder' => 'Notes/Remarks', 'rows' => 2]) !!}
-            </div>
-        </div>
-    </div> 
-</div>
 
 @if ($cond == 'new')
-    <p id="Def_Brgy" style="display: none;">{{ $serviceAccount==null ? '' : $serviceAccount->BarangayId }}</p>
+    <p id="Def_Brgy" style="display: none;">{{ $serviceAccount==null ? '' : ($brgyProxy != null ? $brgyProxy->id : '') }}</p>
 @else
     <p id="Def_Brgy" style="display: none;">{{ $tickets->Barangay }}</p> 
 @endif

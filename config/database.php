@@ -91,6 +91,19 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'sqlsrvbilling' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_BILLING'),
+            'port' => env('DB_PORT_BILLING'),
+            'database' => env('DB_DATABASE_BILLING'),
+            'username' => env('DB_USERNAME_BILLING'),
+            'password' => env('DB_PASSWORD_BILLING'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+        ],
+
     ],
 
     /*

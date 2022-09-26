@@ -84,7 +84,12 @@ class ServiceConnections extends Model
         'ResidenceNumber',
         'AccountNumber',
         'Indigent',
-        'Phase'
+        'Phase',
+        'ElectricianId',
+        'ElectricianName',
+        'ElectricianAddress',
+        'ElectricianContactNo',
+        'ElectricianAcredited'
     ];
 
     /**
@@ -129,6 +134,11 @@ class ServiceConnections extends Model
         'AccountNumber' => 'string',
         'Indigent' => 'string',
         'Phase' => 'string',
+        'ElectricianId' => 'string',
+        'ElectricianName' => 'string',
+        'ElectricianAddress' => 'string',
+        'ElectricianContactNo' => 'string',
+        'ElectricianAcredited' => 'string',
     ];
 
     /**
@@ -175,6 +185,11 @@ class ServiceConnections extends Model
         'AccountNumber' => 'nullable|string',
         'Indigent' => 'nullable|string',
         'Phase' => 'nullable|string',
+        'ElectricianId' => 'nullable|string',
+        'ElectricianName' => 'nullable|string',
+        'ElectricianAddress' => 'nullable|string',
+        'ElectricianContactNo' => 'nullable|string',
+        'ElectricianAcredited' => 'nullable|string',
     ];
 
     public static function getAccountCount($consumerId) {
@@ -209,5 +224,54 @@ class ServiceConnections extends Model
 
     public static function getResidentialId() {
         return '1627280880118';
+    }
+
+    public static function getStreetLightId() {
+        return '1643002557527';
+    }
+
+    public static function getServiceConnectionFees($serviceConnections) {
+        if (floatval($serviceConnections->Phase) == 3) {
+            // HIGHER VOLTAGES
+            if (floatval($serviceConnections->LoadCategory) >= 37.5 && floatval($serviceConnections->LoadCategory) < 75) {
+                return 3575.00;
+            } elseif (floatval($serviceConnections->LoadCategory) >= 75 && floatval($serviceConnections->LoadCategory) < 225) {
+                return 5360.00;
+            } elseif (floatval($serviceConnections->LoadCategory) >= 225) {
+                return 9310.00;
+            }
+        } elseif (floatval($serviceConnections->Phase) == 1) {            
+            if ($serviceConnections->AccountType==ServiceConnections::getResidentialId()) { 
+                if ($serviceConnections->Indigent == 'Yes') {
+                    return 95.00;
+                } else {
+                    // RESIDENTIAL
+                    if (floatval($serviceConnections->LoadCategory) >= 5) {
+                        return 1790.00;
+                    } else {
+                        return 595.00;
+                    }
+                }                
+            } else {
+                // NON RESIDENTIAL
+                if (floatval($serviceConnections->LoadCategory) >= 5) {
+                    return 1790.00;
+                } else {
+                    return 1190.00;
+                }
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public static function getDemandFactor($consumerTypeAlias) {
+        if ($consumerTypeAlias == 'B' | $consumerTypeAlias == 'E' | $consumerTypeAlias == 'RC' | $consumerTypeAlias == 'RI' | $consumerTypeAlias == 'RM') {
+            return .15;
+        } elseif ($consumerTypeAlias == 'S') {
+            return .50;
+        } else {
+            return .30;
+        }
     }
 }

@@ -130,6 +130,10 @@ Route::get('/service_connections/create-change-name/{id}', [ServiceConnectionsCo
 Route::post('/service_connections/store-change-name', [ServiceConnectionsController::class, 'storeChangeName'])->name('serviceConnections.store-change-name');
 Route::get('/service_connections/approve-change-name/{id}', [ServiceConnectionsController::class, 'approveForChangeName'])->name('serviceConnections.approve-change-name');
 Route::get('/service_connections/bypass-approve-inspection/{inspectionId}', [ServiceConnectionsController::class, 'bypassApproveInspection'])->name('serviceConnections.bypass-approve-inspection');
+Route::get('/service_connections/save-electrician-info', [ServiceConnectionsController::class, 'saveElectricianInfo'])->name('serviceConnections.save-electrician-info');
+Route::get('/service_connections/print-invoice/{id}', [ServiceConnectionsController::class, 'printInvoice'])->name('serviceConnections.print-invoice');
+Route::get('/service_connections/inspection-full-report', [ServiceConnectionsController::class, 'inspectionFullReport'])->name('serviceConnections.inspection-full-report');
+Route::get('/service_connections/get-inspection-summary-data', [ServiceConnectionsController::class, 'getInspectionSummaryData'])->name('serviceConnections.get-inspection-summary-data');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 
@@ -154,6 +158,9 @@ Route::resource('serviceConnectionPayParticulars', App\Http\Controllers\ServiceC
 Route::resource('serviceConnectionMatPayments', App\Http\Controllers\ServiceConnectionMatPaymentsController::class);
 
 Route::get('/service_connection_pay_tansactions/create_step_four/{scId}', [App\Http\Controllers\ServiceConnectionPayTransactionController::class, 'createStepFour'])->name('serviceConnectionPayTransactions.create-step-four');
+Route::get('/service_connection_pay_tansactions/save-wiring-labor', [App\Http\Controllers\ServiceConnectionPayTransactionController::class, 'saveWiringLabor'])->name('serviceConnectionPayTransactions.save-wiring-labor');
+Route::get('/service_connection_pay_tansactions/save-bill-deposits', [App\Http\Controllers\ServiceConnectionPayTransactionController::class, 'saveBillDeposits'])->name('serviceConnectionPayTransactions.save-bill-deposits');
+Route::get('/service_connection_pay_tansactions/save-service-connection-transaction', [App\Http\Controllers\ServiceConnectionPayTransactionController::class, 'saveServiceConnectionTransaction'])->name('serviceConnectionPayTransactions.save-service-connection-transaction');
 Route::resource('serviceConnectionPayTransactions', App\Http\Controllers\ServiceConnectionPayTransactionController::class);
 
 
@@ -727,3 +734,21 @@ Route::get('/excemptions/get-excemptions-ajax', [App\Http\Controllers\Excemption
 Route::get('/excemptions/remove-excemption', [App\Http\Controllers\ExcemptionsController::class, 'removeExcemption'])->name('excemptions.remove-excemption');
 Route::get('/excemptions/print-excemptions/{period}', [App\Http\Controllers\ExcemptionsController::class, 'printExcemptions'])->name('excemptions.print-excemptions');
 Route::resource('excemptions', App\Http\Controllers\ExcemptionsController::class);
+
+Route::get('/electricians/get-electricians-ajax', [App\Http\Controllers\ElectriciansController::class, 'getElectricianAjax'])->name('electricians.get-electricians-ajax');
+Route::resource('electricians', App\Http\Controllers\ElectriciansController::class);
+
+
+Route::resource('unbundledRates', App\Http\Controllers\UnbundledRatesController::class);
+
+
+Route::resource('unbundledRatesExtensions', App\Http\Controllers\UnbundledRatesExtensionController::class);
+
+
+Route::resource('billDeposits', App\Http\Controllers\BillDepositsController::class);
+
+
+Route::resource('accountMasters', App\Http\Controllers\AccountMasterController::class);
+
+
+Route::resource('barangayProxies', App\Http\Controllers\BarangayProxiesController::class);
