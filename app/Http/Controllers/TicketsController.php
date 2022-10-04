@@ -142,6 +142,7 @@ class TicketsController extends AppBaseController
                     'CRM_Tickets.Reason',
                     'CRM_Tickets.ContactNumber',
                     'CRM_Tickets.ReportedBy',
+                    'CRM_Tickets.PoleNumber',
                     'CRM_Tickets.ORNumber',
                     'CRM_Tickets.ORDate',
                     'CRM_Tickets.GeoLocation',
@@ -1982,5 +1983,32 @@ class TicketsController extends AppBaseController
         ]);
 
         return response()->json($arr, 200);
+    }
+
+    public function getCrewMonitorData(Request $request) {
+        $data = DB::table('CRM_ServiceConnectionCrew')
+            ->select('id',
+                'StationName',
+                DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Status NOT IN('Executed', 'Acted') AND CrewAssigned=CRM_ServiceConnectionCrew.id AND (Trash IS NULL OR Trash='No')) AS AllAssigned"),
+                DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Status IN('Downloaded by Crew') AND CrewAssigned=CRM_ServiceConnectionCrew.id AND (Trash IS NULL OR Trash='No')) AS Downloaded"),
+                DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Status IN('Received') AND CrewAssigned=CRM_ServiceConnectionCrew.id AND (Trash IS NULL OR Trash='No')) AS Undownloaded"),
+                DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Status IN('Crew Arrived on Site') AND CrewAssigned=CRM_ServiceConnectionCrew.id AND (Trash IS NULL OR Trash='No')) AS SiteArrivals"),
+            )
+            ->orderBy('StationName')
+            ->get();
+
+        $output = "";
+        foreach($data as $item) {
+            $output .= "<tr>
+                                <td>" . $item->StationName . "</td>
+                                <td>" . $item->AllAssigned . "</td>
+                                <td>" . $item->Undownloaded . "</td>
+                                <td>" . $item->Downloaded . "</td>
+                                <td>" . $item->SiteArrivals . "</td>
+                            </tr>
+                        ";
+        }
+
+        return response()->json($output, 200);
     }
 }

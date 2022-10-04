@@ -67,7 +67,12 @@
             </div>
         </div>
 
-        <div class="row">          
+        <div class="row">    
+            {{-- CREW MONITOR --}}
+            <div class="col-lg-12">
+                @include('tickets.crew_monitoring')
+            </div>
+                  
             {{-- Execution and Filling Graph --}}
             <div class="col-lg-6">            
                 <div class="card" style="height: 35vh;">
@@ -78,7 +83,7 @@
                         <canvas id="ticket-chart-canvas" height="300" style="height: 300px;"></canvas>
                     </div>
                 </div>
-            </div>
+            </div>            
         </div>
     </div>
 @endsection

@@ -436,7 +436,7 @@ use Illuminate\Support\Facades\Auth;
 @endcanany --}}
 
 {{-- SERVICE ACCOUNTS --}}
-{{-- @canany(['Super Admin', 'billing re-bill'])
+@canany(['Super Admin', 'billing re-bill'])
     <li class="nav-header">BILLING</li>
     <li class="nav-item">
         <a href="{{ route('bills.dashboard') }}"
@@ -500,7 +500,7 @@ use Illuminate\Support\Facades\Auth;
         </ul>
     </li>
 
-    <li class="nav-item has-treeview">
+    {{-- <li class="nav-item has-treeview">
         <a href="#" class="nav-link">
             <i class="fas fa-layer-group nav-icon text-primary"></i>
             <p>
@@ -535,8 +535,8 @@ use Illuminate\Support\Facades\Auth;
                 </a>
             </li>
         </ul>
-    </li>
-@endcanany --}}
+    </li> --}}
+@endcanany
 
 {{-- BILLS --}}
 {{-- @canany(['Super Admin', 'billing re-bill'])
@@ -608,7 +608,7 @@ use Illuminate\Support\Facades\Auth;
         </ul>
     </li>
 @endcanany --}}
-{{-- @canany(['Super Admin', 'billing re-bill'])
+@canany(['Super Admin', 'billing re-bill'])
     <li class="nav-item has-treeview">
         <a href="#" class="nav-link">
             <i class="fas fa-tachometer-alt nav-icon text-primary"></i>
@@ -657,7 +657,7 @@ use Illuminate\Support\Facades\Auth;
         </ul>
     </li>
 
-    <li class="nav-item has-treeview">
+    {{-- <li class="nav-item has-treeview">
         <a href="#" class="nav-link">
             <i class="fas fa-check nav-icon text-primary"></i>
             <p>
@@ -736,8 +736,8 @@ use Illuminate\Support\Facades\Auth;
                 </a>
             </li>
         </ul>
-    </li>
-@endcanany --}}
+    </li> --}}
+@endcanany
 
 {{-- DISCONNECTION --}}
 {{-- @canany(['Super Admin', 'billing re-bill', 'teller approve'])
@@ -978,7 +978,7 @@ use Illuminate\Support\Facades\Auth;
     </li>  
 @endcanany --}}
 <!-- EXTRAS MENU -->
-{{-- @canany(['Super Admin', 'create membership', 'sc create', 'teller create', 'teller approve'])
+@canany(['Super Admin', 'create membership', 'sc create', 'teller create', 'teller approve'])
     <li class="nav-header">MISCELLANEOUS</li>
     <li class="nav-item has-treeview">
         <a href="#" class="nav-link">
@@ -1011,7 +1011,7 @@ use Illuminate\Support\Facades\Auth;
                 </a>
             </li>
             
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="{{ route('rateItems.index') }}"
                 class="nav-link {{ Request::is('rateItems*') ? 'active' : '' }}">
                 <i class="fas fa-circle nav-icon"></i><p>Rate Items</p>
@@ -1023,10 +1023,19 @@ use Illuminate\Support\Facades\Auth;
                    class="nav-link {{ Request::is('banks*') ? 'active' : '' }}">
                    <i class="fas fa-circle nav-icon"></i><p>Banks</p>
                 </a>
-            </li>
+            </li> --}}
         </ul>
     </li>
-@endcanany --}}
+@endcanany
+
+@canany(['Super Admin', 'agma'])
+    <li class="nav-item">
+        <a href="{{ route('preRegEntries.index') }}"
+        class="nav-link {{ Request::is('preRegEntries*') ? 'active' : '' }}">
+        <i class="fas fa-check-circle     nav-icon"></i><p>AMGA 2022 Pre-Reg</p>
+        </a>
+    </li>
+@endcanany
 
 <!-- ADMIN MENU -->
 @can('Super Admin')
@@ -1064,5 +1073,6 @@ use Illuminate\Support\Facades\Auth;
         </ul>
     </li>
 @endcan
+
 
 

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateTownsRequest;
 use App\Repositories\TownsRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use App\Models\ServiceConnectionCrew;
 use Flash;
 use Response;
 
@@ -95,13 +96,18 @@ class TownsController extends AppBaseController
     {
         $towns = $this->townsRepository->find($id);
 
+        $crews = ServiceConnectionCrew::all();
+
         if (empty($towns)) {
             Flash::error('Towns not found');
 
             return redirect(route('towns.index'));
         }
 
-        return view('towns.edit')->with('towns', $towns);
+        return view('towns.edit', [
+            'towns' => $towns,
+            'crews' => $crews
+        ]);
     }
 
     /**

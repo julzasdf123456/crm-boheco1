@@ -104,6 +104,19 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'sqlsrvagma' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_AGMA'),
+            'port' => env('DB_PORT_AGMA'),
+            'database' => env('DB_DATABASE_AGMA'),
+            'username' => env('DB_USERNAME_AGMA'),
+            'password' => env('DB_PASSWORD_AGMA'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+        ],
+
     ],
 
     /*

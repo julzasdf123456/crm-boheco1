@@ -361,6 +361,7 @@ Route::get('/tickets/disconnection-results-route', [App\Http\Controllers\Tickets
 Route::get('/tickets/create-and-print-disconnection-tickets/{period}/{route}', [App\Http\Controllers\TicketsController::class, 'createAndPrintDisconnectionTickets'])->name('tickets.create-and-print-disconnection-tickets');
 Route::get('/tickets/ticket-tally', [App\Http\Controllers\TicketsController::class, 'ticketTally'])->name('tickets.ticket-tally');
 Route::get('/tickets/get-ticket-tally', [App\Http\Controllers\TicketsController::class, 'getTicketTally'])->name('tickets.get-ticket-tally');
+Route::get('/tickets/get-crew-monitor-data', [App\Http\Controllers\TicketsController::class, 'getCrewMonitorData'])->name('tickets.get-crew-monitor-data');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 
@@ -752,3 +753,6 @@ Route::resource('accountMasters', App\Http\Controllers\AccountMasterController::
 
 
 Route::resource('barangayProxies', App\Http\Controllers\BarangayProxiesController::class);
+
+
+Route::resource('preRegEntries', App\Http\Controllers\PreRegEntriesController::class);
