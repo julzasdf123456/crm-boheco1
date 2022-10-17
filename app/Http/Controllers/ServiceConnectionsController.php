@@ -193,6 +193,7 @@ class ServiceConnectionsController extends AppBaseController
                         'CRM_ServiceConnections.LongSpan', 
                         'CRM_ServiceConnections.AccountType AS AccountTypeRaw', 
                         'CRM_ServiceConnections.ORNumber as ORNumber', 
+                        'CRM_ServiceConnections.ORDate', 
                         'CRM_ServiceConnections.Sitio as Sitio', 
                         'CRM_ServiceConnections.LoadCategory as LoadCategory', 
                         'CRM_ServiceConnections.DateTimeOfEnergization as DateTimeOfEnergization', 

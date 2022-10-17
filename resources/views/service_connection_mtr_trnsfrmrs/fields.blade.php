@@ -1,239 +1,286 @@
-
-<!-- Meterbrand Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('MeterBrand', 'Meter Brand') !!}
+<div class="col-lg-6">
+    <div class="card shadow-none card-primary card-outline">
+        <div class="card-header">
+            Metering
         </div>
+        <div class="card-body">
+            <!-- Meterbrand Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('MeterBrand', 'Meter Brand') !!}
+                    </div>
 
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
-                </div>
-                {!! Form::select('MeterBrand', ['EDMI' => 'EDMI', 'TECHINE' => 'TECHINE'], null, ['class' => 'form-control']) !!}
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
+                            </div>
+                            {!! Form::select('MeterBrand', [
+                                '' => '',
+                                'ACCURA' => 'ACCURA',
+                                'ACLARA KV2C' => 'ACLARA KV2C',
+                                'AMERICO' => 'AMERICO',
+                                'BAZ' => 'BAZ',
+                                'CHINT' => 'CHINT',
+                                'EDMI MK10E' => 'EDMI MK10E',
+                                'EDMI MK6N' => 'EDMI MK6N',
+                                'EDMI MK6E' => 'EDMI MK6E',
+                                'EDMI MK7C' => 'EDMI MK7C',
+                                'ELETRA' => 'ELETRA',
+                                'EVER' => 'EVER',
+                                'FUJI' => 'FUJI',
+                                'GE' => 'GE',
+                                'GE I210' => 'GE I210',
+                                'GE KV2C' => 'GE KV2C',
+                                'GOLDSTAR' => 'GOLDSTAR',
+                                'HARBIN' => 'HARBIN',
+                                'HEAG' => 'HEAG',
+                                'INTECH' => 'INTECH', 
+                                'ITECHENE' => 'ITECHENE',
+                                'LANDIS' => 'LANDIS',
+                                'LANDIS FOCUS' => 'LANDIS FOCUS',
+                                'MITSUBISHI' => 'MITSUBISHI',
+                                'ORIENTAL' => 'ORIENTAL',
+                                'SAFARI' => 'SAFARI',
+                                'SANGAMO' => 'SANGOMO',
+                                'SUZSOU' => 'SUZSOU',
+                                'TATUNG' => 'TATUNG',
+                                'TECHEN' => 'TECHEN',
+                                'TOSHIBA' => 'TOSHIBA',
+                                'WARBURTON' => 'WARBURTON',
+                            ], null, ['class' => 'form-control']) !!}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!-- Meterserialnumber Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('MeterSerialNumber', 'Meter Serial No.') !!}
+                    </div>
+
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
+                            </div>
+                            {!! Form::text('MeterSerialNumber', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150, 'placeholder' => 'Use QR or Barcode Scanner for faster encoding']) !!}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!-- Metersealnumber Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('MeterSealNumber', 'Meter Seal No.') !!}
+                    </div>
+
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
+                            </div>
+                            {!! Form::text('MeterSealNumber', null, ['class' => 'form-control','maxlength' => 200,'maxlength' => 200, 'placeholder' => 'Meter Seal Number']) !!}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!-- Meterkwhstart Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('MeterKwhStart', 'Meter Kwh Start') !!}
+                    </div>
+
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
+                            </div>
+                            {!! Form::text('MeterKwhStart', null, ['class' => 'form-control','maxlength' => 200,'maxlength' => 200, 'placeholder' => 'This is for the reused meters']) !!}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!-- Meterenclosuretype Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('MeterEnclosureType', 'Meter Box Type') !!}
+                    </div>
+
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
+                            </div>
+                            {!! Form::select('MeterEnclosureType', ['' => 'n/a', 'Galvanized Iron' => 'Galvanized Iron', 'Plastic/Fiber Glass' => 'Plastic/Fiber Glass'], null, ['class' => 'form-control']) !!}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!-- Meterheight Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('MeterHeight', 'Meter Height') !!}
+                    </div>
+
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
+                            </div>
+                            {!! Form::text('MeterHeight', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20, 'placeholder' => 'Height in meters (m)']) !!}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!-- Meternotes Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('MeterNotes', 'Meter Notes') !!}
+                    </div>
+
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
+                            </div>
+                            {!! Form::textarea('MeterNotes', null, ['class' => 'form-control', 'placeholder' => 'Meter remarks', 'rows' => 1]) !!}
+                        </div>
+                    </div>
+                </div> 
             </div>
         </div>
-    </div> 
+    </div>
 </div>
 
-<!-- Meterserialnumber Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('MeterSerialNumber', 'Meter Serial No.') !!}
+<div class="col-lg-6">
+    <div class="card shadow-none card-danger card-outline">
+        <div class="card-header">
+            <span class="card-title">Transformer</span>
         </div>
+        <div class="card-body">
+            <!-- Transformerbrand Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('TransformerBrand', 'Transformer Brand') !!}
+                    </div>
 
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
-                </div>
-                {!! Form::text('MeterSerialNumber', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150, 'placeholder' => 'Use QR or Barcode Scanner for faster encoding']) !!}
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
+                            </div>
+                            {!! Form::select('TransformerBrand', ['EDMI' => 'EDMI', 'TECHINE' => 'TECHINE'], null, ['class' => 'form-control']) !!}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!-- TransformerNumber Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('TransformerNumber', 'Transformer No.') !!}
+                    </div>
+
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
+                            </div>
+                            {!! Form::text('TransformerNumber', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150, 'placeholder' => 'Transformer Serial Number']) !!}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!-- Transformerquantity Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('TransformerQuantity', 'Transformer Qty') !!}
+                    </div>
+
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
+                            </div>
+                            {!! Form::text('TransformerQuantity', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20, 'placeholder' => 'Number of transformer installed']) !!}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!-- Transformerrating Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('TransformerRating', 'Transformer Ratings') !!}
+                    </div>
+
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
+                            </div>
+                            {!! Form::text('TransformerRating', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150, 'placeholder' => 'in kVA (Separate by comma if more than 1)']) !!}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!-- Transformerownership Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('TransformerOwnership', 'Ownership') !!}
+                    </div>
+
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
+                            </div>
+                            {!! Form::select('TransformerOwnership', [env('APP_COMPANY_ABRV') => env('APP_COMPANY_ABRV'), 'Privately Owned' => 'Privately Owned'], null, ['class' => 'form-control']) !!}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!-- Transformerownershiptype Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('TransformerOwnershipType', 'Ownership Category') !!}
+                    </div>
+
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
+                            </div>
+                            {!! Form::select('TransformerOwnershipType', ['Shared' => 'Shared', 'Solo' => 'Solo'], null, ['class' => 'form-control']) !!}
+                        </div>
+                    </div>
+                </div> 
             </div>
         </div>
-    </div> 
-</div>
-
-<!-- Metersealnumber Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('MeterSealNumber', 'Meter Seal No.') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
-                </div>
-                {!! Form::text('MeterSealNumber', null, ['class' => 'form-control','maxlength' => 200,'maxlength' => 200, 'placeholder' => 'Meter Seal Number']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<!-- Meterkwhstart Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('MeterKwhStart', 'Meter Kwh Start') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
-                </div>
-                {!! Form::text('MeterKwhStart', null, ['class' => 'form-control','maxlength' => 200,'maxlength' => 200, 'placeholder' => 'This is for the reused meters']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<!-- Meterenclosuretype Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('MeterEnclosureType', 'Meter Box Type') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
-                </div>
-                {!! Form::select('MeterEnclosureType', ['' => 'n/a', 'Galvanized Iron' => 'Galvanized Iron', 'Plastic/Fiber Glass' => 'Plastic/Fiber Glass'], null, ['class' => 'form-control']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<!-- Meterheight Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('MeterHeight', 'Meter Height') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
-                </div>
-                {!! Form::text('MeterHeight', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20, 'placeholder' => 'Height in meters (m)']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<!-- Meternotes Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('MeterNotes', 'Meter Notes') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
-                </div>
-                {!! Form::textarea('MeterNotes', null, ['class' => 'form-control', 'placeholder' => 'Meter remarks', 'rows' => 1]) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<div class="divider"></div>
-<br>
-
-<!-- Transformerbrand Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('TransformerBrand', 'Transformer Brand') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
-                </div>
-                {!! Form::select('TransformerBrand', ['EDMI' => 'EDMI', 'TECHINE' => 'TECHINE'], null, ['class' => 'form-control']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<!-- TransformerNumber Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('TransformerNumber', 'Transformer No.') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
-                </div>
-                {!! Form::text('TransformerNumber', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150, 'placeholder' => 'Transformer Serial Number']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<!-- Transformerquantity Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('TransformerQuantity', 'Transformer Qty') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
-                </div>
-                {!! Form::text('TransformerQuantity', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20, 'placeholder' => 'Number of transformer installed']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<!-- Transformerrating Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('TransformerRating', 'Transformer Ratings') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
-                </div>
-                {!! Form::text('TransformerRating', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150, 'placeholder' => 'in kVA (Separate by comma if more than 1)']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<!-- Transformerownership Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('TransformerOwnership', 'Ownership') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
-                </div>
-                {!! Form::select('TransformerOwnership', [env('APP_COMPANY_ABRV') => env('APP_COMPANY_ABRV'), 'Privately Owned' => 'Privately Owned'], null, ['class' => 'form-control']) !!}
-            </div>
-        </div>
-    </div> 
-</div>
-
-<!-- Transformerownershiptype Field -->
-<div class="form-group col-sm-12">
-    <div class="row">
-        <div class="col-lg-3 col-md-5">
-            {!! Form::label('TransformerOwnershipType', 'Ownership Category') !!}
-        </div>
-
-        <div class="col-lg-9 col-md-7">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
-                </div>
-                {!! Form::select('TransformerOwnershipType', ['Shared' => 'Shared', 'Solo' => 'Solo'], null, ['class' => 'form-control']) !!}
-            </div>
-        </div>
-    </div> 
+    </div>
 </div>
 
 <div class="divider"></div>

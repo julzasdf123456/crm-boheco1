@@ -136,12 +136,9 @@ use Illuminate\Support\Facades\Auth;
                 <div class="card">
                     <div class="card-header p-2">
                         <ul class="nav nav-pills">
-                            <li class="nav-item"><a class="nav-link active" href="#logs" data-toggle="tab">
-                                <i class="fas fa-info-circle"></i>
-                                Details and Logs</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#verification" data-toggle="tab">
+                            <li class="nav-item"><a class="nav-link active" href="#verification" data-toggle="tab">
                                 <i class="fas fa-clipboard-check"></i>
-                                </lord-icon>Verification</a></li>
+                                Verification</a></li>
                             <li class="nav-item"><a class="nav-link" href="#metering" data-toggle="tab">
                                 <i class="fas fa-tachometer-alt"></i>
                                 Metering and Transformer</a></li>
@@ -153,6 +150,12 @@ use Illuminate\Support\Facades\Auth;
                                 <i class="fas fa-toolbox"></i>
                                 Bill of Materials</a></li>
                             @endif
+                            <li class="nav-item"><a class="nav-link" href="#requirements" data-toggle="tab">
+                                <i class="fas fa-info-circle"></i>
+                                Requirements & Crew</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#logs" data-toggle="tab">
+                                <i class="fas fa-list"></i>
+                                Logs</a></li>
                             <li class="nav-item"><a class="nav-link" href="#photos" data-toggle="tab">
                                 <i class="fas fa-file-image"></i>
                                 Photos</a></li>
@@ -161,11 +164,7 @@ use Illuminate\Support\Facades\Auth;
 
                     <div class="card-body">
                         <div class="tab-content">
-                            <div class="tab-pane active" id="logs">
-                                @include('service_connections.details')
-                            </div>
-
-                            <div class="tab-pane" id="verification">
+                            <div class="tab-pane active" id="verification">
                                 @include('service_connections.verification')
                             </div>
 
@@ -179,6 +178,14 @@ use Illuminate\Support\Facades\Auth;
                             
                             <div class="tab-pane" id="bom">
                                 @include('service_connections.bom_details')
+                            </div>
+
+                            <div class="tab-pane" id="requirements">
+                                @include('service_connections.details')
+                            </div>
+
+                            <div class="tab-pane" id="logs">
+                                @include("service_connections.logs")
                             </div>
 
                             <div class="tab-pane" id="photos">

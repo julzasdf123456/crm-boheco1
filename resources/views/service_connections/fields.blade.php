@@ -282,12 +282,33 @@ use App\Models\IDGenerator;
                         @if ($accountTypes != null)
                             @foreach ($accountTypes as $item)
                             <div class="form-check" style="margin-left: 30px;">
-                                <input class="form-check-input" type="radio" name="AccountType" value="{{ $item->id }}">
+                                <input class="form-check-input" type="radio" name="AccountType" value="{{ $item->id }}" {{ $item->id==$serviceConnections->AccountType ? 'checked' : '' }}>
                                 <label class="form-check-label">{{ $item->AccountType }}</label>
                             </div>
                             @endforeach
                         @endif
                     </div> 
+                </div>
+            </div>
+        </div>  
+    </div>
+
+    
+
+    <!-- Accountapplicationtype Field -->
+    <div class="form-group col-sm-12">
+        <div class="row">
+            <div class="col-lg-3 col-md-5">
+                {!! Form::label('LoadCategory', 'Projected Load') !!} <span class="text-danger"><strong> *</strong></span>
+            </div>
+
+            <div class="col-lg-9 col-md-7"> 
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-code-branch"></i></span>
+                    </div>
+
+                    {!! Form::number('LoadCategory', $serviceConnections->LoadCategory, ['class' => 'form-control form-control-sm','maxlength' => 300,'maxlength' => 300, 'step' => 'any', 'placeholder' => 'Projected load in kVA']) !!}                  
                 </div>
             </div>
         </div>  
@@ -576,7 +597,6 @@ use App\Models\IDGenerator;
     </div> 
 </div>
 
-
 <!-- Isnihe Field -->
 <input type="hidden" name="IsNIHE" value="NO">
 
@@ -604,7 +624,7 @@ use App\Models\IDGenerator;
 
 {{-- OR UPDATING ON ADMINS --}}
 <!-- OR Field -->
-{{-- <div class="form-group col-sm-12">
+<div class="form-group col-sm-12">
     <div class="row">
         <div class="col-lg-3 col-md-5">
             {!! Form::label('ORNumber', 'OR Number') !!}
@@ -619,10 +639,10 @@ use App\Models\IDGenerator;
             </div>
         </div>
     </div> 
-</div> --}}
+</div>
 
 <!-- OR Date Field -->
-{{-- <div class="form-group col-sm-12">
+<div class="form-group col-sm-12">
     <div class="row">
         <div class="col-lg-3 col-md-5">
             {!! Form::label('ORDate', 'Payment Date') !!}
@@ -637,7 +657,7 @@ use App\Models\IDGenerator;
             </div>
         </div>
     </div> 
-</div> --}}
+</div>
 
 @push('page_scripts')
     <script type="text/javascript">

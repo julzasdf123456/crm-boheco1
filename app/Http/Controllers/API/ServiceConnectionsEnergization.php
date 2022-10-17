@@ -184,6 +184,6 @@ class ServiceConnectionsEnergization extends Controller {
             $mastPole->save();
         }
 
-        return response()->json('ok', 200);
+        return response()->json($mastPole, 200);
     }
 }

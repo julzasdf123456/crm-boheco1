@@ -1,7 +1,6 @@
 <?php
-
-use App\Models\IDGenerator;
-
+    use App\Models\IDGenerator;
+    use App\Models\ServiceConnections;
 ?>
 
 @extends('layouts.app')
@@ -18,16 +17,15 @@ use App\Models\IDGenerator;
     </section>
 
     <div class="row">
-        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 col-sm-12">
+        {{-- FORM --}}
+        <div class="col-lg-8">
             <div class="content px-3">
-
-
                 @include('adminlte-templates::common.errors')
 
-                <div class="card">
+                <div class="card shadow-none">
 
                     <div class="card-header">
-                        <span class="card-title">In-office Initial Assessment</span>
+                        <span class="card-title">{{ $serviceConnection->ServiceAccountName }} | {{ ServiceConnections::getAddress($serviceConnection) }}</span>
                     </div>
 
                     {!! Form::open(['route' => 'serviceConnectionInspections.store']) !!}
@@ -55,6 +53,31 @@ use App\Models\IDGenerator;
 
                 </div>
              </div>
+        </div>
+
+        {{-- INSPECTIONS CURRENTLY IN QUEUE --}}
+        <div class="col-lg-4">
+            <div class="card shadow-none">
+                <div class="card-header bg-info">
+                    <span class="card-title"><i class="fas fa-info-circle ico-tab"></i>Verifiers Pending Inspections</span>
+                </div>
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <th>Verifier</th>
+                            <th>No. of Pending Insp.</th>
+                        </thead>
+                        <tbody>
+                            @foreach ($pendingInspections as $item)
+                                <tr>
+                                    <td>{{ $item->name }}</td>
+                                    <td>{{ $item->InspectionCount }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

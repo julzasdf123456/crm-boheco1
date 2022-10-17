@@ -98,7 +98,7 @@ use Illuminate\Support\Facades\Auth;
                     </a>
                 </li>
 
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a href="{{ route('serviceConnections.relocation-search') }}"
                     class="nav-link {{ Request::is('serviceConnections.relocation-search') ? 'active' : '' }}">
                         <i class="fas fa-plus nav-icon text-warning"></i>
@@ -112,7 +112,7 @@ use Illuminate\Support\Facades\Auth;
                         <i class="fas fa-plus nav-icon text-warning"></i>
                         <p>Change Name</p>
                     </a>
-                </li>
+                </li> --}}
             @endcanany
 
             @if (Auth::user()->hasRole('Metering Personnel'))
@@ -359,6 +359,12 @@ use Illuminate\Support\Facades\Auth;
                         <a href="{{ route('tickets.create-select') }}"
                         class="nav-link {{ Request::is('tickets.create-select*') ? 'active' : '' }}">
                             <i class="fas fa-circle nav-icon text-danger"></i><p>Ordinary Ticket</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('tickets.relocation-search') }}"
+                        class="nav-link {{ Request::is('tickets.relocation-search*') ? 'active' : '' }}">
+                            <i class="fas fa-circle nav-icon text-danger"></i><p>Relocation</p>
                         </a>
                     </li>
                     <li class="nav-item">

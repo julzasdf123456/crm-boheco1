@@ -1,7 +1,6 @@
 <?php
-
-use App\Models\IDGenerator;
-
+    use App\Models\IDGenerator;
+    use App\Models\ServiceConnections;
 ?>
 
 @extends('layouts.app')
@@ -18,16 +17,15 @@ use App\Models\IDGenerator;
     </section>
 
     <div class="row">
-        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 col-sm-12">
+        <div class="col-lg-12">
             <div class="content px-3">
-
 
                 @include('adminlte-templates::common.errors')
 
-                <div class="card">
+                <div class="card shadow-none">
 
                     <div class="card-header">
-                        <span class="card-title">Meter, Transformer, and Other Equipment Entry</span>
+                        <span class="card-title"><strong><a href="{{ route('serviceConnections.show', [$serviceConnection->id]) }}">{{ $serviceConnection->ServiceAccountName }}</a></strong> | {{ ServiceConnections::getAddress($serviceConnection) }}</span>
                     </div>
 
                     {!! Form::open(['route' => 'serviceConnectionMtrTrnsfrmrs.store']) !!}

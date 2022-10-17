@@ -1,3 +1,7 @@
+<?php
+    use App\Models\ServiceConnections;
+?>
+
 @if($totalTransactions == null)
     <p class="text-center"><i>No payment transactions recorded!</i></p>
     @if ($serviceConnectionInspections != null)
@@ -14,6 +18,16 @@
 @else
     
 <div class="row">
+    @if ($serviceConnections->ORNumber != null)
+        <div class="col-lg-12">
+            <div class="card bg-success">
+                <div class="card-body">
+                    <span><strong>PAID</strong> - OR Number: <strong>{{ $serviceConnections->ORNumber }}</strong> | Payment Date: <strong>{{ $serviceConnections->ORDate }}</strong></span>
+                </div>
+            </div>
+        </div>
+    @endif
+
     {{-- TOTAL PAYMENT --}}
     <div class="col-lg-6 col-md-12">
         <div class="card" style="height: 36vh;">
@@ -170,14 +184,14 @@
                             <input id="PowerFactor" name="PowerFactor" type="number" step="any" class="form-control form-control-sm text-right" value=".85" disabled>
                         </td>
                         <td>x</td><td>
-                            <input id="DemandFactor" name="DemandFactor" type="number" step="any" class="form-control form-control-sm text-right" value="{{ $billDeposit != null ? $billDeposit->DemandFactor : ServiceConnections::getDemandFactor($serviceConnection->Alias) }}">
+                            <input id="DemandFactor" name="DemandFactor" type="number" step="any" class="form-control form-control-sm text-right" value="{{ $billDeposit != null ? $billDeposit->DemandFactor : '' }}">
                         </td>
                         <td>x</td>
                         <td>
                             <input id="Hours" name="Hours" type="number" step="any" class="form-control form-control-sm text-right" value="720" disabled>
                         </td>
                         <td>x</td><td>
-                            <input id="AverageRate" name="AverageRate" type="number" step="any" class="form-control form-control-sm text-right" value="{{ $billDeposit != null ? $billDeposit->AverageRate : UnbundledRates::getOneYearAverageRate($serviceConnection->Alias) }}" disabled>
+                            <input id="AverageRate" name="AverageRate" type="number" step="any" class="form-control form-control-sm text-right" value="{{ $billDeposit != null ? $billDeposit->AverageRate : '' }}" disabled>
                         </td>
                     </tr>
                 </tbody>

@@ -108,7 +108,7 @@
                                             ->first();
                                     @endphp
                                     <div class='form-check'>
-                                        <input type="checkbox" class='form-check-input' value='{{ $item->id }}' name="ChecklistId[]" {{ $checkListRecord != null ? 'checked' : '' }}>
+                                        <input type="checkbox" class='form-check-input' id="{{ $item->id }}" value='{{ $item->id }}' name="ChecklistId[]" {{ $checkListRecord != null ? 'checked' : '' }}>
                                         
                                         @if ($item->Minimum == 'Yes')
                                             <span class="text-danger"><strong> * </strong></span>
@@ -116,7 +116,7 @@
                                             <span style="opacity: 12%"><strong> * </strong></span>
                                         @endif
 
-                                        {{ Form::label('item', $item->Checklist, ['class' => 'form-check-label']) }}
+                                        {{ Form::label($item->id, $item->Checklist, ['class' => 'form-check-label']) }}
                                     </div>   
                                 @endforeach
                             @endif

@@ -32,8 +32,7 @@ class HomeController extends Controller
     public function fetchUnassignedMeters(Request $request) {
         if ($request->ajax()) {            
             $data = DB::table('CRM_ServiceConnections')
-                    ->whereNotNull('ORNumber')
-                    ->whereNotIn('id', DB::table('CRM_ServiceConnectionMeterAndTransformer')->pluck('ServiceConnectionId'))
+                    ->whereRaw("id NOT IN (SELECT ServiceConnectionId FROM CRM_ServiceConnectionMeterAndTransformer)")
                     ->where(function ($query) {
                         $query->where('Trash', 'No')
                             ->orWhereNull('Trash');
@@ -49,8 +48,8 @@ class HomeController extends Controller
     public function fetchNewServiceConnections(Request $request) {
         if ($request->ajax()) {            
             $data = DB::table('CRM_ServiceConnections')
-                    ->join('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
-                    ->join('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                    ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+                    ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
                     ->where(function($query) {
                         $query->where('CRM_ServiceConnections.Status', "For Inspection")
                             ->orWhere('CRM_ServiceConnections.Status', "For Re-Inspection");
@@ -73,8 +72,8 @@ class HomeController extends Controller
     public function fetchApprovedServiceConnections(Request $request) {
         if ($request->ajax()) {            
             $data = DB::table('CRM_ServiceConnections')
-                    ->join('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
-                    ->join('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                    ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+                    ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
                     ->where('CRM_ServiceConnections.Status', 'Approved')
                     ->whereNull('CRM_ServiceConnections.ORNumber')
                     ->where(function ($query) {

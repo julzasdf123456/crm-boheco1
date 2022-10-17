@@ -19,10 +19,9 @@ class ServiceConnectionInspectionsAPI extends Controller {
         $serviceConnections = DB::table('CRM_ServiceConnectionInspections')
             ->leftJoin('CRM_ServiceConnections', 'CRM_ServiceConnectionInspections.ServiceConnectionId', '=', 'CRM_ServiceConnections.id')
             ->select('CRM_ServiceConnections.*')
-            ->where('CRM_ServiceConnections.Status', "For Inspection")
             ->where(function($query) {
                 $query->where('CRM_ServiceConnections.Status', "For Inspection")
-                    ->orWhere('CRM_ServiceConnections.Status', "For Re-Inspection");
+                    ->orWhere('CRM_ServiceConnections.Status', "Re-Inspection");
             })
             ->where(function ($query) {
                 $query->where('CRM_ServiceConnections.Trash', 'No')
@@ -42,10 +41,9 @@ class ServiceConnectionInspectionsAPI extends Controller {
         $serviceConnections = DB::table('CRM_ServiceConnectionInspections')
             ->leftJoin('CRM_ServiceConnections', 'CRM_ServiceConnectionInspections.ServiceConnectionId', '=', 'CRM_ServiceConnections.id')
             ->select('CRM_ServiceConnectionInspections.*')
-            ->where('CRM_ServiceConnections.Status', "For Inspection")
             ->where(function($query) {
                 $query->where('CRM_ServiceConnections.Status', "For Inspection")
-                    ->orWhere('CRM_ServiceConnections.Status', "For Re-Inspection");
+                    ->orWhere('CRM_ServiceConnections.Status', "Re-Inspection");
             })
             ->where(function ($query) {
                 $query->where('CRM_ServiceConnections.Trash', 'No')
@@ -93,7 +91,7 @@ class ServiceConnectionInspectionsAPI extends Controller {
         $serviceConnectionInspections->Notes = $request['Notes'];
         $serviceConnectionInspections->Inspector = $request['Inspector'];
 
-        $serviceConnections->Status = 'Approved';
+        $serviceConnections->Status = $request['Status'];
 
         if ($serviceConnectionInspections->save()) {
             $serviceConnections->save();
@@ -103,8 +101,13 @@ class ServiceConnectionInspectionsAPI extends Controller {
             $timeFrame->id = IDGenerator::generateID();
             $timeFrame->ServiceConnectionId = $request['ServiceConnectionId'];
             $timeFrame->UserId = $request['Inspector'];
-            $timeFrame->Status = 'Approved';
-            $timeFrame->Notes = 'Inspection approved and is waiting for payment';
+            $timeFrame->Status = $request['Status'];
+            if ($request['Status'] == 'Approved') {
+                $timeFrame->Notes = 'Inspection approved and is waiting for payment';
+            } else {
+                $timeFrame->Notes = 'Application is not approved. ' . $request['Notes'];
+            }
+            
             $timeFrame->save();
 
             return response()->json(['ok' => 'ok'], $this->successStatus);

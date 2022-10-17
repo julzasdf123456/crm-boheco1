@@ -2011,4 +2011,29 @@ class TicketsController extends AppBaseController
 
         return response()->json($output, 200);
     }
+
+    public function relocationSearch(Request $request) {
+        if ($request['params'] == null) {
+            $serviceAccounts = DB::connection('sqlsrvbilling')->table('AccountMaster')
+                        ->select('AccountMaster.*')
+                        ->orderBy('AccountNumber')
+                        ->paginate(20);
+        } else {
+            $serviceAccounts = DB::connection('sqlsrvbilling')->table('AccountMaster')
+                        ->select('AccountMaster.*')
+                        ->where('ConsumerName', 'LIKE', '%' . $request['params'] . '%')
+                        ->orWhere('AccountNumber', 'LIKE', '%' . $request['params'] . '%')
+                        ->orWhere('MeterNumber', 'LIKE', '%' . $request['params'] . '%')
+                        ->orderBy('AccountNumber')
+                        ->paginate(20);
+        }  
+
+        return view('/tickets/relocation_search', [
+            'serviceAccounts' => $serviceAccounts
+        ]);
+    }
+
+    public function createRelocation($accountNo) {
+        
+    }
 }

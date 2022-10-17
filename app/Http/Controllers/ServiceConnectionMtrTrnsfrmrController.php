@@ -196,7 +196,49 @@ class ServiceConnectionMtrTrnsfrmrController extends AppBaseController
     }
 
     public function createStepThree($scId) {
-        $serviceConnection = ServiceConnections::find($scId);
+        $serviceConnection = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+            ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_ServiceConnections.StationCrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+            ->select('CRM_ServiceConnections.id as id',
+                        'CRM_ServiceConnections.AccountCount as AccountCount', 
+                        'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                        'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                        'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                        'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.AccountOrganization as AccountOrganization', 
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.ConnectionApplicationType as ConnectionApplicationType',
+                        'CRM_ServiceConnections.MemberConsumerId as MemberConsumerId',
+                        'CRM_ServiceConnections.Status as Status',  
+                        'CRM_ServiceConnections.Notes as Notes', 
+                        'CRM_ServiceConnections.Office', 
+                        'CRM_ServiceConnections.LongSpan', 
+                        'CRM_ServiceConnections.AccountType AS AccountTypeRaw', 
+                        'CRM_ServiceConnections.ORNumber as ORNumber', 
+                        'CRM_ServiceConnections.Sitio as Sitio', 
+                        'CRM_ServiceConnections.LoadCategory as LoadCategory', 
+                        'CRM_ServiceConnections.DateTimeOfEnergization as DateTimeOfEnergization', 
+                        'CRM_ServiceConnections.DateTimeLinemenArrived as DateTimeLinemenArrived', 
+                        'CRM_Towns.Town as Town',
+                        'CRM_Barangays.Barangay as Barangay',
+                        'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                        'CRM_ServiceConnectionCrew.StationName as StationName',
+                        'CRM_ServiceConnectionCrew.CrewLeader as CrewLeader',
+                        'CRM_ServiceConnectionCrew.Members as Members',
+                        'CRM_ServiceConnections.ElectricianId',
+                        'CRM_ServiceConnections.ElectricianName',
+                        'CRM_ServiceConnections.ElectricianAddress',
+                        'CRM_ServiceConnections.ElectricianContactNo',
+                        'CRM_ServiceConnections.ElectricianAcredited',)
+        ->where('CRM_ServiceConnections.id', $scId)
+        ->where(function ($query) {
+            $query->where('CRM_ServiceConnections.Trash', 'No')
+                ->orWhereNull('CRM_ServiceConnections.Trash');
+        })
+        ->first(); 
 
         $serviceConnectionMtrTrnsfrmr = null;
 
@@ -227,8 +269,7 @@ class ServiceConnectionMtrTrnsfrmrController extends AppBaseController
                                         'CRM_Towns.Town as Town',
                                         'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
                                         'CRM_Barangays.Barangay as Barangay')
-                        ->whereNotNull('CRM_ServiceConnections.ORNumber')
-                        ->whereNotIn('CRM_ServiceConnections.id', DB::table('CRM_ServiceConnectionMeterAndTransformer')->pluck('ServiceConnectionId'))
+                        ->whereRaw("CRM_ServiceConnections.id NOT IN (SELECT ServiceConnectionId FROM CRM_ServiceConnectionMeterAndTransformer)")
                         ->where(function ($query) {
                             $query->where('CRM_ServiceConnections.Trash', 'No')
                                 ->orWhereNull('CRM_ServiceConnections.Trash');

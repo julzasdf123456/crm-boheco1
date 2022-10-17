@@ -196,43 +196,45 @@ class UnbundledRates extends Model
                 $join->on('UnbundledRates.ServicePeriodEnd', '=', 'UnbundledRatesExtension.ServicePeriodEnd'); 
             })
             ->where('UnbundledRates.ConsumerType', $alias)
+            ->whereNotNull('UnbundledRatesExtension.Item12')
             ->select(
-                'UnbundledRatesExtension.Item2',
-                'UnbundledRatesExtension.Item3',
-                'UnbundledRatesExtension.Item4',
-                'UnbundledRatesExtension.Item5',
-                'UnbundledRatesExtension.Item6',
-                'UnbundledRatesExtension.Item7',
-                'UnbundledRatesExtension.Item8',
-                'UnbundledRatesExtension.Item9',
-                'UnbundledRatesExtension.Item10',
-                'UnbundledRatesExtension.Item11',
                 'UnbundledRatesExtension.Item12',
-                'UnbundledRatesExtension.Item13',
-                'UnbundledRates.GenerationSystemCharge',
-                'UnbundledRates.FBHCCharge',
-                'UnbundledRates.FPCAAdjustmentCharge',
-                'UnbundledRates.ForexAdjustmentCharge',
-                'UnbundledRates.TransmissionSystemCharge',
-                'UnbundledRates.DistributionSystemCharge',
-                'UnbundledRates.SupplySystemCharge',
-                'UnbundledRates.MeteringSystemCharge',
-                'UnbundledRates.SystemLossCharge',
-                'UnbundledRates.CrossSubsidyCreditCharge',
-                'UnbundledRates.MissionaryElectrificationCharge',
-                'UnbundledRates.EnvironmentalCharge',
-                'UnbundledRates.LifelineSubsidyCharge',
-                'UnbundledRates.LoanCondonationCharge',
-                'UnbundledRates.MandatoryRateReductionCharge',
-                'UnbundledRates.MCC',
-                'UnbundledRates.PPARefund',
-                'UnbundledRates.SeniorCitizenSubsidyCharge',
-                'UnbundledRates.ACRM_VAT',
-                'UnbundledRates.DAA_VAT',
-                'UnbundledRates.DAA_GRAMCharge',
-                'UnbundledRates.DAA_ICERACharge',
-                'UnbundledRates.ACRM_TAFPPCACharge',
-                'UnbundledRates.ACRM_TAFxACharge'
+                // 'UnbundledRatesExtension.Item2',
+                // 'UnbundledRatesExtension.Item3',
+                // 'UnbundledRatesExtension.Item4',
+                // 'UnbundledRatesExtension.Item5',
+                // 'UnbundledRatesExtension.Item6',
+                // 'UnbundledRatesExtension.Item7',
+                // 'UnbundledRatesExtension.Item8',
+                // 'UnbundledRatesExtension.Item9',
+                // 'UnbundledRatesExtension.Item10',
+                // 'UnbundledRatesExtension.Item11',
+                // 'UnbundledRatesExtension.Item12',
+                // 'UnbundledRatesExtension.Item13',
+                // 'UnbundledRates.GenerationSystemCharge',
+                // 'UnbundledRates.FBHCCharge',
+                // 'UnbundledRates.FPCAAdjustmentCharge',
+                // 'UnbundledRates.ForexAdjustmentCharge',
+                // 'UnbundledRates.TransmissionSystemCharge',
+                // 'UnbundledRates.DistributionSystemCharge',
+                // 'UnbundledRates.SupplySystemCharge',
+                // 'UnbundledRates.MeteringSystemCharge',
+                // 'UnbundledRates.SystemLossCharge',
+                // 'UnbundledRates.CrossSubsidyCreditCharge',
+                // 'UnbundledRates.MissionaryElectrificationCharge',
+                // 'UnbundledRates.EnvironmentalCharge',
+                // 'UnbundledRates.LifelineSubsidyCharge',
+                // 'UnbundledRates.LoanCondonationCharge',
+                // 'UnbundledRates.MandatoryRateReductionCharge',
+                // 'UnbundledRates.MCC',
+                // 'UnbundledRates.PPARefund',
+                // 'UnbundledRates.SeniorCitizenSubsidyCharge',
+                // 'UnbundledRates.ACRM_VAT',
+                // 'UnbundledRates.DAA_VAT',
+                // 'UnbundledRates.DAA_GRAMCharge',
+                // 'UnbundledRates.DAA_ICERACharge',
+                // 'UnbundledRates.ACRM_TAFPPCACharge',
+                // 'UnbundledRates.ACRM_TAFxACharge'
             )
             ->orderByDesc('UnbundledRates.ServicePeriodEnd')
             ->limit(12)
@@ -240,42 +242,42 @@ class UnbundledRates extends Model
 
         $ave = 0;        
         foreach($rates as $item) {
-            $total = floatval($item->Item2) +
-                floatval($item->Item3) +
-                floatval($item->Item4) +
-                floatval($item->Item5) +
-                floatval($item->Item6) +
-                floatval($item->Item7) +
-                // floatval($item->Item8) +
-                floatval($item->Item9) +
-                floatval($item->Item10) +
-                floatval($item->Item11) +
-                floatval($item->Item12) +
-                floatval($item->Item13) +
-                floatval($item->GenerationSystemCharge) +
-                floatval($item->FBHCCharge) +
-                floatval($item->FPCAAdjustmentCharge) +
-                floatval($item->ForexAdjustmentCharge) +
-                floatval($item->TransmissionSystemCharge) +
-                floatval($item->DistributionSystemCharge) +
-                floatval($item->SupplySystemCharge) +
-                floatval($item->MeteringSystemCharge) +
-                floatval($item->SystemLossCharge) +
-                floatval($item->CrossSubsidyCreditCharge) +
-                floatval($item->MissionaryElectrificationCharge) +
-                floatval($item->EnvironmentalCharge) +
-                floatval($item->LifelineSubsidyCharge) +
-                floatval($item->LoanCondonationCharge) +
-                floatval($item->MandatoryRateReductionCharge) +
-                floatval($item->MCC) +
-                floatval($item->PPARefund) +
-                floatval($item->SeniorCitizenSubsidyCharge) +
-                floatval($item->ACRM_VAT) +
-                floatval($item->DAA_VAT) +
-                floatval($item->DAA_GRAMCharge) +
-                floatval($item->DAA_ICERACharge) +
-                floatval($item->ACRM_TAFPPCACharge) +
-                floatval($item->ACRM_TAFxACharge);
+            $total = floatval($item->Item12);
+                // floatval($item->Item3) +
+                // floatval($item->Item4) +
+                // floatval($item->Item5) +
+                // floatval($item->Item6) +
+                // floatval($item->Item7) +
+                // // floatval($item->Item8) +
+                // floatval($item->Item9) +
+                // floatval($item->Item10) +
+                // floatval($item->Item11) +
+                // floatval($item->Item12) +
+                // floatval($item->Item13) +
+                // floatval($item->GenerationSystemCharge) +
+                // floatval($item->FBHCCharge) +
+                // floatval($item->FPCAAdjustmentCharge) +
+                // floatval($item->ForexAdjustmentCharge) +
+                // floatval($item->TransmissionSystemCharge) +
+                // floatval($item->DistributionSystemCharge) +
+                // floatval($item->SupplySystemCharge) +
+                // floatval($item->MeteringSystemCharge) +
+                // floatval($item->SystemLossCharge) +
+                // floatval($item->CrossSubsidyCreditCharge) +
+                // floatval($item->MissionaryElectrificationCharge) +
+                // floatval($item->EnvironmentalCharge) +
+                // floatval($item->LifelineSubsidyCharge) +
+                // floatval($item->LoanCondonationCharge) +
+                // floatval($item->MandatoryRateReductionCharge) +
+                // floatval($item->MCC) +
+                // floatval($item->PPARefund) +
+                // floatval($item->SeniorCitizenSubsidyCharge) +
+                // floatval($item->ACRM_VAT) +
+                // floatval($item->DAA_VAT) +
+                // floatval($item->DAA_GRAMCharge) +
+                // floatval($item->DAA_ICERACharge) +
+                // floatval($item->ACRM_TAFPPCACharge) +
+                // floatval($item->ACRM_TAFxACharge);
 
             $ave += $total;
         }
