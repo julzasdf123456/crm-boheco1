@@ -38,7 +38,7 @@
                         <td>{{ $item->MeterNumber }}</td>
                         <td width="120">
                             <div class='btn-group'>
-                                <a href="{{ route('serviceConnections.create-relocation', [$item->AccountNumber]) }}"
+                                <a href="{{ route('tickets.create-relocation', [$item->AccountNumber]) }}"
                                 class='btn btn-primary btn-xs'>
                                     Relocate
                                 </a>

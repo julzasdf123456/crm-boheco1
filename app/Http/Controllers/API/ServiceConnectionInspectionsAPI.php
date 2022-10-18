@@ -8,6 +8,7 @@ use App\Models\ServiceConnections;
 use App\Models\ServiceConnectionInspections;
 use App\Models\ServiceConnectionTimeframes;
 use App\Models\IDGenerator;
+use App\Models\Tickets;
 use Illuminate\Support\Facades\DB;
 use Validator;
 
@@ -104,6 +105,14 @@ class ServiceConnectionInspectionsAPI extends Controller {
             $timeFrame->Status = $request['Status'];
             if ($request['Status'] == 'Approved') {
                 $timeFrame->Notes = 'Inspection approved and is waiting for payment';
+
+                // UPDATE TICKETS IF INSPECTION
+                $ticket = Tickets::where('InspectionId', $request['id'])->first();
+                if ($ticket != null) {
+                    $ticket->Status = 'For Payment';
+                    $ticket->save();
+                }
+
             } else {
                 $timeFrame->Notes = 'Application is not approved. ' . $request['Notes'];
             }

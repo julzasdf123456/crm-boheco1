@@ -85,7 +85,9 @@ class Tickets extends Model
         'NewMeterBrand',
         'NewMeterReading',
         'ServicePeriod',
-        'PoleNumber'
+        'PoleNumber',
+        'ServiceConnectionId',
+        'InspectionId',
     ];
 
     /**
@@ -127,7 +129,9 @@ class Tickets extends Model
         'NewMeterBrand' => 'string',
         'NewMeterReading' => 'string',
         'ServicePeriod' => 'string',
-        'PoleNumber' => 'string'
+        'PoleNumber' => 'string',
+        'ServiceConnectionId' => 'string',
+        'InspectionId' => 'string',
     ];
 
     /**
@@ -171,7 +175,9 @@ class Tickets extends Model
         'NewMeterBrand' => 'nullable|string',
         'NewMeterReading' => 'nullable|string',
         'ServicePeriod' => 'nullable|string',
-        'PoleNumber' => 'nullable|string'
+        'PoleNumber' => 'nullable|string',
+        'ServiceConnectionId' => 'nullable|string',
+        'InspectionId' => 'nullable|string',
     ];
 
     public static function getAddress($ticket) {

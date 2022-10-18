@@ -17,9 +17,12 @@ use App\Models\TicketLogs;
 use App\Models\IDGenerator;
 use App\Models\Readings;
 use App\Models\ServiceAccounts;
+use App\Models\ServiceConnections;
+use App\Models\ServiceConnectionInspections;
 use App\Models\BillingMeters;
 use App\Models\DisconnectionHistory;
 use App\Models\AccountMaster;
+use App\Models\User;
 use App\Exports\TicketSummaryReportDownloadExport;
 use Illuminate\Support\Facades\Auth;
 use Flash;
@@ -158,7 +161,10 @@ class TicketsController extends AppBaseController
                     'CRM_ServiceConnectionCrew.StationName',
                     'CRM_Tickets.created_at',
                     'CRM_Tickets.updated_at',
-                    'CRM_Tickets.Trash')
+                    'CRM_Tickets.Trash',
+                    'CRM_Tickets.ServiceConnectionId',
+                    'CRM_Tickets.InspectionId',  
+                    )
                 ->first();
 
         $ticketLogs = DB::table('CRM_TicketLogs')
@@ -213,6 +219,12 @@ class TicketsController extends AppBaseController
             $history = null;
         }
 
+        if ($tickets->InspectionId != null) {
+            $inspections = ServiceConnectionInspections::find($tickets->InspectionId);
+        } else {
+            $inspections = null;
+        }
+
         if (empty($tickets)) {
             Flash::error('Tickets not found');
 
@@ -223,6 +235,7 @@ class TicketsController extends AppBaseController
             'tickets' => $tickets, 
             'ticketLogs' => $ticketLogs,
             'history' => $history,
+            'serviceConnectionInspections' => $inspections,
         ]);
     }
 
@@ -556,7 +569,7 @@ class TicketsController extends AppBaseController
         $towns = Towns::orderBy('Town')->pluck('Town', 'id');
 
         // TICKETS MATRIX
-        $parentTickets = DB::table('CRM_TicketsRepository')->whereNull('ParentTicket')->orderBy('Name')->get();
+        $parentTickets = DB::table('CRM_TicketsRepository')->whereNull('ParentTicket')->whereNotIn('id', ['1668541254405', '1668541254392'])->orderBy('Name')->get();
 
         $crew = ServiceConnectionCrew::orderBy('StationName')->pluck('StationName', 'id');
 
@@ -2033,7 +2046,144 @@ class TicketsController extends AppBaseController
         ]);
     }
 
-    public function createRelocation($accountNo) {
+    public function createRelocation($id) {
+        if ($id != null) {
+            $serviceAccount = DB::connection('sqlsrvbilling')
+                ->table('AccountMaster')
+                ->where('AccountNumber', $id)
+                ->select('AccountMaster.*')
+                ->first();
+
+            if ($serviceAccount != null) {
+                $left = AccountMaster::where('Route', $serviceAccount->Route)
+                    ->whereRaw("SequenceNumber < " . $serviceAccount->SequenceNumber)
+                    ->orderByDesc('SequenceNumber')
+                    ->first();
+
+                $right = AccountMaster::where('Route', $serviceAccount->Route)
+                    ->whereRaw("SequenceNumber > " . $serviceAccount->SequenceNumber)
+                    ->orderBy('SequenceNumber')
+                    ->first();
+            } else {
+                $left = null;
+
+                $right = null;
+            }
+        } else {
+            $serviceAccount = null;
+            $left = null;
+            $right = null;
+        }
+
+        $towns = Towns::orderBy('Town')->pluck('Town', 'id');
+
+        // TICKETS MATRIX
+        $parentTickets = DB::table('CRM_TicketsRepository')->whereNull('ParentTicket')->whereIn('id', ['1668541254405', '1668541254392'])->orderBy('Name')->get();
+
+        $crew = ServiceConnectionCrew::orderBy('StationName')->pluck('StationName', 'id');
+
+        $inspectors = User::role('Inspector')->pluck('name', 'id'); // CHANGE PERMISSION TO WHATEVER VERIFIER NAME IS
+
+        $history = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
+                        ->where('CRM_Tickets.AccountNumber', $id)
+                        ->select('CRM_Tickets.ConsumerName', 
+                            'CRM_Tickets.id',
+                            'CRM_Towns.Town',
+                            'CRM_Barangays.Barangay',
+                            'CRM_TicketsRepository.Name',
+                            'CRM_TicketsRepository.ParentTicket',
+                            'CRM_Tickets.created_at',
+                            'CRM_Tickets.Reason',
+                            'CRM_Tickets.Status',)
+                        ->orderByDesc('CRM_Tickets.created_at')
+                        ->get();
+
+        $cond = 'new';
+
+        $tickets = null;
+
+        return view('tickets.create_relocation',   [
+            'serviceAccount' => $serviceAccount,
+            'towns' => $towns,
+            'parentTickets' => $parentTickets,
+            'crew' => $crew,
+            'history' => $history,
+            'cond' => $cond,
+            'left' => $left,
+            'right' => $right,
+            'tickets' => $tickets,
+            'inspectors' => $inspectors,
+        ]);
+    }
+
+    public function storeRelocation(Request $request) {
+        $input = $request->all();
+
+        $scId = IDGenerator::generateID();
+
+        $input['ServiceConnectionId'] = $scId;
+        $input['InspectionId'] = $scId;
+        $input['Status'] = 'For Inspection';
+
+        $tickets = $this->ticketsRepository->create($input);
+
+        // SAVE SERVICE CONNECTION
+        $serviceConnection = new ServiceConnections;
+        $serviceConnection->id = $scId;
+        $serviceConnection->ServiceAccountName = $input['ConsumerName'];
+        $serviceConnection->DateOfApplication = date('Y-m-d');
+        $serviceConnection->Sitio = $input['Sitio'];
+        $serviceConnection->Barangay = $input['Barangay'];
+        $serviceConnection->Town = $input['Town'];
+        $serviceConnection->ConnectionApplicationType = 'Relocation';
+        $serviceConnection->Status = 'For Inspection';
+        $serviceConnection->Office = env('APP_LOCATION');
+        $serviceConnection->save();
+
+        // SAVE INSPECTION
+        $inspections = new ServiceConnectionInspections;
+        $inspections->id = $scId;
+        $inspections->ServiceConnectionId = $scId;
+        $inspections->Status = 'FOR INSPECTION';
+        $inspections->Inspector = $input['Inspector'];
+        $inspections->save();
+
+        // FILTER METER RELATED TICKETS
+        // $ticket = DB::table('CRM_TicketsRepository')
+        //     ->where('id', $tickets->Ticket)
+        //     ->whereIn('ParentTicket', ['1668541254365', '1668541254387', '1668541254387', '1668541254422', '1668541254427']) // Mother Meter, KWH Meter, KWH Meter Transfer, Disconnection, Reconnection
+        //     ->first(); 
+            
+        // if ($ticket != null) {
+            
+        // }
+        // SAVE METER INFO
+        $accountMeterInfo = DB::connection('sqlsrvbilling')
+            ->table('AccountMaster')
+            ->where('AccountNumber', $tickets->AccountNumber)
+            ->select('*')
+            ->first();
         
+        if ($accountMeterInfo != null) {
+            $tickets->CurrentMeterNo = $accountMeterInfo->MeterNumber;
+            // EDIT LATER
+            $tickets->GeoLocation = null;
+            $tickets->save();
+        }
+
+        Flash::success('Tickets saved successfully.');
+
+        // CREATE LOG
+        $ticketLog = new TicketLogs;
+        $ticketLog->id = IDGenerator::generateID();
+        $ticketLog->TicketId = $tickets->id;
+        $ticketLog->Log = "Received";
+        $ticketLog->UserId = Auth::id();
+        $ticketLog->save();
+
+        return redirect(route('tickets.show', [$tickets->id]));
     }
 }

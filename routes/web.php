@@ -363,6 +363,8 @@ Route::get('/tickets/ticket-tally', [App\Http\Controllers\TicketsController::cla
 Route::get('/tickets/get-ticket-tally', [App\Http\Controllers\TicketsController::class, 'getTicketTally'])->name('tickets.get-ticket-tally');
 Route::get('/tickets/get-crew-monitor-data', [App\Http\Controllers\TicketsController::class, 'getCrewMonitorData'])->name('tickets.get-crew-monitor-data');
 Route::get('/tickets/relocation-search', [App\Http\Controllers\TicketsController::class, 'relocationSearch'])->name('tickets.relocation-search');
+Route::get('/tickets/create-relocation/{id}', [App\Http\Controllers\TicketsController::class, 'createRelocation'])->name('tickets.create-relocation');
+Route::post('/tickets/store-relocation', [App\Http\Controllers\TicketsController::class, 'storeRelocation'])->name('tickets.store-relocation');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 

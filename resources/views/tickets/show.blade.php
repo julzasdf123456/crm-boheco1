@@ -26,6 +26,11 @@
                     <li class="nav-item"><a class="nav-link" href="#verification" data-toggle="tab">
                         <i class="fas fa-clipboard-check"></i>
                         Logs</a></li>
+                    @if ($serviceConnectionInspections != null)
+                        <li class="nav-item"><a class="nav-link" href="#inspection" data-toggle="tab">
+                            <i class="fas fa-info-circle"></i>
+                            Inspection Data</a></li>
+                    @endif
                 </ul>
             </div>
             <div class="card-body">
@@ -37,6 +42,12 @@
                     <div class="tab-pane" id="verification">
                         @include('tickets.ticket_logs')
                     </div>
+
+                    @if ($serviceConnectionInspections != null)
+                        <div class="tab-pane" id="inspection">
+                            @include('tickets.inspection_data')
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
