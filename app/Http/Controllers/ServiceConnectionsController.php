@@ -63,10 +63,64 @@ class ServiceConnectionsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $serviceConnections = $this->serviceConnectionsRepository->all();
+        if ($request['params'] == null) {
+            $data = DB::table('CRM_ServiceConnections')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_ServiceConnectionMeterAndTransformer', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId')
+                ->select('CRM_ServiceConnections.id as ConsumerId',
+                                'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                                'CRM_ServiceConnections.Status as Status',
+                                'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                                'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                                'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                                'CRM_ServiceConnections.AccountCount as AccountCount',  
+                                'CRM_ServiceConnections.ConnectionApplicationType',
+                                'CRM_ServiceConnections.Office',
+                                'CRM_ServiceConnections.Sitio as Sitio', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_ServiceConnections.LoadCategory',
+                                'CRM_Barangays.Barangay as Barangay',
+                                'CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber')
+                ->where(function ($query) {
+                                    $query->where('CRM_ServiceConnections.Trash', 'No')
+                                        ->orWhereNull('CRM_ServiceConnections.Trash');
+                                })
+                ->orderByDesc('CRM_ServiceConnections.created_at')
+                ->paginate(16);
+        } else {
+            $data = DB::table('CRM_ServiceConnections')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_ServiceConnectionMeterAndTransformer', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId')
+                ->select('CRM_ServiceConnections.id as ConsumerId',
+                                'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                                'CRM_ServiceConnections.Status as Status',
+                                'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                                'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                                'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                                'CRM_ServiceConnections.AccountCount as AccountCount',  
+                                'CRM_ServiceConnections.ConnectionApplicationType',
+                                'CRM_ServiceConnections.Office',
+                                'CRM_ServiceConnections.Sitio as Sitio', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_ServiceConnections.LoadCategory',
+                                'CRM_Barangays.Barangay as Barangay',
+                                'CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber')
+                ->where(function ($query) {
+                                    $query->where('CRM_ServiceConnections.Trash', 'No')
+                                        ->orWhereNull('CRM_ServiceConnections.Trash');
+                                })
+                ->where('CRM_ServiceConnections.ServiceAccountName', 'LIKE', '%' . $request['params'] . '%')
+                ->orWhere('CRM_ServiceConnections.Id', 'LIKE', '%' . $request['params'] . '%')
+                ->orWhere('CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber', 'LIKE', '%' . $request['params'] . '%')
+                ->orderBy('CRM_ServiceConnections.ServiceAccountName')
+                ->paginate(16);
+        }
 
-        return view('service_connections.index')
-            ->with('serviceConnections', $serviceConnections);
+        return view('/service_connections/search_applications', [
+            'data' => $data
+        ]);
     }
 
     public function dashboard() {
@@ -1439,10 +1493,10 @@ class ServiceConnectionsController extends AppBaseController
 
     public function quotationSummary($scId) {
         $serviceConnection = DB::table('CRM_ServiceConnections')
-            ->join('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
-            ->join('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
             ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
-            ->join('CRM_ServiceConnectionCrew', 'CRM_ServiceConnections.StationCrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+            ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_ServiceConnections.StationCrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
             ->select('CRM_ServiceConnections.id as id',
                         'CRM_ServiceConnections.AccountCount as AccountCount', 
                         'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
@@ -1534,7 +1588,7 @@ class ServiceConnectionsController extends AppBaseController
             $billOfMaterialsSummary->TransformerLaborCostPercentage = '0.035';
             $billOfMaterialsSummary->MaterialLaborCostPercentage = '0.35';
             $billOfMaterialsSummary->HandlingCostPercentage = '0.30';
-            $billOfMaterialsSummary->MonthDuration = $serviceConnection->TemporaryDurationInMonths;
+            $billOfMaterialsSummary->MonthDuration = $serviceConnection != null && $serviceConnection->TemporaryDurationInMonths != null ? $serviceConnection->TemporaryDurationInMonths : '';
 
             // CALCULATE SUB-TOTAL
             $subTtl = 0.0;

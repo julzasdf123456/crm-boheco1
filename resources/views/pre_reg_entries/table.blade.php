@@ -23,10 +23,11 @@
                            class='btn btn-primary btn-xs'>
                             <i class="far fa-eye ico-tab-mini"></i>View
                         </a>
-                        {{-- <a href="{{ route('preRegEntries.edit', [$item->Id]) }}"
-                           class='btn btn-default btn-xs'>
-                            <i class="far fa-edit"></i>
+                        <a href="{{ route('preRegEntries.edit', [$item->Id]) }}"
+                           class='btn btn-danger btn-xs'>
+                            <i class="far fa-edit"></i> Edit
                         </a>
+                        {{-- 
                         {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!} --}}
                     </div>
                     {!! Form::close() !!}

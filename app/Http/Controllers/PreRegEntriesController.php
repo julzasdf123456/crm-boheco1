@@ -128,7 +128,7 @@ class PreRegEntriesController extends AppBaseController
      */
     public function update($id, UpdatePreRegEntriesRequest $request)
     {
-        $preRegEntries = $this->preRegEntriesRepository->find($id);
+        $preRegEntries = PreRegEntries::find($id);
 
         if (empty($preRegEntries)) {
             Flash::error('Pre Reg Entries not found');
@@ -136,7 +136,7 @@ class PreRegEntriesController extends AppBaseController
             return redirect(route('preRegEntries.index'));
         }
 
-        $preRegEntries = $this->preRegEntriesRepository->update($request->all(), $id);
+        $preRegEntries = PreRegEntries::where('Id', $id)->update(['ContactNumber' => $request['ContactNumber'], 'Email' => $request['Email']]);
 
         Flash::success('Pre Reg Entries updated successfully.');
 

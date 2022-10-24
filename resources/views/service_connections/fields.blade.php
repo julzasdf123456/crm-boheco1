@@ -120,7 +120,7 @@ use App\Models\IDGenerator;
                             @foreach ($accountTypes as $item)
                             <div class="form-check" style="margin-left: 30px;">
                                 <input class="form-check-input" type="radio" name="AccountType" value="{{ $item->id }}" {{ $item->AccountType=='RESIDENTIAL' ? 'checked' : '' }}>
-                                <label class="form-check-label">{{ $item->AccountType }}</label>
+                                <label class="form-check-label">{{ $item->AccountType }} ({{ $item->Alias }})</label>
                             </div>
                             @endforeach
                         @endif
@@ -283,7 +283,7 @@ use App\Models\IDGenerator;
                             @foreach ($accountTypes as $item)
                             <div class="form-check" style="margin-left: 30px;">
                                 <input class="form-check-input" type="radio" name="AccountType" value="{{ $item->id }}" {{ $item->id==$serviceConnections->AccountType ? 'checked' : '' }}>
-                                <label class="form-check-label">{{ $item->AccountType }}</label>
+                                <label class="form-check-label">{{ $item->AccountType }} ({{ $item->Alias }})</label>
                             </div>
                             @endforeach
                         @endif

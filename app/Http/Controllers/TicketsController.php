@@ -2186,4 +2186,40 @@ class TicketsController extends AppBaseController
 
         return redirect(route('tickets.show', [$tickets->id]));
     }
+
+    public function crewFieldMonitor() {
+        $parentTickets = DB::table('CRM_TicketsRepository')->whereNull('ParentTicket')->whereNotIn('id', ['1668541254405', '1668541254392'])->orderBy('Name')->get();
+
+        $crew = ServiceConnectionCrew::orderBy('StationName')->get();
+
+        $status = DB::table('CRM_Tickets')
+            ->whereRaw("Status NOT IN ('Executed', 'For Payment', 'For Inspection')")
+            ->select('Status')
+            ->groupBy('Status')
+            ->orderByDesc('Status')
+            ->get();
+
+        return view('/tickets/crew_field_monitor', [
+            'parentTickets' => $parentTickets,
+            'crew' => $crew,
+            'status' => $status
+        ]);
+    }
+
+    public function getCrewFieldMonitorData(Request $request) {
+        $ticket = $request['Ticket'];
+        $status = $request['Status'];
+        $crew = $request['Crew'];
+
+        if ($ticket == 'All') {
+            if ($crew == 'All') {
+                $data = DB::table('CRM_Tickets') 
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                    ->where('Status', $status)
+                    ->get();
+            }
+        } else {
+
+        }
+    }
 }

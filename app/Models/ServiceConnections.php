@@ -274,4 +274,46 @@ class ServiceConnections extends Model
             return .30;
         }
     }
+
+    public static function getBgStatus($status) {
+        if ($status=='Energized' | $status=='Closed') {
+            return 'bg-success';
+        } elseif ($status=='For Inspection') {
+            return 'bg-warning';
+        } elseif ($status=='Approved' | $status=='Downloaded by Crew') {
+            return 'bg-info';
+        } elseif($status=='For Transformer and Pole Assigning' | $status=='Forwarded To Planning') {
+            return 'bg-primary';
+        } else {
+            return 'bg-danger';
+        }
+    }
+
+    public static function getProgressStatus($status) {
+        if ($status=='For Inspection' || $status=='Re-Inspection') {
+            return 14.28;
+        } elseif ($status=='Approved') {
+            return 28.56;
+        } elseif($status=='Forwarded To Planning') {
+            return 42.84;
+        } elseif($status=='For Transformer and Pole Assigning') {
+            return 57.12;
+        } elseif ($status=='Downloaded by Crew') {
+            return 71.4;
+        } elseif($status=='Energized') {
+            return 85.68;
+        } elseif($status=='Closed') {
+            return 100;
+        }
+    }
+
+    public static function getOfficeBg($office) {
+        if ($office == 'MAIN OFFICE') {
+            return 'bg-primary';
+        } elseif ($office == 'SUB-OFFICE') {
+            return 'bg-danger';
+        } else {
+            return 'bg-info';
+        }
+    }
 }

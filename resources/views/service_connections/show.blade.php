@@ -11,21 +11,12 @@ use Illuminate\Support\Facades\Auth;
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    {{-- @if (empty($timeFrame) | $timeFrame == null)
-                        <span><i>Timeframe not recorded</i></span>
-                    @else
-                        <span class="badge-lg bg-warning"><strong>{{ $timeFrame->first()==null ? 'Timeframe not recorded' : $timeFrame->first()->Status; }}</strong></span>
-                    @endif --}}
-                    
-                    <span class="badge-lg bg-warning"><strong>{{ $serviceConnections->Status }}</strong></span>
+                <div class="col-sm-12">  
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar progress-bar-striped {{ ServiceConnections::getBgStatus($serviceConnections->Status) }}" role="progressbar" style="width: {{ ServiceConnections::getProgressStatus($serviceConnections->Status) }}%" aria-valuenow="{{ ServiceConnections::getProgressStatus($serviceConnections->Status) }}" aria-valuemin="0" aria-valuemax="10"></div>
+                    </div>                  
+                    <span class="badge {{ ServiceConnections::getBgStatus($serviceConnections->Status) }}"><strong>{{ $serviceConnections->Status }}</strong></span>
                 </div> 
-                <div class="col-sm-6">
-                    <a class="btn btn-default float-right"
-                       href="{{ route('serviceConnections.index') }}">
-                        Back
-                    </a>
-                </div>
             </div>
         </div>
     </section>
@@ -34,7 +25,7 @@ use Illuminate\Support\Facades\Auth;
         <div class="row">
             <div class="col-md-4 col-lg-4">
                 {{-- APPLICATON DETAILS --}}
-                <div class="card {{ $serviceConnections->LoadCategory == 'above 5kVa' ? 'card-danger' : 'card-primary' }} card-outline shadow-none">
+                <div class="card {{ is_numeric($serviceConnections->LoadCategory) && floatval($serviceConnections->LoadCategory) >= 15 ? 'card-danger' : 'card-primary' }} card-outline shadow-none">
                     <div class="card-body box-profile">
                         <div class="text-center">
                             <img id="prof-img" class="profile-user-img img-fluid img-circle" src="" alt="User profile picture">
@@ -145,7 +136,7 @@ use Illuminate\Support\Facades\Auth;
                             <li class="nav-item"><a class="nav-link" href="#invoice" data-toggle="tab">
                                 <i class="fas fa-file-invoice-dollar"></i>
                                 Payment Invoice</a></li>
-                            @if ($serviceConnections->LoadCategory == 'above 5kVa' | $serviceConnections->LongSpan == 'Yes')
+                            @if (is_numeric($serviceConnections->LoadCategory) && floatval($serviceConnections->LoadCategory) >= 15)
                             <li class="nav-item"><a class="nav-link" href="#bom" data-toggle="tab">
                                 <i class="fas fa-toolbox"></i>
                                 Bill of Materials</a></li>

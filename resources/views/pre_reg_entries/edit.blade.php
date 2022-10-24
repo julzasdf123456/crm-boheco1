@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::model($preRegEntries, ['route' => ['preRegEntries.update', $preRegEntries->id], 'method' => 'patch']) !!}
+            {!! Form::model($preRegEntries, ['route' => ['preRegEntries.update', $preRegEntries->Id], 'method' => 'patch']) !!}
 
             <div class="card-body">
                 <div class="row">

@@ -237,6 +237,7 @@
 
             $('#lineApply').on('click', function(e) {
                 assessLines();
+                console.log(lines)
                 
                 if (lines.length > 0) {
                     $.ajax({

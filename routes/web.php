@@ -365,6 +365,7 @@ Route::get('/tickets/get-crew-monitor-data', [App\Http\Controllers\TicketsContro
 Route::get('/tickets/relocation-search', [App\Http\Controllers\TicketsController::class, 'relocationSearch'])->name('tickets.relocation-search');
 Route::get('/tickets/create-relocation/{id}', [App\Http\Controllers\TicketsController::class, 'createRelocation'])->name('tickets.create-relocation');
 Route::post('/tickets/store-relocation', [App\Http\Controllers\TicketsController::class, 'storeRelocation'])->name('tickets.store-relocation');
+Route::get('/tickets/crew-field-monitor', [App\Http\Controllers\TicketsController::class, 'crewFieldMonitor'])->name('tickets.crew-field-monitor');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 
