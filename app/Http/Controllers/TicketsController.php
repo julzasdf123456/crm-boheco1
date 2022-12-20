@@ -101,7 +101,7 @@ class TicketsController extends AppBaseController
         if ($accountMeterInfo != null) {
             $tickets->CurrentMeterNo = $accountMeterInfo->MeterNumber;
             // EDIT LATER
-            $tickets->GeoLocation = null;
+            $tickets->GeoLocation = $accountMeterInfo->Item1;
             $tickets->save();
         }
 
@@ -2170,7 +2170,7 @@ class TicketsController extends AppBaseController
         if ($accountMeterInfo != null) {
             $tickets->CurrentMeterNo = $accountMeterInfo->MeterNumber;
             // EDIT LATER
-            $tickets->GeoLocation = null;
+            $tickets->GeoLocation = $accountMeterInfo->Item1;
             $tickets->save();
         }
 
@@ -2215,11 +2215,79 @@ class TicketsController extends AppBaseController
             if ($crew == 'All') {
                 $data = DB::table('CRM_Tickets') 
                     ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->where('Status', $status)
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->where('CRM_Tickets.Status', $status)
+                    ->select('CRM_TicketsRepository.Name',
+                        'CRM_Tickets.id',
+                        'CRM_Tickets.ConsumerName',
+                        'CRM_ServiceConnectionCrew.StationName',
+                        'CRM_Tickets.created_at',
+                        'CRM_Tickets.GeoLocation'
+                    )
+                    ->orderByDesc('CRM_Tickets.created_at')
+                    ->get();
+            } else {
+                $data = DB::table('CRM_Tickets') 
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->where('CRM_Tickets.Status', $status)
+                    ->where('CRM_Tickets.CrewAssigned', $crew)
+                    ->select('CRM_TicketsRepository.Name',
+                        'CRM_Tickets.id',
+                        'CRM_Tickets.ConsumerName',
+                        'CRM_ServiceConnectionCrew.StationName',
+                        'CRM_Tickets.created_at',
+                        'CRM_Tickets.GeoLocation'
+                    )
+                    ->orderByDesc('CRM_Tickets.created_at')
                     ->get();
             }
         } else {
-
+            if ($crew == 'All') {
+                $data = DB::table('CRM_Tickets') 
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->where('CRM_Tickets.Status', $status)
+                    ->where('CRM_Tickets.Ticket', $ticket)
+                    ->select('CRM_TicketsRepository.Name',
+                        'CRM_Tickets.id',
+                        'CRM_Tickets.ConsumerName',
+                        'CRM_ServiceConnectionCrew.StationName',
+                        'CRM_Tickets.created_at',
+                        'CRM_Tickets.GeoLocation'
+                    )
+                    ->orderByDesc('CRM_Tickets.created_at')
+                    ->get();
+            } else {
+                $data = DB::table('CRM_Tickets') 
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->where('CRM_Tickets.Status', $status)
+                    ->where('CRM_Tickets.CrewAssigned', $crew)
+                    ->where('CRM_Tickets.Ticket', $ticket)
+                    ->select('CRM_TicketsRepository.Name',
+                        'CRM_Tickets.id',
+                        'CRM_Tickets.ConsumerName',
+                        'CRM_ServiceConnectionCrew.StationName',
+                        'CRM_Tickets.created_at',
+                        'CRM_Tickets.GeoLocation'
+                    )
+                    ->orderByDesc('CRM_Tickets.created_at')
+                    ->get();
+            }
         }
+
+        // $output = "";
+        // foreach($data as $item) {
+        //     $output .= "<tr>
+        //                     <td>
+        //                         (<span><a href='" . route('tickets.show', [$item->id]) . "'>" . $item->id . "</a></span>) <strong>" . $item->Name . "</strong><br>
+        //                         <span>" . $item->ConsumerName . "</span><br>
+        //                         <span>Crew: <strong>" . $item->StationName . "</strong></span><br>
+        //                     </td>
+        //                 </tr>";
+        // }
+
+        return response()->json($data, 200);
     }
 }

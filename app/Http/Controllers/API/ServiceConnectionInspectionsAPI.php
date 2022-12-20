@@ -9,6 +9,9 @@ use App\Models\ServiceConnectionInspections;
 use App\Models\ServiceConnectionTimeframes;
 use App\Models\IDGenerator;
 use App\Models\Tickets;
+use App\Models\TicketLogs;
+use App\Models\ServiceConnectionPayTransaction;
+use App\Models\ServiceConnectionTotalPayments;
 use Illuminate\Support\Facades\DB;
 use Validator;
 
@@ -103,18 +106,56 @@ class ServiceConnectionInspectionsAPI extends Controller {
             $timeFrame->ServiceConnectionId = $request['ServiceConnectionId'];
             $timeFrame->UserId = $request['Inspector'];
             $timeFrame->Status = $request['Status'];
+
+            // UPDATE TICKETS IF INSPECTION
+            $ticket = Tickets::where('InspectionId', $request['id'])->first();
             if ($request['Status'] == 'Approved') {
                 $timeFrame->Notes = 'Inspection approved and is waiting for payment';
-
-                // UPDATE TICKETS IF INSPECTION
-                $ticket = Tickets::where('InspectionId', $request['id'])->first();
+                
                 if ($ticket != null) {
                     $ticket->Status = 'For Payment';
                     $ticket->save();
-                }
 
+                    // CREATE LOG
+                    $ticketLog = new TicketLogs;
+                    $ticketLog->id = IDGenerator::generateID();
+                    $ticketLog->TicketId = $ticket->id;
+                    $ticketLog->Log = "Inspection Performed";
+                    $ticketLog->LogDetails = 'Inspection approved and is waiting for payment';
+                    $ticketLog->UserId = $request['Inspector'];
+                    $ticketLog->save();
+
+                    // CREATE PAYMENT IF RELOCATION
+                    $trans = new ServiceConnectionPayTransaction;
+                    $trans->id = IDGenerator::generateIDandRandString();
+                    $trans->ServiceConnectionId = $serviceConnections->id;
+                    $trans->Particular = '1666677846332';
+                    $trans->Amount = '15';
+                    $trans->Vat = '1.18';
+                    $trans->Total = '16.18';
+                    $trans->save();
+
+                    $ttl = new ServiceConnectionTotalPayments;
+                    $ttl->id = IDGenerator::generateIDandRandString();
+                    $ttl->ServiceConnectionId = $serviceConnections->id;
+                    $ttl->SubTotal = '15';
+                    $ttl->TotalVat = '1.18';
+                    $ttl->Total = '16.18';
+                    $ttl->save();
+                }
             } else {
                 $timeFrame->Notes = 'Application is not approved. ' . $request['Notes'];
+
+                if ($ticket != null) {
+                    // CREATE LOG
+                    $ticketLog = new TicketLogs;
+                    $ticketLog->id = IDGenerator::generateID();
+                    $ticketLog->TicketId = $ticket->id;
+                    $ticketLog->Log = "Inspection Performed";
+                    $ticketLog->LogDetails = 'Inspection disapproved because of: ' . $request['Notes'];
+                    $ticketLog->UserId = $request['Inspector'];
+                    $ticketLog->save();
+                }
             }
             
             $timeFrame->save();
