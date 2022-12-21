@@ -29,6 +29,7 @@
 
                         <div class="row">
                             <input type="hidden" name="Id" id="Membership_Id" value="{{ IDGenerator::generateID() }}">
+                            <input type="hidden" name="Office" id="Office" value="{{ env('APP_LOCATION') }}">
                             @include('member_consumers.fields')
                         </div>
 

@@ -16,7 +16,9 @@ use App\Models\MemberConsumerChecklistsRep;
 use App\Models\TransactionDetails;
 use App\Models\TransactionIndex;
 use App\Models\ServiceConnections;
+use App\Exports\DynamicExport;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 use Flash;
 use Response;
@@ -534,5 +536,448 @@ class MemberConsumersController extends AppBaseController
         return view('/member_consumers/print_certificate', [
             'memberConsumer' => $memberConsumers
         ]);
+    }
+
+    public function monthlyReports(Request $request) {
+        $town = isset($request['Town']) ? $request['Town'] : '';
+        $month = isset($request['Month']) ? $request['Month'] : '01';
+        $year = isset($request['Year']) ? $request['Year'] : '1970';
+        $office = $request['Office'];
+
+        $from = $year . '-' . $month . '-01';
+        $to = date('Y-m-d', strtotime('last day of ' . $from));
+
+        if ($town == 'All') {
+            if  ($office == 'All') {
+                $data = DB::table('CRM_MemberConsumers')
+                    ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                    ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                    ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                    ->leftJoin('CRM_MemberConsumerSpouse', 'CRM_MemberConsumerSpouse.MemberConsumerId', '=', 'CRM_MemberConsumers.Id')
+                    ->select('CRM_MemberConsumers.Id',
+                                    'CRM_MemberConsumers.MembershipType',
+                                    'CRM_MemberConsumers.FirstName', 
+                                    'CRM_MemberConsumers.MiddleName', 
+                                    'CRM_MemberConsumers.LastName', 
+                                    'CRM_MemberConsumers.OrganizationName', 
+                                    'CRM_MemberConsumers.Suffix', 
+                                    'CRM_MemberConsumers.DateApplied', 
+                                    'CRM_MemberConsumers.Sitio', 
+                                    'CRM_MemberConsumerTypes.Type',
+                                    'CRM_Towns.Town',
+                                    'CRM_Barangays.Barangay',
+                                    'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.LastName AS SpouseLastName', 
+                                    'CRM_MemberConsumerSpouse.Suffix AS SpouseSuffix')
+                    ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "')")
+                    ->orderBy('CRM_MemberConsumers.DateApplied')
+                    ->orderBy('CRM_MemberConsumers.LastName')
+                    ->get();
+            } else {
+                $data = DB::table('CRM_MemberConsumers')
+                    ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                    ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                    ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                    ->leftJoin('CRM_MemberConsumerSpouse', 'CRM_MemberConsumerSpouse.MemberConsumerId', '=', 'CRM_MemberConsumers.Id')
+                    ->select('CRM_MemberConsumers.Id',
+                                    'CRM_MemberConsumers.MembershipType',
+                                    'CRM_MemberConsumers.FirstName', 
+                                    'CRM_MemberConsumers.MiddleName', 
+                                    'CRM_MemberConsumers.LastName', 
+                                    'CRM_MemberConsumers.OrganizationName', 
+                                    'CRM_MemberConsumers.Suffix', 
+                                    'CRM_MemberConsumers.DateApplied', 
+                                    'CRM_MemberConsumers.Sitio', 
+                                    'CRM_MemberConsumerTypes.Type',
+                                    'CRM_Towns.Town',
+                                    'CRM_Barangays.Barangay',
+                                    'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
+                    ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND Office='" . $office . "'")
+                    ->orderBy('CRM_MemberConsumers.DateApplied')
+                    ->orderBy('CRM_MemberConsumers.LastName')
+                    ->get();
+            }
+        } else {
+            if  ($office == 'All') {
+                $data = DB::table('CRM_MemberConsumers')
+                    ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                    ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                    ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                    ->leftJoin('CRM_MemberConsumerSpouse', 'CRM_MemberConsumerSpouse.MemberConsumerId', '=', 'CRM_MemberConsumers.Id')
+                    ->select('CRM_MemberConsumers.Id',
+                                    'CRM_MemberConsumers.MembershipType',
+                                    'CRM_MemberConsumers.FirstName', 
+                                    'CRM_MemberConsumers.MiddleName', 
+                                    'CRM_MemberConsumers.LastName', 
+                                    'CRM_MemberConsumers.OrganizationName', 
+                                    'CRM_MemberConsumers.Suffix', 
+                                    'CRM_MemberConsumers.DateApplied', 
+                                    'CRM_MemberConsumers.Sitio', 
+                                    'CRM_MemberConsumerTypes.Type',
+                                    'CRM_Towns.Town',
+                                    'CRM_Barangays.Barangay',
+                                    'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
+                    ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_MemberConsumers.Town='" . $town . "'")
+                    ->orderBy('CRM_MemberConsumers.DateApplied')
+                    ->orderBy('CRM_MemberConsumers.LastName')
+                    ->get();
+            } else {
+                $data = DB::table('CRM_MemberConsumers')
+                    ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                    ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                    ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                    ->leftJoin('CRM_MemberConsumerSpouse', 'CRM_MemberConsumerSpouse.MemberConsumerId', '=', 'CRM_MemberConsumers.Id')
+                    ->select('CRM_MemberConsumers.Id',
+                                    'CRM_MemberConsumers.MembershipType',
+                                    'CRM_MemberConsumers.FirstName', 
+                                    'CRM_MemberConsumers.MiddleName', 
+                                    'CRM_MemberConsumers.LastName', 
+                                    'CRM_MemberConsumers.OrganizationName', 
+                                    'CRM_MemberConsumers.Suffix', 
+                                    'CRM_MemberConsumers.DateApplied', 
+                                    'CRM_MemberConsumers.Sitio', 
+                                    'CRM_MemberConsumerTypes.Type',
+                                    'CRM_Towns.Town',
+                                    'CRM_Barangays.Barangay',
+                                    'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
+                    ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND Office='" . $office . "' AND CRM_MemberConsumers.Town='" . $town . "'")
+                    ->orderBy('CRM_MemberConsumers.DateApplied')
+                    ->orderBy('CRM_MemberConsumers.LastName')
+                    ->get();
+            }
+        }
+
+        return view('/member_consumers/monthly_reports', [
+            'towns' => Towns::orderBy('Town')->get(),
+            'data' => $data,
+        ]);
+    }
+
+    public function downloadMonthlyReports($town, $month, $year, $office) {
+        $from = $year . '-' . $month . '-01';
+        $to = date('Y-m-d', strtotime('last day of ' . $from));
+
+        if ($town == 'All') {
+            if  ($office == 'All') {
+                $data = DB::table('CRM_MemberConsumers')
+                    ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                    ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                    ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                    ->leftJoin('CRM_MemberConsumerSpouse', 'CRM_MemberConsumerSpouse.MemberConsumerId', '=', 'CRM_MemberConsumers.Id')
+                    ->select('CRM_MemberConsumers.Id',
+                                    'CRM_MemberConsumers.MembershipType',
+                                    'CRM_MemberConsumers.FirstName', 
+                                    'CRM_MemberConsumers.MiddleName', 
+                                    'CRM_MemberConsumers.LastName', 
+                                    'CRM_MemberConsumers.OrganizationName', 
+                                    'CRM_MemberConsumers.Suffix', 
+                                    'CRM_MemberConsumers.DateApplied', 
+                                    'CRM_MemberConsumers.Sitio', 
+                                    'CRM_MemberConsumerTypes.Type',
+                                    'CRM_Towns.Town',
+                                    'CRM_Barangays.Barangay',
+                                    'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.LastName AS SpouseLastName', 
+                                    'CRM_MemberConsumerSpouse.Suffix AS SpouseSuffix')
+                    ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "')")
+                    ->orderBy('CRM_MemberConsumers.DateApplied')
+                    ->orderBy('CRM_MemberConsumers.LastName')
+                    ->get();
+            } else {
+                $data = DB::table('CRM_MemberConsumers')
+                    ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                    ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                    ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                    ->leftJoin('CRM_MemberConsumerSpouse', 'CRM_MemberConsumerSpouse.MemberConsumerId', '=', 'CRM_MemberConsumers.Id')
+                    ->select('CRM_MemberConsumers.Id',
+                                    'CRM_MemberConsumers.MembershipType',
+                                    'CRM_MemberConsumers.FirstName', 
+                                    'CRM_MemberConsumers.MiddleName', 
+                                    'CRM_MemberConsumers.LastName', 
+                                    'CRM_MemberConsumers.OrganizationName', 
+                                    'CRM_MemberConsumers.Suffix', 
+                                    'CRM_MemberConsumers.DateApplied', 
+                                    'CRM_MemberConsumers.Sitio', 
+                                    'CRM_MemberConsumerTypes.Type',
+                                    'CRM_Towns.Town',
+                                    'CRM_Barangays.Barangay',
+                                    'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
+                    ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND Office='" . $office . "'")
+                    ->orderBy('CRM_MemberConsumers.DateApplied')
+                    ->orderBy('CRM_MemberConsumers.LastName')
+                    ->get();
+            }
+        } else {
+            if  ($office == 'All') {
+                $data = DB::table('CRM_MemberConsumers')
+                    ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                    ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                    ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                    ->leftJoin('CRM_MemberConsumerSpouse', 'CRM_MemberConsumerSpouse.MemberConsumerId', '=', 'CRM_MemberConsumers.Id')
+                    ->select('CRM_MemberConsumers.Id',
+                                    'CRM_MemberConsumers.MembershipType',
+                                    'CRM_MemberConsumers.FirstName', 
+                                    'CRM_MemberConsumers.MiddleName', 
+                                    'CRM_MemberConsumers.LastName', 
+                                    'CRM_MemberConsumers.OrganizationName', 
+                                    'CRM_MemberConsumers.Suffix', 
+                                    'CRM_MemberConsumers.DateApplied', 
+                                    'CRM_MemberConsumers.Sitio', 
+                                    'CRM_MemberConsumerTypes.Type',
+                                    'CRM_Towns.Town',
+                                    'CRM_Barangays.Barangay',
+                                    'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
+                    ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_MemberConsumers.Town='" . $town . "'")
+                    ->orderBy('CRM_MemberConsumers.DateApplied')
+                    ->orderBy('CRM_MemberConsumers.LastName')
+                    ->get();
+            } else {
+                $data = DB::table('CRM_MemberConsumers')
+                    ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                    ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                    ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                    ->leftJoin('CRM_MemberConsumerSpouse', 'CRM_MemberConsumerSpouse.MemberConsumerId', '=', 'CRM_MemberConsumers.Id')
+                    ->select('CRM_MemberConsumers.Id',
+                                    'CRM_MemberConsumers.MembershipType',
+                                    'CRM_MemberConsumers.FirstName', 
+                                    'CRM_MemberConsumers.MiddleName', 
+                                    'CRM_MemberConsumers.LastName', 
+                                    'CRM_MemberConsumers.OrganizationName', 
+                                    'CRM_MemberConsumers.Suffix', 
+                                    'CRM_MemberConsumers.DateApplied', 
+                                    'CRM_MemberConsumers.Sitio', 
+                                    'CRM_MemberConsumerTypes.Type',
+                                    'CRM_Towns.Town',
+                                    'CRM_Barangays.Barangay',
+                                    'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
+                                    'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
+                    ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND Office='" . $office . "' AND CRM_MemberConsumers.Town='" . $town . "'")
+                    ->orderBy('CRM_MemberConsumers.DateApplied')
+                    ->orderBy('CRM_MemberConsumers.LastName')
+                    ->get();
+            }
+        }
+
+        $arr = [];
+        $i=1;
+        foreach ($data as $item) {
+            array_push($arr, [
+                'No' => $i,
+                'id' => $item->Id,
+                'ApplicantName' => strtoupper(MemberConsumers::serializeMemberNameFormal($item)),
+                'Spouse' => strtoupper(MemberConsumers::serializeSpouseDeclared($item)),
+                'Address' => strtoupper(MemberConsumers::getAddress($item)),
+                'Category' => strtoupper($item->Type),
+                'DateApplied' => date('M d, Y', strtotime($item->DateApplied)),
+            ]);
+            $i++;
+        }
+
+        $headers = [
+            '#',
+            'ID',
+            'Applicant Name',
+            'Applicant Spouse',
+            'Address',
+            'Category',
+            'Date Applied'
+        ];
+
+        $export = new DynamicExport($arr, $headers, null, 'Membership Report for ' . date('F Y', strtotime($from)));
+
+        return Excel::download($export, 'Monthly-Membership-Report.xlsx');
+    }
+
+    public function quarterlyReports(Request $request) {
+        $town = isset($request['Town']) ? $request['Town'] : '';
+        $quarter = isset($request['Quarter']) ? $request['Quarter'] : '01';
+        $year = isset($request['Year']) ? $request['Year'] : '1970';
+
+        if ($quarter != null && $year != null) {
+            if ($quarter == '01') {
+                $from = $year . '-01-01';
+                $to = date('Y-m-d', strtotime('last day of March ' . $year));
+            } elseif ($quarter == '02') {
+                $from = $year . '-04-01';
+                $to = date('Y-m-d', strtotime('last day of June ' . $year));
+            } elseif ($quarter == '03') {
+                $from = $year . '-07-01';
+                $to = date('Y-m-d', strtotime('last day of September ' . $year));
+            } else {
+                $from = $year . '-10-01';
+                $to = date('Y-m-d', strtotime('last day of December ' . $year));
+            }            
+
+            if ($town == 'All') {
+                $data = DB::table('CRM_MemberConsumers')
+                        ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                        ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                        ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                        ->leftJoin('CRM_MemberConsumerSpouse', 'CRM_MemberConsumerSpouse.MemberConsumerId', '=', 'CRM_MemberConsumers.Id')
+                        ->select('CRM_MemberConsumers.Id',
+                                        'CRM_MemberConsumers.MembershipType',
+                                        'CRM_MemberConsumers.FirstName', 
+                                        'CRM_MemberConsumers.MiddleName', 
+                                        'CRM_MemberConsumers.LastName', 
+                                        'CRM_MemberConsumers.OrganizationName', 
+                                        'CRM_MemberConsumers.Suffix', 
+                                        'CRM_MemberConsumers.DateApplied', 
+                                        'CRM_MemberConsumers.Sitio', 
+                                        'CRM_MemberConsumerTypes.Type',
+                                        'CRM_Towns.Town',
+                                        'CRM_Barangays.Barangay',
+                                        'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
+                                        'CRM_MemberConsumerSpouse.LastName AS SpouseLastName', 
+                                        'CRM_MemberConsumerSpouse.Suffix AS SpouseSuffix')
+                        ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "')")
+                        ->orderBy('CRM_MemberConsumers.DateApplied')
+                        ->orderBy('CRM_MemberConsumers.LastName')
+                        ->get();
+            } else {
+                $data = DB::table('CRM_MemberConsumers')
+                        ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                        ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                        ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                        ->leftJoin('CRM_MemberConsumerSpouse', 'CRM_MemberConsumerSpouse.MemberConsumerId', '=', 'CRM_MemberConsumers.Id')
+                        ->select('CRM_MemberConsumers.Id',
+                                        'CRM_MemberConsumers.MembershipType',
+                                        'CRM_MemberConsumers.FirstName', 
+                                        'CRM_MemberConsumers.MiddleName', 
+                                        'CRM_MemberConsumers.LastName', 
+                                        'CRM_MemberConsumers.OrganizationName', 
+                                        'CRM_MemberConsumers.Suffix', 
+                                        'CRM_MemberConsumers.DateApplied', 
+                                        'CRM_MemberConsumers.Sitio', 
+                                        'CRM_MemberConsumerTypes.Type',
+                                        'CRM_Towns.Town',
+                                        'CRM_Barangays.Barangay',
+                                        'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
+                                        'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
+                                        'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
+                        ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_MemberConsumers.Town='" . $town . "'")
+                        ->orderBy('CRM_MemberConsumers.DateApplied')
+                        ->orderBy('CRM_MemberConsumers.LastName')
+                        ->get();
+            }
+        } else {
+            $data = [];
+        }
+        
+        return view('/member_consumers/quarterly_reports', [
+            'towns' => Towns::orderBy('Town')->get(),
+            'data' => $data,
+        ]);
+    }
+
+    public function downloadQuarterlyReports($town, $quarter, $year) {
+        if ($quarter != null && $year != null) {
+            if ($quarter == '01') {
+                $from = $year . '-01-01';
+                $to = date('Y-m-d', strtotime('last day of March ' . $year));
+            } elseif ($quarter == '02') {
+                $from = $year . '-04-01';
+                $to = date('Y-m-d', strtotime('last day of June ' . $year));
+            } elseif ($quarter == '03') {
+                $from = $year . '-07-01';
+                $to = date('Y-m-d', strtotime('last day of September ' . $year));
+            } else {
+                $from = $year . '-10-01';
+                $to = date('Y-m-d', strtotime('last day of December ' . $year));
+            }            
+
+            if ($town == 'All') {
+                $data = DB::table('CRM_MemberConsumers')
+                        ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                        ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                        ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                        ->leftJoin('CRM_MemberConsumerSpouse', 'CRM_MemberConsumerSpouse.MemberConsumerId', '=', 'CRM_MemberConsumers.Id')
+                        ->select('CRM_MemberConsumers.Id',
+                                        'CRM_MemberConsumers.MembershipType',
+                                        'CRM_MemberConsumers.FirstName', 
+                                        'CRM_MemberConsumers.MiddleName', 
+                                        'CRM_MemberConsumers.LastName', 
+                                        'CRM_MemberConsumers.OrganizationName', 
+                                        'CRM_MemberConsumers.Suffix', 
+                                        'CRM_MemberConsumers.DateApplied', 
+                                        'CRM_MemberConsumers.Sitio', 
+                                        'CRM_MemberConsumerTypes.Type',
+                                        'CRM_Towns.Town',
+                                        'CRM_Barangays.Barangay',
+                                        'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
+                                        'CRM_MemberConsumerSpouse.LastName AS SpouseLastName', 
+                                        'CRM_MemberConsumerSpouse.Suffix AS SpouseSuffix')
+                        ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "')")
+                        ->orderBy('CRM_MemberConsumers.DateApplied')
+                        ->orderBy('CRM_MemberConsumers.LastName')
+                        ->get();
+            } else {
+                $data = DB::table('CRM_MemberConsumers')
+                        ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                        ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                        ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                        ->leftJoin('CRM_MemberConsumerSpouse', 'CRM_MemberConsumerSpouse.MemberConsumerId', '=', 'CRM_MemberConsumers.Id')
+                        ->select('CRM_MemberConsumers.Id',
+                                        'CRM_MemberConsumers.MembershipType',
+                                        'CRM_MemberConsumers.FirstName', 
+                                        'CRM_MemberConsumers.MiddleName', 
+                                        'CRM_MemberConsumers.LastName', 
+                                        'CRM_MemberConsumers.OrganizationName', 
+                                        'CRM_MemberConsumers.Suffix', 
+                                        'CRM_MemberConsumers.DateApplied', 
+                                        'CRM_MemberConsumers.Sitio', 
+                                        'CRM_MemberConsumerTypes.Type',
+                                        'CRM_Towns.Town',
+                                        'CRM_Barangays.Barangay',
+                                        'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
+                                        'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
+                                        'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
+                        ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_MemberConsumers.Town='" . $town . "'")
+                        ->orderBy('CRM_MemberConsumers.DateApplied')
+                        ->orderBy('CRM_MemberConsumers.LastName')
+                        ->get();
+            }
+        } else {
+            $data = [];
+        }
+
+        $arr = [];
+        $i=1;
+        foreach ($data as $item) {
+            array_push($arr, [
+                'No' => $i,
+                'id' => $item->Id,
+                'ApplicantName' => strtoupper(MemberConsumers::serializeMemberNameFormal($item)),
+                'Spouse' => strtoupper(MemberConsumers::serializeSpouseDeclared($item)),
+                'Address' => strtoupper(MemberConsumers::getAddress($item)),
+                'Category' => strtoupper($item->Type),
+                'DateApplied' => date('M d, Y', strtotime($item->DateApplied)),
+            ]);
+            $i++;
+        }
+
+        $headers = [
+            '#',
+            'ID',
+            'Applicant Name',
+            'Applicant Spouse',
+            'Address',
+            'Category',
+            'Date Applied'
+        ];
+
+        $export = new DynamicExport($arr, $headers, null, 'Membership Report for Quarter ' . $quarter);
+
+        return Excel::download($export, 'Quarterly-Membership-Report.xlsx');
     }
 }

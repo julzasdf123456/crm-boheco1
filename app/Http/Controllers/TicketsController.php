@@ -2290,4 +2290,21 @@ class TicketsController extends AppBaseController
 
         return response()->json($data, 200);
     }
+
+    public function saveTicketLog(Request $request) {
+        $log = $request['Title'];
+        $notes = $request['Description'];
+        $ticketId = $request['TicketId'];
+
+        // CREATE LOG
+        $ticketLog = new TicketLogs;
+        $ticketLog->id = IDGenerator::generateID();
+        $ticketLog->TicketId = $ticketId;
+        $ticketLog->Log = $log;
+        $ticketLog->LogDetails = $notes;
+        $ticketLog->UserId = Auth::id();
+        $ticketLog->save();
+
+        return response()->json($ticketLog, 200);
+    }
 }

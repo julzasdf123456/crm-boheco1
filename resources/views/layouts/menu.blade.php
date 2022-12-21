@@ -36,6 +36,26 @@ use Illuminate\Support\Facades\Auth;
 
             @canany(['Super Admin', 'update membership'])
                 <li class="nav-header">                
+                    Reports
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('memberConsumers.monthly-reports') }}"
+                    class="nav-link {{ Request::is('memberConsumers.monthly-reports*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-success"></i><p>Monthly</p>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="{{ route('memberConsumers.quarterly-reports') }}"
+                    class="nav-link {{ Request::is('memberConsumers.quarterly-reports*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-success"></i><p>Quarterly</p>
+                    </a>
+                </li>
+            @endcanany
+
+            @canany(['Super Admin', 'update membership'])
+                <li class="nav-header">                
                     Settings
                 </li>
 

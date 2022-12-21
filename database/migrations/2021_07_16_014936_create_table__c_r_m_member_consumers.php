@@ -43,6 +43,7 @@ class CreateTableCRMMemberConsumers extends Migration
             $table->string('UserId')->nullable();
             $table->date('ORDate')->nullable();
             $table->string('ORNumber')->nullable();
+            $table->string('Office')->nullable();
             $table->timestamps();
         });
     }

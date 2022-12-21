@@ -17,7 +17,7 @@ use DateTime;
  * @property string $FirstName
  * @property string $MiddleName
  * @property string $LastName
- * @property string $Suffix
+ * @property string $Spouse
  * @property string $OrganizationName
  * @property string $Birthdate
  * @property string $Sitio
@@ -83,7 +83,8 @@ class MemberConsumers extends Model
         'ResidenceNumber',
         'UserId',
         'ORDate',
-        'ORNumber'
+        'ORNumber',
+        'Office'
     ];
 
     /**
@@ -119,7 +120,8 @@ class MemberConsumers extends Model
         'ResidenceNumber' => 'string',
         'UserId' => 'string',
         'ORDate' => 'string',
-        'ORNumber' => 'string'
+        'ORNumber' => 'string',
+        'Office' => 'string'
     ];
 
     /**
@@ -130,9 +132,9 @@ class MemberConsumers extends Model
     public static $rules = [
         'Id' => 'required|string',
         'MembershipType' => 'required|string|max:255',
-        'FirstName' => 'required|string|max:300',
+        'FirstName' => 'nullable|string|max:300',
         'MiddleName' => 'nullable|string|max:300',
-        'LastName' => 'required|string|max:300',
+        'LastName' => 'nullable|string|max:300',
         'Suffix' => 'nullable|string|max:50',
         'Gender' => 'nullable|string|max:50',
         'OrganizationName' => 'nullable|string|max:1000',
@@ -157,7 +159,8 @@ class MemberConsumers extends Model
         'ResidenceNumber' => 'nullable|string',
         'UserId' => 'nullable|string',
         'ORDate' => 'nullable|string',
-        'ORNumber' => 'nullable|string'
+        'ORNumber' => 'nullable|string',
+        'Office' => 'nullable|string'
     ];
 
     public static function serializeMemberName($memberconsumer) {
@@ -197,6 +200,14 @@ class MemberConsumers extends Model
                 return "-";
             }            
         }
+    }
+
+    public static function serializeSpouseDeclared($memberconsumer) {
+        if ($memberconsumer->SpouseFirstName != null && $memberconsumer->SpouseLastName != null) {
+            return $memberconsumer->SpouseFirstName . ' ' . $memberconsumer->SpouseLastName . ' ' . $memberconsumer->SpouseSuffix;
+        } else {
+            return "-";
+        } 
     }
 
     public static function getJuridicalId() {
