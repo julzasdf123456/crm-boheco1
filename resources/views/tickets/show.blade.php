@@ -179,8 +179,12 @@
                             <label class="form-check-label" for="executed">Executed</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="Status" id="executed" value="Not Executed">
+                            <input class="form-check-input" type="radio" name="Status" id="not-executed" value="Not Executed">
                             <label class="form-check-label" for="not-executed">Not Executed</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="Status" id="acted" value="Acted">
+                            <label class="form-check-label" for="not-executed">Acted</label>
                         </div>
                     </div>
 

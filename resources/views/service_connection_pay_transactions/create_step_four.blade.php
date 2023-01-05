@@ -39,7 +39,7 @@ $id = IDGenerator::generateID();
                             <tr>
                                 <td>BOHECO I Accredited</td>
                                 <td class="text-right">
-                                    <input type="checkbox" name="ElectricianAcredited" id="ElectricianAcredited" {{ $serviceConnection->ElectricianAcredited== null ? 'checked' : ($serviceConnection->ElectricianAcredited=='Yes' ? 'checked' : '') }} data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                                    <input type="checkbox" name="ElectricianAcredited" id="ElectricianAcredited" {{ $serviceConnection->ElectricianAcredited==null ? '' : ($serviceConnection->ElectricianAcredited=='Yes' ? 'checked' : '') }} data-bootstrap-switch data-off-color="danger" data-on-color="success">
                                 </td>
                             </tr>
                             <tr>

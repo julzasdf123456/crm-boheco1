@@ -22,6 +22,7 @@ class CreateTableCRMTicketsRepository extends Migration
             $table->string('Type')->nullable(); // Complain, Request, etc.
             $table->string('KPSCategory')->nullable(); // 1-7
             $table->string('KPSIssue')->nullable(); // What year the KPS is issued, or name of issuance code
+            $table->string('KPSHourlyCategory')->nullable();
             $table->timestamps();
         });
     }

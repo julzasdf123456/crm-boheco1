@@ -43,7 +43,8 @@ class TicketsRepository extends Model
         'ParentTicket',
         'Type',
         'KPSCategory',
-        'KPSIssue'
+        'KPSIssue',
+        'KPSHourlyCategory'
     ];
 
     /**
@@ -58,7 +59,8 @@ class TicketsRepository extends Model
         'ParentTicket' => 'string',
         'Type' => 'string',
         'KPSCategory' => 'string',
-        'KPSIssue' => 'string'
+        'KPSIssue' => 'string',
+        'KPSHourlyCategory' => 'string'
     ];
 
     /**
@@ -75,7 +77,8 @@ class TicketsRepository extends Model
         'KPSCategory' => 'nullable|string|max:255',
         'KPSIssue' => 'nullable|string|max:255',
         'created_at' => 'nullable',
-        'updated_at' => 'nullable'
+        'updated_at' => 'nullable',
+        'KPSHourlyCategory' => 'nullable'
     ];
 
     

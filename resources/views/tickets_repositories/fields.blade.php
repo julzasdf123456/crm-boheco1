@@ -19,13 +19,19 @@
 <!-- Type Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('Type', 'Type:') !!}
-    {!! Form::select('ParentTicket', ['Request' => 'Request', 'Complain' => 'Complain'], $ticketsRepository->Type, ['class' => 'form-control', 'placeholder' => 'This is a parent ticket']) !!}
+    {!! Form::select('Type', ['Request' => 'Request', 'Complain' => 'Complain'], $ticketsRepository->Type, ['class' => 'form-control', 'placeholder' => 'This is a parent ticket']) !!}
 </div>
 
 <!-- Kpscategory Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('KPSCategory', 'KPS Category:') !!}
-    {!! Form::number('KPSCategory', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('KPSCategory', 'NEA Reporting Category:') !!}
+    {!! Form::text('KPSCategory', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+</div>
+
+<!-- KPSHourlyCategory Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('KPSHourlyCategory', 'KPS Category:') !!}
+    {!! Form::text('KPSHourlyCategory', null, ['class' => 'form-control','maxlength' => 50,'maxlength' => 50]) !!}
 </div>
 
 <input type="hidden" value="2021" name="KPSIssue">

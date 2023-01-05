@@ -8,6 +8,10 @@ use App\Repositories\ElectriciansRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use App\Models\Electricians;
+use App\Models\ServiceConnections;
+use App\Exports\DynamicExport;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Flash;
 use Response;
 
@@ -158,5 +162,221 @@ class ElectriciansController extends AppBaseController
 
     public function getElectricianAjax(Request $request) {
         return response()->json(Electricians::find($request['id']), 200);
+    }
+
+    public function housewiringLabor(Request $request) {
+        $office = $request['Office'];
+        $month = $request['Month'];
+        $term = $request['Term'];
+        $year = $request['Year'];
+
+        if ($month != null && $year != null && $term != null) {
+            if ($term == '1') {
+                $from = $year . '-' . $month . '-01';
+                $to = $year . '-' . $month . '-15';
+            } elseif ($term == '2') {
+                $from = $year . '-' . $month . '-16';
+                $to = date('Y-m-d', strtotime('last day of ' . $from));
+            } else {
+                $from = '1997-01-01';
+                $to = '1997-01-01';
+            }
+        } else {
+            $from = '1997-01-01';
+            $to = '1997-01-01';
+        }
+
+        $data = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionTotalPayments', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionTotalPayments.ServiceConnectionId')
+            ->whereRaw("CRM_ServiceConnections.ORDate IS NOT NULL AND (ORDate BETWEEN '" . $from . "' AND '" . $to . "') AND ElectricianAcredited='Yes' 
+                AND (CRM_ServiceConnections.Trash IS NULL OR CRM_ServiceConnections.Trash='No')")
+            ->select(
+                'CRM_ServiceConnections.id',
+                'ORDate',
+                'ORNumber',
+                'ServiceAccountName',
+                'Sitio',
+                'CRM_Barangays.Barangay',
+                'CRM_Towns.Town',
+                'ElectricianName',
+                'LaborCharge'
+            )
+            ->orderBy('ORDate')
+            ->orderBy('ServiceAccountName')
+            ->get();
+
+        return view('/electricians/housewiring_labor', [
+            'data' => $data,
+        ]);
+    }
+
+    public function downloadHousewiringLabor($month, $term, $year, $office) {
+        if ($month != null && $year != null && $term != null) {
+            if ($term == '1') {
+                $from = $year . '-' . $month . '-01';
+                $to = $year . '-' . $month . '-15';
+            } elseif ($term == '2') {
+                $from = $year . '-' . $month . '-16';
+                $to = date('Y-m-d', strtotime('last day of ' . $from));
+            } else {
+                $from = '1997-01-01';
+                $to = '1997-01-01';
+            }
+        } else {
+            $from = '1997-01-01';
+            $to = '1997-01-01';
+        }
+
+        $data = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionTotalPayments', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionTotalPayments.ServiceConnectionId')
+            ->whereRaw("CRM_ServiceConnections.ORDate IS NOT NULL AND (ORDate BETWEEN '" . $from . "' AND '" . $to . "') AND ElectricianAcredited='Yes' 
+                AND (CRM_ServiceConnections.Trash IS NULL OR CRM_ServiceConnections.Trash='No')")
+            ->select(
+                'CRM_ServiceConnections.id',
+                'ORDate',
+                'ORNumber',
+                'ServiceAccountName',
+                'Sitio',
+                'CRM_Barangays.Barangay',
+                'CRM_Towns.Town',
+                'ElectricianName',
+                'LaborCharge'
+            )
+            ->orderBy('ORDate')
+            ->orderBy('ServiceAccountName')
+            ->get();
+
+        $arr = [];
+        $i=1;
+        foreach ($data as $item) {
+            array_push($arr, [
+                'No' => $i,
+                'ORDate' => $item->ORDate,
+                'ORNumber' => $item->ORNumber,
+                'ServiceAccountName' => $item->ServiceAccountName,
+                'Address' => ServiceConnections::getAddress($item),
+                'ElecName' => strtoupper($item->ElectricianName),
+                'Labor' => is_numeric($item->LaborCharge) ? number_format($item->LaborCharge, 2) : $item->LaborCharge,
+            ]);
+            $i++;
+        }
+
+        $headers = [
+            '#',
+            'OR Date',
+            'OR Number',
+            'Service Account Name',
+            'Address',
+            'Electrician',
+            'Labor Charge'
+        ];
+
+        $export = new DynamicExport($arr, $headers, null, 'Housewiring Labor Data for ' . date('F d, Y', strtotime($from)) . ' - ' . date('F d, Y', strtotime($to)));
+
+        return Excel::download($export, 'Housewiring-Labor-Data'  . date('F d, Y', strtotime($from)) . '-' . date('F d, Y', strtotime($to)) . '.xlsx');
+    }
+
+    public function laborSummary(Request $request) {
+        $office = $request['Office'];
+        $month = $request['Month'];
+        $term = $request['Term'];
+        $year = $request['Year'];
+
+        if ($month != null && $year != null && $term != null) {
+            if ($term == '1') {
+                $from = $year . '-' . $month . '-01';
+                $to = $year . '-' . $month . '-15';
+            } elseif ($term == '2') {
+                $from = $year . '-' . $month . '-16';
+                $to = date('Y-m-d', strtotime('last day of ' . $from));
+            } else {
+                $from = '1997-01-01';
+                $to = '1997-01-01';
+            }
+        } else {
+            $from = '1997-01-01';
+            $to = '1997-01-01';
+        }
+
+        $data = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_ServiceConnectionTotalPayments', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionTotalPayments.ServiceConnectionId')
+            ->whereRaw("CRM_ServiceConnections.ORDate IS NOT NULL AND (ORDate BETWEEN '" . $from . "' AND '" . $to . "') AND ElectricianAcredited='Yes' 
+                AND (CRM_ServiceConnections.Trash IS NULL OR CRM_ServiceConnections.Trash='No')")
+            ->select(
+                'ElectricianName',
+                DB::raw("COUNT(CRM_ServiceConnections.id) AS ConsumerCount"),
+                DB::raw("SUM(TRY_CAST(LaborCharge AS DECIMAL(15,2))) AS LaborCharge")
+            )
+            ->groupBy('ElectricianId', 'ElectricianName')
+            ->orderBy('ElectricianName')
+            ->get();
+
+        return view('/electricians/labor_summary', [
+            'data' => $data, 
+        ]);
+    }
+
+    public function downloadLaborShare($month, $term, $year, $office) {
+        if ($month != null && $year != null && $term != null) {
+            if ($term == '1') {
+                $from = $year . '-' . $month . '-01';
+                $to = $year . '-' . $month . '-15';
+            } elseif ($term == '2') {
+                $from = $year . '-' . $month . '-16';
+                $to = date('Y-m-d', strtotime('last day of ' . $from));
+            } else {
+                $from = '1997-01-01';
+                $to = '1997-01-01';
+            }
+        } else {
+            $from = '1997-01-01';
+            $to = '1997-01-01';
+        }
+
+        $data = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_ServiceConnectionTotalPayments', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionTotalPayments.ServiceConnectionId')
+            ->leftJoin('CRM_Electricians', 'CRM_ServiceConnections.ElectricianId', '=', 'CRM_Electricians.id')
+            ->whereRaw("CRM_ServiceConnections.ORDate IS NOT NULL AND (ORDate BETWEEN '" . $from . "' AND '" . $to . "') AND ElectricianAcredited='Yes' 
+                AND (CRM_ServiceConnections.Trash IS NULL OR CRM_ServiceConnections.Trash='No')")
+            ->select(
+                'ElectricianName',
+                DB::raw("COUNT(CRM_ServiceConnections.id) AS ConsumerCount"),
+                DB::raw("SUM(TRY_CAST(LaborCharge AS DECIMAL(15,2))) AS LaborCharge"),
+                'BankNumber'
+            )
+            ->groupBy('ElectricianId', 'ElectricianName', 'BankNumber')
+            ->orderBy('ElectricianName')
+            ->get();
+
+        $arr = [];
+        $i=1;
+        foreach ($data as $item) {
+            array_push($arr, [
+                'No' => $i,
+                'ElecName' => strtoupper($item->ElectricianName),
+                'Count' => $item->ConsumerCount,
+                'Labor' => is_numeric($item->LaborCharge) ? number_format($item->LaborCharge, 2) : $item->LaborCharge,
+                'BankNumber' => $item->BankNumber,
+                'Signature' => ''
+            ]);
+            $i++;
+        }
+
+        $headers = [
+            '#',
+            'Electrician',
+            'No. of Applications',
+            'Labor Charge',
+            'Pitakard No.',
+            'Signature'
+        ];
+
+        $export = new DynamicExport($arr, $headers, null, 'Labor Share Summary for ' . date('F d, Y', strtotime($from)) . ' - ' . date('F d, Y', strtotime($to)));
+
+        return Excel::download($export, 'Labor-Share-Summary'  . date('F d, Y', strtotime($from)) . '-' . date('F d, Y', strtotime($to)) . '.xlsx');
     }
 }

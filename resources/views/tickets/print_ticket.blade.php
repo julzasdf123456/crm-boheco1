@@ -291,7 +291,7 @@
         window.print(); 
         
         window.setTimeout(function(){
-            window.history.go(-1)
+            window.location.href = "{{ url('/tickets') }}" + "/{{ $tickets->id }}"
         }, 800);
     }
 </script>

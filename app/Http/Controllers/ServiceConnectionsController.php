@@ -2666,7 +2666,12 @@ class ServiceConnectionsController extends AppBaseController
         $serviceConnection = ServiceConnections::find($id);
 
         if ($serviceConnection != null) {
-            $serviceConnection->ElectricianId = $request['ElectricianId'];
+            if ($request['ElectricianAcredited'] == 'Yes') {
+                $serviceConnection->ElectricianId = $request['ElectricianId'];
+            } else {
+                $serviceConnection->ElectricianId = null;                
+            }
+            
             $serviceConnection->ElectricianName = $request['ElectricianName'];
             $serviceConnection->ElectricianAddress = $request['ElectricianAddress'];
             $serviceConnection->ElectricianAcredited = $request['ElectricianAcredited'];

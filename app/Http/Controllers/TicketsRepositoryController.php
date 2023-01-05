@@ -109,7 +109,10 @@ class TicketsRepositoryController extends AppBaseController
             return redirect(route('ticketsRepositories.index'));
         }
 
-        return view('tickets_repositories.edit', ['ticketsRepository' => $ticketsRepository, 'parentReps' => $parentReps]);
+        return view('tickets_repositories.edit', [
+            'ticketsRepository' => $ticketsRepository, 
+            'parentReps' => $parentReps,
+        ]);
     }
 
     /**

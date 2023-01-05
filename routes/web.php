@@ -372,6 +372,8 @@ Route::post('/tickets/store-relocation', [App\Http\Controllers\TicketsController
 Route::get('/tickets/crew-field-monitor', [App\Http\Controllers\TicketsController::class, 'crewFieldMonitor'])->name('tickets.crew-field-monitor');
 Route::get('/tickets/get-crew-field-monitor-data', [App\Http\Controllers\TicketsController::class, 'getCrewFieldMonitorData'])->name('tickets.get-crew-field-monitor-data');
 Route::get('/tickets/save-ticket-log', [App\Http\Controllers\TicketsController::class, 'saveTicketLog'])->name('tickets.save-ticket-log');
+Route::get('/tickets/nea-kps-summary', [App\Http\Controllers\TicketsController::class, 'neaKpsSummary'])->name('tickets.nea-kps-summary');
+Route::get('/tickets/download-kps-summary-report/{town}/{from}/{to}', [App\Http\Controllers\TicketsController::class, 'downloadKpsSummaryReport'])->name('tickets.download-kps-summary-report');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 
@@ -747,6 +749,10 @@ Route::get('/excemptions/print-excemptions/{period}', [App\Http\Controllers\Exce
 Route::resource('excemptions', App\Http\Controllers\ExcemptionsController::class);
 
 Route::get('/electricians/get-electricians-ajax', [App\Http\Controllers\ElectriciansController::class, 'getElectricianAjax'])->name('electricians.get-electricians-ajax');
+Route::get('/electricians/housewiring-labor', [App\Http\Controllers\ElectriciansController::class, 'housewiringLabor'])->name('electricians.housewiring-labor');
+Route::get('/electricians/download-housewiring-labor/{month}/{term}/{year}/{office}', [App\Http\Controllers\ElectriciansController::class, 'downloadHousewiringLabor'])->name('electricians.download-housewiring-labor');
+Route::get('/electricians/labor-summary', [App\Http\Controllers\ElectriciansController::class, 'laborSummary'])->name('electricians.labor-summary');
+Route::get('/electricians/download-labor-share/{month}/{term}/{year}/{office}', [App\Http\Controllers\ElectriciansController::class, 'downloadLaborShare'])->name('electricians.download-labor-share');
 Route::resource('electricians', App\Http\Controllers\ElectriciansController::class);
 
 

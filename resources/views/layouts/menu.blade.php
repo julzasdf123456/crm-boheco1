@@ -171,6 +171,34 @@ use Illuminate\Support\Facades\Auth;
             <li class="nav-item">
                 <a href="#" class="nav-link">
                     <p>
+                        Electricians
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview" style="display: none;">
+                    <li class="nav-item">
+                        <a href="{{ route('electricians.index') }}"
+                        class="nav-link {{ Request::is('electricians.index*') ? 'active' : '' }}">
+                        <i class="fas fa-circle nav-icon text-warning"></i><p>Accrdtd. Electricians</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('electricians.housewiring-labor') }}"
+                        class="nav-link {{ Request::is('electricians.housewiring-labor*') ? 'active' : '' }}">
+                        <i class="fas fa-circle nav-icon text-warning"></i><p>Housewiring Labor</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('electricians.labor-summary') }}"
+                        class="nav-link {{ Request::is('electricians.labor-summary*') ? 'active' : '' }}">
+                        <i class="fas fa-circle nav-icon text-warning"></i><p>Labor Summary</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <p>
                         Reports
                         <i class="fas fa-angle-left right"></i>
                     </p>
@@ -434,6 +462,13 @@ use Illuminate\Support\Facades\Auth;
                 <a href="{{ route('tickets.ticket-tally') }}"
                 class="nav-link {{ Request::is('tickets.ticket-tally*') ? 'active' : '' }}">
                     <i class="fas fa-list nav-icon text-danger"></i><p>Ticket Tally</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('tickets.nea-kps-summary') }}"
+                class="nav-link {{ Request::is('tickets.nea-kps-summary*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>NEA KPS Summary</p>
                 </a>
             </li>
             <li class="nav-header">                

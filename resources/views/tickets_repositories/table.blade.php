@@ -24,9 +24,17 @@
                         $tickets = TicketsRepository::where('ParentTicket', $item->id)->get();
                     @endphp
                     <table class="table table-hover table-sm table-borderless">
+                        <tr>
+                            <th>Complaint/Request</th>
+                            <th>KPS Category</th>
+                            <th>NEA Reporting Category</th>
+                            <th></th>
+                        </tr>
                         @foreach ($tickets as $ticket)
                             <tr>
                                 <td>{{ $ticket->Name }}</td>
+                                <td>{{ $ticket->KPSHourlyCategory }}</td>
+                                <td>{{ $ticket->KPSCategory }}</td>
                                 <td width="120">
                                     {!! Form::open(['route' => ['ticketsRepositories.destroy', $ticket->id], 'method' => 'delete']) !!}
                                     <div class='btn-group'>
