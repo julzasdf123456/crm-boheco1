@@ -64,7 +64,7 @@ class ServiceConnectionInspectionsAPI extends Controller {
         }  
     }
     
-    public function notifyDownloaded(Request $request) {
+    public function notifyDownloadedInspections(Request $request) {
         $name = $request['ServiceAccountName'];
         $contactNumber = $request['ContactNumber'];
         // CREATE NOTIFICATION

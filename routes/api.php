@@ -29,7 +29,7 @@ use App\Http\Controllers\API\DisconnectionAPI;
 Route::get('get-service-connections/', [ServiceConnectionInspectionsAPI::class, 'getServiceConnections']);
 Route::get('get-service-inspections/', [ServiceConnectionInspectionsAPI::class, 'getServiceInspections']);
 Route::post('update-service-inspections/', [ServiceConnectionInspectionsAPI::class, 'updateServiceInspections']);
-Route::post('notify-downloaded/', [ServiceConnectionInspectionsAPI::class, 'notifyDownloaded']);
+Route::post('notify-downloaded-inspections/', [ServiceConnectionInspectionsAPI::class, 'notifyDownloadedInspections']);
 
 Route::get('get-payment-queues/', [TelleringController::class, 'fetchApprovedServiceConnections']);
 

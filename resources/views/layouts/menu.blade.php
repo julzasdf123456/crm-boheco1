@@ -1177,12 +1177,3 @@ use Illuminate\Support\Facades\Auth;
 @endcan
 
 
-
-<li class="nav-item">
-    <a href="{{ route('signatories.index') }}"
-       class="nav-link {{ Request::is('signatories*') ? 'active' : '' }}">
-        <p>Signatories</p>
-    </a>
-</li>
-
-
