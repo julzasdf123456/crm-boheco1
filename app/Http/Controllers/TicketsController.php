@@ -144,10 +144,17 @@ class TicketsController extends AppBaseController
                     'CRM_TicketsRepository.ParentTicket',
                     'CRM_TicketsRepository.Name as Ticket',
                     'CRM_TicketsRepository.Type as TicketType',
+                    'CRM_Tickets.Ticket as TicketRepoId',
                     'CRM_Tickets.Reason',
                     'CRM_Tickets.ContactNumber',
                     'CRM_Tickets.ReportedBy',
                     'CRM_Tickets.PoleNumber',
+                    'CRM_Tickets.CurrentMeterNo',
+                    'CRM_Tickets.CurrentMeterBrand',
+                    'CRM_Tickets.CurrentMeterReading',
+                    'CRM_Tickets.NewMeterNo',
+                    'CRM_Tickets.NewMeterBrand',
+                    'CRM_Tickets.NewMeterReading',
                     'CRM_Tickets.ORNumber',
                     'CRM_Tickets.ORDate',
                     'CRM_Tickets.GeoLocation',
@@ -312,7 +319,7 @@ class TicketsController extends AppBaseController
 
         Flash::success('Tickets updated successfully.');
 
-        return redirect(route('tickets.index'));
+        return redirect(route('tickets.show', [$tickets->id]));
     }
 
     /**
@@ -822,7 +829,7 @@ class TicketsController extends AppBaseController
             $ticketLog->UserId = Auth::id();
             $ticketLog->save();
 
-            return response()->json(['response' => 'ok'], 200);
+            return response()->json($ticket, 200);
         }
     }
 
@@ -3097,5 +3104,112 @@ class TicketsController extends AppBaseController
         $export = new DynamicExport($data->toArray(), $headers, null, 'TICKETS MONTHLY SUMMARY REPORT PER TOWN FOR ' . date('F Y', strtotime($year . '-' . $month . '-01')));
 
         return Excel::download($export, 'Ticket-Monthly-Summary-Report-per-Town.xlsx');
+    }
+
+    public function changeMeterUnconfirmed(Request $request) {
+        $office = $request['Office'];
+
+        if ($office == 'All') {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("Status='Executed' AND CRM_Tickets.Ticket IN ('1668541254390', '1672792232225') AND ChangeMeterConfirmed IS NULL")
+                ->select('CRM_Tickets.id',
+                    'CRM_Tickets.AccountNumber',
+                    'CRM_Tickets.ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'CRM_Tickets.Sitio',
+                    'CRM_TicketsRepository.ParentTicket',
+                    'CRM_TicketsRepository.Name as Ticket',
+                    'CRM_TicketsRepository.Type as TicketType',
+                    'CRM_Tickets.CurrentMeterNo',
+                    'CRM_Tickets.CurrentMeterReading',
+                    'CRM_Tickets.NewMeterNo',
+                    'CRM_Tickets.NewMeterReading',
+                    'CRM_Tickets.GeoLocation',
+                    'CRM_Tickets.Neighbor1',
+                    'CRM_Tickets.Neighbor2',
+                    'CRM_Tickets.Notes',
+                    'CRM_Tickets.Status',
+                    'CRM_Tickets.DateTimeDownloaded',
+                    'CRM_Tickets.DateTimeLinemanArrived',
+                    'CRM_Tickets.DateTimeLinemanExecuted',
+                    'CRM_Tickets.UserId',
+                    'CRM_Tickets.Office',  
+                    'CRM_ServiceConnectionCrew.StationName',
+                    'CRM_Tickets.created_at',
+                    'CRM_Tickets.updated_at',
+                )
+                ->get();
+        } else {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("Status='Executed' AND CRM_Tickets.Ticket IN ('1668541254390', '1672792232225') AND CRM_Tickets.Office='" . $office . "' AND ChangeMeterConfirmed IS NULL")
+                ->select('CRM_Tickets.id',
+                    'CRM_Tickets.AccountNumber',
+                    'CRM_Tickets.ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'CRM_Tickets.Sitio',
+                    'CRM_TicketsRepository.ParentTicket',
+                    'CRM_TicketsRepository.Name as Ticket',
+                    'CRM_TicketsRepository.Type as TicketType',
+                    'CRM_Tickets.CurrentMeterNo',
+                    'CRM_Tickets.CurrentMeterReading',
+                    'CRM_Tickets.NewMeterNo',
+                    'CRM_Tickets.NewMeterReading',
+                    'CRM_Tickets.GeoLocation',
+                    'CRM_Tickets.Neighbor1',
+                    'CRM_Tickets.Neighbor2',
+                    'CRM_Tickets.Notes',
+                    'CRM_Tickets.Status',
+                    'CRM_Tickets.DateTimeDownloaded',
+                    'CRM_Tickets.DateTimeLinemanArrived',
+                    'CRM_Tickets.DateTimeLinemanExecuted',
+                    'CRM_Tickets.UserId',
+                    'CRM_Tickets.Office',  
+                    'CRM_ServiceConnectionCrew.StationName',
+                    'CRM_Tickets.created_at',
+                    'CRM_Tickets.updated_at',
+                )
+                ->get();
+        }
+
+        return view('/tickets/change_meter_unconfirmed', [
+            'data' => $data,
+        ]);
+    }
+
+    public function changeMeterUpdate($id) {
+        $tickets = $this->ticketsRepository->find($id);
+
+        if (empty($tickets)) {
+            Flash::error('Tickets not found');
+
+            return redirect(route('tickets.index'));
+        }
+
+        if(Auth::user()->hasAnyPermission(['tickets create', 'ticket update', 'Super Admin'])) {
+            return view('/tickets/change_meter_update', [
+                'ticket' => $tickets, 
+            ]);
+        } else {
+            return abort(403, "You're not authorized to update a ticket.");
+        }  
+    }
+
+    public function markAsChangeMeterDone(Request $request) {
+        $id = $request['id'];
+
+        Tickets::where('id', $id)
+            ->update(['ChangeMeterConfirmed' => 'Yes']);
+
+        return response()->json('ok', 200);
     }
 }

@@ -379,6 +379,9 @@ Route::get('/tickets/download-kps-summary-report/{town}/{from}/{to}', [App\Http\
 Route::get('/tickets/kps-customer-service-parameters', [App\Http\Controllers\TicketsController::class, 'kpsCustomerServiceParameters'])->name('tickets.kps-customer-service-parameters');
 Route::get('/tickets/monthly-per-town', [App\Http\Controllers\TicketsController::class, 'monthlyPerTown'])->name('tickets.monthly-per-town');
 Route::get('/tickets/download-monthly-per-town/{month}/{year}', [App\Http\Controllers\TicketsController::class, 'downoadMonthlyPerTown'])->name('tickets.download-monthly-per-town');
+Route::get('/tickets/change-meter-unconfirmed', [App\Http\Controllers\TicketsController::class, 'changeMeterUnconfirmed'])->name('tickets.change-meter-unconfirmed');
+Route::get('/tickets/change-meter-update/{id}', [App\Http\Controllers\TicketsController::class, 'changeMeterUpdate'])->name('tickets.change-meter-update');
+Route::get('/tickets/mark-as-change-meter-done', [App\Http\Controllers\TicketsController::class, 'markAsChangeMeterDone'])->name('tickets.mark-as-change-meter-done');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 
@@ -777,3 +780,6 @@ Route::resource('barangayProxies', App\Http\Controllers\BarangayProxiesControlle
 
 
 Route::resource('preRegEntries', App\Http\Controllers\PreRegEntriesController::class);
+
+
+Route::resource('signatories', App\Http\Controllers\SignatoriesController::class);

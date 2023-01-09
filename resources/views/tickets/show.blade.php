@@ -1,57 +1,57 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <span class="badge-lg {{ $tickets->Status=="Executed" ? 'bg-success' : 'bg-warning' }}"><strong>{{ $tickets->Status }}</strong></span>
-                </div>
-                <div class="col-sm-6">
-                    <a class="btn btn-default float-right"
-                       href="{{ route('tickets.index') }}">
-                        Back
-                    </a>
-                </div>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <span class="badge-lg {{ $tickets->Status=="Executed" ? 'bg-success' : 'bg-warning' }}"><strong>{{ $tickets->Status }}</strong></span>
             </div>
-        </div>
-    </section>
-    <div class="content px-3">
-        <div class="card">
-            <div class="card-header p-2">
-                <ul class="nav nav-pills">
-                    <li class="nav-item"><a class="nav-link active" href="#logs" data-toggle="tab">
-                        <i class="fas fa-info-circle"></i>
-                        Ticket Details</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#verification" data-toggle="tab">
-                        <i class="fas fa-clipboard-check"></i>
-                        Logs</a></li>
-                    @if ($serviceConnectionInspections != null)
-                        <li class="nav-item"><a class="nav-link" href="#inspection" data-toggle="tab">
-                            <i class="fas fa-info-circle"></i>
-                            Inspection Data</a></li>
-                    @endif
-                </ul>
-            </div>
-            <div class="card-body">
-                <div class="tab-content">
-                    <div class="tab-pane active" id="logs">
-                        @include('tickets.ticket_details')
-                    </div>
-
-                    <div class="tab-pane" id="verification">
-                        @include('tickets.ticket_logs')
-                    </div>
-
-                    @if ($serviceConnectionInspections != null)
-                        <div class="tab-pane" id="inspection">
-                            @include('tickets.inspection_data')
-                        </div>
-                    @endif
-                </div>
+            <div class="col-sm-6">
+                <a class="btn btn-default float-right"
+                    href="{{ route('tickets.index') }}">
+                    Back
+                </a>
             </div>
         </div>
     </div>
+</section>
+<div class="content px-3">
+    <div class="card">
+        <div class="card-header p-2">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a class="nav-link active" href="#logs" data-toggle="tab">
+                    <i class="fas fa-info-circle"></i>
+                    Ticket Details</a></li>
+                <li class="nav-item"><a class="nav-link" href="#verification" data-toggle="tab">
+                    <i class="fas fa-clipboard-check"></i>
+                    Logs</a></li>
+                @if ($serviceConnectionInspections != null)
+                    <li class="nav-item"><a class="nav-link" href="#inspection" data-toggle="tab">
+                        <i class="fas fa-info-circle"></i>
+                        Inspection Data</a></li>
+                @endif
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content">
+                <div class="tab-pane active" id="logs">
+                    @include('tickets.ticket_details')
+                </div>
+
+                <div class="tab-pane" id="verification">
+                    @include('tickets.ticket_logs')
+                </div>
+
+                @if ($serviceConnectionInspections != null)
+                    <div class="tab-pane" id="inspection">
+                        @include('tickets.inspection_data')
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
 
 {{-- MODAL FOR UPDATING CREATED AT --}}
 <div class="modal fade" id="modal-date-filed" aria-hidden="true" style="display: none;">
@@ -175,15 +175,15 @@
                     <div class="form-group">
                         <label>Assessment</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="Status" id="executed" value="Executed">
+                            <input class="form-check-input" type="radio" name="Status" id="executed" value="Executed" {{ $tickets->Status=='Executed' ? 'checked' : '' }}>
                             <label class="form-check-label" for="executed">Executed</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="Status" id="not-executed" value="Not Executed">
+                            <input class="form-check-input" type="radio" name="Status" id="not-executed" value="Not Executed" {{ $tickets->Status=='Not Executed' ? 'checked' : '' }}>
                             <label class="form-check-label" for="not-executed">Not Executed</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="Status" id="acted" value="Acted">
+                            <input class="form-check-input" type="radio" name="Status" id="acted" value="Acted" {{ $tickets->Status=='Acted' ? 'checked' : '' }}>
                             <label class="form-check-label" for="not-executed">Acted</label>
                         </div>
                     </div>
@@ -290,7 +290,13 @@
                         Notes : $('#Notes').val(),
                     },
                     success : function(response) {
-                        location.reload();
+                        var ticket = response['Ticket']
+                        if (ticket=='1668541254390' || ticket=='1672792232225') {
+                            window.location.href = "{{ url('/tickets/change-meter-update') }}" + "/" + response['id']
+                        } else {
+                            location.reload()
+                        }
+                        
                     },
                     error : function(error) {
                         alert(error);

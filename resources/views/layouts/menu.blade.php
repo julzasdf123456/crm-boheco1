@@ -573,6 +573,12 @@ use Illuminate\Support\Facades\Auth;
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{ route('tickets.change-meter-unconfirmed') }}"
+                   class="nav-link {{ Request::is('tickets.change-meter-unconfirmed*') ? 'active' : '' }}">                   
+                   <i class="fas fa-circle nav-icon text-primary"></i><p>New Change Meters</p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ route('serviceAccounts.manual-account-migration-one') }}"
                    class="nav-link {{ Request::is('serviceAccounts.manual-account-migration-one*') ? 'active' : '' }}">                   
                    <i class="fas fa-user-plus nav-icon text-primary"></i><p>Add New Account
@@ -1170,5 +1176,13 @@ use Illuminate\Support\Facades\Auth;
     </li>
 @endcan
 
+
+
+<li class="nav-item">
+    <a href="{{ route('signatories.index') }}"
+       class="nav-link {{ Request::is('signatories*') ? 'active' : '' }}">
+        <p>Signatories</p>
+    </a>
+</li>
 
 
