@@ -138,6 +138,8 @@ Route::get('/service_connections/save-electrician-info', [ServiceConnectionsCont
 Route::get('/service_connections/print-invoice/{id}', [ServiceConnectionsController::class, 'printInvoice'])->name('serviceConnections.print-invoice');
 Route::get('/service_connections/inspection-full-report', [ServiceConnectionsController::class, 'inspectionFullReport'])->name('serviceConnections.inspection-full-report');
 Route::get('/service_connections/get-inspection-summary-data', [ServiceConnectionsController::class, 'getInspectionSummaryData'])->name('serviceConnections.get-inspection-summary-data');
+Route::get('/service_connections/energization-per-brgy', [App\Http\Controllers\ServiceConnectionsController::class, 'energizationPerBarangay'])->name('serviceConnections.energization-per-brgy');
+Route::get('/service_connections/download-energization-per-brgy/{mnth}/{year}', [App\Http\Controllers\ServiceConnectionsController::class, 'downloadEnergizationPerBarangay'])->name('serviceConnections.download-energization-per-brgy');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 
@@ -374,6 +376,9 @@ Route::get('/tickets/get-crew-field-monitor-data', [App\Http\Controllers\Tickets
 Route::get('/tickets/save-ticket-log', [App\Http\Controllers\TicketsController::class, 'saveTicketLog'])->name('tickets.save-ticket-log');
 Route::get('/tickets/nea-kps-summary', [App\Http\Controllers\TicketsController::class, 'neaKpsSummary'])->name('tickets.nea-kps-summary');
 Route::get('/tickets/download-kps-summary-report/{town}/{from}/{to}', [App\Http\Controllers\TicketsController::class, 'downloadKpsSummaryReport'])->name('tickets.download-kps-summary-report');
+Route::get('/tickets/kps-customer-service-parameters', [App\Http\Controllers\TicketsController::class, 'kpsCustomerServiceParameters'])->name('tickets.kps-customer-service-parameters');
+Route::get('/tickets/monthly-per-town', [App\Http\Controllers\TicketsController::class, 'monthlyPerTown'])->name('tickets.monthly-per-town');
+Route::get('/tickets/download-monthly-per-town/{month}/{year}', [App\Http\Controllers\TicketsController::class, 'downoadMonthlyPerTown'])->name('tickets.download-monthly-per-town');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 

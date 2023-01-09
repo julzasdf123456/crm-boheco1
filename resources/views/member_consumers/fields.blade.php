@@ -333,7 +333,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                 </div>
-                {!! Form::text('DateApplied', null, ['class' => 'form-control form-control-sm','id'=>'DateApplied', 'placeholder' => 'Date Applied']) !!}
+                {!! Form::text('DateApplied', isset($memberConsumers) || $memberConsumers != null ? ($memberConsumers->DateApplied != null ? $memberConsumers->DateApplied : '') : date('Y-m-d'), ['class' => 'form-control form-control-sm','id'=>'DateApplied', 'placeholder' => 'Date Applied']) !!}
             </div>
         </div>
     </div>   

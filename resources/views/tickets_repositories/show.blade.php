@@ -63,6 +63,7 @@
                     <table class="table table-hover table-sm table-borderless">
                         @foreach ($tickets as $ticket)
                             <tr>
+                                <td>{{ $ticket->id }}</td>
                                 <td>{{ $ticket->Name }}</td>
                                 <td width="120">
                                     {!! Form::open(['route' => ['ticketsRepositories.destroy', $ticket->id], 'method' => 'delete']) !!}

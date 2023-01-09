@@ -51,6 +51,7 @@ class CreateTableCRMTickets extends Migration
             $table->string('PoleNumber')->nullable();
             $table->string('ServiceConnectionId')->nullable();
             $table->string('InspectionId')->nullable();
+            $table->datetime('DateTimeComplainLogged')->nullable();
             $table->timestamps();
         });
     }

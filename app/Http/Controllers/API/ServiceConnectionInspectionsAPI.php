@@ -10,6 +10,7 @@ use App\Models\ServiceConnectionTimeframes;
 use App\Models\IDGenerator;
 use App\Models\Tickets;
 use App\Models\TicketLogs;
+use App\Models\Notifiers;
 use App\Models\ServiceConnectionPayTransaction;
 use App\Models\ServiceConnectionTotalPayments;
 use Illuminate\Support\Facades\DB;
@@ -61,6 +62,26 @@ class ServiceConnectionInspectionsAPI extends Controller {
         } else {
             return response()->json($serviceConnections, $this->successStatus); 
         }  
+    }
+    
+    public function notifyDownloaded(Request $request) {
+        $name = $request['ServiceAccountName'];
+        $contactNumber = $request['ContactNumber'];
+        // CREATE NOTIFICATION
+        if ($contactNumber != null) {
+            if (strlen($contactNumber > 9)) {
+                $notifier = new Notifiers;
+                $notifier->id = IDGenerator::generateIDandRandString();
+                $notifier->Notification = 'Good day, ' . $name . ',\n\nA BOHECO I inspector is on its way to inspect the electrical installation of your house within the day. Please ensure to have a representative in your house during the inspection process.\n\nBOHECO I Auto-SMS Hub';
+                $notifier->Status = 'SENT';
+                $notifier->Intent = "SERVICE CONNECTION INSPECTION"; 
+                $notifier->ObjectId = $request['id'];
+                $notifier->ContactNumber = $contactNumber;
+                $notifier->save();
+            }
+        }
+
+        return response()->json('ok', 200);
     }
 
     public function updateServiceInspections(Request $request) {

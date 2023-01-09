@@ -33,6 +33,7 @@
                         <div class="form-group col-sm-2">
                             <label for="Status">Ticket Status</label>
                             <select name="Status" id="Status" class="form-control">
+                                <option value="All">All</option>
                                 @foreach ($status as $item)
                                     <option value="{{ $item->Status }}">{{ $item->Status }}</option>
                                 @endforeach

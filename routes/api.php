@@ -29,6 +29,7 @@ use App\Http\Controllers\API\DisconnectionAPI;
 Route::get('get-service-connections/', [ServiceConnectionInspectionsAPI::class, 'getServiceConnections']);
 Route::get('get-service-inspections/', [ServiceConnectionInspectionsAPI::class, 'getServiceInspections']);
 Route::post('update-service-inspections/', [ServiceConnectionInspectionsAPI::class, 'updateServiceInspections']);
+Route::post('notify-downloaded/', [ServiceConnectionInspectionsAPI::class, 'notifyDownloaded']);
 
 Route::get('get-payment-queues/', [TelleringController::class, 'fetchApprovedServiceConnections']);
 
@@ -39,6 +40,7 @@ Route::post('update-energized', [ServiceConnectionsEnergization::class, 'updateE
 Route::post('create-timeframes', [ServiceConnectionsEnergization::class, 'createTimeFrames']);
 Route::get('update-downloaded-service-connection-status', [ServiceConnectionsEnergization::class, 'updateDownloadedServiceConnectionStatus']);
 Route::post('receive-mast-poles', [ServiceConnectionsEnergization::class, 'receiveMastPoles']);
+Route::post('notify-downloaded', [ServiceConnectionsEnergization::class, 'notifyDownloaded']);
 
 Route::get('get-towns', [OtherData::class, 'getTowns']);
 Route::get('get-barangays', [OtherData::class, 'getBarangays']);

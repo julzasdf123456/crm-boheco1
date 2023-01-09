@@ -25,6 +25,7 @@ use App\Models\AccountMaster;
 use App\Models\User;
 use App\Exports\TicketSummaryReportDownloadExport;
 use App\Exports\KPSTicketsExport;
+use App\Exports\DynamicExport;
 use Illuminate\Support\Facades\Auth;
 use Flash;
 use Response;
@@ -2213,68 +2214,133 @@ class TicketsController extends AppBaseController
         $crew = $request['Crew'];
 
         if ($ticket == 'All') {
-            if ($crew == 'All') {
-                $data = DB::table('CRM_Tickets') 
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                    ->where('CRM_Tickets.Status', $status)
-                    ->select('CRM_TicketsRepository.Name',
-                        'CRM_Tickets.id',
-                        'CRM_Tickets.ConsumerName',
-                        'CRM_ServiceConnectionCrew.StationName',
-                        'CRM_Tickets.created_at',
-                        'CRM_Tickets.GeoLocation'
-                    )
-                    ->orderByDesc('CRM_Tickets.created_at')
-                    ->get();
+            if ($status == 'All') {
+                if ($crew == 'All') {
+                    $data = DB::table('CRM_Tickets') 
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                        ->select('CRM_TicketsRepository.Name',
+                            'CRM_Tickets.id',
+                            'CRM_Tickets.ConsumerName',
+                            'CRM_ServiceConnectionCrew.StationName',
+                            'CRM_Tickets.created_at',
+                            'CRM_Tickets.GeoLocation'
+                        )
+                        ->orderByDesc('CRM_Tickets.created_at')
+                        ->get();
+                } else {
+                    $data = DB::table('CRM_Tickets') 
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                        ->where('CRM_Tickets.CrewAssigned', $crew)
+                        ->select('CRM_TicketsRepository.Name',
+                            'CRM_Tickets.id',
+                            'CRM_Tickets.ConsumerName',
+                            'CRM_ServiceConnectionCrew.StationName',
+                            'CRM_Tickets.created_at',
+                            'CRM_Tickets.GeoLocation'
+                        )
+                        ->orderByDesc('CRM_Tickets.created_at')
+                        ->get();
+                }
             } else {
-                $data = DB::table('CRM_Tickets') 
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                    ->where('CRM_Tickets.Status', $status)
-                    ->where('CRM_Tickets.CrewAssigned', $crew)
-                    ->select('CRM_TicketsRepository.Name',
-                        'CRM_Tickets.id',
-                        'CRM_Tickets.ConsumerName',
-                        'CRM_ServiceConnectionCrew.StationName',
-                        'CRM_Tickets.created_at',
-                        'CRM_Tickets.GeoLocation'
-                    )
-                    ->orderByDesc('CRM_Tickets.created_at')
-                    ->get();
+                if ($crew == 'All') {
+                    $data = DB::table('CRM_Tickets') 
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                        ->where('CRM_Tickets.Status', $status)
+                        ->select('CRM_TicketsRepository.Name',
+                            'CRM_Tickets.id',
+                            'CRM_Tickets.ConsumerName',
+                            'CRM_ServiceConnectionCrew.StationName',
+                            'CRM_Tickets.created_at',
+                            'CRM_Tickets.GeoLocation'
+                        )
+                        ->orderByDesc('CRM_Tickets.created_at')
+                        ->get();
+                } else {
+                    $data = DB::table('CRM_Tickets') 
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                        ->where('CRM_Tickets.Status', $status)
+                        ->where('CRM_Tickets.CrewAssigned', $crew)
+                        ->select('CRM_TicketsRepository.Name',
+                            'CRM_Tickets.id',
+                            'CRM_Tickets.ConsumerName',
+                            'CRM_ServiceConnectionCrew.StationName',
+                            'CRM_Tickets.created_at',
+                            'CRM_Tickets.GeoLocation'
+                        )
+                        ->orderByDesc('CRM_Tickets.created_at')
+                        ->get();
+                }
             }
+            
         } else {
-            if ($crew == 'All') {
-                $data = DB::table('CRM_Tickets') 
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                    ->where('CRM_Tickets.Status', $status)
-                    ->where('CRM_Tickets.Ticket', $ticket)
-                    ->select('CRM_TicketsRepository.Name',
-                        'CRM_Tickets.id',
-                        'CRM_Tickets.ConsumerName',
-                        'CRM_ServiceConnectionCrew.StationName',
-                        'CRM_Tickets.created_at',
-                        'CRM_Tickets.GeoLocation'
-                    )
-                    ->orderByDesc('CRM_Tickets.created_at')
-                    ->get();
+            if ($status == 'All') {
+                if ($crew == 'All') {
+                    $data = DB::table('CRM_Tickets') 
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                        ->where('CRM_Tickets.Ticket', $ticket)
+                        ->select('CRM_TicketsRepository.Name',
+                            'CRM_Tickets.id',
+                            'CRM_Tickets.ConsumerName',
+                            'CRM_ServiceConnectionCrew.StationName',
+                            'CRM_Tickets.created_at',
+                            'CRM_Tickets.GeoLocation'
+                        )
+                        ->orderByDesc('CRM_Tickets.created_at')
+                        ->get();
+                } else {
+                    $data = DB::table('CRM_Tickets') 
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                        ->where('CRM_Tickets.CrewAssigned', $crew)
+                        ->where('CRM_Tickets.Ticket', $ticket)
+                        ->select('CRM_TicketsRepository.Name',
+                            'CRM_Tickets.id',
+                            'CRM_Tickets.ConsumerName',
+                            'CRM_ServiceConnectionCrew.StationName',
+                            'CRM_Tickets.created_at',
+                            'CRM_Tickets.GeoLocation'
+                        )
+                        ->orderByDesc('CRM_Tickets.created_at')
+                        ->get();
+                }
             } else {
-                $data = DB::table('CRM_Tickets') 
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                    ->where('CRM_Tickets.Status', $status)
-                    ->where('CRM_Tickets.CrewAssigned', $crew)
-                    ->where('CRM_Tickets.Ticket', $ticket)
-                    ->select('CRM_TicketsRepository.Name',
-                        'CRM_Tickets.id',
-                        'CRM_Tickets.ConsumerName',
-                        'CRM_ServiceConnectionCrew.StationName',
-                        'CRM_Tickets.created_at',
-                        'CRM_Tickets.GeoLocation'
-                    )
-                    ->orderByDesc('CRM_Tickets.created_at')
-                    ->get();
+                if ($crew == 'All') {
+                    $data = DB::table('CRM_Tickets') 
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                        ->where('CRM_Tickets.Status', $status)
+                        ->where('CRM_Tickets.Ticket', $ticket)
+                        ->select('CRM_TicketsRepository.Name',
+                            'CRM_Tickets.id',
+                            'CRM_Tickets.ConsumerName',
+                            'CRM_ServiceConnectionCrew.StationName',
+                            'CRM_Tickets.created_at',
+                            'CRM_Tickets.GeoLocation'
+                        )
+                        ->orderByDesc('CRM_Tickets.created_at')
+                        ->get();
+                } else {
+                    $data = DB::table('CRM_Tickets') 
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                        ->where('CRM_Tickets.Status', $status)
+                        ->where('CRM_Tickets.CrewAssigned', $crew)
+                        ->where('CRM_Tickets.Ticket', $ticket)
+                        ->select('CRM_TicketsRepository.Name',
+                            'CRM_Tickets.id',
+                            'CRM_Tickets.ConsumerName',
+                            'CRM_ServiceConnectionCrew.StationName',
+                            'CRM_Tickets.created_at',
+                            'CRM_Tickets.GeoLocation'
+                        )
+                        ->orderByDesc('CRM_Tickets.created_at')
+                        ->get();
+                }
             }
         }
 
@@ -2326,6 +2392,9 @@ class TicketsController extends AppBaseController
                     DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='1.c' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received1c"),
                     DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='1.c' AND Status != 'Received' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted1c"),
 
+                    DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.a' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received2a"),
+                    DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.a' AND Status != 'Received' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted2a"),
+
                     DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.c' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received2c"),
                     DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.c' AND Status != 'Received' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted2c"),
 
@@ -2359,6 +2428,9 @@ class TicketsController extends AppBaseController
 
                 DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='1.c' AND Trash IS NULL AND Town='" . $town . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received1c"),
                 DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='1.c' AND Status != 'Received' AND Trash IS NULL AND Town='" . $town . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted1c"),
+
+                DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.a' AND Trash IS NULL AND Town='" . $town . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received2a"),
+                DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.a' AND Status != 'Received' AND Trash IS NULL AND Town='" . $town . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted2a"),
 
                 DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.c' AND Trash IS NULL AND Town='" . $town . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received2c"),
                 DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.c' AND Status != 'Received' AND Trash IS NULL AND Town='" . $town . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted2c"),
@@ -2466,5 +2538,564 @@ class TicketsController extends AppBaseController
         $export = new KPSTicketsExport($data, $town);
 
         return Excel::download($export, 'NEA-KPS-Report.xlsx');
+    }
+
+    public function kpsCustomerServiceParameters(Request $request) {
+        $month = isset($request['Month']) ? $request['Month'] : '01';
+        $year = isset($request['Year']) ? $request['Year'] : '1991';
+        $office = isset($request['Office']) ? $request['Office'] : 'All';
+
+        $from = $year . '-' . $month . '-01';
+        $to = date('Y-m-d', strtotime('last day of ' . $from));
+
+        $prevFrom = date('Y-m-d', strtotime($from . '-1 month' ));
+        $prevTo = date('Y-m-d', strtotime($to . '-1 month' ));
+
+        $data = [];
+
+        if ($office == 'All') {
+            // ====================================
+            // 2 => Previous Month
+            // ====================================
+            $category2Previous = DB::table('CRM_ServiceConnections')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_ServiceConnections.ORDate, CRM_ServiceConnections.DateTimeOfEnergization) as 'Res'")
+                )
+                ->whereRaw("(CRM_ServiceConnections.created_at BETWEEN '" . $prevFrom . "' AND '" . $prevTo . "') AND  
+                    ORDate IS NOT NULL AND DateTimeOfEnergization IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category2PreviousAvg = 0;
+            foreach ($category2Previous as $itemX) {
+                $category2PreviousAvg += intval($itemX->Res);
+            } 
+            if (count($category2Previous) > 0) {
+                $category2PreviousAvg = $category2PreviousAvg/count($category2Previous);
+            } else {
+                $category2PreviousAvg = 0;
+            } 
+
+            // ====================================
+            // 2 => Current Month
+            // ====================================
+            $category2Current = DB::table('CRM_ServiceConnections')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_ServiceConnections.ORDate, CRM_ServiceConnections.DateTimeOfEnergization) as 'Res'")
+                )
+                ->whereRaw("(CRM_ServiceConnections.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND  
+                    ORDate IS NOT NULL AND DateTimeOfEnergization IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category2CurrentAvg = 0;
+            foreach ($category2Current as $itemX) {
+                $category2CurrentAvg += intval($itemX->Res);
+            } 
+            if (count($category2Current) > 0) {
+                $category2CurrentAvg = $category2CurrentAvg/count($category2Current);
+            } else {
+                $category2CurrentAvg = 0;
+            } 
+
+            // ====================================
+            // 3 => Previous Month
+            // ====================================
+            $category3Previous = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.DateTimeLinemanArrived, CRM_Tickets.DateTimeLinemanExecuted) as 'Res'")
+                )
+                ->whereRaw("(CRM_Tickets.created_at BETWEEN '" . $prevFrom . "' AND '" . $prevTo . "') AND CRM_TicketsRepository.KPSHourlyCategory='3' AND 
+                    DateTimeLinemanExecuted IS NOT NULL AND DateTimeLinemanArrived IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category3PreviousAvg = 0;
+            foreach ($category3Previous as $itemX) {
+                $category3PreviousAvg += intval($itemX->Res);
+            } 
+            if (count($category3Previous) > 0) {
+                $category3PreviousAvg = $category3PreviousAvg/count($category3Previous);
+            } else {
+                $category3PreviousAvg = 0;
+            } 
+
+            // ====================================
+            // 3 => Current Month
+            // ====================================
+            $category3Current = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.DateTimeLinemanArrived, CRM_Tickets.DateTimeLinemanExecuted) as 'Res'")
+                )
+                ->whereRaw("(CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_TicketsRepository.KPSHourlyCategory='3' AND 
+                    DateTimeLinemanExecuted IS NOT NULL AND DateTimeLinemanArrived IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category3CurrentAvg = 0;
+            foreach ($category3Current as $itemX) {
+                $category3CurrentAvg += intval($itemX->Res);
+            } 
+            if (count($category3Current) > 0) {
+                $category3CurrentAvg = $category3CurrentAvg/count($category3Current);
+            } else {
+                $category3CurrentAvg = 0;
+            } 
+
+            // ====================================
+            // 4 => Previous Month
+            // ====================================
+            $category4Previous = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.DateTimeComplainLogged, CRM_Tickets.created_at) as 'Res'")
+                )
+                ->whereRaw("(CRM_Tickets.DateTimeComplainLogged BETWEEN '" . $prevFrom . "' AND '" . $prevTo . "') AND CRM_TicketsRepository.KPSHourlyCategory='4' AND 
+                    CRM_Tickets.created_at IS NOT NULL AND CRM_Tickets.DateTimeComplainLogged IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category4PreviousAvg = 0;
+            foreach ($category4Previous as $itemX) {
+                $category4PreviousAvg += intval($itemX->Res);
+            } 
+            if (count($category4Previous) > 0) {
+                $category4PreviousAvg = $category4PreviousAvg/count($category4Previous);
+            } else {
+                $category4PreviousAvg = 0;
+            } 
+
+            // ====================================
+            // 4 => Current Month
+            // ====================================
+            $category4Current = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.DateTimeComplainLogged, CRM_Tickets.created_at) as 'Res'")
+                )
+                ->whereRaw("(CRM_Tickets.DateTimeComplainLogged BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_TicketsRepository.KPSHourlyCategory='4' AND 
+                    CRM_Tickets.created_at IS NOT NULL AND CRM_Tickets.DateTimeComplainLogged IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category4CurrentAvg = 0;
+            foreach ($category4Current as $itemX) {
+                $category4CurrentAvg += intval($itemX->Res);
+            } 
+            if (count($category4Current) > 0) {
+                $category4CurrentAvg = $category4CurrentAvg/count($category4Current);
+            } else {
+                $category4CurrentAvg = 0;
+            } 
+
+            // ====================================
+            // 6 => Previous Month
+            // ====================================
+            $category6Previous = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.created_at, CRM_Tickets.DateTimeDownloaded) as 'Res'")
+                )
+                ->whereRaw("(CRM_Tickets.created_at BETWEEN '" . $prevFrom . "' AND '" . $prevTo . "') AND CRM_TicketsRepository.KPSHourlyCategory='6' AND 
+                    DateTimeDownloaded IS NOT NULL AND CRM_Tickets.created_at IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category6PreviousAvg = 0;
+            foreach ($category6Previous as $itemX) {
+                $category6PreviousAvg += intval($itemX->Res);
+            } 
+            if (count($category6Previous) > 0) {
+                $category6PreviousAvg = $category6PreviousAvg/count($category6Previous);
+            } else {
+                $category6PreviousAvg = 0;
+            } 
+
+            // ====================================
+            // 6 => Current Month
+            // ====================================
+            $category6Current = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.created_at, CRM_Tickets.DateTimeDownloaded) as 'Res'")
+                )
+                ->whereRaw("(CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_TicketsRepository.KPSHourlyCategory='6' AND 
+                    DateTimeDownloaded IS NOT NULL AND CRM_Tickets.created_at IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category6CurrentAvg = 0;
+            foreach ($category6Current as $itemX) {
+                $category6CurrentAvg += intval($itemX->Res);
+            } 
+            if (count($category6Current) > 0) {
+                $category6CurrentAvg = $category6CurrentAvg/count($category6Current);
+            } else {
+                $category6CurrentAvg = 0;
+            } 
+
+            // ====================================
+            // 7 => Previous Month
+            // ====================================
+            $category7Previous = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.created_at, CRM_Tickets.DateTimeLinemanExecuted) as 'Res'")
+                )
+                ->whereRaw("(CRM_Tickets.created_at BETWEEN '" . $prevFrom . "' AND '" . $prevTo . "') AND CRM_TicketsRepository.KPSHourlyCategory='7' AND 
+                    DateTimeLinemanExecuted IS NOT NULL AND CRM_Tickets.created_at IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category7PreviousAvg = 0;
+            foreach ($category7Previous as $itemX) {
+                $category7PreviousAvg += intval($itemX->Res);
+            } 
+            if (count($category7Previous) > 0) {
+                $category7PreviousAvg = $category7PreviousAvg/count($category7Previous);
+            } else {
+                $category7PreviousAvg = 0;
+            } 
+
+            // ====================================
+            // 7 => Current Month
+            // ====================================
+            $category7Current = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.created_at, CRM_Tickets.DateTimeLinemanExecuted) as 'Res'")
+                )
+                ->whereRaw("(CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_TicketsRepository.KPSHourlyCategory='7' AND 
+                    DateTimeLinemanExecuted IS NOT NULL AND CRM_Tickets.created_at IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category7CurrentAvg = 0;
+            foreach ($category7Current as $itemX) {
+                $category7CurrentAvg += intval($itemX->Res);
+            } 
+            if (count($category7Current) > 0) {
+                $category7CurrentAvg = $category7CurrentAvg/count($category7Current);
+            } else {
+                $category7CurrentAvg = 0;
+            } 
+
+            /**
+             * CONSOLIDATE DATA
+             */
+            $data['Category2Previous'] = $category2PreviousAvg;
+            $data['Category2Current'] = $category2CurrentAvg;
+            $data['Category3Previous'] = $category3PreviousAvg;
+            $data['Category3Current'] = $category3CurrentAvg;
+            $data['Category4Previous'] = $category4PreviousAvg;
+            $data['Category4Current'] = $category4CurrentAvg;
+            $data['Category6Previous'] = $category6PreviousAvg;
+            $data['Category6Current'] = $category6CurrentAvg;
+            $data['Category7Previous'] = $category7PreviousAvg;
+            $data['Category7Current'] = $category7CurrentAvg;
+        } else {
+            // ====================================
+            // 2 => Previous Month
+            // ====================================
+            $category2Previous = DB::table('CRM_ServiceConnections')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_ServiceConnections.ORDate, CRM_ServiceConnections.DateTimeOfEnergization) as 'Res'")
+                )
+                ->whereRaw("CRM_ServiceConnections.Office='" . $office . "' AND (CRM_ServiceConnections.created_at BETWEEN '" . $prevFrom . "' AND '" . $prevTo . "') AND  
+                    ORDate IS NOT NULL AND DateTimeOfEnergization IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category2PreviousAvg = 0;
+            foreach ($category2Previous as $itemX) {
+                $category2PreviousAvg += intval($itemX->Res);
+            } 
+            if (count($category2Previous) > 0) {
+                $category2PreviousAvg = $category2PreviousAvg/count($category2Previous);
+            } else {
+                $category2PreviousAvg = 0;
+            } 
+
+            // ====================================
+            // 2 => Current Month
+            // ====================================
+            $category2Current = DB::table('CRM_ServiceConnections')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_ServiceConnections.ORDate, CRM_ServiceConnections.DateTimeOfEnergization) as 'Res'")
+                )
+                ->whereRaw("CRM_ServiceConnections.Office='" . $office . "' AND (CRM_ServiceConnections.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND  
+                    ORDate IS NOT NULL AND DateTimeOfEnergization IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category2CurrentAvg = 0;
+            foreach ($category2Current as $itemX) {
+                $category2CurrentAvg += intval($itemX->Res);
+            } 
+            if (count($category2Current) > 0) {
+                $category2CurrentAvg = $category2CurrentAvg/count($category2Current);
+            } else {
+                $category2CurrentAvg = 0;
+            } 
+
+            // ====================================
+            // 3 => Previous Month
+            // ====================================
+            $category3Previous = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.DateTimeLinemanArrived, CRM_Tickets.DateTimeLinemanExecuted) as 'Res'")
+                )
+                ->whereRaw("CRM_Tickets.Office='" . $office . "' AND (CRM_Tickets.created_at BETWEEN '" . $prevFrom . "' AND '" . $prevTo . "') AND CRM_TicketsRepository.KPSHourlyCategory='3' AND 
+                    DateTimeLinemanExecuted IS NOT NULL AND DateTimeLinemanArrived IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category3PreviousAvg = 0;
+            foreach ($category3Previous as $itemX) {
+                $category3PreviousAvg += intval($itemX->Res);
+            } 
+            if (count($category3Previous) > 0) {
+                $category3PreviousAvg = $category3PreviousAvg/count($category3Previous);
+            } else {
+                $category3PreviousAvg = 0;
+            } 
+
+            // ====================================
+            // 3 => Current Month
+            // ====================================
+            $category3Current = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.DateTimeLinemanArrived, CRM_Tickets.DateTimeLinemanExecuted) as 'Res'")
+                )
+                ->whereRaw("CRM_Tickets.Office='" . $office . "' AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_TicketsRepository.KPSHourlyCategory='3' AND 
+                    DateTimeLinemanExecuted IS NOT NULL AND DateTimeLinemanArrived IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category3CurrentAvg = 0;
+            foreach ($category3Current as $itemX) {
+                $category3CurrentAvg += intval($itemX->Res);
+            } 
+            if (count($category3Current) > 0) {
+                $category3CurrentAvg = $category3CurrentAvg/count($category3Current);
+            } else {
+                $category3CurrentAvg = 0;
+            } 
+
+            // ====================================
+            // 4 => Previous Month
+            // ====================================
+            $category4Previous = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.DateTimeComplainLogged, CRM_Tickets.created_at) as 'Res'")
+                )
+                ->whereRaw("CRM_Tickets.Office='" . $office . "' AND (CRM_Tickets.DateTimeComplainLogged BETWEEN '" . $prevFrom . "' AND '" . $prevTo . "') AND CRM_TicketsRepository.KPSHourlyCategory='4' AND 
+                    CRM_Tickets.created_at IS NOT NULL AND CRM_Tickets.DateTimeComplainLogged IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category4PreviousAvg = 0;
+            foreach ($category4Previous as $itemX) {
+                $category4PreviousAvg += intval($itemX->Res);
+            } 
+            if (count($category4Previous) > 0) {
+                $category4PreviousAvg = $category4PreviousAvg/count($category4Previous);
+            } else {
+                $category4PreviousAvg = 0;
+            } 
+
+            // ====================================
+            // 4 => Current Month
+            // ====================================
+            $category4Current = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.DateTimeComplainLogged, CRM_Tickets.created_at) as 'Res'")
+                )
+                ->whereRaw("CRM_Tickets.Office='" . $office . "' AND (CRM_Tickets.DateTimeComplainLogged BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_TicketsRepository.KPSHourlyCategory='4' AND 
+                    CRM_Tickets.created_at IS NOT NULL AND CRM_Tickets.DateTimeComplainLogged IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category4CurrentAvg = 0;
+            foreach ($category4Current as $itemX) {
+                $category4CurrentAvg += intval($itemX->Res);
+            } 
+            if (count($category4Current) > 0) {
+                $category4CurrentAvg = $category4CurrentAvg/count($category4Current);
+            } else {
+                $category4CurrentAvg = 0;
+            } 
+
+            // ====================================
+            // 6 => Previous Month
+            // ====================================
+            $category6Previous = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.created_at, CRM_Tickets.DateTimeDownloaded) as 'Res'")
+                )
+                ->whereRaw("CRM_Tickets.Office='" . $office . "' AND (CRM_Tickets.created_at BETWEEN '" . $prevFrom . "' AND '" . $prevTo . "') AND CRM_TicketsRepository.KPSHourlyCategory='6' AND 
+                    DateTimeDownloaded IS NOT NULL AND CRM_Tickets.created_at IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category6PreviousAvg = 0;
+            foreach ($category6Previous as $itemX) {
+                $category6PreviousAvg += intval($itemX->Res);
+            } 
+            if (count($category6Previous) > 0) {
+                $category6PreviousAvg = $category6PreviousAvg/count($category6Previous);
+            } else {
+                $category6PreviousAvg = 0;
+            } 
+
+            // ====================================
+            // 6 => Current Month
+            // ====================================
+            $category6Current = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.created_at, CRM_Tickets.DateTimeDownloaded) as 'Res'")
+                )
+                ->whereRaw("CRM_Tickets.Office='" . $office . "' AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_TicketsRepository.KPSHourlyCategory='6' AND 
+                    DateTimeDownloaded IS NOT NULL AND CRM_Tickets.created_at IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category6CurrentAvg = 0;
+            foreach ($category6Current as $itemX) {
+                $category6CurrentAvg += intval($itemX->Res);
+            } 
+            if (count($category6Current) > 0) {
+                $category6CurrentAvg = $category6CurrentAvg/count($category6Current);
+            } else {
+                $category6CurrentAvg = 0;
+            } 
+
+            // ====================================
+            // 7 => Previous Month
+            // ====================================
+            $category7Previous = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.created_at, CRM_Tickets.DateTimeLinemanExecuted) as 'Res'")
+                )
+                ->whereRaw("CRM_Tickets.Office='" . $office . "' AND (CRM_Tickets.created_at BETWEEN '" . $prevFrom . "' AND '" . $prevTo . "') AND CRM_TicketsRepository.KPSHourlyCategory='7' AND 
+                    DateTimeLinemanExecuted IS NOT NULL AND CRM_Tickets.created_at IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category7PreviousAvg = 0;
+            foreach ($category7Previous as $itemX) {
+                $category7PreviousAvg += intval($itemX->Res);
+            } 
+            if (count($category7Previous) > 0) {
+                $category7PreviousAvg = $category7PreviousAvg/count($category7Previous);
+            } else {
+                $category7PreviousAvg = 0;
+            } 
+
+            // ====================================
+            // 7 => Current Month
+            // ====================================
+            $category7Current = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select(
+                    DB::raw("DATEDIFF(hh, CRM_Tickets.created_at, CRM_Tickets.DateTimeLinemanExecuted) as 'Res'")
+                )
+                ->whereRaw("CRM_Tickets.Office='" . $office . "' AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_TicketsRepository.KPSHourlyCategory='7' AND 
+                    DateTimeLinemanExecuted IS NOT NULL AND CRM_Tickets.created_at IS NOT NULL AND (Trash IS NULL OR Trash='No')")
+                ->get();
+
+            $category7CurrentAvg = 0;
+            foreach ($category7Current as $itemX) {
+                $category7CurrentAvg += intval($itemX->Res);
+            } 
+            if (count($category7Current) > 0) {
+                $category7CurrentAvg = $category7CurrentAvg/count($category7Current);
+            } else {
+                $category7CurrentAvg = 0;
+            } 
+
+            /**
+             * CONSOLIDATE DATA
+             */
+            $data['Category2Previous'] = $category2PreviousAvg;
+            $data['Category2Current'] = $category2CurrentAvg;
+            $data['Category3Previous'] = $category3PreviousAvg;
+            $data['Category3Current'] = $category3CurrentAvg;
+            $data['Category4Previous'] = $category4PreviousAvg;
+            $data['Category4Current'] = $category4CurrentAvg;
+            $data['Category6Previous'] = $category6PreviousAvg;
+            $data['Category6Current'] = $category6CurrentAvg;
+            $data['Category7Previous'] = $category7PreviousAvg;
+            $data['Category7Current'] = $category7CurrentAvg;
+        }
+
+        $parentTickets = DB::table('CRM_TicketsRepository')->whereNull('ParentTicket')->orderBy('Name')->get();
+
+        return view('/tickets/kps_customer_service_parameters', [
+            'parentTickets' => $parentTickets,
+            'data' => $data,
+        ]);
+    }
+
+    public function monthlyPerTown(Request $request) {
+        $month = isset($request['Month']) ? $request['Month'] : '01';
+        $year = isset($request['Year']) ? $request['Year'] : '1991';
+
+        $from = $year . '-' . $month . '-01';
+        $to = date('Y-m-d', strtotime('last day of ' . $from));
+
+        $data = DB::table('CRM_Towns')
+                ->select(
+                    'Town',
+                    DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Ticket IN ('1668541254404', '1668541254399', '1668541254400', '1655791242281', '1672792458611', '1672792439659', '1655791203676') 
+                        AND (Trash IS NULL OR Trash='No') AND Town=CRM_Towns.id AND (created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS SDW"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Ticket IN ('1668541254390', '1672792232225') 
+                        AND (Trash IS NULL OR Trash='No') AND Town=CRM_Towns.id AND (created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS MeterReplacements"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Ticket IN ('1668541254393', '1668541254394', '1668541254395', '1668541254396', '1668541254397') 
+                        AND (Trash IS NULL OR Trash='No') AND Town=CRM_Towns.id AND (created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS MeterTransfer"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Ticket IN ('1668541254428', '1668541254429', '1668541254430') 
+                        AND (Trash IS NULL OR Trash='No') AND Town=CRM_Towns.id AND (created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Reconnection"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Ticket NOT IN ('1668541254428', '1668541254429', '1668541254430',
+                            '1668541254404', '1668541254399', '1668541254400', '1655791242281', '1672792458611', '1672792439659', '1655791203676',
+                            '1668541254390', '1672792232225',
+                            '1668541254393', '1668541254394', '1668541254395', '1668541254396', '1668541254397',
+                            '1668541254428', '1668541254429', '1668541254430') 
+                        AND (Trash IS NULL OR Trash='No') AND Town=CRM_Towns.id AND (created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Others")
+                )
+            ->orderBy('Town')
+            ->get();
+
+        return view('/tickets/monthly_per_town', [
+            'data' => $data,
+        ]);
+    }
+
+    public function downoadMonthlyPerTown($month, $year) {
+        $from = $year . '-' . $month . '-01';
+        $to = date('Y-m-d', strtotime('last day of ' . $from));
+
+        $data = DB::table('CRM_Towns')
+                ->select(
+                    'Town',
+                    DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Ticket IN ('1668541254404', '1668541254399', '1668541254400', '1655791242281', '1672792458611', '1672792439659', '1655791203676') 
+                        AND (Trash IS NULL OR Trash='No') AND Town=CRM_Towns.id AND (created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS SDW"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Ticket IN ('1668541254390', '1672792232225') 
+                        AND (Trash IS NULL OR Trash='No') AND Town=CRM_Towns.id AND (created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS MeterReplacements"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Ticket IN ('1668541254393', '1668541254394', '1668541254395', '1668541254396', '1668541254397') 
+                        AND (Trash IS NULL OR Trash='No') AND Town=CRM_Towns.id AND (created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS MeterTransfer"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Ticket IN ('1668541254428', '1668541254429', '1668541254430') 
+                        AND (Trash IS NULL OR Trash='No') AND Town=CRM_Towns.id AND (created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Reconnection"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Ticket NOT IN ('1668541254428', '1668541254429', '1668541254430',
+                            '1668541254404', '1668541254399', '1668541254400', '1655791242281', '1672792458611', '1672792439659', '1655791203676',
+                            '1668541254390', '1672792232225',
+                            '1668541254393', '1668541254394', '1668541254395', '1668541254396', '1668541254397',
+                            '1668541254428', '1668541254429', '1668541254430') 
+                        AND (Trash IS NULL OR Trash='No') AND Town=CRM_Towns.id AND (created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Others")
+                )
+            ->orderBy('Town')
+            ->get();
+
+        $headers = [
+            'Town',
+            'SDW Related',
+            'Meter Replacements',
+            'Meter Transfer',
+            'Reconnection',
+            'Others'
+        ];
+
+        $export = new DynamicExport($data->toArray(), $headers, null, 'TICKETS MONTHLY SUMMARY REPORT PER TOWN FOR ' . date('F Y', strtotime($year . '-' . $month . '-01')));
+
+        return Excel::download($export, 'Ticket-Monthly-Summary-Report-per-Town.xlsx');
     }
 }

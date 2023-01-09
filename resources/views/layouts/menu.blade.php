@@ -228,6 +228,20 @@ use Illuminate\Support\Facades\Auth;
                         <i class="fas fa-clipboard-list nav-icon text-warning"></i><p>Summary</p>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('tickets.kps-customer-service-parameters') }}"
+                        class="nav-link {{ Request::is('tickets.kps-customer-service-parameters*') ? 'active' : '' }}">
+                            <i class="fas fa-circle nav-icon text-warning"></i><p>KPS Cust. Svc. Params.</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('serviceConnections.energization-per-brgy') }}"
+                        class="nav-link {{ Request::is('serviceConnections.energization-per-brgy*') ? 'active' : '' }}">
+                            <i class="fas fa-circle nav-icon text-warning"></i><p>Energization per Barangay</p>
+                        </a>
+                    </li>
                 </ul>
             </li>
             @endcanany
@@ -415,12 +429,12 @@ use Illuminate\Support\Facades\Auth;
                             <i class="fas fa-circle nav-icon text-danger"></i><p>Relocation</p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="{{ route('tickets.change-meter') }}"
                         class="nav-link {{ Request::is('tickets.change-meter*') ? 'active' : '' }}">
                             <i class="fas fa-circle nav-icon text-danger"></i><p>Change Meter</p>
                         </a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
             @endcanany
@@ -471,6 +485,21 @@ use Illuminate\Support\Facades\Auth;
                     <i class="fas fa-circle nav-icon text-danger"></i><p>NEA KPS Summary</p>
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a href="{{ route('tickets.kps-customer-service-parameters') }}"
+                class="nav-link {{ Request::is('tickets.kps-customer-service-parameters*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>KPS Cust. Svc. Params.</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('tickets.monthly-per-town') }}"
+                class="nav-link {{ Request::is('tickets.monthly-per-town*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>Monthly Per Town</p>
+                </a>
+            </li>
+
             <li class="nav-header">                
                 Settings and Others 
             </li>

@@ -12,6 +12,7 @@ use App\Models\IDGenerator;
 use App\Models\Barangays;
 use App\Models\Towns;
 use App\Models\MemberConsumers;
+use App\Models\Notifiers;
 use App\Models\MemberConsumerChecklistsRep;
 use App\Models\TransactionDetails;
 use App\Models\TransactionIndex;
@@ -124,6 +125,21 @@ class MemberConsumersController extends AppBaseController
                 $memberConsumers = $this->memberConsumersRepository->create($input);
 
                 Flash::success('Member Consumers saved successfully.');
+
+                // CREATE NOTIFICATION
+                if ($input['ContactNumbers'] != null) {
+                    if (strlen($input['ContactNumbers'] > 9)) {
+                        $notifier = new Notifiers;
+                        $notifier->id = IDGenerator::generateIDandRandString();
+                        $notifier->Notification = 'Congratulations! You have been successfully registered as a Member-Consumer-Owner of BOHECO I. This is a system generated message.';
+                        $notifier->From = Auth::id();
+                        $notifier->Status = 'SENT';
+                        $notifier->Intent = "MEMBERSHIP REGISTRATION"; 
+                        $notifier->ObjectId = $input['Id'];
+                        $notifier->ContactNumber = $input['ContactNumbers'];
+                        $notifier->save();
+                    }
+                }
 
                 if ($input['CivilStatus'] == 'Married') {
                     return redirect(route('memberConsumerSpouses.create', [$input['Id']]));

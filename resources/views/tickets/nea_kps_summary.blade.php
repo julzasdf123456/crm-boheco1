@@ -121,8 +121,8 @@
                     <tr>
                         <td>2.a</td>
                         <td>Low Voltage</td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ $data->Received2a }}</td>
+                        <td>{{ $data->Acted2a }}</td>
                     </tr>
                     <tr>
                         <td>2.b</td>

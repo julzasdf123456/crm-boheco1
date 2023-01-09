@@ -88,6 +88,7 @@ class Tickets extends Model
         'PoleNumber',
         'ServiceConnectionId',
         'InspectionId',
+        'DateTimeComplainLogged'
     ];
 
     /**
@@ -132,6 +133,7 @@ class Tickets extends Model
         'PoleNumber' => 'string',
         'ServiceConnectionId' => 'string',
         'InspectionId' => 'string',
+        'DateTimeComplainLogged' => 'string'
     ];
 
     /**
@@ -178,6 +180,7 @@ class Tickets extends Model
         'PoleNumber' => 'nullable|string',
         'ServiceConnectionId' => 'nullable|string',
         'InspectionId' => 'nullable|string',
+        'DateTimeComplainLogged' => 'nullable|string'
     ];
 
     public static function getAddress($ticket) {

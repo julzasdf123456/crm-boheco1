@@ -40,7 +40,7 @@
                     @if ($serviceConnections == null)
                         <p class="text-center"><i>No Service Connection Applications with Unassigned Meters.</i></p>
                     @else
-                        <table class="table table-striped table-valign-middle">
+                        <table class="table table-striped table-hover table-valign-middle">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -48,6 +48,7 @@
                                     <th>Address</th>
                                     <th>Account Type</th>
                                     <th>Station Crew</th>
+                                    <th>Status</th>
                                     <th width="10%">Pre-Energization</th>
                                     <th width="10%">Post-Energization</th>
                                 </tr>
@@ -60,9 +61,14 @@
                                         <td>{{ ServiceConnections::getAddress($item) }}</td>
                                         <td>{{ $item->AccountType }}</td>
                                         <td>{{ $item->StationName }}</td>
+                                        <td><span class="badge bg-info">{{ $item->Status }}</span></td>
                                         <td class="text-center">
                                             <a href="{{ route('serviceConnections.print-order', [$item->id]) }}" class="{{ $item->EnergizationOrderIssued==null ? 'text-primary' : 'text-success' }}" title="Issue and Print Energization Order/Ticket"> <i class="fas fa-print"></i> </a>
-                                            <button id="reAssign" class="btn text-muted" data-toggle="modal" data-target="#modal-default" data-id="{{ $item->id }}" fromData="{{ $item->StationName }}" style="margin-left: 10px;" title="Re-assign station and crew"> <i class="fas fa-hard-hat"></i> </button>
+                                            @if ($item->Status=='Downloaded by Crew')
+                                                
+                                            @else
+                                                <button id="reAssign" class="btn text-muted" data-toggle="modal" data-target="#modal-default" data-id="{{ $item->id }}" fromData="{{ $item->StationName }}" style="margin-left: 10px;" title="Re-assign station and crew"> <i class="fas fa-hard-hat"></i> </button>
+                                            @endif
                                         </td>
                                         <td class="text-center">
                                             <button id="update-energization" class="btn {{ $item->Status=='Not Energized' ? 'text-danger' : 'text-primary' }}" data-toggle="modal" data-target="#modal-energization" data-id="{{ $item->id }}" title="Update Energization Order"> <i class="fas fa-clipboard-check"></i> </button>

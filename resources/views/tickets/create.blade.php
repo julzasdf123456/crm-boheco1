@@ -24,6 +24,22 @@
             <div class="col-lg-8 col-md-12">
                 <div class="card">
                     {!! Form::open(['route' => 'tickets.store']) !!}
+                    <div class="card-header">
+                        <div class="form-group row">
+                            <label for="DateTimeComplainLogged" class="col-md-4">Date and Time Comlaint Logged/Called</label>
+                            {!! Form::text('DateTimeComplainLogged', date('Y-m-d h:i:s'), ['id' => 'DateTimeComplainLogged', 'class' => 'form-control form-control-sm col-md-4', 'placeholder' => 'Datetime Log']) !!}
+
+                            @push('page_scripts')
+                                <script type="text/javascript">
+                                    $('#DateTimeComplainLogged').datetimepicker({
+                                        format: 'YYYY-MM-DD HH:mm:ss',
+                                        useCurrent: true,
+                                        sideBySide: true
+                                    })
+                                </script>
+                            @endpush
+                        </div>
+                    </div>
                     <div class="card-body">                
                         <div class="row">                 
 

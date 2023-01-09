@@ -34,9 +34,11 @@ use App\Models\PreDefinedMaterialsMatrix;
 use App\Models\TransactionDetails;
 use App\Models\TransactionIndex;
 use App\Models\ServiceAccounts;
+use App\Models\Notifiers;
 use App\Models\BillDeposits;
 use App\Exports\ServiceConnectionApplicationsReportExport;
 use App\Exports\ServiceConnectionEnergizationReportExport;
+use App\Exports\DynamicExport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -198,6 +200,21 @@ class ServiceConnectionsController extends AppBaseController
                 $timeFrame->UserId = Auth::id();
                 $timeFrame->Status = 'Received';
                 $timeFrame->save();
+
+                // CREATE NOTIFICATION
+                if ($input['ContactNumber'] != null) {
+                    if (strlen($input['ContactNumber'] > 9)) {
+                        $notifier = new Notifiers;
+                        $notifier->id = IDGenerator::generateIDandRandString();
+                        $notifier->Notification = 'Good day, ' . $serviceConnections->ServiceAccountName . ',\n\nYour application for service connection has been received and will be processed shortly. Expect further notifications for more updates and information regarding your application. Thank you!\n\nBOHECO I Auto-SMS Hub';
+                        $notifier->From = Auth::id();
+                        $notifier->Status = 'SENT';
+                        $notifier->Intent = "SERVICE CONNECTION APPLICATION"; 
+                        $notifier->ObjectId = $input['id'];
+                        $notifier->ContactNumber = $input['ContactNumber'];
+                        $notifier->save();
+                    }
+                }
                 
                 // CREATE FOLDER FIRST
                 if (!file_exists('/CRM_FILES//' . $input['id'])) {
@@ -212,8 +229,6 @@ class ServiceConnectionsController extends AppBaseController
         } else {
             return abort('ID Not found!', 404);
         }
-
-        
     }
 
     /**
@@ -270,6 +285,7 @@ class ServiceConnectionsController extends AppBaseController
         })
         ->first(); 
 
+        
         $serviceConnectionInspections = ServiceConnectionInspections::where('ServiceConnectionId', $id)
                                 ->orderByDesc('created_at')
                                 ->first();
@@ -1046,12 +1062,10 @@ class ServiceConnectionsController extends AppBaseController
                                         'CRM_ServiceConnectionCrew.StationName as StationName',
                                         'CRM_ServiceConnectionCrew.CrewLeader as CrewLeader',
                                         'CRM_ServiceConnectionCrew.Members as Members',
+                                        'CRM_ServiceConnections.Status', 
                                         'CRM_Barangays.Barangay as Barangay')
                         ->whereNotNull('CRM_ServiceConnections.ORNumber')
-                        ->where(function ($query) {
-                            $query->where('CRM_ServiceConnections.Status', 'Approved')
-                                ->orWhere('CRM_ServiceConnections.Status', 'Not Energized');
-                        })
+                        ->whereRaw("CRM_ServiceConnections.Status IN ('Approved', 'Not Energized', 'Downloaded By Crew')")
                         ->whereIn('CRM_ServiceConnections.id', DB::table('CRM_ServiceConnectionMeterAndTransformer')->pluck('ServiceConnectionId'))
                         ->orderBy('CRM_ServiceConnections.ServiceAccountName')
                         ->get();
@@ -2795,4 +2809,58 @@ class ServiceConnectionsController extends AppBaseController
 
         return response()->json($output, 200);
     }
+
+    public function energizationPerBarangay(Request $request) {
+        $month = isset($request['Month']) ? $request['Month'] : '01';
+        $year = isset($request['Year']) ? $request['Year'] : '1991';
+
+        $from = $year . '-' . $month . '-01';
+        $to = date('Y-m-d', strtotime('last day of ' . $from));
+
+        $data = DB::table('CRM_Barangays')            
+            ->leftJoin('CRM_Towns', 'CRM_Barangays.TownId', '=', 'CRM_Towns.id')
+            ->select(
+                'CRM_Barangays.Barangay', 
+                'CRM_Towns.Town',
+                DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE DateTimeOfEnergization IS NOT NULL AND 
+                    (TRY_CAST(DateTimeOfEnergization AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND 
+                    (Trash IS NULL OR Trash='No') AND Barangay=CRM_Barangays.id) AS ConsumerCount"),
+            )
+            ->orderBy('CRM_Towns.Town')
+            ->orderBy('CRM_Barangays.Barangay')
+            ->get();
+
+        return view('/service_connections/energization_per_barangay', [
+            'data' => $data,
+        ]);
+    } 
+
+    public function downloadEnergizationPerBarangay($month, $year) {
+        $from = $year . '-' . $month . '-01';
+        $to = date('Y-m-d', strtotime('last day of ' . $from));
+
+        $data = DB::table('CRM_Barangays')            
+            ->leftJoin('CRM_Towns', 'CRM_Barangays.TownId', '=', 'CRM_Towns.id')
+            ->select(
+                'CRM_Barangays.Barangay', 
+                'CRM_Towns.Town',
+                DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE DateTimeOfEnergization IS NOT NULL AND 
+                    (TRY_CAST(DateTimeOfEnergization AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND 
+                    (Trash IS NULL OR Trash='No') AND Barangay=CRM_Barangays.id) AS ConsumerCount"),
+            )
+            ->orderBy('CRM_Towns.Town')
+            ->orderBy('CRM_Barangays.Barangay')
+            ->get();
+
+        $headers = [
+            'Barangay',
+            'Town',
+            'ConsumerCount',
+        ];
+
+        $export = new DynamicExport($data->toArray(), $headers, null, 'Energization Report per Barangay for ' . date('F Y', strtotime($year . '-' . $month . '-01')));
+
+        return Excel::download($export, 'Energization-Report-per-Barangay.xlsx');
+    }
+
 }

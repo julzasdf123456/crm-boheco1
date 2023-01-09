@@ -45,7 +45,9 @@ class Notifiers extends Model
         'Status',
         'Intent',
         'IntentLink',
-        'ObjectId'
+        'ObjectId',
+        'ContactNumber',
+        'IsSMSSent',
     ];
 
     /**
@@ -61,7 +63,9 @@ class Notifiers extends Model
         'Status' => 'string',
         'Intent' => 'string',
         'IntentLink' => 'string',
-        'ObjectId' => 'string'
+        'ObjectId' => 'string',
+        'ContactNumber' => 'string',
+        'IsSMSSent' => 'string'
     ];
 
     /**
@@ -79,6 +83,8 @@ class Notifiers extends Model
         'IntentLink' => 'nullable|string|max:800',
         'ObjectId' => 'nullable|string|max:255',
         'created_at' => 'nullable',
-        'updated_at' => 'nullable'
+        'updated_at' => 'nullable',
+        'ContactNumber' => 'nullable|string',
+        'IsSMSSent' => 'nullable|string'
     ];
 }
