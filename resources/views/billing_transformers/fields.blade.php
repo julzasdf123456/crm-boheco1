@@ -64,7 +64,7 @@
 
 <div class="divider"></div>
 
-<div class="form-group col-sm-12">
+{{-- <div class="form-group col-sm-12">
     <div class="row">
         <!-- Main Field -->
         <div class="col-lg-1 col-md-1">
@@ -99,15 +99,15 @@
             </div>
         </div>
     </div> 
-</div>
+</div> --}}
 
-<div class="divider"></div>
+{{-- <div class="divider"></div> --}}
 
 <div class="form-group col-lg-12">
     <div class="row">
         <!-- BAPA Field -->
         <div class="col-lg-1 col-md-1">
-            {!! Form::label('BAPA', 'BAPA:') !!}
+            {!! Form::label('BAPA', 'BAPA/ECA:') !!}
         </div>
 
         <div class="col-lg-1 col-md-1">
@@ -118,7 +118,7 @@
 
         <!-- OrganizationParentAccount/BAPA NAME Field -->
         <div class="col-lg-1 col-md-1">
-            {!! Form::label('OrganizationParentAccount', 'Select BAPA:') !!}
+            {!! Form::label('OrganizationParentAccount', 'Select BAPA/ECA:') !!}
         </div>
 
         <div class="col-lg-3 col-md-4">

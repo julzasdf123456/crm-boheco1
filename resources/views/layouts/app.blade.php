@@ -230,9 +230,48 @@
 
         <ul class="navbar-nav ml-auto">
             <!-- Navbar Search -->
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <button class="btn btn-link text-primary" title="Search Consumer"  data-toggle="modal" data-target="#modal-search-main"><i class="fas fa-search ico-tab"></i></button> 
+            </li> --}}
+
+            
+            {{-- SHORT CUTS --}}
+            @canany(['Super Admin', 'create membership'])
+            <li class="nav-item">
+                <a class="nav-link text-success" href="{{ route('memberConsumers.create') }}" title="New Membership">
+                    <i class="fas fa-plus"></i>
+                </a>
             </li>
+            @endcanany
+
+            @canany(['Super Admin', 'sc create'])
+            <li class="nav-item">
+                <a class="nav-link text-warning" href="{{ route('serviceConnections.selectmembership') }}" title="New Service Connection Application">
+                    <i class="fas fa-plus"></i>
+                </a>
+            </li>
+            @endcanany
+
+            @canany(['Super Admin', 'tickets create'])
+            <li class="nav-item dropdown">
+                <a class="nav-link text-danger" data-toggle="dropdown" href="#">
+                    <i class="fas fa-plus"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                    {{-- <span class="dropdown-item dropdown-header">15 Notifications</span> --}}
+                    <span>
+                        <a href="{{ route('tickets.create-select') }}"
+                            class="nav-link">
+                            <i class="fas fa-circle nav-icon text-danger ico-tab"></i>Ordinary Ticket
+                        </a>
+                        <a href="{{ route('tickets.relocation-search') }}"
+                            class="nav-link">
+                            <i class="fas fa-circle nav-icon text-danger ico-tab"></i>Relocation Ticket
+                        </a>
+                    </span>                    
+                </div>
+            </li>
+            @endcanany
     
             <!-- Notifications Dropdown Menu -->
             <li class="nav-item dropdown">

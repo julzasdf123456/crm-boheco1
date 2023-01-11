@@ -534,23 +534,23 @@ use Illuminate\Support\Facades\Auth;
 {{-- SERVICE ACCOUNTS --}}
 @canany(['Super Admin', 'billing re-bill'])
     <li class="nav-header">BILLING</li>
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a href="{{ route('bills.dashboard') }}"
            class="nav-link {{ Request::is('bills.dashboard*') ? 'active' : '' }}">                   
            <i class="fas fa-chart-line nav-icon text-primary"></i><p>Dashboard
            </p>
         </a>
-    </li>
+    </li> --}}
     <li class="nav-item has-treeview">
         <a href="#" class="nav-link">
             <i class="fas fa-file-invoice-dollar nav-icon text-primary"></i>
             <p>
-                Billing Inquiry
+                Billing
                 <i class="fas fa-angle-left right"></i>
             </p>
         </a>
         <ul class="nav nav-treeview">
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="{{ route('serviceAccounts.index') }}"
                    class="nav-link {{ Request::is('serviceAccounts*') ? 'active' : '' }}">                   
                    <i class="fas fa-user-circle nav-icon text-primary"></i><p>All Accounts</p>
@@ -562,14 +562,14 @@ use Illuminate\Support\Facades\Auth;
                    title="Accounts with Termed Payments">                   
                    <i class="fas fa-list nav-icon text-primary"></i><p>Accounts w/ OCL</p>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-header">                
                 Others 
             </li>
             <li class="nav-item">
                 <a href="{{ route('serviceAccounts.pending-accounts') }}"
                    class="nav-link {{ Request::is('serviceAccounts.pending-accounts*') ? 'active' : '' }}">                   
-                   <i class="fas fa-user-alt-slash nav-icon text-primary"></i><p>Pending Accounts</p>
+                   <i class="fas fa-user-alt-slash nav-icon text-primary"></i><p>New Energized</p>
                 </a>
             </li>
             <li class="nav-item">
@@ -711,7 +711,7 @@ use Illuminate\Support\Facades\Auth;
     </li>
 @endcanany --}}
 @canany(['Super Admin', 'billing re-bill'])
-    <li class="nav-item has-treeview">
+    {{-- <li class="nav-item has-treeview">
         <a href="#" class="nav-link">
             <i class="fas fa-tachometer-alt nav-icon text-primary"></i>
             <p>
@@ -757,7 +757,7 @@ use Illuminate\Support\Facades\Auth;
                 </a>
             </li>
         </ul>
-    </li>
+    </li> --}}
 
     {{-- <li class="nav-item has-treeview">
         <a href="#" class="nav-link">
@@ -1130,14 +1130,14 @@ use Illuminate\Support\Facades\Auth;
     </li>
 @endcanany
 
-@canany(['Super Admin', 'agma'])
+{{-- @canany(['Super Admin', 'agma'])
     <li class="nav-item">
         <a href="{{ route('preRegEntries.index') }}"
         class="nav-link {{ Request::is('preRegEntries*') ? 'active' : '' }}">
         <i class="fas fa-check-circle     nav-icon"></i><p>AMGA 2022 Pre-Reg</p>
         </a>
     </li>
-@endcanany
+@endcanany --}}
 
 <!-- ADMIN MENU -->
 @can('Super Admin')
