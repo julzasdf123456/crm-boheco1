@@ -416,7 +416,7 @@ class TicketsController extends AppBaseController
                                             ->orWhereNull('CRM_Tickets.Trash');
                                     })
                     ->orderByDesc('CRM_Tickets.created_at')
-                    ->take(15)
+                    ->limit(15)
                     ->get();
             }
 
