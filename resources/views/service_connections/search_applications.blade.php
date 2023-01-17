@@ -10,7 +10,7 @@
             {!! Form::open(['route' => 'serviceConnections.index', 'method' => 'GET']) !!}
                 <div class="row mb-2">
                     <div class="col-md-6 offset-md-3">
-                        <input type="text" class="form-control" placeholder="Search Account # or Account Name" name="params" value="{{ old('params') }}">
+                        <input type="text" class="form-control" placeholder="Search Account # or Account Name" name="params" value="{{ isset($_GET['params']) ? $_GET['params'] : '' }}" autofocus>
                     </div>
                     <div class="col-md-3">
                         {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}

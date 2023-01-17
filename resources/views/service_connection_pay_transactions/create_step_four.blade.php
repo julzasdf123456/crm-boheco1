@@ -235,7 +235,7 @@ $id = IDGenerator::generateID();
                             <td>Wiring Labor Charge</td>
                             <th class="text-right text-primary">₱ <span id="wiring-labor-charge-display" data-toggle="tooltip" data-placement="left">{{ $totalPayments != null ? number_format($totalPayments->LaborCharge, 2) : '0.00' }}</span></th>
                         </tr>
-                        <tr>
+                        <tr title="Bill deposits are being rounded down to the nearest hundredth">
                             <td>Bill Deposit</td>
                             <th class="text-right text-primary">₱ <span id="bill-deposit-display" data-toggle="tooltip" data-placement="left">{{ $totalPayments != null ? number_format($totalPayments->BillDeposit, 2) : '0.00' }}</span></th>
                         </tr>
@@ -473,10 +473,10 @@ $id = IDGenerator::generateID();
                                 parseFloat($('#PowerFactor').val()) *
                                 parseFloat($('#DemandFactor').val()) *
                                 parseFloat($('#Hours').val()) *
-                                parseFloat($('#AverageRate').val())
+                                parseFloat($('#AverageRate').val())                                
             }
 
-            return Math.floor(billDeposit)
+            return Math.floor(billDeposit / 100) * 100
         }
 
         // GET OVER ALL TOTAL

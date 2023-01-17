@@ -140,6 +140,8 @@ Route::get('/service_connections/inspection-full-report', [ServiceConnectionsCon
 Route::get('/service_connections/get-inspection-summary-data', [ServiceConnectionsController::class, 'getInspectionSummaryData'])->name('serviceConnections.get-inspection-summary-data');
 Route::get('/service_connections/energization-per-brgy', [App\Http\Controllers\ServiceConnectionsController::class, 'energizationPerBarangay'])->name('serviceConnections.energization-per-brgy');
 Route::get('/service_connections/download-energization-per-brgy/{mnth}/{year}', [App\Http\Controllers\ServiceConnectionsController::class, 'downloadEnergizationPerBarangay'])->name('serviceConnections.download-energization-per-brgy');
+Route::get('/service_connections/crew-assigning', [App\Http\Controllers\ServiceConnectionsController::class, 'crewAssigning'])->name('serviceConnections.crew-assigning');
+Route::get('/service_connections/assign-crew', [App\Http\Controllers\ServiceConnectionsController::class, 'assignCrew'])->name('serviceConnections.assign-crew');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 
@@ -776,7 +778,11 @@ Route::resource('unbundledRatesExtensions', App\Http\Controllers\UnbundledRatesE
 
 Route::resource('billDeposits', App\Http\Controllers\BillDepositsController::class);
 
-
+Route::get('/account_masters/account-migration-step-one/{id}', [App\Http\Controllers\AccountMasterController::class, 'accountMigrationStepOne'])->name('accountMasters.account-migration-step-one');
+Route::get('/account_masters/get-available-account-numbers', [App\Http\Controllers\AccountMasterController::class, 'getAvailableAccountNumbers'])->name('accountMasters.get-available-account-numbers');
+Route::get('/account_masters/account-migration-step-two/{id}/{scId}', [App\Http\Controllers\AccountMasterController::class, 'accountMigrationStepTwo'])->name('accountMasters.account-migration-step-two');
+Route::get('/account_masters/account-migration-step-three/{id}/{scId}', [App\Http\Controllers\AccountMasterController::class, 'accountMigrationStepThree'])->name('accountMasters.account-migration-step-three');
+Route::get('/account_masters/get-neighboring-by-barangay', [App\Http\Controllers\AccountMasterController::class, 'getNeighboringByBarangay'])->name('accountMasters.get-neighboring-by-barangay');
 Route::resource('accountMasters', App\Http\Controllers\AccountMasterController::class);
 
 
@@ -787,3 +793,9 @@ Route::resource('preRegEntries', App\Http\Controllers\PreRegEntriesController::c
 
 
 Route::resource('signatories', App\Http\Controllers\SignatoriesController::class);
+
+
+Route::resource('accountMasterExtensions', App\Http\Controllers\AccountMasterExtensionController::class);
+
+
+Route::resource('meters', App\Http\Controllers\MetersController::class);

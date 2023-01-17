@@ -1145,25 +1145,23 @@ class ServiceConnectionsController extends AppBaseController
     }
 
     public function changeStationCrew(Request $request) {
-        if(request()->ajax()){
-            $serviceConnection = ServiceConnections::find($request['id']);
+        $serviceConnection = ServiceConnections::find($request['id']);
 
-            $serviceConnection->StationCrewAssigned = $request['StationCrewAssigned'];
-            $serviceConnection->DateTimeOfEnergizationIssue = date('Y-m-d H:i:s');
+        $serviceConnection->StationCrewAssigned = $request['StationCrewAssigned'];
+        $serviceConnection->DateTimeOfEnergizationIssue = date('Y-m-d H:i:s');
 
-            $serviceConnection->save();
+        $serviceConnection->save();
 
-            // CREATE Timeframes
-            $timeFrame = new ServiceConnectionTimeframes;
-            $timeFrame->id = IDGenerator::generateID();
-            $timeFrame->ServiceConnectionId = $request['id'];
-            $timeFrame->UserId = Auth::id();
-            $timeFrame->Status = 'Station Crew Re-assigned';
-            $timeFrame->Notes = 'From ' . $request['FromStationCrewName'] . ' to ' . $request['ToStationCrewName'];
-            $timeFrame->save();
+        // CREATE Timeframes
+        $timeFrame = new ServiceConnectionTimeframes;
+        $timeFrame->id = IDGenerator::generateID();
+        $timeFrame->ServiceConnectionId = $request['id'];
+        $timeFrame->UserId = Auth::id();
+        $timeFrame->Status = 'Station Crew Re-assigned';
+        $timeFrame->Notes = 'From ' . $request['FromStationCrewName'] . ' to ' . $request['ToStationCrewName'];
+        $timeFrame->save();
 
-            return response()->json([ 'success' => true ]);
-        }        
+        return response()->json([ 'success' => true ], 200);       
     }
 
     public function updateEnergizationStatus(Request $request) {
@@ -2929,4 +2927,56 @@ class ServiceConnectionsController extends AppBaseController
         return Excel::download($export, 'Energization-Report-per-Barangay.xlsx');
     }
 
+    public function crewAssigning(Request $request) {
+        $office = isset($request['Office']) ? $request['Office'] : env('APP_LOCATION');
+
+        $data = DB::table('CRM_ServiceConnections')                
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')   
+            ->whereRaw("StationCrewAssigned IS NULL AND CRM_ServiceConnections.Status NOT IN('Energized', 'Closed') AND (Trash IS NULL OR Trash='No') AND Office='" . $office . "'") 
+            ->select(
+                'CRM_ServiceConnections.id',
+                'ServiceAccountName',
+                'Sitio',
+                'CRM_Towns.Town',
+                'CRM_Barangays.Barangay',
+                'DateOfApplication',
+                'CRM_ServiceConnections.Status',
+                'CRM_ServiceConnectionAccountTypes.AccountType',
+                'Office',
+                'LoadCategory')
+            ->orderBy('DateOfApplication')
+            ->get();     
+            
+        $crews = ServiceConnectionCrew::orderBy('StationName')->get();
+
+        return view('/service_connections/crew_assigning', [
+            'data' => $data,
+            'crew' => $crews,
+        ]);
+    }
+
+    public function assignCrew(Request $request) {
+        $serviceConnection = ServiceConnections::find($request['id']);
+
+        $serviceConnection->StationCrewAssigned = $request['StationCrewAssigned'];
+
+        $serviceConnection->save();
+        
+        $crew = ServiceConnectionCrew::find($request['StationCrewAssigned']);
+
+        // CREATE Timeframes
+        $timeFrame = new ServiceConnectionTimeframes;
+        $timeFrame->id = IDGenerator::generateID();
+        $timeFrame->ServiceConnectionId = $request['id'];
+        $timeFrame->UserId = Auth::id();
+        $timeFrame->Status = 'Station Crew Assigned';
+        if ($crew != null) {
+            $timeFrame->Notes = 'Application assigned to crew ' . $crew->StationName;
+        }        
+        $timeFrame->save();
+
+        return response()->json('ok', 200);       
+    }
 }

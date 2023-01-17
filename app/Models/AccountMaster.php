@@ -85,13 +85,18 @@ class AccountMaster extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
+    protected $primaryKey = 'AccountNumber';
+
+    public $incrementing = false;
 
     protected $dates = ['deleted_at'];
+
+    public $timestamps = false;
 
     public $connection = "sqlsrvbilling";
 
     public $fillable = [
-        'rowguid',
+        'AccountNumber',
         'ComputeMode',
         'RecordStatus',
         'ChangeDate',
@@ -232,8 +237,7 @@ class AccountMaster extends Model
      * @var array
      */
     public static $rules = [
-        'rowguid' => 'required|string',
-        'ComputeMode' => 'required|string|max:20',
+        'ComputeMode' => 'nullable|string|max:20',
         'RecordStatus' => 'nullable|string|max:1',
         'ChangeDate' => 'nullable',
         'Area' => 'nullable|string|max:10',
@@ -296,5 +300,21 @@ class AccountMaster extends Model
         'BillingStatus' => 'nullable|string|max:20'
     ];
 
-    
+    public static function getTypeByAlias($alias) {
+        if ($alias=='CL' || $alias=='CS') {
+            return 'C';
+        } elseif ($alias=='RM' || $alias=='RI') {
+            return 'R';
+        } else {
+            return $alias;
+        }
+    }
+
+    public static function getInstallationType($type) {
+        if ($type=='Non-Concrete') {
+            return 'conc';
+        } else {
+            return 'non-conc';
+        }
+    }
 }

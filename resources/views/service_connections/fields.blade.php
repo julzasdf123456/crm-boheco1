@@ -171,7 +171,7 @@ use App\Models\IDGenerator;
                         <span class="input-group-text"><i class="fas fa-code-branch"></i></span>
                     </div>
 
-                    {!! Form::number('LoadCategory', null, ['class' => 'form-control form-control-sm','maxlength' => 300,'maxlength' => 300, 'step' => 'any', 'placeholder' => 'Projected load in kVA']) !!}                  
+                    {!! Form::number('LoadCategory', 0.25, ['class' => 'form-control form-control-sm','maxlength' => 300,'maxlength' => 300, 'step' => 'any', 'placeholder' => 'Projected load in kVA', 'required' => true]) !!}                  
                 </div>
             </div>
         </div>  
@@ -308,7 +308,7 @@ use App\Models\IDGenerator;
                         <span class="input-group-text"><i class="fas fa-code-branch"></i></span>
                     </div>
 
-                    {!! Form::number('LoadCategory', $serviceConnections->LoadCategory, ['class' => 'form-control form-control-sm','maxlength' => 300,'maxlength' => 300, 'step' => 'any', 'placeholder' => 'Projected load in kVA']) !!}                  
+                    {!! Form::number('LoadCategory', $serviceConnections->LoadCategory, ['class' => 'form-control form-control-sm','maxlength' => 300,'maxlength' => 300, 'step' => 'any', 'placeholder' => 'Projected load in kVA', 'required' => true]) !!}                  
                 </div>
             </div>
         </div>  

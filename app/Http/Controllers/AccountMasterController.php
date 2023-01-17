@@ -7,6 +7,24 @@ use App\Http\Requests\UpdateAccountMasterRequest;
 use App\Repositories\AccountMasterRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use App\Models\ServiceConnections;
+use App\Models\Towns;
+use App\Models\Barangays;
+use App\Models\ServiceConnectionInspections;
+use App\Models\ServiceConnectionAccountTypes;
+use App\Models\ServiceAccounts;
+use App\Models\MeterReaders;
+use App\Models\Meters;
+use App\Models\AccountNameHistory;
+use App\Models\BillingTransformers;
+use App\Models\AccountMaster;
+use App\Models\AccountMasterExtension;
+use App\Models\ServiceConnectionMtrTrnsfrmr;
+use App\Models\ServiceConnectionCrew;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Flash;
 use Response;
 
@@ -17,6 +35,7 @@ class AccountMasterController extends AppBaseController
 
     public function __construct(AccountMasterRepository $accountMasterRepo)
     {
+        $this->middleware('auth');
         $this->accountMasterRepository = $accountMasterRepo;
     }
 
@@ -56,11 +75,23 @@ class AccountMasterController extends AppBaseController
     {
         $input = $request->all();
 
-        $accountMaster = $this->accountMasterRepository->create($input);
+        $account = AccountMaster::find($input['AccountNumber']);
+        if ($account != null) {
+            Flash::error('Account Number already taken!');
 
-        Flash::success('Account Master saved successfully.');
+            return redirect(route('accountMasters.account-migration-step-one', [$input['ServiceConnectionId']]));
+        } else {
+            $accountMaster = $this->accountMasterRepository->create($input);
 
-        return redirect(route('accountMasters.index'));
+            // Flash::success('Account Master saved successfully.');
+
+            $extension = new AccountMasterExtension;
+            $extension->AccountNumber = $input['AccountNumber'];
+            $extension->Item2 = $input['ServiceConnectionId'];
+            $extension->save();
+
+            return redirect(route('accountMasters.account-migration-step-two', [$input['AccountNumber'], $input['ServiceConnectionId']]));
+        }
     }
 
     /**
@@ -116,16 +147,22 @@ class AccountMasterController extends AppBaseController
         $accountMaster = $this->accountMasterRepository->find($id);
 
         if (empty($accountMaster)) {
-            Flash::error('Account Master not found');
+            Flash::error('Account not found');
 
             return redirect(route('accountMasters.index'));
         }
 
         $accountMaster = $this->accountMasterRepository->update($request->all(), $id);
 
-        Flash::success('Account Master updated successfully.');
+        $serviceConnection = ServiceConnections::find($request['ServiceConnectionId']);
+        if ($serviceConnection != null) {
+            $serviceConnection->Status = 'Closed';
+            $serviceConnection->save();
+        }
 
-        return redirect(route('accountMasters.index'));
+        Flash::success('Account migrated successfully!.');
+
+        return redirect(route('serviceAccounts.pending-accounts'));
     }
 
     /**
@@ -152,5 +189,98 @@ class AccountMasterController extends AppBaseController
         Flash::success('Account Master deleted successfully.');
 
         return redirect(route('accountMasters.index'));
+    }
+
+    public function accountMigrationStepOne($id) {
+        $serviceConnection = ServiceConnections::find($id);
+        // $serviceAccount = ServiceAccounts::where('ServiceConnectionId', $id)->first();
+        $serviceConnectionInspection = ServiceConnectionInspections::where('ServiceConnectionId', $id)->orderByDesc('created_at')->first();
+        $towns = Towns::where('id', $serviceConnection->Town)->first();
+        $barangays = Barangays::where('id', $serviceConnection->Barangay)->first();
+        $crew = ServiceConnectionCrew::find($serviceConnection->StationCrewAssigned);
+        $accountTypes = ServiceConnectionAccountTypes::all();
+
+        return view('/account_masters/account_migration_step_one',
+            [
+                'serviceConnection' => $serviceConnection,
+                'inspection' => $serviceConnectionInspection,
+                'town' => $towns,
+                'barangay' => $barangays,
+                'accountTypes' => $accountTypes,
+                'crew' => $crew,
+            ] 
+        );
+    }
+
+    public function accountMigrationStepTwo($acctNo, $scId) {
+        $serviceAccount = AccountMaster::find($acctNo);
+        $serviceConnection = ServiceConnections::find($scId);
+        $meterAndTransformer = ServiceConnectionMtrTrnsfrmr::where('ServiceConnectionId', $scId)->first();
+
+        return view('/account_masters/account_migration_step_two', [
+            'serviceAccount' => $serviceAccount,
+            'serviceConnection' => $serviceConnection,
+            'meter' => $meterAndTransformer,
+        ]);
+    }
+
+    public function accountMigrationStepThree($acctNo, $scId) {
+        $serviceAccount = AccountMaster::find($acctNo);
+        $serviceConnection = ServiceConnections::find($scId);
+        $meterAndTransformer = ServiceConnectionMtrTrnsfrmr::where('ServiceConnectionId', $scId)->first();
+        $meter = Meters::find($serviceAccount->MeterNumber);
+
+        return view('/account_masters/account_migration_step_three', [
+            'serviceAccount' => $serviceAccount,
+            'serviceConnection' => $serviceConnection,
+            'meterAndTransformer' => $meterAndTransformer,
+            'meter' => $meter
+        ]);
+    }
+
+    public function getAvailableAccountNumbers(Request $request) {
+        $acctNo = $request['AccountNumberSample'];
+
+        if (strlen($acctNo) == 6) {
+            $acctNo = $acctNo;
+        } else {
+            $acctNo = substr($acctNo, 0, 6);
+        }
+
+        // GET ALL ACCOUNT NOS FIRST
+        $accounts = AccountMaster::whereRaw("AccountNumber LIKE '" . $acctNo . "%'")->get();
+        $existing = [];
+        foreach($accounts as $item) {
+            array_push($existing, $item->AccountNumber);
+        }
+
+        // generate ten thousand samples
+        $samples = [];
+        $sample = 9999;
+        for ($i = 1; $i <= $sample; $i++) {
+            $head = sprintf("%0004d", $i);
+            array_push($samples, $acctNo . $head);
+        }
+
+        $finalData = array_diff($samples, $existing);
+        $output = "";
+        foreach($finalData as $key => $value) {
+            $output .= "<tr onclick=selectAccount('" . $value . "')>" .
+                "<td>" . $value . "</td>" .
+            "</tr>";
+        }
+        return response()->json($output, 200);
+    }
+
+    public function getNeighboringByBarangay(Request $request) {
+        $town = $request['Town'];
+        $barangay = $request['Barangay'];
+
+        $accounts = DB::connection('sqlsrvbilling')->table('AccountMaster')
+            ->whereRaw("ConsumerAddress LIKE '%" . $barangay . "%' AND ConsumerAddress LIKE '%" . $town . "%' AND Item1 IS NOT NULL")
+            ->select('Item1', 'AccountNumber', 'ConsumerName', 'SequenceNumber', 'Route')
+            ->get();
+
+        return response()->json($accounts, 200);
     }
 }

@@ -45,7 +45,7 @@
                 </tr>
                 <tr>
                     <td>Inspector</td>
-                    <td>{{ $inspector->name }}</td>
+                    <td>{{ $inspector != null ? $inspector->name : '-' }}</td>
                 </tr>
                 <tr>
                     <td>Inspection Date</td>

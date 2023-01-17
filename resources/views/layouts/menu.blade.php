@@ -162,7 +162,14 @@ use Illuminate\Support\Facades\Auth;
                         <i class="fas fa-clipboard-check nav-icon text-warning"></i><p>Daily Monitor</p>
                         </a>
                     </li>
-
+                    @canany(['Super Admin', 'sc update energization'])
+                    <li class="nav-item">
+                        <a href="{{ route('serviceConnections.crew-assigning') }}"
+                        class="nav-link {{ Request::is('serviceConnections.crew-assigning*') ? 'active' : '' }}">
+                        <i class="fas fa-hard-hat nav-icon text-warning"></i><p>Crew Assigning</p>
+                        </a>
+                    </li>
+                    @endcanany
                 </ul>
             </li>
             @endcanany
@@ -1201,5 +1208,4 @@ use Illuminate\Support\Facades\Auth;
         </ul>
     </li>
 @endcan
-
 
