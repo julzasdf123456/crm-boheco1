@@ -539,12 +539,76 @@ class ServiceConnectionsController extends AppBaseController
         }          
     }
 
-    public function selectMembership() {
+    public function selectMembership(Request $request) {
         /**
          * ASSESS PERMISSIONS
          */
         if(Auth::user()->hasAnyPermission(['create membership', 'sc create', 'Super Admin'])) {
-            return view('/service_connections/selectmembership');
+            $search = $request['search'];
+            
+            if ($search != null) {
+                $data = DB::table('CRM_MemberConsumers')
+                    ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                    ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                    ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                    ->select('CRM_MemberConsumers.Id as ConsumerId',
+                                    'CRM_MemberConsumers.MembershipType as MembershipType', 
+                                    'CRM_MemberConsumers.FirstName as FirstName', 
+                                    'CRM_MemberConsumers.MiddleName as MiddleName', 
+                                    'CRM_MemberConsumers.LastName as LastName', 
+                                    'CRM_MemberConsumers.OrganizationName as OrganizationName', 
+                                    'CRM_MemberConsumers.Suffix as Suffix', 
+                                    'CRM_MemberConsumers.Birthdate as Birthdate', 
+                                    'CRM_MemberConsumers.ApplicationStatus as ApplicationStatus',
+                                    'CRM_MemberConsumers.DateApplied as DateApplied', 
+                                    'CRM_MemberConsumers.CivilStatus as CivilStatus', 
+                                    'CRM_MemberConsumers.DateApproved as DateApproved', 
+                                    'CRM_MemberConsumers.ContactNumbers as ContactNumbers', 
+                                    'CRM_MemberConsumers.EmailAddress as EmailAddress',  
+                                    'CRM_MemberConsumers.Notes as Notes', 
+                                    'CRM_MemberConsumers.Gender as Gender', 
+                                    'CRM_MemberConsumers.Sitio as Sitio', 
+                                    'CRM_MemberConsumers.Office', 
+                                    'CRM_MemberConsumerTypes.*',
+                                    'CRM_Towns.Town as Town',
+                                    'CRM_Barangays.Barangay as Barangay')
+                    ->whereRaw("(LastName LIKE '%" . $search . "%' OR FirstName LIKE '%" . $search . "%' OR MiddleName LIKE '%" . $search . "%' OR 
+                        OrganizationName LIKE '%" . $search . "%' OR CRM_MemberConsumers.Id LIKE '%" . $search . "%')")
+                    ->paginate(25);
+            } else {
+                $data = DB::table('CRM_MemberConsumers')
+                    ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                    ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                    ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                    ->select('CRM_MemberConsumers.Id as ConsumerId',
+                                    'CRM_MemberConsumers.MembershipType as MembershipType', 
+                                    'CRM_MemberConsumers.FirstName as FirstName', 
+                                    'CRM_MemberConsumers.MiddleName as MiddleName', 
+                                    'CRM_MemberConsumers.LastName as LastName', 
+                                    'CRM_MemberConsumers.OrganizationName as OrganizationName', 
+                                    'CRM_MemberConsumers.Suffix as Suffix', 
+                                    'CRM_MemberConsumers.Birthdate as Birthdate', 
+                                    'CRM_MemberConsumers.ApplicationStatus as ApplicationStatus',
+                                    'CRM_MemberConsumers.DateApplied as DateApplied', 
+                                    'CRM_MemberConsumers.CivilStatus as CivilStatus', 
+                                    'CRM_MemberConsumers.DateApproved as DateApproved', 
+                                    'CRM_MemberConsumers.ContactNumbers as ContactNumbers', 
+                                    'CRM_MemberConsumers.EmailAddress as EmailAddress',  
+                                    'CRM_MemberConsumers.Notes as Notes', 
+                                    'CRM_MemberConsumers.Gender as Gender', 
+                                    'CRM_MemberConsumers.Sitio as Sitio', 
+                                    'CRM_MemberConsumers.Office', 
+                                    'CRM_MemberConsumerTypes.*',
+                                    'CRM_Towns.Town as Town',
+                                    'CRM_Barangays.Barangay as Barangay')                                    
+                    ->whereRaw("CRM_MemberConsumers.Notes IS NULL OR CRM_MemberConsumers.Notes NOT IN ('BILLING ACCOUNT GROUPING PARENT')")
+                    ->orderByDesc('CRM_MemberConsumers.created_at')
+                    ->paginate(25);
+            }
+
+            return view('/service_connections/selectmembership', [
+                'data' => $data
+            ]);
         } else {
             return abort(403, "You're not authorized to create a service connection application.");
         }
@@ -592,6 +656,7 @@ class ServiceConnectionsController extends AppBaseController
                                     'CRM_MemberConsumers.Notes as Notes', 
                                     'CRM_MemberConsumers.Gender as Gender', 
                                     'CRM_MemberConsumers.Sitio as Sitio', 
+                                    'CRM_MemberConsumers.Office', 
                                     'CRM_MemberConsumerTypes.*',
                                     'CRM_Towns.Town as Town',
                                     'CRM_Barangays.Barangay as Barangay')
@@ -626,6 +691,7 @@ class ServiceConnectionsController extends AppBaseController
                                     'CRM_MemberConsumers.Notes as Notes', 
                                     'CRM_MemberConsumers.Gender as Gender', 
                                     'CRM_MemberConsumers.Sitio as Sitio', 
+                                    'CRM_MemberConsumers.Office', 
                                     'CRM_MemberConsumerTypes.*',
                                     'CRM_Towns.Town as Town',
                                     'CRM_Barangays.Barangay as Barangay')                                    

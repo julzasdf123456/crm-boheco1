@@ -123,7 +123,13 @@
         <div class="col-lg-3 col-md-5">
             <div class="form-group">
                 {!! Form::label('CrewAssigned', 'Crew Assigned:') !!}
-                {!! Form::select('CrewAssigned', $crew, null, ['class' => 'form-control form-control-sm',]) !!}
+                {{-- {!! Form::select('CrewAssigned', $crew, null, ['class' => 'form-control form-control-sm',]) !!} --}}
+                <select name="CrewAssigned" id="CrewAssigned" class="form-control form-control-sm">
+                    <option value="">-</option>
+                    @foreach ($crew as $item)
+                        <option value="{{ $item->id }}">{{ $item->StationName }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
 
@@ -139,7 +145,7 @@
                     @foreach ($parentTickets as $items)
                         <optgroup label="{{ $items->Name }}">
                             @php
-                                $ticketsRep = TicketsRepository::where('ParentTicket', $items->id)->whereNotIn('Id', Tickets::getMeterRelatedComplainsId())->orderBy('Name')->get();
+                                $ticketsRep = TicketsRepository::where('ParentTicket', $items->id)->whereNotIn('Id', [Tickets::getChangeMeter()])->orderBy('Name')->get();
                             @endphp
                             @foreach ($ticketsRep as $item)
                                 <option value="{{ $item->id }}" {{ $tickets != null && $tickets->Ticket==$item->id ? 'selected' : '' }}>{{ $item->Name }}</option>

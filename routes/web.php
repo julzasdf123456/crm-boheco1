@@ -382,6 +382,10 @@ Route::get('/tickets/download-monthly-per-town/{month}/{year}', [App\Http\Contro
 Route::get('/tickets/change-meter-unconfirmed', [App\Http\Controllers\TicketsController::class, 'changeMeterUnconfirmed'])->name('tickets.change-meter-unconfirmed');
 Route::get('/tickets/change-meter-update/{id}', [App\Http\Controllers\TicketsController::class, 'changeMeterUpdate'])->name('tickets.change-meter-update');
 Route::get('/tickets/mark-as-change-meter-done', [App\Http\Controllers\TicketsController::class, 'markAsChangeMeterDone'])->name('tickets.mark-as-change-meter-done');
+Route::get('/tickets/pending-change-meters', [App\Http\Controllers\TicketsController::class, 'pendingChangeMeters'])->name('tickets.pending-change-meters');
+Route::get('/tickets/update-crew-ajax', [App\Http\Controllers\TicketsController::class, 'updateCrewAjax'])->name('tickets.update-crew-ajax');
+Route::get('/tickets/crew-assigning-metering', [App\Http\Controllers\TicketsController::class, 'crewAssigningMetering'])->name('tickets.crew-assigning-metering');
+Route::get('/tickets/meter-inspections', [App\Http\Controllers\TicketsController::class, 'meterInspections'])->name('tickets.meter-inspections');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 

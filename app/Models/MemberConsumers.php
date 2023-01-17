@@ -165,7 +165,12 @@ class MemberConsumers extends Model
 
     public static function serializeMemberName($memberconsumer) {
         if ($memberconsumer->MembershipType == MemberConsumers::getJuridicalId()) { // GET ID OF THE DESIRED JURIDICAL TYPE
-            return $memberconsumer->OrganizationName;
+            if ($memberconsumer->OrganizationName==null) {
+                return $memberconsumer->LastName;
+            } else {
+                return $memberconsumer->OrganizationName;
+            }           
+
         } else {
             return $memberconsumer->FirstName . ' ' . $memberconsumer->LastName . ' ' . $memberconsumer->Suffix;
         }

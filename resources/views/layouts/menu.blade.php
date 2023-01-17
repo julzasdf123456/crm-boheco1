@@ -407,7 +407,7 @@ use Illuminate\Support\Facades\Auth;
                     <i class="fas fa-clipboard-list nav-icon text-danger"></i><p>All Tickets</p>
                 </a>
             </li>
-            @canany(['Super Admin', 'tickets create'])
+            
             <li class="nav-item has-treeview">
                 <a href="#" class="nav-link">
                     <i class="fas fa-plus-circle nav-icon text-danger"></i>
@@ -417,6 +417,7 @@ use Illuminate\Support\Facades\Auth;
                     </p>
                 </a>
                 <ul class="nav nav-treeview">
+                    @canany(['Super Admin', 'tickets create'])
                     <li class="nav-item">
                         <a href="{{ route('tickets.create-select') }}"
                         class="nav-link {{ Request::is('tickets.create-select*') ? 'active' : '' }}">
@@ -429,18 +430,20 @@ use Illuminate\Support\Facades\Auth;
                             <i class="fas fa-circle nav-icon text-danger"></i><p>Relocation</p>
                         </a>
                     </li>
-                    {{-- <li class="nav-item">
+                    @endcanany
+                    @canany(['Super Admin', 'create metering data'])
+                    <li class="nav-item">
                         <a href="{{ route('tickets.change-meter') }}"
                         class="nav-link {{ Request::is('tickets.change-meter*') ? 'active' : '' }}">
                             <i class="fas fa-circle nav-icon text-danger"></i><p>Change Meter</p>
                         </a>
-                    </li> --}}
+                    </li>
+                    @endcanany
                 </ul>
             </li>
-            @endcanany
             @canany(['Super Admin', 'tickets edit'])
             <li class="nav-header">                
-                Assessments 
+                ESD/Operations 
             </li>
             <li class="nav-item">
                 <a href="{{ route('tickets.crew-field-monitor') }}"
@@ -448,16 +451,39 @@ use Illuminate\Support\Facades\Auth;
                     <i class="fas fa-circle nav-icon text-danger"></i><p>Crew Field Monitor</p>
                 </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="{{ route('tickets.assessments-change-meter') }}"
                 class="nav-link {{ Request::is('tickets.assessments-change-meter*') ? 'active' : '' }}">
                     <i class="fas fa-circle nav-icon text-danger"></i><p>Change Meter Requests</p>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item">
                 <a href="{{ route('tickets.assessments-ordinary-ticket') }}"
                 class="nav-link {{ Request::is('tickets.assessments-ordinary-ticket*') ? 'active' : '' }}">
                     <i class="fas fa-circle nav-icon text-danger"></i><p>Crew Assigning</p>
+                </a>
+            </li>
+            @endcanany
+            @canany(['Super Admin', 'create metering data'])
+            <li class="nav-header">                
+                Metering 
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('tickets.pending-change-meters') }}"
+                class="nav-link {{ Request::is('tickets.pending-change-meters*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>Pending Change Meters</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('tickets.crew-assigning-metering') }}"
+                class="nav-link {{ Request::is('tickets.crew-assigning-metering*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>Crew Assigning</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('tickets.meter-inspections') }}"
+                class="nav-link {{ Request::is('tickets.meter-inspections*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>Meter Inspections</p>
                 </a>
             </li>
             @endcanany

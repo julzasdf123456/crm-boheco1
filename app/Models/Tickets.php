@@ -203,13 +203,15 @@ class Tickets extends Model
     }
 
     public static function getMeterRelatedComplainsId() {
-        // return ['1668541254390']; // Change Meter
-        return [];
+        return ['1668541254390', '1672792149359', '1668541254388']; 
+    }
+
+    public static function getMeterInspectionsId() {
+        return ['1672792149359', '1668541254388']; 
     }
 
     public static function getChangeMeter() {
-        // return '1668541254390';
-        return '0';
+        return '1668541254390';
     }
 
     public static function getViolations() {

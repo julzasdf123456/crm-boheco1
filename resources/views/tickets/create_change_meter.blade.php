@@ -2,6 +2,41 @@
     use App\Models\IDGenerator;
     use App\Models\TicketsRepository;
     use App\Models\Tickets;
+    use App\Models\Towns;
+    use App\Models\BarangayProxies;
+
+    // ANALYZE ADDRESS
+    if ($serviceAccount != null) {
+        $townDef = explode(",", $serviceAccount->ConsumerAddress);
+        $townFinal = "";
+        if (trim($townDef[count($townDef)-1]) == 'ALBUR') {
+            $townFinal = 'ALBURQUERQUE';
+        } elseif (trim($townDef[count($townDef)-1]) == 'CATIGBI-AN') {
+            $townFinal = 'CATIGBIAN';
+        } elseif (trim($townDef[count($townDef)-1]) == 'CABILAO') {
+            $townFinal = 'LOON';
+        } elseif (trim($townDef[count($townDef)-1]) == 'S. ISIDRO') {
+            $townFinal = 'SAN ISIDRO';
+        } elseif (trim($townDef[count($townDef)-1]) == 'SAN ISIDRRO') {
+            $townFinal = 'SAN ISIDRO';
+        } elseif (trim($townDef[count($townDef)-1]) == 'BOHOL') {
+            $townFinal = 'DIMIAO';
+        }  else {
+            $townFinal = trim($townDef[count($townDef)-1]);
+        }
+
+        // GET TOWN
+        $townAnalyzed = Towns::where('Town', 'LIKE', '%' . $townFinal . '%')->first();
+
+        // GET BARANGAY
+        $brgyRaw = count($townDef) > 1 ? trim($townDef[count($townDef)-2]) : '';
+        $brgyProxy = BarangayProxies::where('Barangay', $brgyRaw)
+            ->where('TownId', $townAnalyzed != null ? $townAnalyzed->id : '0')
+            ->first();
+    } else {
+        $townFinal = "";
+    }
+    
 @endphp
 
 @extends('layouts.app')
@@ -40,7 +75,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
                                             </div>
-                                            {!! Form::text('ConsumerName', $serviceAccount==null ? '' : $serviceAccount->ServiceAccountName, ['class' => 'form-control','maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name']) !!}
+                                            {!! Form::text('ConsumerName', $serviceAccount==null ? '' : $serviceAccount->ConsumerName, ['class' => 'form-control','maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name']) !!}
                                         </div>
                                     </div>  
                                 </div> 
@@ -58,7 +93,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                             </div>
-                                            {!! Form::select('Town', $towns, $serviceAccount==null ? '' : $serviceAccount->TownId, ['class' => 'form-control']) !!}
+                                            {!! Form::select('Town', $towns, $serviceAccount==null ? '' : ($townAnalyzed != null ? $townAnalyzed->id : ''), ['class' => 'form-control form-control-sm']) !!}
                                         </div>
                                     </div>
                                 </div>    
@@ -132,7 +167,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                             </div>
-                                            {!! Form::text('Sitio', $serviceAccount==null ? '' : $serviceAccount->Purok, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000, 'placeholder' => 'Sitio']) !!}
+                                            {!! Form::text('Sitio', null, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000, 'placeholder' => 'Sitio']) !!}
                                         </div>
                                     </div>
                                 </div> 
@@ -227,7 +262,23 @@
                             <div class="divider"></div>
                             <br>
 
-                            {{-- GEOLOCATION IS FETCHED FROM SERVICE ACCOUNTS --}}
+                            <!-- Crewassigned Field -->
+                            <div class="form-group col-sm-12">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-5">
+                                        {!! Form::label('CrewAssigned', 'Crew Assigned:') !!}
+                                    </div>
+
+                                    <div class="col-lg-9 col-md-7">
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-street-view"></i></span>
+                                            </div>
+                                            {!! Form::select('CrewAssigned', $crew, null, ['class' => 'form-control form-control-sm',]) !!}
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
 
                             <!-- Neighbor1 Field -->
                             <div class="form-group col-sm-12">
@@ -241,7 +292,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-street-view"></i></span>
                                             </div>
-                                            {!! Form::text('Neighbor1', null, ['class' => 'form-control', 'placeholder' => 'Neighbor 1']) !!}
+                                            {!! Form::text('Neighbor1', $left != null ? $left->ConsumerName : ($tickets != null && $tickets->Neighbor1 != null ? $tickets->Neighbor1 : ''), ['class' => 'form-control form-control-sm', 'placeholder' => 'Neighbor 1']) !!}
                                         </div>
                                     </div>
                                 </div> 
@@ -259,7 +310,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-street-view"></i></span>
                                             </div>
-                                            {!! Form::text('Neighbor2', null, ['class' => 'form-control', 'placeholder' => 'Neighbor 2']) !!}
+                                            {!! Form::text('Neighbor2', $right != null ? $right->ConsumerName : ($tickets != null && $tickets->Neighbor2 != null ? $tickets->Neighbor2 : ''), ['class' => 'form-control form-control-sm', 'placeholder' => 'Neighbor 2']) !!}
                                         </div>
                                     </div>
                                 </div> 
@@ -284,9 +335,9 @@
                             </div>
 
                             @if ($cond == 'new')
-                            <p id="Def_Brgy" style="display: none;">{{ $serviceAccount==null ? '' : $serviceAccount->BarangayId }}</p>
+                            <p id="Def_Brgy" style="display: none;">{{ $serviceAccount==null ? '' : ($brgyProxy != null ? $brgyProxy->id : '') }}</p>
                             @else
-                            <p id="Def_Brgy" style="display: none;">{{ $tickets->Barangay }}</p> 
+                            <p id="Def_Brgy" style="display: none;">{{ $tickets != null ? $tickets->Barangay : '0' }}</p> 
                             @endif
 
 
@@ -302,7 +353,7 @@
                             <input type="hidden" name="Ticket" id="" value="{{ Tickets::getChangeMeter() }}">
 
                             @if ($serviceAccount != null)  
-                                <input type="hidden" value="{{ $serviceAccount->id }}" name="AccountNumber">
+                                <input type="hidden" value="{{ $serviceAccount->AccountNumber }}" name="AccountNumber">
                             @endif  
                             
                         </div>

@@ -1,6 +1,6 @@
 <!-- Stationname Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('StationName', 'Station Name') !!}
+    {!! Form::label('StationName', 'Station/Group Name') !!}
     {!! Form::text('StationName', null, ['class' => 'form-control','maxlength' => 140,'maxlength' => 140]) !!}
 </div>
 
@@ -18,8 +18,15 @@
 
 <!-- OFFICE -->
 <div class="form-group col-sm-6">
-    {!! Form::label('Office', 'Office:') !!}
-    {!! Form::select('Office', ['MAIN' => 'MAIN', 'CADIZ' => 'CADIZ', 'ESCALANTE' => 'ESCALANTE', 'MANAPLA' => 'MANAPLA', 'VICTORIAS' => 'VICTORIAS', 'SAN CARLOS' => 'SAN CARLOS', 'EB MAGALONA' => 'EB MAGALONA',  'SAGAY' => 'SAGAY', 'TOBOSO' => 'TOBOSO', 'CALATRAVA' => 'CALATRAVA'], null, ['class' => 'form-control',]) !!}
+    {!! Form::label('Office', 'Department:') !!}
+    <select name="Office" class="form-control form-control-sm">
+        <option value="ISD">ISD</option>
+        <option value="ESD">ESD</option>
+        <option value="OGM">OGM</option>
+        <option value="OSD">OSD</option>
+        <option value="PGD">PGD</option>
+        <option value="SEEAD">SEEAD</option>
+    </select>
 </div>
 
 <!-- Grouping -->

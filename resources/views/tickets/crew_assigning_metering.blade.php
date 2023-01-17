@@ -10,7 +10,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-12">
-                <h4>Ticket Crew Assigning</h4>
+                <h4>Ticket Crew Assigning | Metering</h4>
             </div>
         </div>
     </div>
@@ -21,7 +21,7 @@
         {{-- FORM --}}
         <div class="col-lg-12">
             <div class="card shadow-none">
-                {!! Form::open(['route' => 'tickets.assessments-ordinary-ticket', 'method' => 'GET']) !!}
+                {!! Form::open(['route' => 'tickets.crew-assigning-metering', 'method' => 'GET']) !!}
                 <div class="card-body">
                     <div class="row">
     

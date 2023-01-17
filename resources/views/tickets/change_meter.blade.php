@@ -20,13 +20,10 @@
         <div class="container-fluid">
             {!! Form::open(['route' => 'tickets.change-meter', 'method' => 'GET']) !!}
                 <div class="row mb-2">
-                    <div class="col-md-2 offset-md-1">
-                        <input class="form-control" id="old-account-no" name="oldaccount" autocomplete="off" data-inputmask="'alias': 'phonebe'" maxlength="12" value="{{ env('APP_AREA_CODE') }}" style="font-size: 1.5em; color: #b91400; font-weight: bold;">
+                    <div class="col-md-6 offset-lg-2">
+                        <input type="text" class="form-control" placeholder="Search" name="params" value="{{ old('params') }}" autofocus>
                     </div>
-                    <div class="col-md-6">
-                        <input type="text" class="form-control" placeholder="Search" name="params" value="{{ old('params') }}">
-                    </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
                     </div>
                 </div>
@@ -40,7 +37,7 @@
 
         <div class="clearfix"></div>
 
-        <table class="table table-hover">
+        <table class="table table-hover table-sm">
             <thead>
                 <th>Account Number</th>
                 <th>Service Account Name</th>
@@ -50,15 +47,14 @@
             <tbody>
                 @foreach ($serviceAccounts as $item)
                     <tr>
-                        <td>{{ $item->OldAccountNo }}</td>
-                        <td>{{ $item->ServiceAccountName }} {{ $item->AccountCount != null ? '(# ' . $item->AccountCount . ')' : '' }}</td>                
-                        <td>{{ $item->Barangay }}, {{ $item->Town }}</td>
+                        <td>{{ $item->AccountNumber }}</td>
+                        <td>{{ $item->ConsumerName }}</td>                
+                        <td>{{ $item->ConsumerAddress }}</td>
                         <td width="120">
-                            {!! Form::open(['route' => ['serviceAccounts.destroy', $item->id], 'method' => 'delete']) !!}
                             <div class='btn-group'>
-                                <a href="{{ route('tickets.create-change-meter', [$item->id]) }}"
-                                   class='btn btn-primary btn-xs'>
-                                    <i class="fas fa-forward"></i>
+                                <a href="{{ route('tickets.create-change-meter', [$item->AccountNumber]) }}"
+                                   class='btn btn-primary btn-sm'>Go 
+                                    <i class="fas fa-arrow-right"></i>
                                 </a>
                                 {{-- <a href="{{ route('serviceAccounts.edit', [$item->id]) }}"
                                    class='btn btn-default btn-xs'>
@@ -66,7 +62,6 @@
                                 </a>
                                 {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!} --}}
                             </div>
-                            {!! Form::close() !!}
                         </td>
                     </tr>
                     
