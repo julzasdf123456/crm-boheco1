@@ -214,11 +214,19 @@ class Tickets extends Model
         return '1668541254390';
     }
 
+    public static function getChangeMeters() {
+        return ['1668541254390', '1672792232225'];
+    }
+
     public static function getViolations() {
         return ['1668541254425']; // Pilferage
     }
 
     public static function getReconnection() {
         return '1668541254428';
+    }
+
+    public static function getDiscoReco() {
+        return ['1668541254422', '1668541254427'];
     }
 }

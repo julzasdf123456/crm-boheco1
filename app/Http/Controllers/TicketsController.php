@@ -23,9 +23,12 @@ use App\Models\BillingMeters;
 use App\Models\DisconnectionHistory;
 use App\Models\AccountMaster;
 use App\Models\User;
+use App\Models\Meters;
 use App\Exports\TicketSummaryReportDownloadExport;
 use App\Exports\KPSTicketsExport;
 use App\Exports\DynamicExport;
+use App\Exports\DiscoRecoExport;
+use App\Exports\MeterReplacementsExport;
 use Illuminate\Support\Facades\Auth;
 use Flash;
 use Response;
@@ -696,6 +699,11 @@ class TicketsController extends AppBaseController
                     'CRM_Tickets.Status',
                     'CRM_Tickets.DateTimeDownloaded',
                     'CRM_Tickets.CurrentMeterNo',
+                    'CRM_Tickets.CurrentMeterBrand',
+                    'CRM_Tickets.CurrentMeterReading',
+                    'CRM_Tickets.NewMeterNo',
+                    'CRM_Tickets.NewMeterBrand',
+                    'CRM_Tickets.NewMeterReading',
                     'CRM_Tickets.DateTimeLinemanArrived',
                     'CRM_Tickets.DateTimeLinemanExecuted',
                     'CRM_Tickets.UserId',
@@ -1273,16 +1281,20 @@ class TicketsController extends AppBaseController
                     ->whereRaw("SequenceNumber > " . $serviceAccount->SequenceNumber)
                     ->orderBy('SequenceNumber')
                     ->first();
+
+                $meter = Meters::find($serviceAccount->MeterNumber);
             } else {
                 $left = null;
 
                 $right = null;
+                $meter = null;
                 return abort(404, "Account number not found or erroneous!");
             }
         } else {
             $serviceAccount = null;
             $left = null;
             $right = null;
+            $meter = null;
         }
 
         $towns = Towns::orderBy('Town')->pluck('Town', 'id');
@@ -1290,7 +1302,7 @@ class TicketsController extends AppBaseController
         // TICKETS MATRIX
         $parentTickets = DB::table('CRM_TicketsRepository')->whereNull('ParentTicket')->whereNotIn('id', ['1668541254405', '1668541254392'])->orderBy('Name')->get();
 
-        $crew = ServiceConnectionCrew::where('Office', 'SEEAD')->orderBy('StationName')->pluck('StationName', 'id');
+        $crew = ServiceConnectionCrew::orderBy('StationName')->get();
 
         $history = DB::table('CRM_Tickets')
                         ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
@@ -1321,6 +1333,7 @@ class TicketsController extends AppBaseController
             'left' => $left,
             'right' => $right,
             'crew' => $crew,
+            'meter' => $meter,
         ]);
 
     }
@@ -1428,7 +1441,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Barangays.Barangay as Barangay')
                     ->whereRaw("(Trash IS NULL OR Trash='No') AND CrewAssigned IS NULL AND Status NOT IN ('Executed', 'CANCELLED', 'Acted', 'Downloaded by Crew')")
                     ->where('Office', $office)
-                    ->whereNotIn('Ticket', Tickets::getMeterRelatedComplainsId())              
+                    ->whereNotIn('Ticket', Tickets::getMeterInspectionsId())              
                     ->orderBy('CRM_Tickets.created_at')
                     ->get();
 
@@ -3620,5 +3633,245 @@ class TicketsController extends AppBaseController
             'crew' => $crews,
             'data' => $tickets
         ]);
+    }
+
+    public function meterReplacements(Request $request) {
+        $from = $request['From'];
+        $to = $request['To'];
+        $office = $request['Office'];
+
+        if ($office == 'All') {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->whereIn('CRM_Tickets.Ticket', Tickets::getChangeMeters())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'NewMeterBrand',
+                    'NewMeterNo',
+                    'NewMeterReading',
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        } else {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_Tickets.Office='" . $office . "'")
+                ->whereIn('CRM_Tickets.Ticket', Tickets::getChangeMeters())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'NewMeterBrand',
+                    'NewMeterNo',
+                    'NewMeterReading',
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        }
+
+        return view('/tickets/meter_replacements', [
+            'data' => $data,
+        ]);
+    }
+
+    public function downloadMeterReplacements($from, $to, $office) {
+        if ($office == 'All') {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->whereIn('CRM_Tickets.Ticket', Tickets::getChangeMeters())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'NewMeterBrand',
+                    'NewMeterNo',
+                    'NewMeterReading',
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        } else {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_Tickets.Office='" . $office . "'")
+                ->whereIn('CRM_Tickets.Ticket', Tickets::getChangeMeters())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'NewMeterBrand',
+                    'NewMeterNo',
+                    'NewMeterReading',
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        }
+
+        $export = new MeterReplacementsExport($data, $from, $to);
+
+        return Excel::download($export, 'Meter-Replacement-Reports.xlsx');
+    }
+
+    public function disconnectionReconnectionReport(Request $request) {
+        $from = $request['From'];
+        $to = $request['To'];
+        $office = $request['Office'];
+
+        if ($office == 'All') {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->whereIn('CRM_TicketsRepository.ParentTicket', Tickets::getDiscoReco())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'CRM_TicketsRepository.Name',
+                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        } else {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_Tickets.Office='" . $office . "'")
+                ->whereIn('CRM_TicketsRepository.ParentTicket', Tickets::getDiscoReco())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'CRM_TicketsRepository.Name',
+                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        }
+
+        return view('/tickets/disco_reco_report', [
+            'data' => $data,
+        ]);
+    }
+
+    public function downloadDiscoReco($from, $to, $office) {
+        if ($office == 'All') {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->whereIn('CRM_TicketsRepository.ParentTicket', Tickets::getDiscoReco())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'CRM_TicketsRepository.Name',
+                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        } else {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_Tickets.Office='" . $office . "'")
+                ->whereIn('CRM_TicketsRepository.ParentTicket', Tickets::getDiscoReco())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'CRM_TicketsRepository.Name',
+                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        }
+
+        $export = new DiscoRecoExport($data, $from, $to);
+
+        return Excel::download($export, 'Disco-Reco-Reports.xlsx');
     }
 }

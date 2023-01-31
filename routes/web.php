@@ -142,6 +142,10 @@ Route::get('/service_connections/energization-per-brgy', [App\Http\Controllers\S
 Route::get('/service_connections/download-energization-per-brgy/{mnth}/{year}', [App\Http\Controllers\ServiceConnectionsController::class, 'downloadEnergizationPerBarangay'])->name('serviceConnections.download-energization-per-brgy');
 Route::get('/service_connections/crew-assigning', [App\Http\Controllers\ServiceConnectionsController::class, 'crewAssigning'])->name('serviceConnections.crew-assigning');
 Route::get('/service_connections/assign-crew', [App\Http\Controllers\ServiceConnectionsController::class, 'assignCrew'])->name('serviceConnections.assign-crew');
+Route::get('/service_connections/energization-per-town', [App\Http\Controllers\ServiceConnectionsController::class, 'energizationPerTown'])->name('serviceConnections.energization-per-town');
+Route::get('/service_connections/download-energization-per-town/{mnth}/{year}', [App\Http\Controllers\ServiceConnectionsController::class, 'downloadEnergizationPerTown'])->name('serviceConnections.download-energization-per-town');
+Route::get('/service_connections/meter-installation', [App\Http\Controllers\ServiceConnectionsController::class, 'meterInstallation'])->name('serviceConnections.meter-installation');
+Route::get('/service_connections/download-meter-installation/{from}/{to}/{office}', [App\Http\Controllers\ServiceConnectionsController::class, 'downloadMeterInstallation'])->name('serviceConnections.download-meter-installation');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 
@@ -388,6 +392,10 @@ Route::get('/tickets/pending-change-meters', [App\Http\Controllers\TicketsContro
 Route::get('/tickets/update-crew-ajax', [App\Http\Controllers\TicketsController::class, 'updateCrewAjax'])->name('tickets.update-crew-ajax');
 Route::get('/tickets/crew-assigning-metering', [App\Http\Controllers\TicketsController::class, 'crewAssigningMetering'])->name('tickets.crew-assigning-metering');
 Route::get('/tickets/meter-inspections', [App\Http\Controllers\TicketsController::class, 'meterInspections'])->name('tickets.meter-inspections');
+Route::get('/tickets/meter-replacements', [App\Http\Controllers\TicketsController::class, 'meterReplacements'])->name('tickets.meter-replacements');
+Route::get('/tickets/download-meter-replacements/{from}/{to}/{office}', [App\Http\Controllers\TicketsController::class, 'downloadMeterReplacements'])->name('tickets.download-meter-replacements');
+Route::get('/tickets/disco-reco-reports', [App\Http\Controllers\TicketsController::class, 'disconnectionReconnectionReport'])->name('tickets.disco-reco-reports');
+Route::get('/tickets/download-disco-reco/{from}/{to}/{office}', [App\Http\Controllers\TicketsController::class, 'downloadDiscoReco'])->name('tickets.download-disco-reco');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 

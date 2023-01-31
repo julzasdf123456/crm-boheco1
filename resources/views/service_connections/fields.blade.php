@@ -30,6 +30,10 @@ use App\Models\IDGenerator;
                             <input class="form-check-input" type="radio" name="ConnectionApplicationType" value="Rewiring">
                             <label class="form-check-label">Rewiring</label>
                         </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="ConnectionApplicationType" value="Street Lighting">
+                            <label class="form-check-label">Street Lighting</label>
+                        </div>
                     </div>   
                 </div>
             </div>
@@ -292,9 +296,6 @@ use App\Models\IDGenerator;
             </div>
         </div>  
     </div>
-
-    
-
     <!-- Accountapplicationtype Field -->
     <div class="form-group col-sm-12">
         <div class="row">

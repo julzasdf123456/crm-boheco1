@@ -20,15 +20,12 @@ class ServiceConnectionsEnergization extends Controller {
     public function getForEnergizationData() {
         $serviceConnections = DB::table('CRM_ServiceConnections')
             ->leftJoin('CRM_ServiceConnectionInspections', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionInspections.ServiceConnectionId')
-            ->where(function ($query) {
-                $query->where('CRM_ServiceConnections.Status', 'Approved')
-                    ->orWhere('CRM_ServiceConnections.Status', 'Not Energized');
-            })
+            ->whereRaw("CRM_ServiceConnections.Status IN ('Approved', 'Not Energized')")
             ->where(function ($query) {
                 $query->where('CRM_ServiceConnections.Trash', 'No')
                     ->orWhereNull('CRM_ServiceConnections.Trash');
             })
-            ->whereIn('CRM_ServiceConnections.id', DB::table('CRM_ServiceConnectionMeterAndTransformer')->pluck('ServiceConnectionId'))
+            ->whereRaw("CRM_ServiceConnections.id IN (SELECT DISTINCT ServiceConnectionId FROM CRM_ServiceConnectionMeterAndTransformer WHERE ServiceConnectionId IS NOT NULL)")
             ->select('CRM_ServiceConnections.*')
             ->orderBy('CRM_ServiceConnections.ServiceAccountName')
             ->get();

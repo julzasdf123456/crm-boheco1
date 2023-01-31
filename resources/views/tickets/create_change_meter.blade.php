@@ -56,10 +56,14 @@
 
         @include('adminlte-templates::common.errors')
 
+        {!! Form::open(['route' => 'tickets.store']) !!}
         <div class="row">
-            <div class="col-lg-7 col-md-6">
-                <div class="card">
-                    {!! Form::open(['route' => 'tickets.store']) !!}
+            {{-- TICKET DETAILS --}}
+            <div class="col-lg-6 col-md-6">
+                <div class="card shadow-none">
+                    <div class="card-header">
+                        <span class="card-title">Complaint Details</span>
+                    </div>
                     <div class="card-body">                
                         <div class="row"> 
 
@@ -274,7 +278,12 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-street-view"></i></span>
                                             </div>
-                                            {!! Form::select('CrewAssigned', $crew, null, ['class' => 'form-control form-control-sm',]) !!}
+                                            <select name="CrewAssigned" id="CrewAssigned" class="form-control form-control-sm">
+                                                <option value="">-</option>
+                                                @foreach ($crew as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->StationName }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                 </div> 
@@ -358,18 +367,74 @@
                             
                         </div>
                     </div>
+                </div>
+            </div>
 
+            {{-- METER DETAILS --}}
+            <div class="col-lg-6 col-md-6">
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <span class="card-title">Meter Details</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- CurrentMeterNo Field -->
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    {!! Form::label('CurrentMeterNo', 'Old Meter No:') !!}
+                                    {!! Form::text('CurrentMeterNo', $meter != null ? $meter->MeterNumber : '', ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100, 'readonly' => true]) !!}
+                                </div>
+                            </div>
+
+                            <!-- NewMeterNo Field -->
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    {!! Form::label('NewMeterNo', 'New Meter No:') !!}
+                                    {!! Form::text('NewMeterNo', null, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100]) !!}
+                                </div>
+                            </div>
+
+                            <!-- CurrentMeterBrand Field -->
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    {!! Form::label('CurrentMeterBrand', 'Old Meter Brand:') !!}
+                                    {!! Form::text('CurrentMeterBrand', $meter != null ? $meter->Make : '', ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100, 'readonly' => true]) !!}
+                                </div>
+                            </div>
+
+                            <!-- NewMeterBrand Field -->
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    {!! Form::label('NewMeterBrand', 'New Meter Brand:') !!}
+                                    {!! Form::text('NewMeterBrand', null, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100]) !!}
+                                </div>
+                            </div>
+
+                            <!-- CurrentMeterReading Field -->
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    {!! Form::label('CurrentMeterReading', 'Old Meter Pullout Reading:') !!}
+                                    {!! Form::text('CurrentMeterReading', 0, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100]) !!}
+                                </div>
+                            </div>
+
+                            <!-- NewMeterReading Field -->
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    {!! Form::label('NewMeterReading', 'New Meter Start Reading:') !!}
+                                    {!! Form::text('NewMeterReading', 0, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100]) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card-footer">
                         {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
                         <a href="{{ route('tickets.index') }}" class="btn btn-default">Cancel</a>
                     </div>
-
-                    {!! Form::close() !!}
                 </div>
-            </div>
 
-            <div class="col-lg-5 col-md-6">
-                <div class="card card-outline card-primary">
+                {{-- HISTORY --}}
+                <div class="card shadow-none">
                     <div class="card-header">
                         <span class="card-title">Ticket History <i class="text-muted">(newest to oldest)</i></span>
                     </div>
@@ -420,7 +485,7 @@
                                                 </table>
                                             </div>
                                         </div>
-                                  </div>
+                                </div>
                                 @endforeach
                             </div>
                         @else
@@ -429,6 +494,8 @@
                     </div>
                 </div>
             </div>
+
+            {!! Form::close() !!}
         </div>
     </div>
 @endsection

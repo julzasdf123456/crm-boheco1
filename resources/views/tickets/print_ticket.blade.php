@@ -229,8 +229,8 @@
                 </div>
                 <div class="col-6">
                     <p style="border-bottom: 1px solid #989898;">:  <strong>{{ $tickets->CurrentMeterNo }}</strong></p>
-                    <p style="border-bottom: 1px solid #989898;">:</p>
-                    <p style="border-bottom: 1px solid #989898;">:</p>
+                    <p style="border-bottom: 1px solid #989898;">:  <strong>{{ $tickets->CurrentMeterBrand }}</strong></p>
+                    <p style="border-bottom: 1px solid #989898;">:  <strong>{{ $tickets->CurrentMeterReading }}</strong></p>
                 </div>
             </div>
 
@@ -247,9 +247,9 @@
                     <p>Seal No.</p>
                 </div>
                 <div class="col-6">
-                    <p style="border-bottom: 1px solid #989898;">:</p>
-                    <p style="border-bottom: 1px solid #989898;">:</p>
-                    <p style="border-bottom: 1px solid #989898;">:</p>
+                    <p style="border-bottom: 1px solid #989898;">:  <strong>{{ $tickets->NewMeterNo }}</strong></p>
+                    <p style="border-bottom: 1px solid #989898;">:  <strong>{{ $tickets->NewMeterBrand }}</strong></p>
+                    <p style="border-bottom: 1px solid #989898;">:  <strong>{{ $tickets->NewMeterReading }}</strong></p>
                 </div>
             </div>
 

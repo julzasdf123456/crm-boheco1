@@ -224,8 +224,8 @@ use Illuminate\Support\Facades\Auth;
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('serviceConnections.daily-monitor') }}"
-                        class="nav-link {{ Request::is('serviceConnections.daily-monitor*') ? 'active' : '' }}">
+                        <a href="{{ route('serviceConnections.meter-installation') }}"
+                        class="nav-link {{ Request::is('serviceConnections.meter-installation*') ? 'active' : '' }}">
                         <i class="fas fa-tachometer-alt nav-icon text-warning"></i><p>Meter Installation</p>
                         </a>
                     </li>
@@ -249,6 +249,14 @@ use Illuminate\Support\Facades\Auth;
                             <i class="fas fa-circle nav-icon text-warning"></i><p>Energization per Barangay</p>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('serviceConnections.energization-per-town') }}"
+                        class="nav-link {{ Request::is('serviceConnections.energization-per-town*') ? 'active' : '' }}">
+                            <i class="fas fa-circle nav-icon text-warning"></i><p>Energization per Town</p>
+                        </a>
+                    </li>
+
                 </ul>
             </li>
             @endcanany
@@ -530,6 +538,20 @@ use Illuminate\Support\Facades\Auth;
                 <a href="{{ route('tickets.monthly-per-town') }}"
                 class="nav-link {{ Request::is('tickets.monthly-per-town*') ? 'active' : '' }}">
                     <i class="fas fa-circle nav-icon text-danger"></i><p>Monthly Per Town</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('tickets.meter-replacements') }}"
+                class="nav-link {{ Request::is('tickets.meter-replacements*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>Meter Replacements</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('tickets.disco-reco-reports') }}"
+                class="nav-link {{ Request::is('tickets.disco-reco-reports*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>Disco/Reco Report</p>
                 </a>
             </li>
 

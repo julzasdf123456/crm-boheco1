@@ -2979,4 +2979,202 @@ class ServiceConnectionsController extends AppBaseController
 
         return response()->json('ok', 200);       
     }
+
+    public function energizationPerTown(Request $request) {
+        $month = isset($request['Month']) ? $request['Month'] : '01';
+        $year = isset($request['Year']) ? $request['Year'] : '1991';
+
+        $from = $year . '-' . $month . '-01';
+        $to = date('Y-m-d', strtotime('last day of ' . $from));
+
+        $data = DB::table('CRM_Towns')    
+            ->select(
+                'CRM_Towns.Town',
+                DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE DateTimeOfEnergization IS NOT NULL AND 
+                    (TRY_CAST(DateTimeOfEnergization AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND 
+                    (Trash IS NULL OR Trash='No') AND Town=CRM_Towns.id) AS ConsumerCount"),
+            )
+            ->orderBy('CRM_Towns.Town')
+            ->get();
+
+        return view('/service_connections/energization_per_town', [
+            'data' => $data,
+        ]);
+    }
+
+    public function downloadEnergizationPerTown($month, $year) {
+        $from = $year . '-' . $month . '-01';
+        $to = date('Y-m-d', strtotime('last day of ' . $from));
+
+        $data = DB::table('CRM_Towns')    
+            ->select(
+                'CRM_Towns.Town',
+                DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE DateTimeOfEnergization IS NOT NULL AND 
+                    (TRY_CAST(DateTimeOfEnergization AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND 
+                    (Trash IS NULL OR Trash='No') AND Town=CRM_Towns.id) AS ConsumerCount"),
+            )
+            ->orderBy('CRM_Towns.Town')
+            ->get();
+
+        $headers = [
+            'Town',
+            'ConsumerCount',
+        ];
+
+        $export = new DynamicExport($data->toArray(), $headers, null, 'Energization Report per Town for ' . date('F Y', strtotime($year . '-' . $month . '-01')));
+
+        return Excel::download($export, 'Energization-Report-per-Town.xlsx');
+    }
+
+    public function meterInstallation(Request $request) {
+        $from = $request['From'];
+        $to = $request['To'];
+        $office = $request['Office'];
+
+        if ($office == 'All') {
+            $data = DB::table('CRM_ServiceConnectionMeterAndTransformer')
+                ->leftJoin('CRM_ServiceConnections', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId', '=', 'CRM_ServiceConnections.id')                
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_ServiceConnectionMeterAndTransformer.created_at BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->select('CRM_ServiceConnectionMeterAndTransformer.created_at',
+                    'CRM_ServiceConnections.id',
+                    'ServiceAccountName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'DateTimeOfEnergization',
+                    'MeterSerialNumber',
+                    'MeterBrand',
+                    'MeterSealNumber',
+                    'TypeOfMetering')
+                ->orderBy('CRM_ServiceConnectionMeterAndTransformer.created_at')
+                ->get();
+        } else {
+            $data = DB::table('CRM_ServiceConnectionMeterAndTransformer')
+                ->leftJoin('CRM_ServiceConnections', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId', '=', 'CRM_ServiceConnections.id')                
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND Office='" . $office . "' AND (CRM_ServiceConnectionMeterAndTransformer.created_at BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->select('CRM_ServiceConnectionMeterAndTransformer.created_at',
+                    'CRM_ServiceConnections.id',
+                    'ServiceAccountName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'DateTimeOfEnergization',
+                    'MeterSerialNumber',
+                    'MeterBrand',
+                    'MeterSealNumber',
+                    'TypeOfMetering')
+                ->orderBy('CRM_ServiceConnectionMeterAndTransformer.created_at')
+                ->get();
+        }
+
+        return view('/service_connections/meter_installations', [
+            'data' => $data,
+        ]);
+    }
+
+    public function downloadMeterInstallation($from, $to, $office) {
+        if ($office == 'All') {
+            $data = DB::table('CRM_ServiceConnectionMeterAndTransformer')
+                ->leftJoin('CRM_ServiceConnections', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId', '=', 'CRM_ServiceConnections.id')                
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_ServiceConnectionMeterAndTransformer.created_at BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->select('CRM_ServiceConnectionMeterAndTransformer.created_at',
+                    'CRM_ServiceConnections.id',
+                    'ServiceAccountName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'DateTimeOfEnergization',
+                    'MeterSerialNumber',
+                    'MeterBrand',
+                    'MeterSealNumber',
+                    'TypeOfMetering')
+                ->orderBy('CRM_ServiceConnectionMeterAndTransformer.created_at')
+                ->get();
+        } else {
+            $data = DB::table('CRM_ServiceConnectionMeterAndTransformer')
+                ->leftJoin('CRM_ServiceConnections', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId', '=', 'CRM_ServiceConnections.id')                
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND Office='" . $office . "' AND (CRM_ServiceConnectionMeterAndTransformer.created_at BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->select('CRM_ServiceConnectionMeterAndTransformer.created_at',
+                    'CRM_ServiceConnections.id',
+                    'ServiceAccountName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'DateTimeOfEnergization',
+                    'MeterSerialNumber',
+                    'MeterBrand',
+                    'MeterSealNumber',
+                    'TypeOfMetering')
+                ->orderBy('CRM_ServiceConnectionMeterAndTransformer.created_at')
+                ->get();
+        }
+
+        $arr = [];
+        $rows = count($data);
+        $i=1;
+        foreach($data as $item) {
+            array_push($arr, [
+                'No' => $i,
+                'DateAssigned' => date('M d, Y h:m:s A', strtotime($item->created_at)),
+                'TurnOn' => $item->id,
+                'Name' => $item->ServiceAccountName,
+                'Barangay' => $item->Barangay,
+                'Town' => $item->Town,
+                'DateEnergized' => date('M d, Y h:m:s A', strtotime($item->DateTimeOfEnergization)),
+                'MeterNo' => $item->MeterSerialNumber,
+                'Brand' => $item->MeterBrand,
+                'Seal' => $item->MeterSealNumber,
+                'Type' => $item->TypeOfMetering,
+            ]);
+            $i++;
+        }
+
+        $headers = [
+            'No',
+            "Date of Meter Assigning",
+            "Turn On ID",
+            "Consumer Name",
+            "Barangay",
+            "Town",
+            "Date Energized",
+            "Meter Number",
+            "Meter Brand",
+            "Meter Seal",
+            "Metering Type",
+        ];
+
+        $styles = [
+            1 => [
+                'font' => ['bold' => true],
+                'alignment' => ['horizontal' => 'center'],
+            ],
+            2 => [
+                'font' => ['bold' => true],
+                'alignment' => ['horizontal' => 'center'],
+            ],
+            4 => [
+                'font' => ['bold' => true],
+                'alignment' => ['horizontal' => 'center'],
+            ],
+            7 => [
+                'font' => ['bold' => true],
+                'alignment' => ['horizontal' => 'center'],
+            ],
+            'A7:K' . ($rows + 7) => [
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    ]
+                ]
+            ]
+        ];
+
+        $export = new DynamicExport($arr, $headers, $styles, 'METER INSTALLATION REPORT FROM ' . date('M d, Y', strtotime($from)) . ' TO ' . date('M d, Y', strtotime($to)));
+
+        return Excel::download($export, 'Meter-Installation-Report.xlsx');
+    }
 }
