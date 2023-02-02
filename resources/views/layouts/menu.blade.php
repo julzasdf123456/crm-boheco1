@@ -605,10 +605,10 @@ use Illuminate\Support\Facades\Auth;
             </p>
         </a>
         <ul class="nav nav-treeview">
-            {{-- <li class="nav-item">
-                <a href="{{ route('serviceAccounts.index') }}"
-                   class="nav-link {{ Request::is('serviceAccounts*') ? 'active' : '' }}">                   
-                   <i class="fas fa-user-circle nav-icon text-primary"></i><p>All Accounts</p>
+            <li class="nav-item">
+                <a href="{{ route('accountMasters.index') }}"
+                   class="nav-link {{ Request::is('accountMasters.index*') ? 'active' : '' }}">                   
+                   <i class="fas fa-user-circle nav-icon text-primary"></i><p>Consumer Accounts</p>
                 </a>
             </li>
             <li class="nav-item">
@@ -617,7 +617,7 @@ use Illuminate\Support\Facades\Auth;
                    title="Accounts with Termed Payments">                   
                    <i class="fas fa-list nav-icon text-primary"></i><p>Accounts w/ OCL</p>
                 </a>
-            </li> --}}
+            </li>
             <li class="nav-header">                
                 Others 
             </li>
@@ -1230,4 +1230,6 @@ use Illuminate\Support\Facades\Auth;
         </ul>
     </li>
 @endcan
+
+
 

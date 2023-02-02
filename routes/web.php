@@ -543,7 +543,6 @@ Route::get('/bills/print-bulk-bill-new-format-group/{period}/{groupId}', [App\Ht
 Route::get('/bills/delete-bill-and-reading-ajax', [App\Http\Controllers\BillsController::class, 'deleteBillAndReadingAjax'])->name('bills.delete-bill-and-reading-ajax');
 Route::get('/bills/kwh-monitoring', [App\Http\Controllers\BillsController::class, 'kwhMonitoring'])->name('bills.kwh-monitoring');
 Route::get('/bills/fetch-kwh-data', [App\Http\Controllers\BillsController::class, 'fetchKwhData'])->name('bills.fetch-kwh-data');
-Route::resource('bills', App\Http\Controllers\BillsController::class);
 
 
 Route::resource('readingImages', App\Http\Controllers\ReadingImagesController::class);
@@ -807,3 +806,6 @@ Route::resource('accountMasterExtensions', App\Http\Controllers\AccountMasterExt
 
 
 Route::resource('meters', App\Http\Controllers\MetersController::class);
+
+
+Route::resource('bills', App\Http\Controllers\BillsController::class);

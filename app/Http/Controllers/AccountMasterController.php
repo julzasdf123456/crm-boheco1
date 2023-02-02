@@ -15,6 +15,7 @@ use App\Models\ServiceConnectionAccountTypes;
 use App\Models\ServiceAccounts;
 use App\Models\MeterReaders;
 use App\Models\Meters;
+use App\Models\Bills;
 use App\Models\AccountNameHistory;
 use App\Models\BillingTransformers;
 use App\Models\AccountMaster;
@@ -48,10 +49,22 @@ class AccountMasterController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $accountMasters = $this->accountMasterRepository->all();
+        $query = $request['params'];
 
-        return view('account_masters.index')
-            ->with('accountMasters', $accountMasters);
+        if (isset($query)) {
+            $serviceAccounts = DB::connection('sqlsrvbilling')->table('AccountMaster')
+                ->whereRaw("ConsumerName LIKE '%" . $query . "%' OR MeterNumber LIKE '%" . $query . "%' OR AccountNumber LIKE '%" . $query . "%'")
+                ->select('*')
+                ->paginate(50);
+        } else {
+            $serviceAccounts = DB::connection('sqlsrvbilling')->table('AccountMaster')
+                ->select('*')
+                ->paginate(25);
+        }
+
+        return view('account_masters.index', [
+            'serviceAccounts' => $serviceAccounts
+        ]);
     }
 
     /**
@@ -111,7 +124,23 @@ class AccountMasterController extends AppBaseController
             return redirect(route('accountMasters.index'));
         }
 
-        return view('account_masters.show')->with('accountMaster', $accountMaster);
+        $meter = Meters::where('MeterNumber', $accountMaster->MeterNumber)->first();
+
+        $bills = DB::connection('sqlsrvbilling')->table('Bills')
+            ->leftJoin('PaidBills', function($join) {
+                $join->on('Bills.AccountNumber', '=', 'PaidBills.AccountNumber')
+                    ->on('Bills.ServicePeriodEnd', '=', 'PaidBills.ServicePeriodEnd');
+            })
+            ->select('Bills.*', 'PaidBills.ORNumber', 'PaidBills.ORDate')
+            ->where('Bills.AccountNumber', $id)
+            ->orderByDesc('Bills.ServicePeriodEnd')
+            ->get();
+
+        return view('account_masters.show', [
+            'accountMaster' => $accountMaster,
+            'meter' => $meter,
+            'bills' => $bills
+        ]);
     }
 
     /**

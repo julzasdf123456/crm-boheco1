@@ -1,113 +1,97 @@
-<!-- Billnumber Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('BillNumber', 'Billnumber:') !!}
-    {!! Form::text('BillNumber', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
-</div>
-
 <!-- Accountnumber Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('AccountNumber', 'Accountnumber:') !!}
-    {!! Form::text('AccountNumber', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::text('AccountNumber', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
 </div>
 
-<!-- Serviceperiod Field -->
+<!-- Powerpreviousreading Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('ServicePeriod', 'Serviceperiod:') !!}
-    {!! Form::text('ServicePeriod', null, ['class' => 'form-control','id'=>'ServicePeriod']) !!}
+    {!! Form::label('PowerPreviousReading', 'Powerpreviousreading:') !!}
+    {!! Form::number('PowerPreviousReading', null, ['class' => 'form-control']) !!}
 </div>
 
-@push('page_scripts')
-    <script type="text/javascript">
-        $('#ServicePeriod').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm:ss',
-            useCurrent: true,
-            sideBySide: true
-        })
-    </script>
-@endpush
-
-<!-- Multiplier Field -->
+<!-- Powerpresentreading Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('Multiplier', 'Multiplier:') !!}
-    {!! Form::text('Multiplier', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('PowerPresentReading', 'Powerpresentreading:') !!}
+    {!! Form::number('PowerPresentReading', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Coreloss Field -->
+<!-- Demandpreviousreading Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('Coreloss', 'Coreloss:') !!}
-    {!! Form::text('Coreloss', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('DemandPreviousReading', 'Demandpreviousreading:') !!}
+    {!! Form::number('DemandPreviousReading', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Kwhused Field -->
+<!-- Demandpresentreading Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('KwhUsed', 'Kwhused:') !!}
-    {!! Form::text('KwhUsed', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
-</div>
-
-<!-- Previouskwh Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('PreviousKwh', 'Previouskwh:') !!}
-    {!! Form::text('PreviousKwh', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
-</div>
-
-<!-- Presentkwh Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('PresentKwh', 'Presentkwh:') !!}
-    {!! Form::text('PresentKwh', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
-</div>
-
-<!-- Demandpreviouskwh Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('DemandPreviousKwh', 'Demandpreviouskwh:') !!}
-    {!! Form::text('DemandPreviousKwh', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
-</div>
-
-<!-- Demandpresentkwh Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('DemandPresentKwh', 'Demandpresentkwh:') !!}
-    {!! Form::text('DemandPresentKwh', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('DemandPresentReading', 'Demandpresentreading:') !!}
+    {!! Form::number('DemandPresentReading', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Additionalkwh Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('AdditionalKwh', 'Additionalkwh:') !!}
-    {!! Form::text('AdditionalKwh', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('AdditionalKWH', 'Additionalkwh:') !!}
+    {!! Form::number('AdditionalKWH', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Additionaldemandkwh Field -->
+<!-- Additionalkwdemand Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('AdditionalDemandKwh', 'Additionaldemandkwh:') !!}
-    {!! Form::text('AdditionalDemandKwh', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('AdditionalKWDemand', 'Additionalkwdemand:') !!}
+    {!! Form::number('AdditionalKWDemand', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Powerkwh Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('PowerKWH', 'Powerkwh:') !!}
+    {!! Form::number('PowerKWH', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Kwhamount Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('KwhAmount', 'Kwhamount:') !!}
-    {!! Form::text('KwhAmount', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('KWHAmount', 'Kwhamount:') !!}
+    {!! Form::number('KWHAmount', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Effectiverate Field -->
+<!-- Demandkw Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('EffectiveRate', 'Effectiverate:') !!}
-    {!! Form::text('EffectiveRate', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('DemandKW', 'Demandkw:') !!}
+    {!! Form::number('DemandKW', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Additionalcharges Field -->
+<!-- Kwamount Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('AdditionalCharges', 'Additionalcharges:') !!}
-    {!! Form::text('AdditionalCharges', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('KWAmount', 'Kwamount:') !!}
+    {!! Form::number('KWAmount', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Charges Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('Charges', 'Charges:') !!}
+    {!! Form::number('Charges', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Deductions Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('Deductions', 'Deductions:') !!}
-    {!! Form::text('Deductions', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::number('Deductions', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Netamount Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('NetAmount', 'Netamount:') !!}
-    {!! Form::text('NetAmount', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::number('NetAmount', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Powerrate Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('PowerRate', 'Powerrate:') !!}
+    {!! Form::number('PowerRate', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Demandrate Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('DemandRate', 'Demandrate:') !!}
+    {!! Form::number('DemandRate', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Billingdate Field -->
@@ -174,194 +158,406 @@
     </script>
 @endpush
 
+<!-- Billnumber Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('BillNumber', 'Billnumber:') !!}
+    {!! Form::text('BillNumber', null, ['class' => 'form-control','maxlength' => 10,'maxlength' => 10]) !!}
+</div>
+
+<!-- Remarks Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('Remarks', 'Remarks:') !!}
+    {!! Form::text('Remarks', null, ['class' => 'form-control','maxlength' => 128,'maxlength' => 128]) !!}
+</div>
+
+<!-- Averagekwh Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('AverageKWH', 'Averagekwh:') !!}
+    {!! Form::number('AverageKWH', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Averagekwdemand Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('AverageKWDemand', 'Averagekwdemand:') !!}
+    {!! Form::number('AverageKWDemand', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Coreloss Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('CoreLoss', 'Coreloss:') !!}
+    {!! Form::number('CoreLoss', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Meter Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('Meter', 'Meter:') !!}
+    {!! Form::number('Meter', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Pr Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('PR', 'Pr:') !!}
+    {!! Form::number('PR', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Sdw Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('SDW', 'Sdw:') !!}
+    {!! Form::number('SDW', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Others Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('Others', 'Others:') !!}
+    {!! Form::number('Others', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Ppa Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('PPA', 'Ppa:') !!}
+    {!! Form::number('PPA', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Ppaamount Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('PPAAmount', 'Ppaamount:') !!}
+    {!! Form::number('PPAAmount', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Basicamount Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('BasicAmount', 'Basicamount:') !!}
+    {!! Form::number('BasicAmount', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Pradiscount Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('PRADiscount', 'Pradiscount:') !!}
+    {!! Form::number('PRADiscount', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Praamount Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('PRAAmount', 'Praamount:') !!}
+    {!! Form::number('PRAAmount', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Ppcadiscount Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('PPCADiscount', 'Ppcadiscount:') !!}
+    {!! Form::number('PPCADiscount', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Ppcaamount Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('PPCAAmount', 'Ppcaamount:') !!}
+    {!! Form::number('PPCAAmount', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Ucamount Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('UCAmount', 'Ucamount:') !!}
+    {!! Form::number('UCAmount', null, ['class' => 'form-control']) !!}
+</div>
+
 <!-- Meternumber Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('MeterNumber', 'Meternumber:') !!}
-    {!! Form::text('MeterNumber', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::text('MeterNumber', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
 </div>
 
 <!-- Consumertype Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('ConsumerType', 'Consumertype:') !!}
-    {!! Form::text('ConsumerType', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::text('ConsumerType', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
 </div>
 
 <!-- Billtype Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('BillType', 'Billtype:') !!}
-    {!! Form::text('BillType', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::text('BillType', null, ['class' => 'form-control','maxlength' => 10,'maxlength' => 10]) !!}
 </div>
 
-<!-- Generationsystemcharge Field -->
+<!-- Qcamount Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('GenerationSystemCharge', 'Generationsystemcharge:') !!}
-    {!! Form::text('GenerationSystemCharge', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('QCAmount', 'Qcamount:') !!}
+    {!! Form::number('QCAmount', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Transmissiondeliverychargekw Field -->
+<!-- Epamount Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('TransmissionDeliveryChargeKW', 'Transmissiondeliverychargekw:') !!}
-    {!! Form::text('TransmissionDeliveryChargeKW', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('EPAmount', 'Epamount:') !!}
+    {!! Form::number('EPAmount', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Transmissiondeliverychargekwh Field -->
+<!-- Pcamount Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('TransmissionDeliveryChargeKWH', 'Transmissiondeliverychargekwh:') !!}
-    {!! Form::text('TransmissionDeliveryChargeKWH', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('PCAmount', 'Pcamount:') !!}
+    {!! Form::number('PCAmount', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Systemlosscharge Field -->
+<!-- Loancondonation Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('SystemLossCharge', 'Systemlosscharge:') !!}
-    {!! Form::text('SystemLossCharge', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('LoanCondonation', 'Loancondonation:') !!}
+    {!! Form::number('LoanCondonation', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Distributiondemandcharge Field -->
+<!-- Billingperiod Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('DistributionDemandCharge', 'Distributiondemandcharge:') !!}
-    {!! Form::text('DistributionDemandCharge', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('BillingPeriod', 'Billingperiod:') !!}
+    {!! Form::text('BillingPeriod', null, ['class' => 'form-control','id'=>'BillingPeriod']) !!}
 </div>
 
-<!-- Distributionsystemcharge Field -->
+@push('page_scripts')
+    <script type="text/javascript">
+        $('#BillingPeriod').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm:ss',
+            useCurrent: true,
+            sideBySide: true
+        })
+    </script>
+@endpush
+
+<!-- Unbundledtag Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('DistributionSystemCharge', 'Distributionsystemcharge:') !!}
-    {!! Form::text('DistributionSystemCharge', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    <div class="form-check">
+        {!! Form::hidden('UnbundledTag', 0, ['class' => 'form-check-input']) !!}
+        {!! Form::checkbox('UnbundledTag', '1', null, ['class' => 'form-check-input']) !!}
+        {!! Form::label('UnbundledTag', 'Unbundledtag', ['class' => 'form-check-label']) !!}
+    </div>
 </div>
 
-<!-- Supplyretailcustomercharge Field -->
+
+<!-- Generationsystemamt Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('SupplyRetailCustomerCharge', 'Supplyretailcustomercharge:') !!}
-    {!! Form::text('SupplyRetailCustomerCharge', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('GenerationSystemAmt', 'Generationsystemamt:') !!}
+    {!! Form::number('GenerationSystemAmt', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Supplysystemcharge Field -->
+<!-- Fbhcamt Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('SupplySystemCharge', 'Supplysystemcharge:') !!}
-    {!! Form::text('SupplySystemCharge', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('FBHCAmt', 'Fbhcamt:') !!}
+    {!! Form::number('FBHCAmt', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Meteringretailcustomercharge Field -->
+<!-- Fpcaadjustmentamt Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('MeteringRetailCustomerCharge', 'Meteringretailcustomercharge:') !!}
-    {!! Form::text('MeteringRetailCustomerCharge', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('FPCAAdjustmentAmt', 'Fpcaadjustmentamt:') !!}
+    {!! Form::number('FPCAAdjustmentAmt', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Meteringsystemcharge Field -->
+<!-- Forexadjustmentamt Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('MeteringSystemCharge', 'Meteringsystemcharge:') !!}
-    {!! Form::text('MeteringSystemCharge', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('ForexAdjustmentAmt', 'Forexadjustmentamt:') !!}
+    {!! Form::number('ForexAdjustmentAmt', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Rfsc Field -->
+<!-- Transmissiondemandamt Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('RFSC', 'Rfsc:') !!}
-    {!! Form::text('RFSC', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('TransmissionDemandAmt', 'Transmissiondemandamt:') !!}
+    {!! Form::number('TransmissionDemandAmt', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Lifelinerate Field -->
+<!-- Transmissionsystemamt Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('LifelineRate', 'Lifelinerate:') !!}
-    {!! Form::text('LifelineRate', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('TransmissionSystemAmt', 'Transmissionsystemamt:') !!}
+    {!! Form::number('TransmissionSystemAmt', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Interclasscrosssubsidycharge Field -->
+<!-- Distributiondemandamt Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('InterClassCrossSubsidyCharge', 'Interclasscrosssubsidycharge:') !!}
-    {!! Form::text('InterClassCrossSubsidyCharge', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('DistributionDemandAmt', 'Distributiondemandamt:') !!}
+    {!! Form::number('DistributionDemandAmt', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Pparefund Field -->
+<!-- Distributionsystemamt Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('PPARefund', 'Pparefund:') !!}
-    {!! Form::text('PPARefund', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('DistributionSystemAmt', 'Distributionsystemamt:') !!}
+    {!! Form::number('DistributionSystemAmt', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Supplyretailcustomeramt Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('SupplyRetailCustomerAmt', 'Supplyretailcustomeramt:') !!}
+    {!! Form::number('SupplyRetailCustomerAmt', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Supplysystemamt Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('SupplySystemAmt', 'Supplysystemamt:') !!}
+    {!! Form::number('SupplySystemAmt', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Meteringretailcustomeramt Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('MeteringRetailCustomerAmt', 'Meteringretailcustomeramt:') !!}
+    {!! Form::number('MeteringRetailCustomerAmt', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Meteringsystemamt Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('MeteringSystemAmt', 'Meteringsystemamt:') !!}
+    {!! Form::number('MeteringSystemAmt', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Systemlossamt Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('SystemLossAmt', 'Systemlossamt:') !!}
+    {!! Form::number('SystemLossAmt', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Crosssubsidycreditamt Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('CrossSubsidyCreditAmt', 'Crosssubsidycreditamt:') !!}
+    {!! Form::number('CrossSubsidyCreditAmt', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Missionaryelectrificationamt Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('MissionaryElectrificationAmt', 'Missionaryelectrificationamt:') !!}
+    {!! Form::number('MissionaryElectrificationAmt', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Environmentalamt Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('EnvironmentalAmt', 'Environmentalamt:') !!}
+    {!! Form::number('EnvironmentalAmt', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Lifelinesubsidyamt Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('LifelineSubsidyAmt', 'Lifelinesubsidyamt:') !!}
+    {!! Form::number('LifelineSubsidyAmt', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Item1 Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('Item1', 'Item1:') !!}
+    {!! Form::number('Item1', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Item2 Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('Item2', 'Item2:') !!}
+    {!! Form::number('Item2', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Item3 Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('Item3', 'Item3:') !!}
+    {!! Form::number('Item3', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Item4 Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('Item4', 'Item4:') !!}
+    {!! Form::number('Item4', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Seniorcitizendiscount Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('SeniorCitizenDiscount', 'Seniorcitizendiscount:') !!}
+    {!! Form::number('SeniorCitizenDiscount', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Seniorcitizensubsidy Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('SeniorCitizenSubsidy', 'Seniorcitizensubsidy:') !!}
-    {!! Form::text('SeniorCitizenSubsidy', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::number('SeniorCitizenSubsidy', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Missionaryelectrificationcharge Field -->
+<!-- Ucmerefund Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('MissionaryElectrificationCharge', 'Missionaryelectrificationcharge:') !!}
-    {!! Form::text('MissionaryElectrificationCharge', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('UCMERefund', 'Ucmerefund:') !!}
+    {!! Form::number('UCMERefund', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Environmentalcharge Field -->
+<!-- Netprevreading Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('EnvironmentalCharge', 'Environmentalcharge:') !!}
-    {!! Form::text('EnvironmentalCharge', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('NetPrevReading', 'Netprevreading:') !!}
+    {!! Form::number('NetPrevReading', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Strandedcontractcosts Field -->
+<!-- Netpresreading Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('StrandedContractCosts', 'Strandedcontractcosts:') !!}
-    {!! Form::text('StrandedContractCosts', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('NetPresReading', 'Netpresreading:') !!}
+    {!! Form::number('NetPresReading', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Npcstrandeddebt Field -->
+<!-- Netpowerkwh Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('NPCStrandedDebt', 'Npcstrandeddebt:') !!}
-    {!! Form::text('NPCStrandedDebt', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('NetPowerKWH', 'Netpowerkwh:') !!}
+    {!! Form::number('NetPowerKWH', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Feedintariffallowance Field -->
+<!-- Netgenerationamount Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('FeedInTariffAllowance', 'Feedintariffallowance:') !!}
-    {!! Form::text('FeedInTariffAllowance', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('NetGenerationAmount', 'Netgenerationamount:') !!}
+    {!! Form::number('NetGenerationAmount', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Missionaryelectrificationredci Field -->
+<!-- Creditkwh Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('MissionaryElectrificationREDCI', 'Missionaryelectrificationredci:') !!}
-    {!! Form::text('MissionaryElectrificationREDCI', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('CreditKWH', 'Creditkwh:') !!}
+    {!! Form::number('CreditKWH', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Generationvat Field -->
+<!-- Creditamount Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('GenerationVAT', 'Generationvat:') !!}
-    {!! Form::text('GenerationVAT', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('CreditAmount', 'Creditamount:') !!}
+    {!! Form::number('CreditAmount', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Transmissionvat Field -->
+<!-- Netmeteringsystemamt Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('TransmissionVAT', 'Transmissionvat:') !!}
-    {!! Form::text('TransmissionVAT', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('NetMeteringSystemAmt', 'Netmeteringsystemamt:') !!}
+    {!! Form::number('NetMeteringSystemAmt', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Systemlossvat Field -->
+<!-- Daa Gram Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('SystemLossVAT', 'Systemlossvat:') !!}
-    {!! Form::text('SystemLossVAT', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('DAA_GRAM', 'Daa Gram:') !!}
+    {!! Form::number('DAA_GRAM', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Distributionvat Field -->
+<!-- Daa Icera Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('DistributionVAT', 'Distributionvat:') !!}
-    {!! Form::text('DistributionVAT', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('DAA_ICERA', 'Daa Icera:') !!}
+    {!! Form::number('DAA_ICERA', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Realpropertytax Field -->
+<!-- Acrm Tafppca Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('RealPropertyTax', 'Realpropertytax:') !!}
-    {!! Form::text('RealPropertyTax', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20]) !!}
+    {!! Form::label('ACRM_TAFPPCA', 'Acrm Tafppca:') !!}
+    {!! Form::number('ACRM_TAFPPCA', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Notes Field -->
+<!-- Acrm Tafxa Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('Notes', 'Notes:') !!}
-    {!! Form::text('Notes', null, ['class' => 'form-control','maxlength' => 2500,'maxlength' => 2500]) !!}
+    {!! Form::label('ACRM_TAFxA', 'Acrm Tafxa:') !!}
+    {!! Form::number('ACRM_TAFxA', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Userid Field -->
+<!-- Daa Vat Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('UserId', 'Userid:') !!}
-    {!! Form::text('UserId', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('DAA_VAT', 'Daa Vat:') !!}
+    {!! Form::number('DAA_VAT', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Billedfrom Field -->
+<!-- Acrm Vat Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('BilledFrom', 'Billedfrom:') !!}
-    {!! Form::text('BilledFrom', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('ACRM_VAT', 'Acrm Vat:') !!}
+    {!! Form::number('ACRM_VAT', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Netmeteringnetamount Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('NetMeteringNetAmount', 'Netmeteringnetamount:') !!}
+    {!! Form::number('NetMeteringNetAmount', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Referenceno Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('ReferenceNo', 'Referenceno:') !!}
+    {!! Form::text('ReferenceNo', null, ['class' => 'form-control','maxlength' => 30,'maxlength' => 30]) !!}
 </div>

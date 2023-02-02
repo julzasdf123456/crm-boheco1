@@ -1,91 +1,73 @@
-<!-- Billnumber Field -->
-<div class="col-sm-12">
-    {!! Form::label('BillNumber', 'Billnumber:') !!}
-    <p>{{ $bills->BillNumber }}</p>
-</div>
-
 <!-- Accountnumber Field -->
 <div class="col-sm-12">
     {!! Form::label('AccountNumber', 'Accountnumber:') !!}
     <p>{{ $bills->AccountNumber }}</p>
 </div>
 
-<!-- Serviceperiod Field -->
+<!-- Powerpreviousreading Field -->
 <div class="col-sm-12">
-    {!! Form::label('ServicePeriod', 'Serviceperiod:') !!}
-    <p>{{ $bills->ServicePeriod }}</p>
+    {!! Form::label('PowerPreviousReading', 'Powerpreviousreading:') !!}
+    <p>{{ $bills->PowerPreviousReading }}</p>
 </div>
 
-<!-- Multiplier Field -->
+<!-- Powerpresentreading Field -->
 <div class="col-sm-12">
-    {!! Form::label('Multiplier', 'Multiplier:') !!}
-    <p>{{ $bills->Multiplier }}</p>
+    {!! Form::label('PowerPresentReading', 'Powerpresentreading:') !!}
+    <p>{{ $bills->PowerPresentReading }}</p>
 </div>
 
-<!-- Coreloss Field -->
+<!-- Demandpreviousreading Field -->
 <div class="col-sm-12">
-    {!! Form::label('Coreloss', 'Coreloss:') !!}
-    <p>{{ $bills->Coreloss }}</p>
+    {!! Form::label('DemandPreviousReading', 'Demandpreviousreading:') !!}
+    <p>{{ $bills->DemandPreviousReading }}</p>
 </div>
 
-<!-- Kwhused Field -->
+<!-- Demandpresentreading Field -->
 <div class="col-sm-12">
-    {!! Form::label('KwhUsed', 'Kwhused:') !!}
-    <p>{{ $bills->KwhUsed }}</p>
-</div>
-
-<!-- Previouskwh Field -->
-<div class="col-sm-12">
-    {!! Form::label('PreviousKwh', 'Previouskwh:') !!}
-    <p>{{ $bills->PreviousKwh }}</p>
-</div>
-
-<!-- Presentkwh Field -->
-<div class="col-sm-12">
-    {!! Form::label('PresentKwh', 'Presentkwh:') !!}
-    <p>{{ $bills->PresentKwh }}</p>
-</div>
-
-<!-- Demandpreviouskwh Field -->
-<div class="col-sm-12">
-    {!! Form::label('DemandPreviousKwh', 'Demandpreviouskwh:') !!}
-    <p>{{ $bills->DemandPreviousKwh }}</p>
-</div>
-
-<!-- Demandpresentkwh Field -->
-<div class="col-sm-12">
-    {!! Form::label('DemandPresentKwh', 'Demandpresentkwh:') !!}
-    <p>{{ $bills->DemandPresentKwh }}</p>
+    {!! Form::label('DemandPresentReading', 'Demandpresentreading:') !!}
+    <p>{{ $bills->DemandPresentReading }}</p>
 </div>
 
 <!-- Additionalkwh Field -->
 <div class="col-sm-12">
-    {!! Form::label('AdditionalKwh', 'Additionalkwh:') !!}
-    <p>{{ $bills->AdditionalKwh }}</p>
+    {!! Form::label('AdditionalKWH', 'Additionalkwh:') !!}
+    <p>{{ $bills->AdditionalKWH }}</p>
 </div>
 
-<!-- Additionaldemandkwh Field -->
+<!-- Additionalkwdemand Field -->
 <div class="col-sm-12">
-    {!! Form::label('AdditionalDemandKwh', 'Additionaldemandkwh:') !!}
-    <p>{{ $bills->AdditionalDemandKwh }}</p>
+    {!! Form::label('AdditionalKWDemand', 'Additionalkwdemand:') !!}
+    <p>{{ $bills->AdditionalKWDemand }}</p>
+</div>
+
+<!-- Powerkwh Field -->
+<div class="col-sm-12">
+    {!! Form::label('PowerKWH', 'Powerkwh:') !!}
+    <p>{{ $bills->PowerKWH }}</p>
 </div>
 
 <!-- Kwhamount Field -->
 <div class="col-sm-12">
-    {!! Form::label('KwhAmount', 'Kwhamount:') !!}
-    <p>{{ $bills->KwhAmount }}</p>
+    {!! Form::label('KWHAmount', 'Kwhamount:') !!}
+    <p>{{ $bills->KWHAmount }}</p>
 </div>
 
-<!-- Effectiverate Field -->
+<!-- Demandkw Field -->
 <div class="col-sm-12">
-    {!! Form::label('EffectiveRate', 'Effectiverate:') !!}
-    <p>{{ $bills->EffectiveRate }}</p>
+    {!! Form::label('DemandKW', 'Demandkw:') !!}
+    <p>{{ $bills->DemandKW }}</p>
 </div>
 
-<!-- Additionalcharges Field -->
+<!-- Kwamount Field -->
 <div class="col-sm-12">
-    {!! Form::label('AdditionalCharges', 'Additionalcharges:') !!}
-    <p>{{ $bills->AdditionalCharges }}</p>
+    {!! Form::label('KWAmount', 'Kwamount:') !!}
+    <p>{{ $bills->KWAmount }}</p>
+</div>
+
+<!-- Charges Field -->
+<div class="col-sm-12">
+    {!! Form::label('Charges', 'Charges:') !!}
+    <p>{{ $bills->Charges }}</p>
 </div>
 
 <!-- Deductions Field -->
@@ -98,6 +80,18 @@
 <div class="col-sm-12">
     {!! Form::label('NetAmount', 'Netamount:') !!}
     <p>{{ $bills->NetAmount }}</p>
+</div>
+
+<!-- Powerrate Field -->
+<div class="col-sm-12">
+    {!! Form::label('PowerRate', 'Powerrate:') !!}
+    <p>{{ $bills->PowerRate }}</p>
+</div>
+
+<!-- Demandrate Field -->
+<div class="col-sm-12">
+    {!! Form::label('DemandRate', 'Demandrate:') !!}
+    <p>{{ $bills->DemandRate }}</p>
 </div>
 
 <!-- Billingdate Field -->
@@ -124,6 +118,108 @@
     <p>{{ $bills->DueDate }}</p>
 </div>
 
+<!-- Billnumber Field -->
+<div class="col-sm-12">
+    {!! Form::label('BillNumber', 'Billnumber:') !!}
+    <p>{{ $bills->BillNumber }}</p>
+</div>
+
+<!-- Remarks Field -->
+<div class="col-sm-12">
+    {!! Form::label('Remarks', 'Remarks:') !!}
+    <p>{{ $bills->Remarks }}</p>
+</div>
+
+<!-- Averagekwh Field -->
+<div class="col-sm-12">
+    {!! Form::label('AverageKWH', 'Averagekwh:') !!}
+    <p>{{ $bills->AverageKWH }}</p>
+</div>
+
+<!-- Averagekwdemand Field -->
+<div class="col-sm-12">
+    {!! Form::label('AverageKWDemand', 'Averagekwdemand:') !!}
+    <p>{{ $bills->AverageKWDemand }}</p>
+</div>
+
+<!-- Coreloss Field -->
+<div class="col-sm-12">
+    {!! Form::label('CoreLoss', 'Coreloss:') !!}
+    <p>{{ $bills->CoreLoss }}</p>
+</div>
+
+<!-- Meter Field -->
+<div class="col-sm-12">
+    {!! Form::label('Meter', 'Meter:') !!}
+    <p>{{ $bills->Meter }}</p>
+</div>
+
+<!-- Pr Field -->
+<div class="col-sm-12">
+    {!! Form::label('PR', 'Pr:') !!}
+    <p>{{ $bills->PR }}</p>
+</div>
+
+<!-- Sdw Field -->
+<div class="col-sm-12">
+    {!! Form::label('SDW', 'Sdw:') !!}
+    <p>{{ $bills->SDW }}</p>
+</div>
+
+<!-- Others Field -->
+<div class="col-sm-12">
+    {!! Form::label('Others', 'Others:') !!}
+    <p>{{ $bills->Others }}</p>
+</div>
+
+<!-- Ppa Field -->
+<div class="col-sm-12">
+    {!! Form::label('PPA', 'Ppa:') !!}
+    <p>{{ $bills->PPA }}</p>
+</div>
+
+<!-- Ppaamount Field -->
+<div class="col-sm-12">
+    {!! Form::label('PPAAmount', 'Ppaamount:') !!}
+    <p>{{ $bills->PPAAmount }}</p>
+</div>
+
+<!-- Basicamount Field -->
+<div class="col-sm-12">
+    {!! Form::label('BasicAmount', 'Basicamount:') !!}
+    <p>{{ $bills->BasicAmount }}</p>
+</div>
+
+<!-- Pradiscount Field -->
+<div class="col-sm-12">
+    {!! Form::label('PRADiscount', 'Pradiscount:') !!}
+    <p>{{ $bills->PRADiscount }}</p>
+</div>
+
+<!-- Praamount Field -->
+<div class="col-sm-12">
+    {!! Form::label('PRAAmount', 'Praamount:') !!}
+    <p>{{ $bills->PRAAmount }}</p>
+</div>
+
+<!-- Ppcadiscount Field -->
+<div class="col-sm-12">
+    {!! Form::label('PPCADiscount', 'Ppcadiscount:') !!}
+    <p>{{ $bills->PPCADiscount }}</p>
+</div>
+
+<!-- Ppcaamount Field -->
+<div class="col-sm-12">
+    {!! Form::label('PPCAAmount', 'Ppcaamount:') !!}
+    <p>{{ $bills->PPCAAmount }}</p>
+</div>
+
+<!-- Ucamount Field -->
+<div class="col-sm-12">
+    {!! Form::label('UCAmount', 'Ucamount:') !!}
+    <p>{{ $bills->UCAmount }}</p>
+</div>
+
 <!-- Meternumber Field -->
 <div class="col-sm-12">
     {!! Form::label('MeterNumber', 'Meternumber:') !!}
@@ -142,88 +238,172 @@
     <p>{{ $bills->BillType }}</p>
 </div>
 
-<!-- Generationsystemcharge Field -->
+<!-- Qcamount Field -->
 <div class="col-sm-12">
-    {!! Form::label('GenerationSystemCharge', 'Generationsystemcharge:') !!}
-    <p>{{ $bills->GenerationSystemCharge }}</p>
+    {!! Form::label('QCAmount', 'Qcamount:') !!}
+    <p>{{ $bills->QCAmount }}</p>
 </div>
 
-<!-- Transmissiondeliverychargekw Field -->
+<!-- Epamount Field -->
 <div class="col-sm-12">
-    {!! Form::label('TransmissionDeliveryChargeKW', 'Transmissiondeliverychargekw:') !!}
-    <p>{{ $bills->TransmissionDeliveryChargeKW }}</p>
+    {!! Form::label('EPAmount', 'Epamount:') !!}
+    <p>{{ $bills->EPAmount }}</p>
 </div>
 
-<!-- Transmissiondeliverychargekwh Field -->
+<!-- Pcamount Field -->
 <div class="col-sm-12">
-    {!! Form::label('TransmissionDeliveryChargeKWH', 'Transmissiondeliverychargekwh:') !!}
-    <p>{{ $bills->TransmissionDeliveryChargeKWH }}</p>
+    {!! Form::label('PCAmount', 'Pcamount:') !!}
+    <p>{{ $bills->PCAmount }}</p>
 </div>
 
-<!-- Systemlosscharge Field -->
+<!-- Loancondonation Field -->
 <div class="col-sm-12">
-    {!! Form::label('SystemLossCharge', 'Systemlosscharge:') !!}
-    <p>{{ $bills->SystemLossCharge }}</p>
+    {!! Form::label('LoanCondonation', 'Loancondonation:') !!}
+    <p>{{ $bills->LoanCondonation }}</p>
 </div>
 
-<!-- Distributiondemandcharge Field -->
+<!-- Billingperiod Field -->
 <div class="col-sm-12">
-    {!! Form::label('DistributionDemandCharge', 'Distributiondemandcharge:') !!}
-    <p>{{ $bills->DistributionDemandCharge }}</p>
+    {!! Form::label('BillingPeriod', 'Billingperiod:') !!}
+    <p>{{ $bills->BillingPeriod }}</p>
 </div>
 
-<!-- Distributionsystemcharge Field -->
+<!-- Unbundledtag Field -->
 <div class="col-sm-12">
-    {!! Form::label('DistributionSystemCharge', 'Distributionsystemcharge:') !!}
-    <p>{{ $bills->DistributionSystemCharge }}</p>
+    {!! Form::label('UnbundledTag', 'Unbundledtag:') !!}
+    <p>{{ $bills->UnbundledTag }}</p>
 </div>
 
-<!-- Supplyretailcustomercharge Field -->
+<!-- Generationsystemamt Field -->
 <div class="col-sm-12">
-    {!! Form::label('SupplyRetailCustomerCharge', 'Supplyretailcustomercharge:') !!}
-    <p>{{ $bills->SupplyRetailCustomerCharge }}</p>
+    {!! Form::label('GenerationSystemAmt', 'Generationsystemamt:') !!}
+    <p>{{ $bills->GenerationSystemAmt }}</p>
 </div>
 
-<!-- Supplysystemcharge Field -->
+<!-- Fbhcamt Field -->
 <div class="col-sm-12">
-    {!! Form::label('SupplySystemCharge', 'Supplysystemcharge:') !!}
-    <p>{{ $bills->SupplySystemCharge }}</p>
+    {!! Form::label('FBHCAmt', 'Fbhcamt:') !!}
+    <p>{{ $bills->FBHCAmt }}</p>
 </div>
 
-<!-- Meteringretailcustomercharge Field -->
+<!-- Fpcaadjustmentamt Field -->
 <div class="col-sm-12">
-    {!! Form::label('MeteringRetailCustomerCharge', 'Meteringretailcustomercharge:') !!}
-    <p>{{ $bills->MeteringRetailCustomerCharge }}</p>
+    {!! Form::label('FPCAAdjustmentAmt', 'Fpcaadjustmentamt:') !!}
+    <p>{{ $bills->FPCAAdjustmentAmt }}</p>
 </div>
 
-<!-- Meteringsystemcharge Field -->
+<!-- Forexadjustmentamt Field -->
 <div class="col-sm-12">
-    {!! Form::label('MeteringSystemCharge', 'Meteringsystemcharge:') !!}
-    <p>{{ $bills->MeteringSystemCharge }}</p>
+    {!! Form::label('ForexAdjustmentAmt', 'Forexadjustmentamt:') !!}
+    <p>{{ $bills->ForexAdjustmentAmt }}</p>
 </div>
 
-<!-- Rfsc Field -->
+<!-- Transmissiondemandamt Field -->
 <div class="col-sm-12">
-    {!! Form::label('RFSC', 'Rfsc:') !!}
-    <p>{{ $bills->RFSC }}</p>
+    {!! Form::label('TransmissionDemandAmt', 'Transmissiondemandamt:') !!}
+    <p>{{ $bills->TransmissionDemandAmt }}</p>
 </div>
 
-<!-- Lifelinerate Field -->
+<!-- Transmissionsystemamt Field -->
 <div class="col-sm-12">
-    {!! Form::label('LifelineRate', 'Lifelinerate:') !!}
-    <p>{{ $bills->LifelineRate }}</p>
+    {!! Form::label('TransmissionSystemAmt', 'Transmissionsystemamt:') !!}
+    <p>{{ $bills->TransmissionSystemAmt }}</p>
 </div>
 
-<!-- Interclasscrosssubsidycharge Field -->
+<!-- Distributiondemandamt Field -->
 <div class="col-sm-12">
-    {!! Form::label('InterClassCrossSubsidyCharge', 'Interclasscrosssubsidycharge:') !!}
-    <p>{{ $bills->InterClassCrossSubsidyCharge }}</p>
+    {!! Form::label('DistributionDemandAmt', 'Distributiondemandamt:') !!}
+    <p>{{ $bills->DistributionDemandAmt }}</p>
 </div>
 
-<!-- Pparefund Field -->
+<!-- Distributionsystemamt Field -->
 <div class="col-sm-12">
-    {!! Form::label('PPARefund', 'Pparefund:') !!}
-    <p>{{ $bills->PPARefund }}</p>
+    {!! Form::label('DistributionSystemAmt', 'Distributionsystemamt:') !!}
+    <p>{{ $bills->DistributionSystemAmt }}</p>
+</div>
+
+<!-- Supplyretailcustomeramt Field -->
+<div class="col-sm-12">
+    {!! Form::label('SupplyRetailCustomerAmt', 'Supplyretailcustomeramt:') !!}
+    <p>{{ $bills->SupplyRetailCustomerAmt }}</p>
+</div>
+
+<!-- Supplysystemamt Field -->
+<div class="col-sm-12">
+    {!! Form::label('SupplySystemAmt', 'Supplysystemamt:') !!}
+    <p>{{ $bills->SupplySystemAmt }}</p>
+</div>
+
+<!-- Meteringretailcustomeramt Field -->
+<div class="col-sm-12">
+    {!! Form::label('MeteringRetailCustomerAmt', 'Meteringretailcustomeramt:') !!}
+    <p>{{ $bills->MeteringRetailCustomerAmt }}</p>
+</div>
+
+<!-- Meteringsystemamt Field -->
+<div class="col-sm-12">
+    {!! Form::label('MeteringSystemAmt', 'Meteringsystemamt:') !!}
+    <p>{{ $bills->MeteringSystemAmt }}</p>
+</div>
+
+<!-- Systemlossamt Field -->
+<div class="col-sm-12">
+    {!! Form::label('SystemLossAmt', 'Systemlossamt:') !!}
+    <p>{{ $bills->SystemLossAmt }}</p>
+</div>
+
+<!-- Crosssubsidycreditamt Field -->
+<div class="col-sm-12">
+    {!! Form::label('CrossSubsidyCreditAmt', 'Crosssubsidycreditamt:') !!}
+    <p>{{ $bills->CrossSubsidyCreditAmt }}</p>
+</div>
+
+<!-- Missionaryelectrificationamt Field -->
+<div class="col-sm-12">
+    {!! Form::label('MissionaryElectrificationAmt', 'Missionaryelectrificationamt:') !!}
+    <p>{{ $bills->MissionaryElectrificationAmt }}</p>
+</div>
+
+<!-- Environmentalamt Field -->
+<div class="col-sm-12">
+    {!! Form::label('EnvironmentalAmt', 'Environmentalamt:') !!}
+    <p>{{ $bills->EnvironmentalAmt }}</p>
+</div>
+
+<!-- Lifelinesubsidyamt Field -->
+<div class="col-sm-12">
+    {!! Form::label('LifelineSubsidyAmt', 'Lifelinesubsidyamt:') !!}
+    <p>{{ $bills->LifelineSubsidyAmt }}</p>
+</div>
+
+<!-- Item1 Field -->
+<div class="col-sm-12">
+    {!! Form::label('Item1', 'Item1:') !!}
+    <p>{{ $bills->Item1 }}</p>
+</div>
+
+<!-- Item2 Field -->
+<div class="col-sm-12">
+    {!! Form::label('Item2', 'Item2:') !!}
+    <p>{{ $bills->Item2 }}</p>
+</div>
+
+<!-- Item3 Field -->
+<div class="col-sm-12">
+    {!! Form::label('Item3', 'Item3:') !!}
+    <p>{{ $bills->Item3 }}</p>
+</div>
+
+<!-- Item4 Field -->
+<div class="col-sm-12">
+    {!! Form::label('Item4', 'Item4:') !!}
+    <p>{{ $bills->Item4 }}</p>
+</div>
+
+<!-- Seniorcitizendiscount Field -->
+<div class="col-sm-12">
+    {!! Form::label('SeniorCitizenDiscount', 'Seniorcitizendiscount:') !!}
+    <p>{{ $bills->SeniorCitizenDiscount }}</p>
 </div>
 
 <!-- Seniorcitizensubsidy Field -->
@@ -232,87 +412,99 @@
     <p>{{ $bills->SeniorCitizenSubsidy }}</p>
 </div>
 
-<!-- Missionaryelectrificationcharge Field -->
+<!-- Ucmerefund Field -->
 <div class="col-sm-12">
-    {!! Form::label('MissionaryElectrificationCharge', 'Missionaryelectrificationcharge:') !!}
-    <p>{{ $bills->MissionaryElectrificationCharge }}</p>
+    {!! Form::label('UCMERefund', 'Ucmerefund:') !!}
+    <p>{{ $bills->UCMERefund }}</p>
 </div>
 
-<!-- Environmentalcharge Field -->
+<!-- Netprevreading Field -->
 <div class="col-sm-12">
-    {!! Form::label('EnvironmentalCharge', 'Environmentalcharge:') !!}
-    <p>{{ $bills->EnvironmentalCharge }}</p>
+    {!! Form::label('NetPrevReading', 'Netprevreading:') !!}
+    <p>{{ $bills->NetPrevReading }}</p>
 </div>
 
-<!-- Strandedcontractcosts Field -->
+<!-- Netpresreading Field -->
 <div class="col-sm-12">
-    {!! Form::label('StrandedContractCosts', 'Strandedcontractcosts:') !!}
-    <p>{{ $bills->StrandedContractCosts }}</p>
+    {!! Form::label('NetPresReading', 'Netpresreading:') !!}
+    <p>{{ $bills->NetPresReading }}</p>
 </div>
 
-<!-- Npcstrandeddebt Field -->
+<!-- Netpowerkwh Field -->
 <div class="col-sm-12">
-    {!! Form::label('NPCStrandedDebt', 'Npcstrandeddebt:') !!}
-    <p>{{ $bills->NPCStrandedDebt }}</p>
+    {!! Form::label('NetPowerKWH', 'Netpowerkwh:') !!}
+    <p>{{ $bills->NetPowerKWH }}</p>
 </div>
 
-<!-- Feedintariffallowance Field -->
+<!-- Netgenerationamount Field -->
 <div class="col-sm-12">
-    {!! Form::label('FeedInTariffAllowance', 'Feedintariffallowance:') !!}
-    <p>{{ $bills->FeedInTariffAllowance }}</p>
+    {!! Form::label('NetGenerationAmount', 'Netgenerationamount:') !!}
+    <p>{{ $bills->NetGenerationAmount }}</p>
 </div>
 
-<!-- Missionaryelectrificationredci Field -->
+<!-- Creditkwh Field -->
 <div class="col-sm-12">
-    {!! Form::label('MissionaryElectrificationREDCI', 'Missionaryelectrificationredci:') !!}
-    <p>{{ $bills->MissionaryElectrificationREDCI }}</p>
+    {!! Form::label('CreditKWH', 'Creditkwh:') !!}
+    <p>{{ $bills->CreditKWH }}</p>
 </div>
 
-<!-- Generationvat Field -->
+<!-- Creditamount Field -->
 <div class="col-sm-12">
-    {!! Form::label('GenerationVAT', 'Generationvat:') !!}
-    <p>{{ $bills->GenerationVAT }}</p>
+    {!! Form::label('CreditAmount', 'Creditamount:') !!}
+    <p>{{ $bills->CreditAmount }}</p>
 </div>
 
-<!-- Transmissionvat Field -->
+<!-- Netmeteringsystemamt Field -->
 <div class="col-sm-12">
-    {!! Form::label('TransmissionVAT', 'Transmissionvat:') !!}
-    <p>{{ $bills->TransmissionVAT }}</p>
+    {!! Form::label('NetMeteringSystemAmt', 'Netmeteringsystemamt:') !!}
+    <p>{{ $bills->NetMeteringSystemAmt }}</p>
 </div>
 
-<!-- Systemlossvat Field -->
+<!-- Daa Gram Field -->
 <div class="col-sm-12">
-    {!! Form::label('SystemLossVAT', 'Systemlossvat:') !!}
-    <p>{{ $bills->SystemLossVAT }}</p>
+    {!! Form::label('DAA_GRAM', 'Daa Gram:') !!}
+    <p>{{ $bills->DAA_GRAM }}</p>
 </div>
 
-<!-- Distributionvat Field -->
+<!-- Daa Icera Field -->
 <div class="col-sm-12">
-    {!! Form::label('DistributionVAT', 'Distributionvat:') !!}
-    <p>{{ $bills->DistributionVAT }}</p>
+    {!! Form::label('DAA_ICERA', 'Daa Icera:') !!}
+    <p>{{ $bills->DAA_ICERA }}</p>
 </div>
 
-<!-- Realpropertytax Field -->
+<!-- Acrm Tafppca Field -->
 <div class="col-sm-12">
-    {!! Form::label('RealPropertyTax', 'Realpropertytax:') !!}
-    <p>{{ $bills->RealPropertyTax }}</p>
+    {!! Form::label('ACRM_TAFPPCA', 'Acrm Tafppca:') !!}
+    <p>{{ $bills->ACRM_TAFPPCA }}</p>
 </div>
 
-<!-- Notes Field -->
+<!-- Acrm Tafxa Field -->
 <div class="col-sm-12">
-    {!! Form::label('Notes', 'Notes:') !!}
-    <p>{{ $bills->Notes }}</p>
+    {!! Form::label('ACRM_TAFxA', 'Acrm Tafxa:') !!}
+    <p>{{ $bills->ACRM_TAFxA }}</p>
 </div>
 
-<!-- Userid Field -->
+<!-- Daa Vat Field -->
 <div class="col-sm-12">
-    {!! Form::label('UserId', 'Userid:') !!}
-    <p>{{ $bills->UserId }}</p>
+    {!! Form::label('DAA_VAT', 'Daa Vat:') !!}
+    <p>{{ $bills->DAA_VAT }}</p>
 </div>
 
-<!-- Billedfrom Field -->
+<!-- Acrm Vat Field -->
 <div class="col-sm-12">
-    {!! Form::label('BilledFrom', 'Billedfrom:') !!}
-    <p>{{ $bills->BilledFrom }}</p>
+    {!! Form::label('ACRM_VAT', 'Acrm Vat:') !!}
+    <p>{{ $bills->ACRM_VAT }}</p>
+</div>
+
+<!-- Netmeteringnetamount Field -->
+<div class="col-sm-12">
+    {!! Form::label('NetMeteringNetAmount', 'Netmeteringnetamount:') !!}
+    <p>{{ $bills->NetMeteringNetAmount }}</p>
+</div>
+
+<!-- Referenceno Field -->
+<div class="col-sm-12">
+    {!! Form::label('ReferenceNo', 'Referenceno:') !!}
+    <p>{{ $bills->ReferenceNo }}</p>
 </div>
 
