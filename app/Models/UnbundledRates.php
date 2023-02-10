@@ -16,37 +16,37 @@ use Illuminate\Support\Facades\DB;
  * @property string $rowguid
  * @property string|\Carbon\Carbon $ServicePeriodEnd
  * @property string $Description
- * @property integer $LifelineLevel
- * @property integer $GenerationSystemCharge
- * @property integer $FBHCCharge
+ * @property float $LifelineLevel
+ * @property float $GenerationSystemCharge
+ * @property float $FBHCCharge
  * @property number $ACRM_TAFPPCACharge
  * @property number $ACRM_TAFxACharge
  * @property string $UploadedBy
  * @property string|\Carbon\Carbon $DateUploaded
- * @property integer $PPARefund
- * @property integer $SeniorCitizenSubsidyCharge
+ * @property float $PPARefund
+ * @property float $SeniorCitizenSubsidyCharge
  * @property number $ACRM_VAT
  * @property number $DAA_VAT
  * @property number $DAA_GRAMCharge
  * @property number $DAA_ICERACharge
- * @property integer $MissionaryElectrificationCharge
- * @property integer $EnvironmentalCharge
- * @property integer $LifelineSubsidyCharge
- * @property integer $LoanCondonationCharge
- * @property integer $MandatoryRateReductionCharge
- * @property integer $MCC
- * @property integer $SupplyRetailCustomerCharge
- * @property integer $SupplySystemCharge
- * @property integer $MeteringRetailCustomerCharge
- * @property integer $MeteringSystemCharge
- * @property integer $SystemLossCharge
- * @property integer $CrossSubsidyCreditCharge
- * @property integer $FPCAAdjustmentCharge
- * @property integer $ForexAdjustmentCharge
- * @property integer $TransmissionDemandCharge
- * @property integer $TransmissionSystemCharge
- * @property integer $DistributionDemandCharge
- * @property integer $DistributionSystemCharge
+ * @property float $MissionaryElectrificationCharge
+ * @property float $EnvironmentalCharge
+ * @property float $LifelineSubsidyCharge
+ * @property float $LoanCondonationCharge
+ * @property float $MandatoryRateReductionCharge
+ * @property float $MCC
+ * @property float $SupplyRetailCustomerCharge
+ * @property float $SupplySystemCharge
+ * @property float $MeteringRetailCustomerCharge
+ * @property float $MeteringSystemCharge
+ * @property float $SystemLossCharge
+ * @property float $CrossSubsidyCreditCharge
+ * @property float $FPCAAdjustmentCharge
+ * @property float $ForexAdjustmentCharge
+ * @property float $TransmissionDemandCharge
+ * @property float $TransmissionSystemCharge
+ * @property float $DistributionDemandCharge
+ * @property float $DistributionSystemCharge
  */
 class UnbundledRates extends Model
 {
@@ -114,37 +114,37 @@ class UnbundledRates extends Model
         'ConsumerType' => 'string',
         'ServicePeriodEnd' => 'datetime',
         'Description' => 'string',
-        'LifelineLevel' => 'integer',
-        'GenerationSystemCharge' => 'integer',
-        'FBHCCharge' => 'integer',
+        'LifelineLevel' => 'float',
+        'GenerationSystemCharge' => 'float',
+        'FBHCCharge' => 'float',
         'ACRM_TAFPPCACharge' => 'decimal:6',
         'ACRM_TAFxACharge' => 'decimal:6',
         'UploadedBy' => 'string',
         'DateUploaded' => 'datetime',
-        'PPARefund' => 'integer',
-        'SeniorCitizenSubsidyCharge' => 'integer',
+        'PPARefund' => 'float',
+        'SeniorCitizenSubsidyCharge' => 'float',
         'ACRM_VAT' => 'decimal:6',
         'DAA_VAT' => 'decimal:6',
         'DAA_GRAMCharge' => 'decimal:6',
         'DAA_ICERACharge' => 'decimal:6',
-        'MissionaryElectrificationCharge' => 'integer',
-        'EnvironmentalCharge' => 'integer',
-        'LifelineSubsidyCharge' => 'integer',
-        'LoanCondonationCharge' => 'integer',
-        'MandatoryRateReductionCharge' => 'integer',
-        'MCC' => 'integer',
-        'SupplyRetailCustomerCharge' => 'integer',
-        'SupplySystemCharge' => 'integer',
-        'MeteringRetailCustomerCharge' => 'integer',
-        'MeteringSystemCharge' => 'integer',
-        'SystemLossCharge' => 'integer',
-        'CrossSubsidyCreditCharge' => 'integer',
-        'FPCAAdjustmentCharge' => 'integer',
-        'ForexAdjustmentCharge' => 'integer',
-        'TransmissionDemandCharge' => 'integer',
-        'TransmissionSystemCharge' => 'integer',
-        'DistributionDemandCharge' => 'integer',
-        'DistributionSystemCharge' => 'integer'
+        'MissionaryElectrificationCharge' => 'float',
+        'EnvironmentalCharge' => 'float',
+        'LifelineSubsidyCharge' => 'float',
+        'LoanCondonationCharge' => 'float',
+        'MandatoryRateReductionCharge' => 'float',
+        'MCC' => 'float',
+        'SupplyRetailCustomerCharge' => 'float',
+        'SupplySystemCharge' => 'float',
+        'MeteringRetailCustomerCharge' => 'float',
+        'MeteringSystemCharge' => 'float',
+        'SystemLossCharge' => 'float',
+        'CrossSubsidyCreditCharge' => 'float',
+        'FPCAAdjustmentCharge' => 'float',
+        'ForexAdjustmentCharge' => 'float',
+        'TransmissionDemandCharge' => 'float',
+        'TransmissionSystemCharge' => 'float',
+        'DistributionDemandCharge' => 'float',
+        'DistributionSystemCharge' => 'float'
     ];
 
     /**
@@ -156,37 +156,37 @@ class UnbundledRates extends Model
         'rowguid' => 'required|string',
         'ServicePeriodEnd' => 'required',
         'Description' => 'nullable|string|max:50',
-        'LifelineLevel' => 'nullable|integer',
-        'GenerationSystemCharge' => 'nullable|integer',
-        'FBHCCharge' => 'nullable|integer',
+        'LifelineLevel' => 'nullable|float',
+        'GenerationSystemCharge' => 'nullable|float',
+        'FBHCCharge' => 'nullable|float',
         'ACRM_TAFPPCACharge' => 'nullable|numeric',
         'ACRM_TAFxACharge' => 'nullable|numeric',
         'UploadedBy' => 'nullable|string|max:30',
         'DateUploaded' => 'nullable',
-        'PPARefund' => 'nullable|integer',
-        'SeniorCitizenSubsidyCharge' => 'nullable|integer',
+        'PPARefund' => 'nullable|float',
+        'SeniorCitizenSubsidyCharge' => 'nullable|float',
         'ACRM_VAT' => 'nullable|numeric',
         'DAA_VAT' => 'nullable|numeric',
         'DAA_GRAMCharge' => 'nullable|numeric',
         'DAA_ICERACharge' => 'nullable|numeric',
-        'MissionaryElectrificationCharge' => 'nullable|integer',
-        'EnvironmentalCharge' => 'nullable|integer',
-        'LifelineSubsidyCharge' => 'nullable|integer',
-        'LoanCondonationCharge' => 'nullable|integer',
-        'MandatoryRateReductionCharge' => 'nullable|integer',
-        'MCC' => 'nullable|integer',
-        'SupplyRetailCustomerCharge' => 'nullable|integer',
-        'SupplySystemCharge' => 'nullable|integer',
-        'MeteringRetailCustomerCharge' => 'nullable|integer',
-        'MeteringSystemCharge' => 'nullable|integer',
-        'SystemLossCharge' => 'nullable|integer',
-        'CrossSubsidyCreditCharge' => 'nullable|integer',
-        'FPCAAdjustmentCharge' => 'nullable|integer',
-        'ForexAdjustmentCharge' => 'nullable|integer',
-        'TransmissionDemandCharge' => 'nullable|integer',
-        'TransmissionSystemCharge' => 'nullable|integer',
-        'DistributionDemandCharge' => 'nullable|integer',
-        'DistributionSystemCharge' => 'nullable|integer'
+        'MissionaryElectrificationCharge' => 'nullable|float',
+        'EnvironmentalCharge' => 'nullable|float',
+        'LifelineSubsidyCharge' => 'nullable|float',
+        'LoanCondonationCharge' => 'nullable|float',
+        'MandatoryRateReductionCharge' => 'nullable|float',
+        'MCC' => 'nullable|float',
+        'SupplyRetailCustomerCharge' => 'nullable|float',
+        'SupplySystemCharge' => 'nullable|float',
+        'MeteringRetailCustomerCharge' => 'nullable|float',
+        'MeteringSystemCharge' => 'nullable|float',
+        'SystemLossCharge' => 'nullable|float',
+        'CrossSubsidyCreditCharge' => 'nullable|float',
+        'FPCAAdjustmentCharge' => 'nullable|float',
+        'ForexAdjustmentCharge' => 'nullable|float',
+        'TransmissionDemandCharge' => 'nullable|float',
+        'TransmissionSystemCharge' => 'nullable|float',
+        'DistributionDemandCharge' => 'nullable|float',
+        'DistributionSystemCharge' => 'nullable|float'
     ];
 
     public static function getOneYearAverageRate($alias) {

@@ -1185,14 +1185,14 @@ use Illuminate\Support\Facades\Auth;
     </li>
 @endcanany
 
-{{-- @canany(['Super Admin', 'agma'])
+@canany(['Super Admin', 'agma'])
     <li class="nav-item">
         <a href="{{ route('preRegEntries.index') }}"
         class="nav-link {{ Request::is('preRegEntries*') ? 'active' : '' }}">
         <i class="fas fa-check-circle     nav-icon"></i><p>AMGA 2022 Pre-Reg</p>
         </a>
     </li>
-@endcanany --}}
+@endcanany
 
 <!-- ADMIN MENU -->
 @can('Super Admin')
@@ -1231,5 +1231,21 @@ use Illuminate\Support\Facades\Auth;
     </li>
 @endcan
 
+
+
+<li class="nav-item">
+    <a href="{{ route('billsExtensions.index') }}"
+       class="nav-link {{ Request::is('billsExtensions*') ? 'active' : '' }}">
+        <p>Bills Extensions</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('paidBills.index') }}"
+       class="nav-link {{ Request::is('paidBills*') ? 'active' : '' }}">
+        <p>Paid Bills</p>
+    </a>
+</li>
 
 

@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class PaidBillsRepository
  * @package App\Repositories
- * @version February 11, 2022, 8:16 am PST
+ * @version February 7, 2023, 10:38 am PST
 */
 
 class PaidBillsRepository extends BaseRepository
@@ -17,26 +17,33 @@ class PaidBillsRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'BillNumber',
         'AccountNumber',
-        'ServicePeriod',
-        'ORNumber',
-        'ORDate',
-        'DCRNumber',
-        'KwhUsed',
-        'Teller',
-        'OfficeTransacted',
-        'PostingDate',
-        'PostingTime',
-        'Surcharge',
-        'Form2307TwoPercent',
-        'Form2307FivePercent',
-        'AdditionalCharges',
-        'Deductions',
+        'BillNumber',
+        'ServicePeriodEnd',
+        'Power',
+        'Meter',
+        'PR',
+        'Others',
         'NetAmount',
-        'Source',
-        'ObjectSourceId',
-        'UserId'
+        'PaymentType',
+        'ORNumber',
+        'Teller',
+        'DCRNumber',
+        'PostingDate',
+        'PostingSequence',
+        'PromptPayment',
+        'Surcharge',
+        'SLAdjustment',
+        'OtherDeduction',
+        'ORDate',
+        'MDRefund',
+        'Form2306',
+        'Form2307',
+        'Amount2306',
+        'Amount2307',
+        'ServiceFee',
+        'Others1',
+        'Others2'
     ];
 
     /**

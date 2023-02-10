@@ -485,66 +485,6 @@ Route::get('/readings/print-bulk-new-format-mreader/{period}/{day}/{town}/{mread
 Route::get('/readings/print-bulk-old-format-mreader/{period}/{day}/{town}/{mreader}', [App\Http\Controllers\ReadingsController::class, 'printBulkBillOldFormatMreader'])->name('readings.print-bulk-old-format-mreader');
 Route::resource('readings', App\Http\Controllers\ReadingsController::class);
 
-Route::get('/bills/unbilled-readings', [App\Http\Controllers\BillsController::class, 'unbilledReadings'])->name('bills.unbilled-readings');
-Route::get('/bills/unbilled-readings-console/{servicePeriod}', [App\Http\Controllers\BillsController::class, 'unbilledReadingsConsole'])->name('bills.unbilled-readings-console');
-Route::get('/bills/zero-readings-view/{readingId}', [App\Http\Controllers\BillsController::class, 'zeroReadingsView'])->name('bills.zero-readings-view');
-Route::get('/bills/average-bill/{readingId}', [App\Http\Controllers\BillsController::class, 'averageBill'])->name('bills.average-bill');
-Route::get('/bills/rebill-reading-adjustment/{readingId}', [App\Http\Controllers\BillsController::class, 'rebillReadingAdjustment'])->name('bills.rebill-reading-adjustment');
-Route::post('/bills/rebill/{readingId}', [App\Http\Controllers\BillsController::class, 'rebill'])->name('bills.rebill');
-Route::get('/bills/adjust-bill/{billId}', [App\Http\Controllers\BillsController::class, 'adjustBill'])->name('bills.adjust-bill');
-Route::get('/bills/fetch-bill-adjustment-data', [App\Http\Controllers\BillsController::class, 'fetchBillAdjustmentData'])->name('bills.fetch-bill-adjustment-data');
-Route::get('/bills/all-bills', [App\Http\Controllers\BillsController::class,  'allBills'])->name('bills.all-bills');
-Route::get('/bills/bill-arrears-unlocking', [App\Http\Controllers\BillsController::class,  'billArrearsUnlocking'])->name('bills.bill-arrears-unlocking');
-Route::get('/bills/unlock-bill-arrear/{id}', [App\Http\Controllers\BillsController::class,  'unlockBillArrear'])->name('bills.unlock-bill-arrear');
-Route::get('/bills/reject-unlock-bill-arrear/{id}', [App\Http\Controllers\BillsController::class,  'rejectUnlockBillArrear'])->name('bills.reject-unlock-bill-arrear');
-Route::get('/bills/grouped-billing', [App\Http\Controllers\BillsController::class,  'groupedBilling'])->name('bills.grouped-billing');
-Route::get('/bills/create-group-billing-step-one', [App\Http\Controllers\BillsController::class,  'createGroupBillingStepOne'])->name('bills.create-group-billing-step-one');
-Route::get('/bills/create-group-billing-step-one-pre-select', [App\Http\Controllers\BillsController::class,  'createGroupBillingStepOnePreSelect'])->name('bills.create-group-billing-step-one-pre-select');
-Route::get('/bills/create-group-billing-step-two/{memberConsumerId}', [App\Http\Controllers\BillsController::class,  'createGroupBillingStepTwo'])->name('bills.create-group-billing-step-two');
-Route::post('/bills/store-group-billing-step-one', [App\Http\Controllers\BillsController::class,  'storeGroupBillingStepOne'])->name('bills.store-group-billing-step-one');
-Route::get('/bills/fetch-member-consumers', [App\Http\Controllers\BillsController::class,  'fetchMemberConsumers'])->name('bills.fetch-member-consumers');
-Route::get('/bills/search-account', [App\Http\Controllers\BillsController::class,  'searchAccount'])->name('bills.search-account');
-Route::get('/bills/add-to-group', [App\Http\Controllers\BillsController::class,  'addToGroup'])->name('bills.add-to-group');
-Route::get('/bills/remove-from-group', [App\Http\Controllers\BillsController::class,  'removeFromGroup'])->name('bills.remove-from-group');
-Route::get('/bills/grouped-billing-view/{memberConsumerId}', [App\Http\Controllers\BillsController::class,  'groupedBillingView'])->name('bills.grouped-billing-view');
-Route::get('/bills/grouped-billing-bill-view/{memberConsumerId}/{period}', [App\Http\Controllers\BillsController::class,  'groupedBillingBillView'])->name('bills.grouped-billing-bill-view');
-Route::get('/bills/add-two-percent', [App\Http\Controllers\BillsController::class,  'add2Percent'])->name('bills.add-two-percent');
-Route::get('/bills/remove-two-percent', [App\Http\Controllers\BillsController::class,  'remove2Percent'])->name('bills.remove-two-percent');
-Route::get('/bills/add-five-percent', [App\Http\Controllers\BillsController::class,  'add5Percent'])->name('bills.add-five-percent');
-Route::get('/bills/remove-five-percent', [App\Http\Controllers\BillsController::class,  'remove5Percent'])->name('bills.remove-five-percent');
-Route::get('/bills/print-group-billing/{memberConsumerId}/{period}', [App\Http\Controllers\BillsController::class,  'printGroupBilling'])->name('bills.print-group-billing');
-Route::get('/bills/print-single-bill-new-format/{billId}', [App\Http\Controllers\BillsController::class,  'printSingleBillNewFormat'])->name('bills.print-single-bill-new-format');
-Route::get('/bills/print-single-bill-old/{billId}', [App\Http\Controllers\BillsController::class,  'printSingleBillOld'])->name('bills.print-single-bill-old');
-Route::get('/bills/bulk-print-bill', [App\Http\Controllers\BillsController::class,  'bulkPrintBill'])->name('bills.bulk-print-bill');
-Route::get('/bills/get-routes-from-town', [App\Http\Controllers\BillsController::class,  'getRoutesFromTown'])->name('bills.get-routes-from-town');
-Route::get('/bills/print-bulk-bill-new-format/{period}/{town}/{route}/{day}', [App\Http\Controllers\BillsController::class,  'printBulkBillNewFormat'])->name('bills.print-bulk-bill-new-format');
-Route::get('/bills/print-bulk-bill-old-format/{period}/{town}/{route}', [App\Http\Controllers\BillsController::class,  'printBulkBillOldFormat'])->name('bills.print-bulk-bill-old-format');
-Route::get('/bills/print-bulk-bill-old-format-bapa/{period}/{bapaName}/{from}/{route}', [App\Http\Controllers\BillsController::class,  'printBulkBillOldFormatBapa'])->name('bills.print-bulk-bill-old-format-bapa');
-Route::get('/bills/bapa-manual-billing', [App\Http\Controllers\BillsController::class,  'bapaManualBilling'])->name('bills.bapa-manual-billing');
-Route::get('/bills/search-bapa-for-billing', [App\Http\Controllers\BillsController::class,  'searchBapaForBilling'])->name('bills.search-bapa-for-billing');
-Route::get('/bills/bapa-manual-billing-console/{bapaName}', [App\Http\Controllers\BillsController::class,  'bapaManualBillingConsole'])->name('bills.bapa-manual-billing-console');
-Route::get('/bills/get-bill-computation', [App\Http\Controllers\BillsController::class,  'getBillComputation'])->name('bills.get-bill-computation');
-Route::get('/bills/bill-manually', [App\Http\Controllers\BillsController::class,  'billManually'])->name('bills.bill-manually');
-Route::get('/bills/fetch-billed-consumers-from-reading', [App\Http\Controllers\BillsController::class,  'fetchBilledConsumersFromReading'])->name('bills.fetch-billed-consumers-from-reading');
-Route::get('/bills/request-cancel-bill', [App\Http\Controllers\BillsController::class,  'requestCancelBill'])->name('bills.request-cancel-bill');
-Route::get('/bills/bills-cancellation-approval', [App\Http\Controllers\BillsController::class,  'billsCancellationApproval'])->name('bills.bills-cancellation-approval');
-Route::get('/bills/approve-bill-cancellation-request/{id}', [App\Http\Controllers\BillsController::class,  'approveBillCancellationRequest'])->name('bills.approve-bill-cancellation-request');
-Route::get('/bills/reject-bill-cancellation-request/{id}', [App\Http\Controllers\BillsController::class,  'rejectBillCancellationRequest'])->name('bills.reject-bill-cancellation-request');
-Route::get('/bills/change-meter-readings/{account}/{period}', [App\Http\Controllers\BillsController::class,  'changeMeterReadings'])->name('bills.change-meter-readings');
-Route::post('/bills/bill-change-meters', [App\Http\Controllers\BillsController::class,  'billChangeMeters'])->name('bills.bill-change-meters');
-Route::get('/bills/adjustment-reports', [App\Http\Controllers\BillsController::class,  'adjustmentReports'])->name('bills.adjustment-reports');
-Route::get('/bills/print-adjustment-report/{type}/{period}', [App\Http\Controllers\BillsController::class,  'printAdjustmentReport'])->name('bills.print-adjustment-report');
-Route::get('/bills/mark-as-paid', [App\Http\Controllers\BillsController::class, 'markAsPaid'])->name('bills.mark-as-paid');
-Route::get('/bills/dashboard', [App\Http\Controllers\BillsController::class, 'dashboard'])->name('bills.dashboard');
-Route::get('/bills/dashboard-reading-monitor', [App\Http\Controllers\BillsController::class, 'dashboardReadingMonitor'])->name('bills.dashboard-reading-monitor');
-Route::get('/bills/change-bapa-duedate', [App\Http\Controllers\BillsController::class, 'changeBapaDueDate'])->name('bills.change-bapa-duedate');
-Route::get('/bills/print-bulk-bill-old-format-group/{period}/{groupId}', [App\Http\Controllers\BillsController::class,  'printBulkBillOldFormatGroup'])->name('bills.print-bulk-bill-old-format-group');
-Route::get('/bills/print-bulk-bill-new-format-group/{period}/{groupId}', [App\Http\Controllers\BillsController::class,  'printBulkBillNewFormatGroup'])->name('bills.print-bulk-bill-new-format-group');
-Route::get('/bills/delete-bill-and-reading-ajax', [App\Http\Controllers\BillsController::class, 'deleteBillAndReadingAjax'])->name('bills.delete-bill-and-reading-ajax');
-Route::get('/bills/kwh-monitoring', [App\Http\Controllers\BillsController::class, 'kwhMonitoring'])->name('bills.kwh-monitoring');
-Route::get('/bills/fetch-kwh-data', [App\Http\Controllers\BillsController::class, 'fetchKwhData'])->name('bills.fetch-kwh-data');
-
-
 Route::resource('readingImages', App\Http\Controllers\ReadingImagesController::class);
 
 Route::get('/collectibles/ledgerize', [App\Http\Controllers\CollectiblesController::class, 'ledgerize'])->name('collectibles.ledgerize');
@@ -589,38 +529,6 @@ Route::resource('transactionIndices', App\Http\Controllers\TransactionIndexContr
 
 
 Route::resource('transactionDetails', App\Http\Controllers\TransactionDetailsController::class);
-
-Route::get('/paid_bills/search', [App\Http\Controllers\PaidBillsController::class, 'search'])->name('paidBills.search');
-Route::get('/paid_bills/fetch-details', [App\Http\Controllers\PaidBillsController::class, 'fetchDetails'])->name('paidBills.fetch-details');
-Route::get('/paid_bills/fetch-account', [App\Http\Controllers\PaidBillsController::class, 'fetchAccount'])->name('paidBills.fetch-account');
-Route::get('/paid_bills/fetch-payable', [App\Http\Controllers\PaidBillsController::class, 'fetchPayable'])->name('paidBills.fetch-payable');
-Route::get('/paid_bills/save-paid-bill-and-print', [App\Http\Controllers\PaidBillsController::class, 'savePaidBillAndPrint'])->name('paidBills.save-paid-bill-and-print');
-Route::get('/paid_bills/print-bill-payment/{paidBillId}', [App\Http\Controllers\PaidBillsController::class, 'printBillPayment'])->name('paidBills.print-bill-payment');
-Route::get('/paid_bills/or-cancellation', [App\Http\Controllers\PaidBillsController::class, 'orCancellation'])->name('paidBills.or-cancellation');
-Route::get('/paid_bills/search-or', [App\Http\Controllers\PaidBillsController::class, 'searchOR'])->name('paidBills.search-or');
-Route::get('/paid_bills/fetch-or-details', [App\Http\Controllers\PaidBillsController::class, 'fetchORDetails'])->name('paidBills.fetch-or-details');
-Route::get('/paid_bills/request-cancel-or', [App\Http\Controllers\PaidBillsController::class, 'requestCancelOR'])->name('paidBills.request-cancel-or');
-Route::get('/paid_bills/request-bills-payment-unlock', [App\Http\Controllers\PaidBillsController::class, 'requestBillsPaymentUnlock'])->name('paidBills.request-bills-payment-unlock');
-Route::get('/paid_bills/bapa-payments', [App\Http\Controllers\PaidBillsController::class, 'bapaPayments'])->name('paidBills.bapa-payments');
-Route::get('/paid_bills/search-bapa', [App\Http\Controllers\PaidBillsController::class, 'searchBapa'])->name('paidBills.search-bapa');
-Route::get('/paid_bills/bapa-payment-console/{bapaName}', [App\Http\Controllers\PaidBillsController::class, 'bapaPaymentConsole'])->name('paidBills.bapa-payment-console');
-Route::get('/paid_bills/get-bills-from-bapa', [App\Http\Controllers\PaidBillsController::class, 'getBillsFromBapa'])->name('paidBills.get-bills-from-bapa');
-Route::get('/paid_bills/save-bapa-payments', [App\Http\Controllers\PaidBillsController::class, 'saveBapaPayments'])->name('paidBills.save-bapa-payments');
-Route::get('/paid_bills/bills-collection', [App\Http\Controllers\PaidBillsController::class, 'billsCollection'])->name('paidBills.bills-collection');
-Route::get('/paid_bills/get-adjusted-bapa-bills', [App\Http\Controllers\PaidBillsController::class, 'getAdjustedBapaBills'])->name('paidBills.get-adjusted-bapa-bills');
-Route::get('/paid_bills/add-check-payments', [App\Http\Controllers\PaidBillsController::class, 'addCheckPayments'])->name('paidBills.add-check-payments');
-Route::get('/paid_bills/delete-check-payment', [App\Http\Controllers\PaidBillsController::class, 'deleteCheckPayment'])->name('paidBills.delete-check-payment');
-Route::get('/paid_bills/fetch-account-by-old-account-number', [App\Http\Controllers\PaidBillsController::class, 'fetchAccountByOldAccountNumber'])->name('paidBills.fetch-account-by-old-account-number');
-Route::get('/paid_bills/print-bapa-payments/{dcrNum}', [App\Http\Controllers\PaidBillsController::class, 'printBapaPayments'])->name('paidBills.print-bapa-payments');
-Route::get('/paid_bills/get-ors-from-range', [App\Http\Controllers\PaidBillsController::class, 'getORsFromRange'])->name('paidBills.get-ors-from-range');
-Route::get('/paid_bills/add-denomination', [App\Http\Controllers\PaidBillsController::class, 'addDenomination'])->name('paidBills.add-denomination');
-Route::get('/paid_bills/third-party-collection', [App\Http\Controllers\PaidBillsController::class, 'thirdPartyCollection'])->name('paidBills.third-party-collection');
-Route::get('/paid_bills/upload-third-party-collection', [App\Http\Controllers\PaidBillsController::class, 'uploadThirdPartyCollection'])->name('paidBills.upload-third-party-collection');
-Route::post('/paid_bills/validate-tpc-upload', [App\Http\Controllers\PaidBillsController::class, 'validateTpcUpload'])->name('paidBills.validate-tpc-upload');
-Route::get('/paid_bills/tcp-upload-validator/{seriesNo}', [App\Http\Controllers\PaidBillsController::class, 'tcpUploadValidator'])->name('paidBills.tcp-upload-validator');
-Route::get('/paid_bills/deposit-double-payments/{seriesNo}', [App\Http\Controllers\PaidBillsController::class, 'depositDoublePayments'])->name('paidBills.deposit-double-payments');
-Route::get('/paid_bills/post-payments/{seriesNo}', [App\Http\Controllers\PaidBillsController::class, 'postPayments'])->name('paidBills.post-payments');
-Route::resource('paidBills', App\Http\Controllers\PaidBillsController::class);
 
 Route::get('/disconnection_histories/generate-turn-off-list', [App\Http\Controllers\DisconnectionHistoryController::class, 'generateTurnOffList'])->name('disconnectionHistories.generate-turn-off-list');
 Route::get('/disconnection_histories/get-turn-off-list-preview', [App\Http\Controllers\DisconnectionHistoryController::class, 'getTurnOffListPreview'])->name('disconnectionHistories.get-turn-off-list-preview');
@@ -808,4 +716,11 @@ Route::resource('accountMasterExtensions', App\Http\Controllers\AccountMasterExt
 Route::resource('meters', App\Http\Controllers\MetersController::class);
 
 
+Route::get('/bills/show-bill/{acctno}/{period}', [App\Http\Controllers\BillsController::class, 'showBill'])->name('bills.show-bill');
 Route::resource('bills', App\Http\Controllers\BillsController::class);
+
+
+Route::resource('billsExtensions', App\Http\Controllers\BillsExtensionController::class);
+
+
+Route::resource('paidBills', App\Http\Controllers\PaidBillsController::class);

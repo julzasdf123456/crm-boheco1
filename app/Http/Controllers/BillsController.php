@@ -7,6 +7,17 @@ use App\Http\Requests\UpdateBillsRequest;
 use App\Repositories\BillsRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use App\Models\Bills;
+use App\Models\BillsExtension;
+use App\Models\UnbundledRates;
+use App\Models\UnbundledRatesExtension;
+use App\Models\PaidBills;
+use App\Models\Meters;
+use App\Models\AccountMaster;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Flash;
 use Response;
 
@@ -153,5 +164,39 @@ class BillsController extends AppBaseController
         Flash::success('Bills deleted successfully.');
 
         return redirect(route('bills.index'));
+    }
+
+    public function showBill($accountNumber, $period) {
+        // $billDetails = DB::connection('sqlsrvbilling')
+        //     ->select("EXEC sp_SOA @ServicePeriodEnd='" . date('Y-m-d', strtotime($period)) . "', @WhereClause='Bi.AccountNumber=''" . $accountNumber . "'''");
+        // dd($billDetails);
+        $bills = Bills::where('AccountNumber', $accountNumber)
+            ->where('ServicePeriodEnd', $period)
+            ->first();
+        $billsExtension = BillsExtension::where('AccountNumber', $accountNumber)
+            ->where('ServicePeriodEnd', $period)
+            ->first();
+        $paidBill = PaidBills::where('AccountNumber', $accountNumber)
+            ->where('ServicePeriodEnd', $period)
+            ->first();
+        $account = AccountMaster::where('AccountNumber', $accountNumber)->first();
+        $rate = UnbundledRates::where('ServicePeriodEnd', $period)
+            ->where('ConsumerType', $bills->ConsumerType)
+            ->first();
+        $rateExtension = UnbundledRatesExtension::where('ServicePeriodEnd', $period)
+            ->where('ConsumerType', $bills->ConsumerType)
+            ->first();
+        $meter = Meters::where('MeterNumber', $account->MeterNumber)->first();
+
+        return view('/bills/show', [
+            'bills' => $bills,
+            'billsExtension' => $billsExtension,
+            'paidBill' => $paidBill,
+            'account' => $account,
+            'rate' => $rate,
+            'rateExtension' => $rateExtension,
+            'meter' => $meter,
+        ]);
+        
     }
 }

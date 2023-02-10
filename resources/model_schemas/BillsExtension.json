@@ -3,25 +3,13 @@
         "name": "AccountNumber",
         "dbType": "string,20",
         "htmlType": "text",
-        "validations": "required|string|max:20|string|max:20",
-        "searchable": true,
-        "fillable": true,
-        "primary": false,
-        "inForm": true,
-        "inIndex": true,
-        "inView": true
-    },
-    {
-        "name": "BillNumber",
-        "dbType": "string,10:nullable",
-        "htmlType": "text",
-        "validations": "nullable|string|max:10|nullable|string|max:10",
-        "searchable": true,
-        "fillable": true,
-        "primary": false,
-        "inForm": true,
-        "inIndex": true,
-        "inView": true
+        "validations": null,
+        "searchable": false,
+        "fillable": false,
+        "primary": true,
+        "inForm": false,
+        "inIndex": false,
+        "inView": false
     },
     {
         "name": "ServicePeriodEnd",
@@ -36,7 +24,7 @@
         "inView": true
     },
     {
-        "name": "Power",
+        "name": "GenerationVAT",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -48,7 +36,7 @@
         "inView": true
     },
     {
-        "name": "Meter",
+        "name": "TransmissionVAT",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -60,7 +48,7 @@
         "inView": true
     },
     {
-        "name": "PR",
+        "name": "SLVAT",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -72,7 +60,7 @@
         "inView": true
     },
     {
-        "name": "Others",
+        "name": "DistributionVAT",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -84,7 +72,7 @@
         "inView": true
     },
     {
-        "name": "NetAmount",
+        "name": "OthersVAT",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -96,10 +84,46 @@
         "inView": true
     },
     {
-        "name": "PaymentType",
-        "dbType": "string,20:nullable",
+        "name": "Item5",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": "nullable|integer|nullable|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "Item6",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": "nullable|integer|nullable|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "Item7",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": "nullable|integer|nullable|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "Item8",
+        "dbType": "string,10:nullable",
         "htmlType": "text",
-        "validations": "nullable|string|max:20|nullable|string|max:20",
+        "validations": "nullable|string|max:10|nullable|string|max:10",
         "searchable": true,
         "fillable": true,
         "primary": false,
@@ -108,55 +132,7 @@
         "inView": true
     },
     {
-        "name": "ORNumber",
-        "dbType": "string,20:nullable",
-        "htmlType": "text",
-        "validations": "nullable|string|max:20|nullable|string|max:20",
-        "searchable": true,
-        "fillable": true,
-        "primary": false,
-        "inForm": true,
-        "inIndex": true,
-        "inView": true
-    },
-    {
-        "name": "Teller",
-        "dbType": "string,50:nullable",
-        "htmlType": "text",
-        "validations": "nullable|string|max:50|nullable|string|max:50",
-        "searchable": true,
-        "fillable": true,
-        "primary": false,
-        "inForm": true,
-        "inIndex": true,
-        "inView": true
-    },
-    {
-        "name": "DCRNumber",
-        "dbType": "string,20:nullable",
-        "htmlType": "text",
-        "validations": "nullable|string|max:20|nullable|string|max:20",
-        "searchable": true,
-        "fillable": true,
-        "primary": false,
-        "inForm": true,
-        "inIndex": true,
-        "inView": true
-    },
-    {
-        "name": "PostingDate",
-        "dbType": "datetime:nullable",
-        "htmlType": "date",
-        "validations": "nullable|nullable",
-        "searchable": true,
-        "fillable": true,
-        "primary": false,
-        "inForm": true,
-        "inIndex": true,
-        "inView": true
-    },
-    {
-        "name": "PostingSequence",
+        "name": "Item9",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -168,7 +144,7 @@
         "inView": true
     },
     {
-        "name": "PromptPayment",
+        "name": "Item10",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -180,7 +156,7 @@
         "inView": true
     },
     {
-        "name": "Surcharge",
+        "name": "Item11",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -192,7 +168,7 @@
         "inView": true
     },
     {
-        "name": "SLAdjustment",
+        "name": "Item12",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -204,7 +180,7 @@
         "inView": true
     },
     {
-        "name": "OtherDeduction",
+        "name": "Item13",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -216,19 +192,7 @@
         "inView": true
     },
     {
-        "name": "ORDate",
-        "dbType": "datetime:nullable",
-        "htmlType": "date",
-        "validations": "nullable|nullable",
-        "searchable": true,
-        "fillable": true,
-        "primary": false,
-        "inForm": true,
-        "inIndex": true,
-        "inView": true
-    },
-    {
-        "name": "MDRefund",
+        "name": "Item14",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -240,31 +204,7 @@
         "inView": true
     },
     {
-        "name": "Form2306",
-        "dbType": "string,50:nullable",
-        "htmlType": "text",
-        "validations": "nullable|string|max:50|nullable|string|max:50",
-        "searchable": true,
-        "fillable": true,
-        "primary": false,
-        "inForm": true,
-        "inIndex": true,
-        "inView": true
-    },
-    {
-        "name": "Form2307",
-        "dbType": "string,50:nullable",
-        "htmlType": "text",
-        "validations": "nullable|string|max:50|nullable|string|max:50",
-        "searchable": true,
-        "fillable": true,
-        "primary": false,
-        "inForm": true,
-        "inIndex": true,
-        "inView": true
-    },
-    {
-        "name": "Amount2306",
+        "name": "Item15",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -276,7 +216,7 @@
         "inView": true
     },
     {
-        "name": "Amount2307",
+        "name": "Item16",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -288,7 +228,7 @@
         "inView": true
     },
     {
-        "name": "ServiceFee",
+        "name": "Item17",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -300,7 +240,7 @@
         "inView": true
     },
     {
-        "name": "Others1",
+        "name": "Item18",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -312,7 +252,7 @@
         "inView": true
     },
     {
-        "name": "Others2",
+        "name": "Item19",
         "dbType": "integer,false",
         "htmlType": null,
         "validations": "nullable|integer|nullable|integer",
@@ -324,15 +264,63 @@
         "inView": true
     },
     {
-        "name": "id",
-        "dbType": "string,100",
-        "htmlType": "text",
-        "validations": null,
-        "searchable": false,
-        "fillable": false,
-        "primary": true,
-        "inForm": false,
-        "inIndex": false,
-        "inView": false
+        "name": "Item20",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": "nullable|integer|nullable|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "Item21",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": "nullable|integer|nullable|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "Item22",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": "nullable|integer|nullable|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "Item23",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": "nullable|integer|nullable|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "Item24",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": "nullable|integer|nullable|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
     }
 ]

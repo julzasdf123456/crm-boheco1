@@ -19,14 +19,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property number $AdditionalKWH
  * @property number $AdditionalKWDemand
  * @property number $PowerKWH
- * @property integer $KWHAmount
+ * @property float $KWHAmount
  * @property number $DemandKW
- * @property integer $KWAmount
- * @property integer $Charges
- * @property integer $Deductions
- * @property integer $NetAmount
- * @property integer $PowerRate
- * @property integer $DemandRate
+ * @property float $KWAmount
+ * @property float $Charges
+ * @property float $Deductions
+ * @property float $NetAmount
+ * @property float $PowerRate
+ * @property float $DemandRate
  * @property string|\Carbon\Carbon $BillingDate
  * @property string|\Carbon\Carbon $ServiceDateFrom
  * @property string|\Carbon\Carbon $ServiceDateTo
@@ -36,51 +36,51 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property number $AverageKWH
  * @property number $AverageKWDemand
  * @property number $CoreLoss
- * @property integer $Meter
- * @property integer $PR
- * @property integer $SDW
- * @property integer $Others
- * @property integer $PPA
- * @property integer $PPAAmount
- * @property integer $BasicAmount
- * @property integer $PRADiscount
- * @property integer $PRAAmount
- * @property integer $PPCADiscount
- * @property integer $PPCAAmount
- * @property integer $UCAmount
+ * @property float $Meter
+ * @property float $PR
+ * @property float $SDW
+ * @property float $Others
+ * @property float $PPA
+ * @property float $PPAAmount
+ * @property float $BasicAmount
+ * @property float $PRADiscount
+ * @property float $PRAAmount
+ * @property float $PPCADiscount
+ * @property float $PPCAAmount
+ * @property float $UCAmount
  * @property string $MeterNumber
  * @property string $ConsumerType
  * @property string $BillType
- * @property integer $QCAmount
- * @property integer $EPAmount
- * @property integer $PCAmount
- * @property integer $LoanCondonation
+ * @property float $QCAmount
+ * @property float $EPAmount
+ * @property float $PCAmount
+ * @property float $LoanCondonation
  * @property string|\Carbon\Carbon $BillingPeriod
  * @property boolean $UnbundledTag
- * @property integer $GenerationSystemAmt
- * @property integer $FBHCAmt
- * @property integer $FPCAAdjustmentAmt
- * @property integer $ForexAdjustmentAmt
- * @property integer $TransmissionDemandAmt
- * @property integer $TransmissionSystemAmt
- * @property integer $DistributionDemandAmt
- * @property integer $DistributionSystemAmt
- * @property integer $SupplyRetailCustomerAmt
- * @property integer $SupplySystemAmt
- * @property integer $MeteringRetailCustomerAmt
- * @property integer $MeteringSystemAmt
- * @property integer $SystemLossAmt
- * @property integer $CrossSubsidyCreditAmt
- * @property integer $MissionaryElectrificationAmt
- * @property integer $EnvironmentalAmt
- * @property integer $LifelineSubsidyAmt
- * @property integer $Item1
- * @property integer $Item2
- * @property integer $Item3
- * @property integer $Item4
- * @property integer $SeniorCitizenDiscount
- * @property integer $SeniorCitizenSubsidy
- * @property integer $UCMERefund
+ * @property float $GenerationSystemAmt
+ * @property float $FBHCAmt
+ * @property float $FPCAAdjustmentAmt
+ * @property float $ForexAdjustmentAmt
+ * @property float $TransmissionDemandAmt
+ * @property float $TransmissionSystemAmt
+ * @property float $DistributionDemandAmt
+ * @property float $DistributionSystemAmt
+ * @property float $SupplyRetailCustomerAmt
+ * @property float $SupplySystemAmt
+ * @property float $MeteringRetailCustomerAmt
+ * @property float $MeteringSystemAmt
+ * @property float $SystemLossAmt
+ * @property float $CrossSubsidyCreditAmt
+ * @property float $MissionaryElectrificationAmt
+ * @property float $EnvironmentalAmt
+ * @property float $LifelineSubsidyAmt
+ * @property float $Item1
+ * @property float $Item2
+ * @property float $Item3
+ * @property float $Item4
+ * @property float $SeniorCitizenDiscount
+ * @property float $SeniorCitizenSubsidy
+ * @property float $UCMERefund
  * @property number $NetPrevReading
  * @property number $NetPresReading
  * @property number $NetPowerKWH
@@ -94,7 +94,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property number $ACRM_TAFxA
  * @property number $DAA_VAT
  * @property number $ACRM_VAT
- * @property integer $NetMeteringNetAmount
+ * @property float $NetMeteringNetAmount
  * @property string $ReferenceNo
  */
 class Bills extends Model
@@ -221,14 +221,14 @@ class Bills extends Model
         'AdditionalKWH' => 'float',
         'AdditionalKWDemand' => 'float',
         'PowerKWH' => 'decimal:2',
-        'KWHAmount' => 'integer',
+        'KWHAmount' => 'float',
         'DemandKW' => 'float',
-        'KWAmount' => 'integer',
-        'Charges' => 'integer',
-        'Deductions' => 'integer',
-        'NetAmount' => 'integer',
-        'PowerRate' => 'integer',
-        'DemandRate' => 'integer',
+        'KWAmount' => 'float',
+        'Charges' => 'float',
+        'Deductions' => 'float',
+        'NetAmount' => 'float',
+        'PowerRate' => 'float',
+        'DemandRate' => 'float',
         'BillingDate' => 'datetime',
         'ServiceDateFrom' => 'datetime',
         'ServiceDateTo' => 'datetime',
@@ -238,51 +238,51 @@ class Bills extends Model
         'AverageKWH' => 'float',
         'AverageKWDemand' => 'float',
         'CoreLoss' => 'float',
-        'Meter' => 'integer',
-        'PR' => 'integer',
-        'SDW' => 'integer',
-        'Others' => 'integer',
-        'PPA' => 'integer',
-        'PPAAmount' => 'integer',
-        'BasicAmount' => 'integer',
-        'PRADiscount' => 'integer',
-        'PRAAmount' => 'integer',
-        'PPCADiscount' => 'integer',
-        'PPCAAmount' => 'integer',
-        'UCAmount' => 'integer',
+        'Meter' => 'float',
+        'PR' => 'float',
+        'SDW' => 'float',
+        'Others' => 'float',
+        'PPA' => 'float',
+        'PPAAmount' => 'float',
+        'BasicAmount' => 'float',
+        'PRADiscount' => 'float',
+        'PRAAmount' => 'float',
+        'PPCADiscount' => 'float',
+        'PPCAAmount' => 'float',
+        'UCAmount' => 'float',
         'MeterNumber' => 'string',
         'ConsumerType' => 'string',
         'BillType' => 'string',
-        'QCAmount' => 'integer',
-        'EPAmount' => 'integer',
-        'PCAmount' => 'integer',
-        'LoanCondonation' => 'integer',
+        'QCAmount' => 'float',
+        'EPAmount' => 'float',
+        'PCAmount' => 'float',
+        'LoanCondonation' => 'float',
         'BillingPeriod' => 'datetime',
         'UnbundledTag' => 'boolean',
-        'GenerationSystemAmt' => 'integer',
-        'FBHCAmt' => 'integer',
-        'FPCAAdjustmentAmt' => 'integer',
-        'ForexAdjustmentAmt' => 'integer',
-        'TransmissionDemandAmt' => 'integer',
-        'TransmissionSystemAmt' => 'integer',
-        'DistributionDemandAmt' => 'integer',
-        'DistributionSystemAmt' => 'integer',
-        'SupplyRetailCustomerAmt' => 'integer',
-        'SupplySystemAmt' => 'integer',
-        'MeteringRetailCustomerAmt' => 'integer',
-        'MeteringSystemAmt' => 'integer',
-        'SystemLossAmt' => 'integer',
-        'CrossSubsidyCreditAmt' => 'integer',
-        'MissionaryElectrificationAmt' => 'integer',
-        'EnvironmentalAmt' => 'integer',
-        'LifelineSubsidyAmt' => 'integer',
-        'Item1' => 'integer',
-        'Item2' => 'integer',
-        'Item3' => 'integer',
-        'Item4' => 'integer',
-        'SeniorCitizenDiscount' => 'integer',
-        'SeniorCitizenSubsidy' => 'integer',
-        'UCMERefund' => 'integer',
+        'GenerationSystemAmt' => 'float',
+        'FBHCAmt' => 'float',
+        'FPCAAdjustmentAmt' => 'float',
+        'ForexAdjustmentAmt' => 'float',
+        'TransmissionDemandAmt' => 'float',
+        'TransmissionSystemAmt' => 'float',
+        'DistributionDemandAmt' => 'float',
+        'DistributionSystemAmt' => 'float',
+        'SupplyRetailCustomerAmt' => 'float',
+        'SupplySystemAmt' => 'float',
+        'MeteringRetailCustomerAmt' => 'float',
+        'MeteringSystemAmt' => 'float',
+        'SystemLossAmt' => 'float',
+        'CrossSubsidyCreditAmt' => 'float',
+        'MissionaryElectrificationAmt' => 'float',
+        'EnvironmentalAmt' => 'float',
+        'LifelineSubsidyAmt' => 'float',
+        'Item1' => 'float',
+        'Item2' => 'float',
+        'Item3' => 'float',
+        'Item4' => 'float',
+        'SeniorCitizenDiscount' => 'float',
+        'SeniorCitizenSubsidy' => 'float',
+        'UCMERefund' => 'float',
         'NetPrevReading' => 'decimal:2',
         'NetPresReading' => 'decimal:2',
         'NetPowerKWH' => 'decimal:2',
@@ -296,7 +296,7 @@ class Bills extends Model
         'ACRM_TAFxA' => 'decimal:2',
         'DAA_VAT' => 'decimal:2',
         'ACRM_VAT' => 'decimal:2',
-        'NetMeteringNetAmount' => 'integer',
+        'NetMeteringNetAmount' => 'float',
         'ReferenceNo' => 'string'
     ];
 
@@ -314,14 +314,14 @@ class Bills extends Model
         'AdditionalKWH' => 'nullable|numeric',
         'AdditionalKWDemand' => 'nullable|numeric',
         'PowerKWH' => 'nullable|numeric',
-        'KWHAmount' => 'nullable|integer',
+        'KWHAmount' => 'nullable|float',
         'DemandKW' => 'nullable|numeric',
-        'KWAmount' => 'nullable|integer',
-        'Charges' => 'nullable|integer',
-        'Deductions' => 'nullable|integer',
-        'NetAmount' => 'nullable|integer',
-        'PowerRate' => 'nullable|integer',
-        'DemandRate' => 'nullable|integer',
+        'KWAmount' => 'nullable|float',
+        'Charges' => 'nullable|float',
+        'Deductions' => 'nullable|float',
+        'NetAmount' => 'nullable|float',
+        'PowerRate' => 'nullable|float',
+        'DemandRate' => 'nullable|float',
         'BillingDate' => 'nullable',
         'ServiceDateFrom' => 'nullable',
         'ServiceDateTo' => 'nullable',
@@ -331,51 +331,51 @@ class Bills extends Model
         'AverageKWH' => 'nullable|numeric',
         'AverageKWDemand' => 'nullable|numeric',
         'CoreLoss' => 'nullable|numeric',
-        'Meter' => 'nullable|integer',
-        'PR' => 'nullable|integer',
-        'SDW' => 'nullable|integer',
-        'Others' => 'nullable|integer',
-        'PPA' => 'nullable|integer',
-        'PPAAmount' => 'nullable|integer',
-        'BasicAmount' => 'nullable|integer',
-        'PRADiscount' => 'nullable|integer',
-        'PRAAmount' => 'nullable|integer',
-        'PPCADiscount' => 'nullable|integer',
-        'PPCAAmount' => 'nullable|integer',
-        'UCAmount' => 'nullable|integer',
+        'Meter' => 'nullable|float',
+        'PR' => 'nullable|float',
+        'SDW' => 'nullable|float',
+        'Others' => 'nullable|float',
+        'PPA' => 'nullable|float',
+        'PPAAmount' => 'nullable|float',
+        'BasicAmount' => 'nullable|float',
+        'PRADiscount' => 'nullable|float',
+        'PRAAmount' => 'nullable|float',
+        'PPCADiscount' => 'nullable|float',
+        'PPCAAmount' => 'nullable|float',
+        'UCAmount' => 'nullable|float',
         'MeterNumber' => 'nullable|string|max:20',
         'ConsumerType' => 'nullable|string|max:20',
         'BillType' => 'nullable|string|max:10',
-        'QCAmount' => 'nullable|integer',
-        'EPAmount' => 'nullable|integer',
-        'PCAmount' => 'nullable|integer',
-        'LoanCondonation' => 'nullable|integer',
+        'QCAmount' => 'nullable|float',
+        'EPAmount' => 'nullable|float',
+        'PCAmount' => 'nullable|float',
+        'LoanCondonation' => 'nullable|float',
         'BillingPeriod' => 'nullable',
         'UnbundledTag' => 'nullable|boolean',
-        'GenerationSystemAmt' => 'nullable|integer',
-        'FBHCAmt' => 'nullable|integer',
-        'FPCAAdjustmentAmt' => 'nullable|integer',
-        'ForexAdjustmentAmt' => 'nullable|integer',
-        'TransmissionDemandAmt' => 'nullable|integer',
-        'TransmissionSystemAmt' => 'nullable|integer',
-        'DistributionDemandAmt' => 'nullable|integer',
-        'DistributionSystemAmt' => 'nullable|integer',
-        'SupplyRetailCustomerAmt' => 'nullable|integer',
-        'SupplySystemAmt' => 'nullable|integer',
-        'MeteringRetailCustomerAmt' => 'nullable|integer',
-        'MeteringSystemAmt' => 'nullable|integer',
-        'SystemLossAmt' => 'nullable|integer',
-        'CrossSubsidyCreditAmt' => 'nullable|integer',
-        'MissionaryElectrificationAmt' => 'nullable|integer',
-        'EnvironmentalAmt' => 'nullable|integer',
-        'LifelineSubsidyAmt' => 'nullable|integer',
-        'Item1' => 'nullable|integer',
-        'Item2' => 'nullable|integer',
-        'Item3' => 'nullable|integer',
-        'Item4' => 'nullable|integer',
-        'SeniorCitizenDiscount' => 'nullable|integer',
-        'SeniorCitizenSubsidy' => 'nullable|integer',
-        'UCMERefund' => 'nullable|integer',
+        'GenerationSystemAmt' => 'nullable|float',
+        'FBHCAmt' => 'nullable|float',
+        'FPCAAdjustmentAmt' => 'nullable|float',
+        'ForexAdjustmentAmt' => 'nullable|float',
+        'TransmissionDemandAmt' => 'nullable|float',
+        'TransmissionSystemAmt' => 'nullable|float',
+        'DistributionDemandAmt' => 'nullable|float',
+        'DistributionSystemAmt' => 'nullable|float',
+        'SupplyRetailCustomerAmt' => 'nullable|float',
+        'SupplySystemAmt' => 'nullable|float',
+        'MeteringRetailCustomerAmt' => 'nullable|float',
+        'MeteringSystemAmt' => 'nullable|float',
+        'SystemLossAmt' => 'nullable|float',
+        'CrossSubsidyCreditAmt' => 'nullable|float',
+        'MissionaryElectrificationAmt' => 'nullable|float',
+        'EnvironmentalAmt' => 'nullable|float',
+        'LifelineSubsidyAmt' => 'nullable|float',
+        'Item1' => 'nullable|float',
+        'Item2' => 'nullable|float',
+        'Item3' => 'nullable|float',
+        'Item4' => 'nullable|float',
+        'SeniorCitizenDiscount' => 'nullable|float',
+        'SeniorCitizenSubsidy' => 'nullable|float',
+        'UCMERefund' => 'nullable|float',
         'NetPrevReading' => 'nullable|numeric',
         'NetPresReading' => 'nullable|numeric',
         'NetPowerKWH' => 'nullable|numeric',
@@ -389,9 +389,8 @@ class Bills extends Model
         'ACRM_TAFxA' => 'nullable|numeric',
         'DAA_VAT' => 'nullable|numeric',
         'ACRM_VAT' => 'nullable|numeric',
-        'NetMeteringNetAmount' => 'nullable|integer',
+        'NetMeteringNetAmount' => 'nullable|float',
         'ReferenceNo' => 'nullable|string|max:30'
     ];
 
-    
 }
