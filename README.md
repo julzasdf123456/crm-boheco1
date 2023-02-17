@@ -77,3 +77,9 @@ You can also check out our other paid products on [CodeCanyon](https://codecanyo
 ### User - Special Authentication
 - In UsersController.authenticate(), update the permissions
 
+### Additional Columns
+- `CRM_ServiceConnectionMaterialPayments` 
+    1. BOHECOIShare (money)
+- `CRM_ServiceConnectionTotalPayments`
+    1. BOHECOShare (money)
+

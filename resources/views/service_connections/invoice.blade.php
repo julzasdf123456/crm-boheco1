@@ -30,7 +30,7 @@
 
     {{-- TOTAL PAYMENT --}}
     <div class="col-lg-6 col-md-12">
-        <div class="card" style="height: 36vh;">
+        <div class="card">
             <div class="card-header border-0 bg-success">
                 <span>
                     <strong>Payment Summary</strong>
@@ -67,8 +67,12 @@
                         <th class="text-right text-primary" onclick="showServiceConnectionFeeComputation()">₱ <span id="service-connection-fee-display">{{ $totalTransactions != null ? number_format($totalTransactions->ServiceConnectionFee, 2) : "0" }}</span></th>
                     </tr>
                     <tr>
-                        <td>Wiring Labor Charge</td>
+                        <td>Elec. Labor Charge</td>
                         <th class="text-right text-primary">₱ <span id="wiring-labor-charge-display" data-toggle="tooltip" data-placement="left">{{ $totalTransactions != null ? number_format($totalTransactions->LaborCharge, 2) : '0.00' }}</span></th>
+                    </tr>
+                    <tr>
+                        <td>BOHECO I Share</td>
+                        <th class="text-right text-primary">₱ <span id="wiring-labor-charge-display" data-toggle="tooltip" data-placement="left">{{ $totalTransactions != null ? number_format($totalTransactions->BOHECOShare, 2) : '0.00' }}</span></th>
                     </tr>
                     <tr>
                         <td>Bill Deposit</td>
@@ -98,7 +102,7 @@
 
     {{-- ELECTRICIAN --}}
     <div class="col-lg-6 col-md-12">
-        <div class="card" style="height: 36vh;">
+        <div class="card">
             <div class="card-header">
                 <span><strong>Electrician Information</strong></span>
             </div>

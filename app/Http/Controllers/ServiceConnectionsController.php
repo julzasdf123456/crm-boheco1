@@ -789,7 +789,12 @@ class ServiceConnectionsController extends AppBaseController
          * ASSESS PERMISSIONS
          */
         if(Auth::user()->hasAnyPermission(['create membership', 'sc create', 'Super Admin'])) {
-            return view('/service_connections/create_new', ['memberConsumer' => $memberConsumer, 'cond' => $cond, 'towns' => $towns, 'accountTypes' => $accountTypes, 'crew' => $crew]);
+            return view('/service_connections/create_new', [
+                'memberConsumer' => $memberConsumer, 
+                'cond' => $cond, 
+                'towns' => $towns, 
+                'accountTypes' => $accountTypes, 
+                'crew' => $crew]);
         } else {
             return abort(403, "You're not authorized to create a service connection application.");
         }        

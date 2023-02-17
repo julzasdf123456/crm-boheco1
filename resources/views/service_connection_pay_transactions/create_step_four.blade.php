@@ -95,6 +95,7 @@ $id = IDGenerator::generateID();
                         <th>Particular</th>
                         <th class='text-center'>Quantity</th>
                         <th class='text-center'>Charge per Unit</th>
+                        <th class='text-center'>BOHECO I<br>Share (P20)</th>
                         <th class='text-center' colspan="2">VAT</th>
                         <th class='text-center'>Total</th>
                     </thead>
@@ -110,6 +111,9 @@ $id = IDGenerator::generateID();
                                 </td>
                                 <td style="width: 120px;">
                                     <input type="number" step="any" class="form-control form-control-sm text-right" id="{{ $item->id }}Charge" value="{{ $item->Rate }}" disabled>
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm text-right" name="{{ $item->id }}BOHECOIShare" value="{{ number_format($item->BOHECOIShare, 2) }}" id="{{ $item->id }}BOHECOIShare" disabled>
                                 </td>
                                 <td style="width: 80px;">
                                     <input type="number" step="any" class="form-control form-control-sm text-right" id="{{ $item->id }}VAT" value="{{ $item->VatPercentage }}" disabled>
@@ -228,12 +232,17 @@ $id = IDGenerator::generateID();
                     <tbody>
                         <tr>
                             <td>Service Connection Fee</td>
-                            <th class="text-right text-primary" onclick="showServiceConnectionFeeComputation()">₱ <span id="service-connection-fee-display">{{ $totalPayments != null ? number_format($totalPayments->ServiceConnectionFee, 2) : number_format(ServiceConnections::getServiceConnectionFees($serviceConnection), 2) }}</span></th>
-                            <span id="service-connection-fee" style="display: none;">{{ $totalPayments != null ? number_format($totalPayments->ServiceConnectionFee, 2) : ServiceConnections::getServiceConnectionFees($serviceConnection) }}</span>
+                            {{-- <th class="text-right text-primary" onclick="showServiceConnectionFeeComputation()">₱ <span id="service-connection-fee-display">{{ $totalPayments != null ? number_format($totalPayments->ServiceConnectionFee, 2) : number_format(ServiceConnections::getServiceConnectionFees($serviceConnection), 2) }}</span></th> --}}
+                            <th class="text-right text-primary">₱ <span id="service-connection-fee-display">0.0</span></th>
+                            <span id="service-connection-fee" style="display: none;">0</span>
                         </tr>
                         <tr>
-                            <td>Wiring Labor Charge</td>
+                            <td>Elec. Wiring Labor Fees</td>
                             <th class="text-right text-primary">₱ <span id="wiring-labor-charge-display" data-toggle="tooltip" data-placement="left">{{ $totalPayments != null ? number_format($totalPayments->LaborCharge, 2) : '0.00' }}</span></th>
+                        </tr>
+                        <tr>
+                            <td>BOHECO I Share</td>
+                            <th class="text-right text-primary">₱ <span id="boheco-share" data-toggle="tooltip" data-placement="left">{{ $totalPayments != null ? number_format($totalPayments->BOHECOShare, 2) : '0.00' }}</span></th>
                         </tr>
                         <tr title="Bill deposits are being rounded down to the nearest hundredth">
                             <td>Bill Deposit</td>
@@ -409,9 +418,11 @@ $id = IDGenerator::generateID();
             
             var subTotal = qty * charge
             var vatAmnt = subTotal * vat
+            var bohecoShare = qty * 20
             var total = subTotal + vatAmnt
             
             $('#' + id + 'VATAmount').val(vatAmnt.toFixed(2))
+            $('#' + id + 'BOHECOIShare').val(bohecoShare.toFixed(2))
             $('#' + id + 'Total').val(total.toFixed(2))
 
             getOverAllTotal()
@@ -421,8 +432,11 @@ $id = IDGenerator::generateID();
         function validateLaborCharge() {
             if (isAccredited) {
                 $('#wiring-labor-charge-display').text(Number((getTotalLaborCharge()).toFixed(2)).toLocaleString(undefined, {minimumFractionDigits: 2}))
+                $('#boheco-share').text(Number((getBOHECOIShare()).toFixed(2)).toLocaleString(undefined, {minimumFractionDigits: 2}))
+                console.log(getBOHECOIShare())
             } else {
                 $('#wiring-labor-charge-display').text(0.00)
+                $('#boheco-share').text(0.00)
             }  
         }
 
@@ -435,7 +449,21 @@ $id = IDGenerator::generateID();
                 var totalVal = $('#' + id + 'Total').val()
                 var vatVal = $('#' + id + 'VATAmount').val()
                 if (!jQuery.isEmptyObject(totalVal) && !jQuery.isEmptyObject(vatVal)) {
-                    totalAmnt += parseFloat(totalVal) - parseFloat(vatVal)
+                    totalAmnt += parseFloat(totalVal - 20) - parseFloat(vatVal) // -20 FOR BOHECO SHARE
+                }                
+            });
+            return totalAmnt
+        }
+
+        // GET TOTAL BOHECO I SHARE
+        function getBOHECOIShare() {
+            var totalAmnt = 0
+            $('#labor-charge-table > tbody  > tr').each(function(index, tr) { 
+                var id = $(tr).attr('id')
+
+                var bohecoshare = $('#' + id + 'BOHECOIShare').val()
+                if (!jQuery.isEmptyObject(bohecoshare)) {
+                    totalAmnt += parseFloat(bohecoshare)
                 }                
             });
             return totalAmnt
@@ -482,7 +510,7 @@ $id = IDGenerator::generateID();
         // GET OVER ALL TOTAL
         function getOverAllTotal() {
             if (isAccredited) {
-                overAllSubTotal = getTotalLaborCharge() + serviceConnectionFees + getBillDepositNormal()
+                overAllSubTotal = getTotalLaborCharge() + getBOHECOIShare() + serviceConnectionFees + getBillDepositNormal()
                 witholdableVat = getTotalLaborVat() + (serviceConnectionFees * .12)
                 overAllVat = getTotalLaborVat() + (getBillDepositNormal() * .12) + (serviceConnectionFees * .12)
             } else {
@@ -585,6 +613,7 @@ $id = IDGenerator::generateID();
 
                 var totalVal = $('#' + id + 'Total').val()
                 var vatVal = $('#' + id + 'VATAmount').val()
+                var bohecoShare = $('#' + id + 'BOHECOIShare').val()
                 var qtyVal = $('#' + id + 'Quantity').val()
                 
                 $.ajax({
@@ -595,6 +624,7 @@ $id = IDGenerator::generateID();
                         MaterialId : id,
                         Quantity : qtyVal,
                         VAT : vatVal,
+                        BOHECOIShare : bohecoShare,
                         Total : totalVal
                     },
                     success : function(res) {
@@ -651,6 +681,7 @@ $id = IDGenerator::generateID();
                     ServiceConnectionFee : serviceConnectionFees,
                     BillDeposit : getBillDepositNormal(),
                     WitholdableVat : witholdableVat,
+                    BOHECOShare : getBOHECOIShare(),
                     LaborCharge : isAccredited ? getTotalLaborCharge() : 0
                 },
                 success : function(res) {

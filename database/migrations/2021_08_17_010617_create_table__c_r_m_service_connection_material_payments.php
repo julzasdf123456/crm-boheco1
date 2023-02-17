@@ -21,6 +21,7 @@ class CreateTableCRMServiceConnectionMaterialPayments extends Migration
             $table->string('Quantity', 20)->nullable();
             $table->string('Vat', 100)->nullable();
             $table->string('Total', 100)->nullable();
+            $table->decimal('BOHECOIShare', 15, 2)->nullable();
             $table->timestamps();
         });
     }

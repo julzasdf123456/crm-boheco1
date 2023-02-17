@@ -41,7 +41,8 @@ class ServiceConnectionMatPayments extends Model
         'Material',
         'Quantity',
         'Vat',
-        'Total'
+        'Total',
+        'BOHECOIShare'
     ];
 
     /**
@@ -55,7 +56,8 @@ class ServiceConnectionMatPayments extends Model
         'Material' => 'string',
         'Quantity' => 'string',
         'Vat' => 'string',
-        'Total' => 'string'
+        'Total' => 'string',
+        'BOHECOIShare' => 'string'
     ];
 
     /**
@@ -71,7 +73,8 @@ class ServiceConnectionMatPayments extends Model
         'Vat' => 'nullable|string|max:100',
         'Total' => 'nullable|string|max:100',
         'created_at' => 'nullable',
-        'updated_at' => 'nullable'
+        'updated_at' => 'nullable',
+        'BOHECOIShare' => 'nullable|string'
     ];
 
     

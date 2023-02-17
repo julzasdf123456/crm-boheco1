@@ -202,9 +202,10 @@ class ServiceConnectionPayTransactionController extends AppBaseController
         $laborPayables = DB::table('CRM_ServiceConnectionMaterialPayables')
             ->where('BuildingType', $serviceConnection->BuildingType)
             ->select('CRM_ServiceConnectionMaterialPayables.*',
-                DB::raw("(SELECT TOP 1 Quantity FROM CRM_ServiceConnectionMaterialPayments WHERE Material=CRM_ServiceConnectionMaterialPayables.id AND ServiceConnectionId='" . $serviceConnection->id . "') Qty"),
-                DB::raw("(SELECT TOP 1 Vat FROM CRM_ServiceConnectionMaterialPayments WHERE Material=CRM_ServiceConnectionMaterialPayables.id AND ServiceConnectionId='" . $serviceConnection->id . "') Vat"),
-                DB::raw("(SELECT TOP 1 Total FROM CRM_ServiceConnectionMaterialPayments WHERE Material=CRM_ServiceConnectionMaterialPayables.id AND ServiceConnectionId='" . $serviceConnection->id . "') Total")      
+                DB::raw("(SELECT TOP 1 Quantity FROM CRM_ServiceConnectionMaterialPayments WHERE Material=CRM_ServiceConnectionMaterialPayables.id AND ServiceConnectionId='" . $serviceConnection->id . "') AS Qty"),
+                DB::raw("(SELECT TOP 1 Vat FROM CRM_ServiceConnectionMaterialPayments WHERE Material=CRM_ServiceConnectionMaterialPayables.id AND ServiceConnectionId='" . $serviceConnection->id . "') AS Vat"),
+                DB::raw("(SELECT TOP 1 BOHECOIShare FROM CRM_ServiceConnectionMaterialPayments WHERE Material=CRM_ServiceConnectionMaterialPayables.id AND ServiceConnectionId='" . $serviceConnection->id . "') AS BOHECOIShare"),
+                DB::raw("(SELECT TOP 1 Total FROM CRM_ServiceConnectionMaterialPayments WHERE Material=CRM_ServiceConnectionMaterialPayables.id AND ServiceConnectionId='" . $serviceConnection->id . "') AS Total")      
             )
             ->orderBy('Material')
             ->get();
@@ -226,6 +227,7 @@ class ServiceConnectionPayTransactionController extends AppBaseController
         $materialId = $request['MaterialId'];
         $qty = $request['Quantity'];
         $vat = $request['VAT'];
+        $bohecoShare = $request['BOHECOIShare'];
         $total = $request['Total'];
 
         // DELETE PREV RECORD
@@ -238,6 +240,7 @@ class ServiceConnectionPayTransactionController extends AppBaseController
         $payment->Material = $materialId;
         $payment->Quantity = $qty;
         $payment->Vat = $vat;
+        $payment->BOHECOIShare = $bohecoShare;
         $payment->Total = $total;
         $payment->save();
 
@@ -281,6 +284,7 @@ class ServiceConnectionPayTransactionController extends AppBaseController
         $total->ServiceConnectionFee = $request['ServiceConnectionFee'];
         $total->BillDeposit = $request['BillDeposit'];
         $total->WitholdableVat = $request['WitholdableVat'];
+        $total->BOHECOShare = $request['BOHECOShare'];
         $total->LaborCharge = $request['LaborCharge'];
         $total->save();
 

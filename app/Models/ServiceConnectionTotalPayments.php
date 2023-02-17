@@ -50,7 +50,8 @@ class ServiceConnectionTotalPayments extends Model
         'ServiceConnectionFee',
         'BillDeposit',
         'WitholdableVat',
-        'LaborCharge'
+        'LaborCharge',
+        'BOHECOShare'
     ];
 
     /**
@@ -71,6 +72,7 @@ class ServiceConnectionTotalPayments extends Model
         'BillDeposit' => 'string',
         'WitholdableVat' => 'string',
         'LaborCharge' => 'string',
+        'BOHECOShare' => 'string'
     ];
 
     /**
@@ -93,6 +95,7 @@ class ServiceConnectionTotalPayments extends Model
         'BillDeposit' => 'nullable|string',
         'WitholdableVat' => 'nullable|string',
         'LaborCharge' => 'nullable|string',
+        'BOHECOShare' => 'nullable|string'
     ];
 
     

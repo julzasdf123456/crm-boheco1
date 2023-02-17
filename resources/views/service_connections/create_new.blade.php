@@ -25,7 +25,7 @@
                         <span class="card-title">Applicant Basic Account Info</strong></span>
 
                         <div class="card-tools">
-                            <a href="{{ route('memberConsumers.show', [ $memberConsumer->ConsumerId ]) }}">Skip For Now</a>
+                            {{-- <a href="{{ route('memberConsumers.show', [ $memberConsumer->ConsumerId ]) }}">Skip For Now</a> --}}
                         </div>
                     </div>
 

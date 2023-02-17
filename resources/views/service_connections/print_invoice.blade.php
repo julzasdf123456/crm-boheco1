@@ -232,8 +232,12 @@
                                 <th class="table-borderless text-right">P {{ number_format($totalTransactions->ServiceConnectionFee, 2) }}</th>
                             </tr>
                             <tr>
-                                <td class="table-borderless">Labor Charge</td>
+                                <td class="table-borderless">Elec. Labor Charge</td>
                                 <th class="table-borderless text-right">P {{ number_format($totalTransactions->LaborCharge, 2) }}</th>
+                            </tr>
+                            <tr>
+                                <td class="table-borderless">BOHECO I Share</td>
+                                <th class="table-borderless text-right">P {{ number_format($totalTransactions->BOHECOShare, 2) }}</th>
                             </tr>
                             <tr>
                                 <td class="table-borderless">Bill Deposit</td>
