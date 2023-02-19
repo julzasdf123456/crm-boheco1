@@ -611,13 +611,13 @@ use Illuminate\Support\Facades\Auth;
                    <i class="fas fa-user-circle nav-icon text-primary"></i><p>Consumer Accounts</p>
                 </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="{{ route('serviceAccounts.termed-payment-accounts') }}"
                    class="nav-link {{ Request::is('serviceAccounts.termed-payment-accounts') ? 'active' : '' }}"
                    title="Accounts with Termed Payments">                   
                    <i class="fas fa-list nav-icon text-primary"></i><p>Accounts w/ OCL</p>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-header">                
                 Others 
             </li>

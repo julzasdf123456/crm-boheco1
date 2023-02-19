@@ -65,7 +65,7 @@ class ServiceConnectionPayTransaction extends Model
      * @var array
      */
     public static $rules = [
-        'id' => 'required|string',
+        'id' => 'nullable|string',
         'ServiceConnectionId' => 'required|string|max:255',
         'Particular' => 'required|string|max:40',
         'Amount' => 'nullable|string|max:20',

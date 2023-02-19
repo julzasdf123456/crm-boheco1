@@ -273,7 +273,7 @@ use Illuminate\Support\Facades\Auth;
 
             <div class="card-footer">
                 {!! Form::submit('Next', ['class' => 'btn btn-primary btn-sm float-right']) !!}
-                <a href="{{ route('serviceAccounts.index') }}" class="btn btn-default btn-sm">Cancel</a>
+                <a href="{{ route('serviceConnections.show', [$serviceConnection->id]) }}" class="btn btn-success btn-sm" target="_blank">View Application Info</a>
             </div>
 
             {!! Form::close() !!}

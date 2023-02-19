@@ -15,7 +15,9 @@ use App\Models\Electricians;
 use App\Models\IDGenerator;
 use App\Models\BillDeposits;
 use App\Models\ServiceConnectionTotalPayments;
+use App\Models\ServiceConnectionTimeframes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Flash;
 use Response;
 
@@ -195,6 +197,18 @@ class ServiceConnectionPayTransactionController extends AppBaseController
             ->where('CRM_ServiceConnections.id', $scId)
             ->first();
 
+        $particulars = ServiceConnectionPayParticulars::all();
+
+        $particularPayments = DB::table('CRM_ServiceConnectionParticularPaymentsTransactions')
+                    ->leftJoin('CRM_ServiceConnectionPaymentParticulars', 'CRM_ServiceConnectionParticularPaymentsTransactions.Particular', '=', 'CRM_ServiceConnectionPaymentParticulars.id')
+                    ->select('CRM_ServiceConnectionParticularPaymentsTransactions.id',
+                            'CRM_ServiceConnectionParticularPaymentsTransactions.Amount',
+                            'CRM_ServiceConnectionParticularPaymentsTransactions.Vat',
+                            'CRM_ServiceConnectionParticularPaymentsTransactions.Total',
+                            'CRM_ServiceConnectionPaymentParticulars.Particular')
+                    ->where('CRM_ServiceConnectionParticularPaymentsTransactions.ServiceConnectionId', $scId)
+                    ->get();
+
         $totalPayments = ServiceConnectionTotalPayments::where('ServiceConnectionId', $scId)->first();
 
         $electricians = Electricians::orderBy('Name')->get();
@@ -219,6 +233,8 @@ class ServiceConnectionPayTransactionController extends AppBaseController
             'totalPayments' => $totalPayments,
             'laborPayables' => $laborPayables,
             'billDeposit' => $billDeposit,
+            'particulars' => $particulars,
+            'particularPayments' => $particularPayments,
         ]);
     }
 
@@ -286,7 +302,16 @@ class ServiceConnectionPayTransactionController extends AppBaseController
         $total->WitholdableVat = $request['WitholdableVat'];
         $total->BOHECOShare = $request['BOHECOShare'];
         $total->LaborCharge = $request['LaborCharge'];
+        $total->Particulars = $request['Particulars'];
         $total->save();
+
+        $timeFrame = new ServiceConnectionTimeframes;
+        $timeFrame->id = IDGenerator::generateID();
+        $timeFrame->ServiceConnectionId = $scId;
+        $timeFrame->UserId = Auth::id();
+        $timeFrame->Status = 'Payment Updated!';
+        $timeFrame->Notes = 'Payment updated with and amount of ' . number_format($request['Total'], 2);
+        $timeFrame->save();
 
         return response()->json('ok', 200);
     }

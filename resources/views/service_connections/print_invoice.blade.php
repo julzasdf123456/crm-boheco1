@@ -76,6 +76,10 @@
             padding: 0;
         }
     }  
+
+    .float-left {
+        float: left;
+    }
     
     .left-indent {
         padding-left: 15px;
@@ -180,11 +184,12 @@
         @if ($i==1) 
             <div style="width: 100%; position: relative; height: 20px;"></div>
         @endif
+        <img src="{{ URL::asset('imgs/company_logo.png'); }}" class="float-left" style="height: 50px; margin-top: -5px;" alt="Image"> 
         <p class="text-center"><strong>{{ strtoupper(env('APP_COMPANY')) }}</strong></p>
         <p class="text-center">{{ env('APP_ADDRESS') }}</p>
         <p class="text-center">{{ env('APP_COMPANY_TIN') }}</p>
 
-        <h4 class="text-center">SERVICE CONNECTION INVOICE</h4>
+        <h4 class="text-center">SERVICE CONNECTION PAYMENT STUB</h4>
 
         <div style="width: 100%; position: relative;">
             <div class="half" >
@@ -221,52 +226,40 @@
             </div>
 
             <div class="half" style="margin-left: 30px;">
-                <div class="invoice-card">
-                    <div class="invoice-card-header">
-                        <span><strong>Payable Summary</strong></span>
-                    </div>
-                    <div class="invoice-card-body">
-                        <table style="width: 100%;">
-                            <tr>
-                                <td class="table-borderless">Service Connection Fees</td>
-                                <th class="table-borderless text-right">P {{ number_format($totalTransactions->ServiceConnectionFee, 2) }}</th>
-                            </tr>
-                            <tr>
-                                <td class="table-borderless">Elec. Labor Charge</td>
-                                <th class="table-borderless text-right">P {{ number_format($totalTransactions->LaborCharge, 2) }}</th>
-                            </tr>
-                            <tr>
-                                <td class="table-borderless">BOHECO I Share</td>
-                                <th class="table-borderless text-right">P {{ number_format($totalTransactions->BOHECOShare, 2) }}</th>
-                            </tr>
-                            <tr>
-                                <td class="table-borderless">Bill Deposit</td>
-                                <th class="table-borderless text-right">P {{ number_format($totalTransactions->BillDeposit, 2) }}</th>
-                            </tr>
-                            <tr>
-                                <td class="table-borderless">Total VAT</td>
-                                <th class="table-borderless text-right">P {{ number_format($totalTransactions->TotalVat, 2) }}</th>
-                            </tr>
-                            <tr>
-                                <td class="table-borderless">2% WItholding Tax</td>
-                                <th class="table-borderless text-right">- P {{ number_format($totalTransactions->Form2307TwoPercent, 2) }}</th>
-                            </tr>
-                            <tr>
-                                <td class="table-borderless">5% WItholding Tax</td>
-                                <th class="table-borderless text-right">- P {{ number_format($totalTransactions->Form2307FivePercent, 2) }}</th>
-                            </tr>
-                        </table>
-                    </div>  
-                    
-                    <div class="invoice-card-footer">                        
-                        <table style="width: 100%;">
-                            <tr>
-                                <td class="table-borderless">Total Payables</td>
-                                <th class="table-borderless text-right" style="font-size: 1em;">P {{ number_format($totalTransactions->Total, 2) }}</th>
-                            </tr>
-                        </table>
-                    </div>
-                </div>                
+                <p><i>Payment Summary</i></p>
+
+                <table class="table" style="width: 100%;">
+                    <tr>
+                        <td>Svc. Con. Charge</td>
+                        <th  class="text-right">P {{ number_format($totalTransactions->LaborCharge + $totalTransactions->BOHECOShare, 2) }}</th>
+                    </tr>
+                    <tr>
+                        <td>Bill Deposit</td>
+                        <th  class="text-right">P {{ number_format($totalTransactions->BillDeposit, 2) }}</th>
+                    </tr>
+                    @foreach ($particularPayments as $item)
+                        <tr>
+                            <td>{{ $item->Particular }}</td>
+                            <th  class="text-right">P {{ number_format($item->Amount, 2) }}</th>
+                        </tr>
+                    @endforeach
+                    <tr>
+                        <td>Total VAT</td>
+                        <th  class="text-right">P {{ number_format($totalTransactions->TotalVat, 2) }}</th>
+                    </tr>
+                    <tr>
+                        <td>2% WItholding Tax</td>
+                        <th  class="text-right">- P {{ number_format($totalTransactions->Form2307TwoPercent, 2) }}</th>
+                    </tr>
+                    <tr>
+                        <td>5% WItholding Tax</td>
+                        <th  class="text-right">- P {{ number_format($totalTransactions->Form2307FivePercent, 2) }}</th>
+                    </tr>
+                    <tr>
+                        <th class="text-left">Total Payables</th>
+                        <th  class="text-right" style="font-size: 1em;">P {{ number_format($totalTransactions->Total, 2) }}</th>
+                    </tr>
+                </table>       
             </div>
         </div>   
 

@@ -2827,11 +2827,22 @@ class ServiceConnectionsController extends AppBaseController
 
         $totalTransactions = ServiceConnectionTotalPayments::where('ServiceConnectionId', $id)->first();
 
+        $particularPayments = DB::table('CRM_ServiceConnectionParticularPaymentsTransactions')
+                    ->leftJoin('CRM_ServiceConnectionPaymentParticulars', 'CRM_ServiceConnectionParticularPaymentsTransactions.Particular', '=', 'CRM_ServiceConnectionPaymentParticulars.id')
+                    ->select('CRM_ServiceConnectionParticularPaymentsTransactions.id',
+                            'CRM_ServiceConnectionParticularPaymentsTransactions.Amount',
+                            'CRM_ServiceConnectionParticularPaymentsTransactions.Vat',
+                            'CRM_ServiceConnectionParticularPaymentsTransactions.Total',
+                            'CRM_ServiceConnectionPaymentParticulars.Particular')
+                    ->where('CRM_ServiceConnectionParticularPaymentsTransactions.ServiceConnectionId', $id)
+                    ->get();
+
         return view('/service_connections/print_invoice', [
             'serviceConnections' => $serviceConnections,
             'laborWiringCharges' => $laborWiringCharges,
             'billDeposit' => $billDeposit,
             'totalTransactions' => $totalTransactions,
+            'particularPayments' => $particularPayments,
         ]);
     }
 

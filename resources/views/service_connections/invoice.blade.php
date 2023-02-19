@@ -43,7 +43,7 @@
                     @if ($totalTransactions != null)
                         <div class="col-md-12">
                             @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Service Connection Assessor'])) 
-                                @if ($totalTransactions->Notes == null) 
+                                @if ($totalTransactions->Notes == null && $serviceConnections->ORNumber == null) 
                                     <a href="{{ route('serviceConnectionPayTransactions.create-step-four', [$serviceConnections->id]) }}" class="btn btn-tool text-white">
                                     <i class="fas fa-pen"></i></a>
                                 @endif
@@ -73,6 +73,10 @@
                     <tr>
                         <td>BOHECO I Share</td>
                         <th class="text-right text-primary">₱ <span id="wiring-labor-charge-display" data-toggle="tooltip" data-placement="left">{{ $totalTransactions != null ? number_format($totalTransactions->BOHECOShare, 2) : '0.00' }}</span></th>
+                    </tr>
+                    <tr>
+                        <td>Other Payables</td>
+                        <th class="text-right text-primary">₱ <span id="bill-deposit-display" data-toggle="tooltip" data-placement="left">{{ $totalTransactions != null ? number_format($totalTransactions->Particulars, 2) : '0.00' }}</span></th>
                     </tr>
                     <tr>
                         <td>Bill Deposit</td>
@@ -158,6 +162,38 @@
                                 <td class="text-right">{{ number_format($item->Total, 2) }}</td>
                             </tr>
                         @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {{-- OTHER PAYABLES --}}
+    <div class="col-lg-12">
+        <div class="card shadow-none">
+            <div class="card-header">
+                <span><strong>Other Payables</strong></span>
+            </div>
+
+            <div class="card-body table-responsive p-0">
+                <table id="particulars_table" class="table table-sm table-bordered table-hover">
+                    <thead>
+                        <th>Item</th>
+                        <th class="text-right">Amnt</th>
+                        <th class="text-right">VAT</th>
+                        <th class="text-right">Total</th>
+                    </thead>
+                    <tbody>
+                        @if ($particularPayments != null)
+                            @foreach ($particularPayments as $item)
+                                <tr id="{{ $item->id }}">
+                                    <td>{{ $item->Particular }}</td>  
+                                    <td class="text-right">{{ number_format($item->Amount, 2) }}</td>
+                                    <td class="text-right">{{ number_format($item->Vat, 2) }}</td>  
+                                    <td class="text-right">{{ number_format($item->Total, 2) }}</td> 
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>

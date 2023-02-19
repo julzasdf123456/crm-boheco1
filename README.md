@@ -82,4 +82,5 @@ You can also check out our other paid products on [CodeCanyon](https://codecanyo
     1. BOHECOIShare (money)
 - `CRM_ServiceConnectionTotalPayments`
     1. BOHECOShare (money)
+    2. Particulars (money)
 

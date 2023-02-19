@@ -134,6 +134,69 @@ $id = IDGenerator::generateID();
             </div>
         </div>
 
+        {{-- OTHER PAYMENTS --}}
+        <div class="card shadow-none">
+            <div class="card-header">
+                <span><strong>Other Payables</strong></span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label>Item</label>
+                            <select id="particulars" class="form-control form-control-sm">
+                                <option value="">-- Select --</option>
+                               @foreach ($particulars as $particular)
+                                   <option default-amount="{{ $particular->DefaultAmount }}" vat="{{ $particular->VatPercentage }}" value="{{ $particular->id }}">{{ $particular->Particular }}</option>
+                               @endforeach
+                            </select>
+                        </div>                                    
+                    </div>
+
+                    <input type="hidden" name="_token" id="csrfParticulars" value="{{Session::token()}}">
+
+                    <div class="col-lg-4">
+                        <div class="form-group-sm">
+                            <label>Amount</label>
+                            <input id="particular_amt" class="form-control form-control-sm" type="number" step="any" placeholder="Amount">
+                        </div>                                    
+                    </div>
+
+                    <div class="col-lg-4">
+                        <label style="opacity: 0; display: block;">Action</label>
+                        <button id="add_particular" class="btn btn-sm btn-primary">Add</button>                                   
+                    </div>
+
+                    <div class="col-md-12 col-lg-12">
+                        <table id="particulars_table" class="table table-sm table-hover">
+                            <thead>
+                                <th>Item</th>
+                                <th class="text-right">Amnt</th>
+                                <th class="text-right">VAT</th>
+                                <th class="text-right">Total</th>
+                                <th width=10></th>
+                            </thead>
+                            <tbody>
+                                @if ($particularPayments != null)
+                                    @foreach ($particularPayments as $item)
+                                        <tr id="{{ $item->id }}">
+                                            <td>{{ $item->Particular }}</td>  
+                                            <td class="text-right">{{ number_format($item->Amount, 2) }}</td>
+                                            <td class="text-right">{{ number_format($item->Vat, 2) }}</td>  
+                                            <td class="text-right">{{ number_format($item->Total, 2) }}</td>
+                                            <td>
+                                                <button class='btn btn-xs btn-danger' onClick='deleteParticulars("{{ $item->id }}")'><i class='fas fa-trash'></i></button>
+                                            </td>  
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {{-- BILL DEPOSIT --}}
         <div class="card shadow-none">
             <div class="card-header">
@@ -249,6 +312,10 @@ $id = IDGenerator::generateID();
                             <th class="text-right text-primary">₱ <span id="bill-deposit-display" data-toggle="tooltip" data-placement="left">{{ $totalPayments != null ? number_format($totalPayments->BillDeposit, 2) : '0.00' }}</span></th>
                         </tr>
                         <tr>
+                            <td>Other Payables</td>
+                            <th class="text-right text-primary">₱ <span id="particulars-display" data-toggle="tooltip" data-placement="left">{{ $totalPayments != null ? number_format($totalPayments->Particulars, 2) : '0.00' }}</span></th>
+                        </tr>
+                        <tr>
                             <td>Total VAT</td>
                             <th class="text-right text-primary">₱ <span id="total-vat-display" data-toggle="tooltip" data-placement="left">{{ $totalPayments != null ? number_format($totalPayments->TotalVat, 2) : '0.00' }}</span></th>
                         </tr>
@@ -302,7 +369,7 @@ $id = IDGenerator::generateID();
         var billDeposit = 0
         var overAllTotal = 0
 
-        var isAccredited = true
+        var isAccredited = false
         var is2Percent = false
         var is5Percent = false
 
@@ -404,12 +471,138 @@ $id = IDGenerator::generateID();
                 getOverAllTotal()
             }) 
 
-            $('#save-payment').on('click', function() {                
+            $('#save-payment').on('click', function() {   
+                $(this).attr('disabled', 'true')           
                 validateElectricianInfo()
             })
 
+            /** 
+             * PARTICULARS
+             */
+             $('#particulars').on('change', function() {
+                $('#particular_amt').val($('#particulars option:selected').attr('default-amount'));
+                $('#particular_amt').focus()
+            });
+
+            $('#add_particular').on('click', function() {
+                var particularId = $('#particulars').val();
+                var amnt = $('#particular_amt').val();
+                var particular = $('#particulars option:selected').text();
+                var vat = $('#particulars option:selected').attr('vat');
+
+                if (jQuery.isEmptyObject(amnt)) {
+                    Swal.fire({
+                        text : 'Please provide an amount!',
+                        icon : 'warning'
+                    })
+                } else {
+                    var vatValue = parseFloat(amnt * vat)
+                    var d = new Date()
+                    var particularPaymentIdValue = d.getTime()
+                    var total = parseFloat(amnt)  + vatValue
+                    var scId = "{{ $serviceConnection->id }}"
+
+                    $.ajax({
+                        url : '/serviceConnectionPayTransactions',
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            id : particularPaymentIdValue,
+                            ServiceConnectionId: scId,
+                            Particular: particularId,
+                            Amount: parseFloat(amnt).toFixed(2),
+                            Vat: vatValue.toFixed(2),
+                            Total: total.toFixed(2),
+                        },
+                        success : function(data) {
+                            $('#particulars_table tbody').append(addRowToParticulars(particularPaymentIdValue, particular, parseFloat(amnt).toFixed(2), vatValue.toFixed(2), total.toFixed(2)));
+                            getOverAllTotal()
+                        },
+                        error : function(error) {
+                            console.log(error);
+                            Swal.fire({
+                                text : 'Error adding item!',
+                                icon : 'error'
+                            })
+                        }
+                    });    
+                }
+            });
+
             getOverAllTotal()
         })
+
+        function addRowToParticulars(id, particular, amnt, vat, total) {
+            return "<tr id='" + id + "'>" +
+                        "<td>" + particular + "</td>" +
+                        "<td class='text-right'>" + amnt + "</td>" +
+                        "<td class='text-right'>" + vat + "</td>" +
+                        "<td class='text-right'>" + total + "</td>" +
+                        "<td><button class='btn btn-xs btn-danger' onClick=deleteParticulars('" + id + "')><i class='fas fa-trash'></i></button></td>" +
+                    "</tr>";
+        }
+
+        function deleteParticulars(id) {
+            if (confirm('Are you sure you want to delete this particular?')) {
+                $.ajax({
+                    url : '/serviceConnectionPayTransactions/' + id,
+                    type: "DELETE",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        id: id,
+                    },
+                    success : function(data) {
+                        $('#' + id).remove();
+                        getOverAllTotal()
+                    },
+                    error : function(error) {
+                        console.log(error);
+                        Swal.fire({
+                            text : 'Error deleting item!',
+                            icon : 'error'
+                        })
+                    }
+                });  
+            } else {
+
+            }            
+        }
+
+        function calculateTableColumn(table, index, display) {
+            var total = 0;
+            $('#' + table + ' tr').each(function() {
+                var value = parseFloat($('td', this).eq(index).text().replace(',', ''));
+                console.log(value);
+                if (!isNaN(value)) {
+                    total += parseFloat(value);
+                }
+            });
+            $('#' + display).text(total.toLocaleString('en-US', {maximumFractionDigits:2}));
+        }
+
+        function calculateTableColumnRaw(table, index) {
+            var total = 0;
+            $('#' + table + ' tr').each(function() {
+                var value = parseFloat($('td', this).eq(index).text().replace(',', ''));
+                console.log(value);
+                if (!isNaN(value)) {
+                    total += parseFloat(value);
+                }
+            });
+            return total
+        }
+
+        function calculateVatTableColumnRaw(table, index) {
+            var total = 0;
+            $('#' + table + ' tr').each(function() {
+                var value = parseFloat($('td', this).eq(index).text().replace(',', ''));
+                console.log(value);
+                if (!isNaN(value)) {
+                    total += parseFloat(value);
+                }
+            });
+            return total
+        }
 
         function computeLaborCharge(id) {
             var qty = parseFloat($('#' + id + 'Quantity').val())
@@ -440,6 +633,11 @@ $id = IDGenerator::generateID();
             }  
         }
 
+        // VALIDATE PARTICULARS PAYMENTS
+        function validateParticulars() {
+            $('#particulars-display').text(Number((calculateTableColumnRaw('particulars_table', 1)).toFixed(2)).toLocaleString(undefined, {minimumFractionDigits: 2}))
+        }
+
         // GET TOTAL LABOR CHARGE LESS VAT
         function getTotalLaborCharge() {
             var totalAmnt = 0
@@ -465,8 +663,13 @@ $id = IDGenerator::generateID();
                 if (!jQuery.isEmptyObject(bohecoshare)) {
                     totalAmnt += parseFloat(bohecoshare)
                 }                
-            });
-            return totalAmnt
+            })
+            if (isAccredited) {
+                return totalAmnt
+            } else {
+                return 0
+            }
+            
         }
 
         // GET TOTAL LABOR VAT
@@ -510,13 +713,13 @@ $id = IDGenerator::generateID();
         // GET OVER ALL TOTAL
         function getOverAllTotal() {
             if (isAccredited) {
-                overAllSubTotal = getTotalLaborCharge() + getBOHECOIShare() + serviceConnectionFees + getBillDepositNormal()
-                witholdableVat = getTotalLaborVat() + (serviceConnectionFees * .12)
-                overAllVat = getTotalLaborVat() + (getBillDepositNormal() * .12) + (serviceConnectionFees * .12)
+                overAllSubTotal = getTotalLaborCharge() + getBOHECOIShare() + serviceConnectionFees + getBillDepositNormal() + calculateTableColumnRaw('particulars_table', 1)
+                witholdableVat = getTotalLaborVat() + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
+                overAllVat = getTotalLaborVat() + (getBillDepositNormal() * .12) + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
             } else {
-                overAllSubTotal = serviceConnectionFees + getBillDepositNormal()
-                witholdableVat = (serviceConnectionFees * .12)
-                overAllVat = (getBillDepositNormal() * .12) + (serviceConnectionFees * .12)
+                overAllSubTotal = serviceConnectionFees + getBillDepositNormal() + calculateTableColumnRaw('particulars_table', 1)
+                witholdableVat = (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
+                overAllVat = (getBillDepositNormal() * .12) + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
             }
 
             // 2%
@@ -536,6 +739,7 @@ $id = IDGenerator::generateID();
             overAllTotal = (overAllSubTotal + overAllVat) - (twoPercentVat + fivePercentVat)
 
             validateLaborCharge()
+            validateParticulars()
 
             // TOOLTIPS
             $('#service-connection-fee-display').attr('title', '12% VAT: ' + Number((serviceConnectionFees * .12).toFixed(2)).toLocaleString(undefined, {minimumFractionDigits: 2}))
@@ -682,7 +886,8 @@ $id = IDGenerator::generateID();
                     BillDeposit : getBillDepositNormal(),
                     WitholdableVat : witholdableVat,
                     BOHECOShare : getBOHECOIShare(),
-                    LaborCharge : isAccredited ? getTotalLaborCharge() : 0
+                    LaborCharge : isAccredited ? getTotalLaborCharge() : 0,
+                    Particulars : calculateTableColumnRaw('particulars_table', 1),
                 },
                 success : function(res) {
                     Swal.fire({
