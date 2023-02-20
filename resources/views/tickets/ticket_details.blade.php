@@ -70,6 +70,10 @@
                                         <td>{{ $tickets->StationName }}</td>
                                     </tr>
                                     <tr>
+                                        <th>Lineman/Crew/Group Executed :</th>
+                                        <td>{{ $tickets->LinemanCrewExecuted }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>OR Number :</th>
                                         <td>{{ $tickets->ORNumber }}</td>
                                     </tr>

@@ -83,4 +83,7 @@ You can also check out our other paid products on [CodeCanyon](https://codecanyo
 - `CRM_ServiceConnectionTotalPayments`
     1. BOHECOShare (money)
     2. Particulars (money)
-
+- `CRM_Tickets`
+    1. LinemanCrewExecuted (varchar, 225)
+- `CRM_ServiceConnections`
+    1. LinemanCrewExecuted (varchar, 225)

@@ -80,10 +80,14 @@
             </div>
 
             <div class="card-body">
-                <table class="table">
+                <table class="table table-sm table-hover">
                     <tr>
                         <th>Station</th>
                         <td>{{ $serviceConnections->StationName }}</td>
+                    </tr>
+                    <tr>
+                        <th>Lineman/Crew Executed</th>
+                        <td>{{ $serviceConnections->LinemanCrewExecuted }}</td>
                     </tr>
                     <tr>
                         <th>Leader</th>

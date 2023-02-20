@@ -177,10 +177,14 @@ class MemberConsumers extends Model
     }
 
     public static function serializeMemberNameFormal($memberconsumer) {
-        if ($memberconsumer->MembershipType == MemberConsumers::getJuridicalId()) { // GET ID OF THE DESIRED JURIDICAL TYPE
-            return $memberconsumer->OrganizationName;
+        if ($memberconsumer != null) {
+            if ($memberconsumer->MembershipType == MemberConsumers::getJuridicalId()) { // GET ID OF THE DESIRED JURIDICAL TYPE
+                return $memberconsumer->OrganizationName;
+            } else {
+                return $memberconsumer->LastName . ', ' . $memberconsumer->FirstName . ' ' . $memberconsumer->Suffix;
+            }
         } else {
-            return $memberconsumer->LastName . ', ' . $memberconsumer->FirstName . ' ' . $memberconsumer->Suffix;
+            return null;
         }
     }
 

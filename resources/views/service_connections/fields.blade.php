@@ -209,65 +209,6 @@ use App\Models\IDGenerator;
         </div>  
     </div>
 
-
-    <!-- LongSpan Field -->
-    {{-- <div class="form-group col-sm-12">
-        <div class="row">
-            <div class="col-lg-3 col-md-5">
-                {!! Form::label('LongSpan', 'Spanning') !!}
-            </div>
-
-            <div class="col-lg-9 col-md-7"> 
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-code-branch"></i></span>
-                    </div>
-
-                    <div class="radio-group-horizontal-sm">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="LongSpan" value="Yes" >
-                            <label class="form-check-label">Above 70 meters</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="LongSpan" value="No" checked>
-                            <label class="form-check-label">Below 70 meters</label>
-                        </div>
-                    </div>                    
-                </div>
-            </div>
-        </div>  
-    </div> --}}
-
-    <!-- TypeOfOccupancy Field -->
-    {{-- <div class="form-group col-sm-12">
-        <div class="row">
-            <div class="col-lg-3 col-md-5">
-                {!! Form::label('TypeOfOccupancy', 'Type of Occupancy: ') !!}
-            </div>
-
-            <div class="col-lg-9 col-md-7">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-code-branch"></i></span>
-                    </div>
-                    <div class="radio-group-horizontal-sm">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="TypeOfOccupancy" value="Owns House/Lot" checked>
-                            <label class="form-check-label">Owns House/Lot</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="TypeOfOccupancy" value="Owns House">
-                            <label class="form-check-label">Owns House</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="TypeOfOccupancy" value="Leasing/Renting">
-                            <label class="form-check-label">Leasing/Renting</label>
-                        </div>
-                    </div>   
-                </div>
-            </div>
-        </div>  
-    </div> --}}
 @else 
     <!-- Accounttype Field -->
     <div class="form-group col-sm-12">
@@ -343,7 +284,7 @@ use App\Models\IDGenerator;
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
                 </div>
-                {!! Form::text('MemberConsumerId', $cond=='new' ? $memberConsumer->ConsumerId : $serviceConnections->MemberConsumerId, ['class' => 'form-control form-control-sm','maxlength' => 255,'maxlength' => 255, 'readonly' => 'true']) !!}
+                {!! Form::text('MemberConsumerId', $cond=='new' ? ($memberConsumer != null ? $memberConsumer->ConsumerId : '') : $serviceConnections->MemberConsumerId, ['class' => 'form-control form-control-sm','maxlength' => 255,'maxlength' => 255, 'readonly' => 'true']) !!}
             </div>
         </div>
     </div> 
@@ -397,7 +338,7 @@ use App\Models\IDGenerator;
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                 </div>
-                {!! Form::select('Town', $towns, $cond=='new' ? $memberConsumer->TownId : $serviceConnections->TownId, ['class' => 'form-control form-control-sm']) !!}
+                {!! Form::select('Town', $towns, $cond=='new' ? ($memberConsumer->TownId != null ? $memberConsumer->TownId : '') : $serviceConnections->TownId, ['class' => 'form-control form-control-sm', 'required' => 'true']) !!}
             </div>
         </div>
     </div>    
@@ -415,7 +356,7 @@ use App\Models\IDGenerator;
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                 </div>
-                {!! Form::select('Barangay', [], null, ['class' => 'form-control form-control-sm',]) !!}
+                {!! Form::select('Barangay', [], null, ['class' => 'form-control form-control-sm', 'required' => 'true']) !!}
             </div>
         </div>
     </div>    
@@ -545,7 +486,7 @@ use App\Models\IDGenerator;
 @endpush
 
 <!-- Station Field -->
-{{-- <div class="form-group col-sm-12">
+<div class="form-group col-sm-12">
     <div class="row">
         <div class="col-lg-3 col-md-5">
             {!! Form::label('StationCrewAssigned', 'Station Crew') !!}
@@ -560,7 +501,7 @@ use App\Models\IDGenerator;
             </div>
         </div>
     </div>  
-</div> --}}
+</div>
 
 <!-- BuildingType Field -->
 <div class="form-group col-sm-12">

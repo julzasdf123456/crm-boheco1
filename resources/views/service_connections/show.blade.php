@@ -26,6 +26,32 @@ use Illuminate\Support\Facades\Auth;
             <div class="col-md-4 col-lg-4">
                 {{-- APPLICATON DETAILS --}}
                 <div class="card {{ is_numeric($serviceConnections->LoadCategory) && floatval($serviceConnections->LoadCategory) >= 15 ? 'card-danger' : 'card-primary' }} card-outline shadow-none">
+                    <div class="card-header border-0">
+                        <div class="card-tools">                            
+                            @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Service Connection Assessor'])) 
+                                <a href="{{ route('serviceConnections.edit', [$serviceConnections->id]) }}" class="btn btn-tool text-warning" title="Edit service connection details">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                                @if ($totalTransactions != null)
+                                    @if ($totalTransactions->Notes == null && $serviceConnections->ORNumber == null) 
+                                        <a href="{{ route('serviceConnectionPayTransactions.create-step-four', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Update service connection payment">
+                                        <i class="fas fa-dollar-sign"></i></a>
+                                    @endif
+
+                                    <a href="{{ route('serviceConnections.print-invoice', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Print Payment Slip">
+                                        <i class="fas fa-comments-dollar"></i>
+                                    </a>                                    
+                                @endif
+                                <a href="{{ route('serviceConnectionInspections.edit', [$serviceConnectionInspections->id]) }}" class="btn btn-tool text-primary" title="Update Verification/Inspection Details">
+                                    <i class="fas fa-clipboard-check"></i>
+                                </a>
+                                <a class="btn btn-tool text-info" href="{{ route('serviceConnections.assess-checklists', [$serviceConnections->id]) }}" title="Update requirements"><i class="fas fa-check-circle"></i></a>
+                                <a href="{{ route('serviceConnections.move-to-trash', [$serviceConnections->id]) }}" class="btn btn-tool text-danger" title="Move to trash">
+                                    <i class="fas fa-trash"></i>
+                                </a>  
+                            @endif
+                        </div>
+                    </div>
                     <div class="card-body box-profile">
                         <div class="text-center">
                             <img id="prof-img" class="profile-user-img img-fluid img-circle" src="" alt="User profile picture">
@@ -80,40 +106,30 @@ use Illuminate\Support\Facades\Auth;
                         <p class="text-muted">{{ $serviceConnections->Office}}</p>
 
                         @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Service Connection Assessor'])) 
-                            <a href="{{ route('serviceConnections.edit', [$serviceConnections->id]) }}" class="text-warning" title="Edit service connection details">
+                            {{-- <a href="{{ route('serviceConnections.edit', [$serviceConnections->id]) }}" class="text-warning" title="Edit service connection details">
                                 <i class="fas fa-pen"></i>
-                            </a>
+                            </a> --}}
 
-                            @if ($serviceConnections->ConnectionApplicationType == 'Change Name' && $serviceConnections->ORNumber != null)
-                                @if ($serviceConnections->Status == 'Approved For Change Name')
-                                    
-                                @else
-                                    <a href="{{ route('serviceConnections.approve-change-name', [$serviceConnections->id]) }}" class="text-success" title="Approve Change Name and Forward to Billing Analyst" style="margin-left: 20px;">
-                                        <i class="fas fa-check-circle"></i>
-                                    </a>
-                                @endif                                
-                            @endif
-
-                            <a href="{{ route('serviceConnections.move-to-trash', [$serviceConnections->id]) }}" class="text-danger float-right" title="Move to trash">
+                            {{-- <a href="{{ route('serviceConnections.move-to-trash', [$serviceConnections->id]) }}" class="text-danger float-right" title="Move to trash">
                                 <i class="fas fa-trash"></i>
-                            </a>                            
+                            </a>                             --}}
                         @endif
                         
                     </div>
                     <div class="card-footer">
                         @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Service Connection Assessor']))
                             @if ($serviceConnections->MemberConsumerId != null)
-                                <a class="btn btn-success btn-xs" href="{{ route('memberConsumers.print-membership-application', [$serviceConnections->MemberConsumerId]) }}" title="Print Application Form">
+                                {{-- <a class="btn btn-success btn-xs" href="{{ route('memberConsumers.print-membership-application', [$serviceConnections->MemberConsumerId]) }}" title="Print Application Form">
                                     <i class="fas fa-print"> </i> Membership Form
-                                </a>
-                                <a href="{{ route('memberConsumers.print-certificate', [$serviceConnections->MemberConsumerId]) }}" class="btn btn-xs btn-warning" title="Print Certificate"><i class="fas fa-print"></i>
+                                </a> --}}
+                                {{-- <a href="{{ route('memberConsumers.print-certificate', [$serviceConnections->MemberConsumerId]) }}" class="btn btn-xs btn-warning" title="Print Certificate"><i class="fas fa-print"></i>
                                     Certificate
-                                </a>
+                                </a> --}}
                             @endif 
                             
-                            <a class="btn btn-primary btn-xs" href="{{ route('serviceConnections.print-service-connection-application', [$serviceConnections->id]) }}" title="Print Service Connection Application">
+                            {{-- <a class="btn btn-primary btn-xs" href="{{ route('serviceConnections.print-service-connection-application', [$serviceConnections->id]) }}" title="Print Service Connection Application">
                                 <i class="fas fa-print"> </i> Application Form
-                            </a>
+                            </a> --}}
 
                             {{-- <a class="btn btn-danger btn-xs" href="{{ route('serviceConnections.print-service-connection-contract', [$serviceConnections->id]) }}" class="text-danger" title="Print Service Connection Contract">
                                 <i class="fas fa-print"> </i> Contract

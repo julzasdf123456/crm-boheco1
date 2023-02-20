@@ -89,7 +89,8 @@ class Tickets extends Model
         'ServiceConnectionId',
         'InspectionId',
         'DateTimeComplainLogged',
-        'ChangeMeterConfirmed'
+        'ChangeMeterConfirmed',
+        'LinemanCrewExecuted',
     ];
 
     /**
@@ -135,7 +136,8 @@ class Tickets extends Model
         'ServiceConnectionId' => 'string',
         'InspectionId' => 'string',
         'DateTimeComplainLogged' => 'string',
-        'ChangeMeterConfirmed' => 'string'
+        'ChangeMeterConfirmed' => 'string',
+        'LinemanCrewExecuted' => 'string'
     ];
 
     /**
@@ -183,7 +185,8 @@ class Tickets extends Model
         'ServiceConnectionId' => 'nullable|string',
         'InspectionId' => 'nullable|string',
         'DateTimeComplainLogged' => 'nullable|string',
-        'ChangeMeterConfirmed' => 'nullable|string'
+        'ChangeMeterConfirmed' => 'nullable|string',
+        'LinemanCrewExecuted' => 'nullable|string'
     ];
 
     public static function getAddress($ticket) {

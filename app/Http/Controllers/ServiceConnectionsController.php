@@ -277,7 +277,8 @@ class ServiceConnectionsController extends AppBaseController
                         'CRM_ServiceConnections.ElectricianName',
                         'CRM_ServiceConnections.ElectricianAddress',
                         'CRM_ServiceConnections.ElectricianContactNo',
-                        'CRM_ServiceConnections.ElectricianAcredited',)
+                        'CRM_ServiceConnections.ElectricianAcredited',
+                        'CRM_ServiceConnections.LinemanCrewExecuted',)
         ->where('CRM_ServiceConnections.id', $id)
         ->where(function ($query) {
             $query->where('CRM_ServiceConnections.Trash', 'No')
@@ -751,9 +752,9 @@ class ServiceConnectionsController extends AppBaseController
         $towns = Towns::orderBy('Town')->pluck('Town', 'id');
 
         $memberConsumer = DB::table('CRM_MemberConsumers')
-                            ->join('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
-                            ->join('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
-                            ->join('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                            ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                            ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                            ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
                             ->select('CRM_MemberConsumers.Id as ConsumerId',
                                     'CRM_MemberConsumers.MembershipType as MembershipType', 
                                     'CRM_MemberConsumers.FirstName as FirstName', 

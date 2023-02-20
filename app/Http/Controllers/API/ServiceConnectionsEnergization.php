@@ -20,13 +20,21 @@ class ServiceConnectionsEnergization extends Controller {
     public function getForEnergizationData() {
         $serviceConnections = DB::table('CRM_ServiceConnections')
             ->leftJoin('CRM_ServiceConnectionInspections', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionInspections.ServiceConnectionId')
+            ->leftJoin('CRM_ServiceConnectionMeterAndTransformer', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId')
+            ->leftJoin('users', 'users.id', '=', 'CRM_ServiceConnectionInspections.Inspector')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
             ->whereRaw("CRM_ServiceConnections.Status IN ('Approved', 'Not Energized')")
             ->where(function ($query) {
                 $query->where('CRM_ServiceConnections.Trash', 'No')
                     ->orWhereNull('CRM_ServiceConnections.Trash');
             })
             ->whereRaw("CRM_ServiceConnections.id IN (SELECT DISTINCT ServiceConnectionId FROM CRM_ServiceConnectionMeterAndTransformer WHERE ServiceConnectionId IS NOT NULL)")
-            ->select('CRM_ServiceConnections.*')
+            ->select('CRM_ServiceConnections.*', 
+                'CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber', 
+                'CRM_ServiceConnectionMeterAndTransformer.MeterBrand',
+                'CRM_ServiceConnectionMeterAndTransformer.MeterSealNumber',
+                'users.name AS Verifier',
+                'CRM_ServiceConnectionAccountTypes.AccountType AS AccountTypeWord')
             ->orderBy('CRM_ServiceConnections.ServiceAccountName')
             ->get();
 
@@ -112,6 +120,7 @@ class ServiceConnectionsEnergization extends Controller {
         $serviceConnections->Status = $request['Status'];
         $serviceConnections->DateTimeLinemenArrived = $request['DateTimeLinemenArrived'];
         $serviceConnections->DateTimeOfEnergization = $request['DateTimeOfEnergization'];
+        $serviceConnections->LinemanCrewExecuted = $request['LinemanCrewExecuted'];
         $serviceConnections->Notes = $request['Notes'];
 
         if ($serviceConnections->save()) {

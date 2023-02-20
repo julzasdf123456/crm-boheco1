@@ -220,6 +220,7 @@ class TicketsController extends AppBaseController
                     'CRM_Tickets.DateTimeLinemanExecuted',
                     'CRM_Tickets.UserId',
                     'CRM_Tickets.Office',  
+                    'CRM_Tickets.LinemanCrewExecuted',  
                     'CRM_ServiceConnectionCrew.StationName',
                     'CRM_Tickets.created_at',
                     'CRM_Tickets.updated_at',

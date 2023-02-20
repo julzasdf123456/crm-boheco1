@@ -55,6 +55,7 @@ class CreateTableCRMServiceConnections extends Migration
             $table->string('ElectricianAddress')->nullable();
             $table->string('ElectricianContactNo')->nullable();
             $table->string('ElectricianAcredited')->nullable();
+            $table->string('LinemanCrewExecuted')->nullable();
             $table->timestamps();
         });
     }

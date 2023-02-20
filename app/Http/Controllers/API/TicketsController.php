@@ -79,6 +79,7 @@ class TicketsController extends Controller {
             $tickets->NewMeterNo = $request['NewMeterNo'];
             $tickets->NewMeterReading = $request['NewMeterReading'];
             $tickets->PercentError = $request['PercentError'];
+            $tickets->LinemanCrewExecuted = $request['LinemanCrewExecuted'];
             $tickets->save();
 
             // CREATE LOG

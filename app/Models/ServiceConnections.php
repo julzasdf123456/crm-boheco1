@@ -90,7 +90,8 @@ class ServiceConnections extends Model
         'ElectricianAddress',
         'ElectricianContactNo',
         'ElectricianAcredited',
-        'DateTimeLinemanDownloaded'
+        'DateTimeLinemanDownloaded',
+        'LinemanCrewExecuted'
     ];
 
     /**
@@ -140,7 +141,8 @@ class ServiceConnections extends Model
         'ElectricianAddress' => 'string',
         'ElectricianContactNo' => 'string',
         'ElectricianAcredited' => 'string',
-        'DateTimeLinemanDownloaded' => 'string'
+        'DateTimeLinemanDownloaded' => 'string',
+        'LinemanCrewExecuted' => 'string'
     ];
 
     /**
@@ -192,7 +194,8 @@ class ServiceConnections extends Model
         'ElectricianAddress' => 'nullable|string',
         'ElectricianContactNo' => 'nullable|string',
         'ElectricianAcredited' => 'nullable|string',
-        'DateTimeLinemanDownloaded' => 'nullable|string'
+        'DateTimeLinemanDownloaded' => 'nullable|string',
+        'LinemanCrewExecuted' => 'nullable|string'
     ];
 
     public static function getAccountCount($consumerId) {
