@@ -314,7 +314,7 @@ class ServiceConnectionPayTransactionController extends AppBaseController
         $timeFrame->Notes = 'Payment updated with and amount of ' . number_format($request['Total'], 2);
         $timeFrame->save();
 
-        $serviceConnection = ServiceConnection::find($id);
+        $serviceConnection = ServiceConnections::find($id);
 
         if ($serviceConnection != null) {
             // SEND SMS
