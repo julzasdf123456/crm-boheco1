@@ -185,7 +185,7 @@ class ServiceConnectionsController extends AppBaseController
                 
                 // SEND SMS
                 if ($sc->ContactNumber != null) {
-                    $msg = "Hello " . $sc->ServiceAccountName . ", \nBOHECO I has received your application and is now being processed." .
+                    $msg = "Hello " . $sc->ServiceAccountName . ", \nBOHECO I has received your application and is now being processed. " .
                         "You will receive several SMS notifications in the future regarding the progress of your application. \nHave a gret day!";
                     SMSNotifications::createFreshSms($sc->ContactNumber, $msg, 'SERVICE CONNECTIONS', $sc->id);
                 }                
@@ -213,7 +213,7 @@ class ServiceConnectionsController extends AppBaseController
                 // SEND SMS
                 if ($input['ContactNumber'] != null) {
                     if (strlen($input['ContactNumber'] > 9)) {
-                        $msg = "Hello " . $serviceConnections->ServiceAccountName . ", \nYour application for service connection has been received and will be processed shortly." .
+                        $msg = "Hello " . $serviceConnections->ServiceAccountName . ", \nYour application for service connection has been received and will be processed shortly. " .
                             "You will receive several SMS notifications in the future regarding the progress of your application. \nHave a gret day!\n\nThis is a system-generated SMS.";
                         SMSNotifications::createFreshSms($input['ContactNumber'], $msg, 'SERVICE CONNECTIONS', $input['id']);
                     }                    
@@ -957,15 +957,21 @@ class ServiceConnectionsController extends AppBaseController
     public function updateChecklists($id) {
         $serviceConnections = $this->serviceConnectionsRepository->find($id);
 
-        $checklist = ServiceConnectionChecklistsRep::all();
-
-        $checklistCompleted = ServiceConnectionChecklists::where('ServiceConnectionId', $id)->pluck('ChecklistId')->all();
+        if ($serviceConnections->AccountType==ServiceConnections::getResidentialId()) {
+            $checklist = ServiceConnectionChecklistsRep::where('Notes', 'RESIDENTIAL')->get();
+        } else {
+            if (floatval($serviceConnections->LoadCategory) > 225) {
+                $checklist = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL ABOVE 5kVA')->get();
+            } else {
+                $checklist = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL BELOW 5kVA')->get();
+            }
+        }
 
         /**
          * ASSESS PERMISSIONS
          */
         if(Auth::user()->hasAnyPermission(['update membership', 'sc update', 'Super Admin'])) {
-            return view('/service_connections/update_checklists', ['serviceConnections' => $serviceConnections, 'checklist' => $checklist, 'checklistCompleted' => $checklistCompleted]);
+            return view('/service_connections/update_checklists', ['serviceConnections' => $serviceConnections, 'checklist' => $checklist]);
         } else {
             return abort(403, "You're not authorized to create/update a service connection application.");
         }         

@@ -11,6 +11,7 @@ use App\Models\ServiceConnectionChecklists;
 use App\Models\ServiceConnectionChecklistsRep;
 use App\Models\IDGenerator;
 use App\Models\ServiceConnections;
+use App\Models\ServiceConnectionInspections;
 use App\Models\ServiceConnectionTimeframes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -230,7 +231,14 @@ class ServiceConnectionChecklistsController extends AppBaseController
             $serviceConnection->Status = 'For Inspection';
             $serviceConnection->save();
 
-            return redirect(route('serviceConnectionInspections.create-step-two', [$id]));
+            // CHECK IF ALREADY HAS VERIFICATION DATA
+            $inspection = ServiceConnectionInspections::where('ServiceConnectionId', $id)->first();
+
+            if ($inspection != null) {
+                return redirect(route('serviceConnections.show', [$id]));
+            } else {
+                return redirect(route('serviceConnectionInspections.create-step-two', [$id]));
+            }            
         } else {
             // IF REQUIREMENTS AIN'T COMPLETE
             
