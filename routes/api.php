@@ -12,6 +12,7 @@ use App\Http\Controllers\API\TicketsController;
 use App\Http\Controllers\API\MeterReaderTracksAPI;
 use App\Http\Controllers\API\ReadAndBillAPI;
 use App\Http\Controllers\API\DisconnectionAPI;
+use App\Http\Controllers\API\SMSNotificationsAPI;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,4 +87,9 @@ Route::get('get-disconnection-list', [DisconnectionAPI::class, 'getDisconnection
 Route::get('get-disconnection-list-by-meter-reader', [DisconnectionAPI::class, 'getDisconnectionListByMeterReader']);
 Route::get('get-disconnection-list-by-route', [DisconnectionAPI::class, 'getDisconnectionListByRoute']);
 Route::post('receive-disconnection-uploads', [DisconnectionAPI::class, 'receiveDisconnectionUploads']);
+
+
+// SMS NOTIFICATIONS
+Route::get('get-random-notification', [SMSNotificationsAPI::class, 'getRandomNotification']);
+Route::get('update-sms', [SMSNotificationsAPI::class, 'updateSMSNotification']);
 
