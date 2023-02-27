@@ -113,24 +113,24 @@
                             <td><i>Within</i></td>
                             <td class="text-center">48</td>
                             <td><strong>hours</strong> upon payment of fees</td>
-                            <td class="text-center text-red"><strong>{{ $data != null ? $data['Category2Previous'] : 0 }}</strong> hours</td>
-                            <td class="text-center text-red"><strong>{{ $data != null ? $data['Category2Current'] : 0 }}</strong> hours</td>
+                            <td class="text-center text-red"><strong>{{ $data != null ? number_format($data['Category2Previous'], 2) : 0 }}</strong> hours</td>
+                            <td class="text-center text-red"><strong>{{ $data != null ? number_format($data['Category2Current'], 2) : 0 }}</strong> hours</td>
                         </tr>
                         <tr>
                             <td><strong>3. </strong> Restoration of service after line fault on the secondary side, including service drop/ lateral</td>
                             <td><i>Within</i></td>
                             <td class="text-center">4</td>
                             <td><strong>hours</strong> upon on-site arrival</td>
-                            <td class="text-center text-red"><strong>{{ $data != null ? $data['Category3Previous'] : 0 }}</strong> hours</td>
-                            <td class="text-center text-red"><strong>{{ $data != null ? $data['Category3Current'] : 0 }}</strong> hours</td>
+                            <td class="text-center text-red"><strong>{{ $data != null ? number_format($data['Category3Previous'], 2) : 0 }}</strong> hours</td>
+                            <td class="text-center text-red"><strong>{{ $data != null ? number_format($data['Category3Current'], 2) : 0 }}</strong> hours</td>
                         </tr>
                         <tr>
                             <td><strong>4. </strong> Response time on Consumer  Complaints (Billing, Payment and Meter Complaints)</td>
                             <td><i>Within</i></td>
                             <td class="text-center">24</td>
                             <td><strong>hours</strong> after receipt of complaints</td>
-                            <td class="text-center text-red"><strong>{{ $data != null ? $data['Category4Previous'] : 0 }}</strong> hours</td>
-                            <td class="text-center text-red"><strong>{{ $data != null ? $data['Category4Current'] : 0 }}</strong> hours</td>
+                            <td class="text-center text-red"><strong>{{ $data != null ? number_format($data['Category4Previous'], 2) : 0 }}</strong> hours</td>
+                            <td class="text-center text-red"><strong>{{ $data != null ? number_format($data['Category4Current'], 2) : 0 }}</strong> hours</td>
                         </tr>
                         <tr>
                             <td><strong>5. </strong> Timeframe in informing Customer on scheduled power interruptions</td>
@@ -145,16 +145,16 @@
                             <td><i>Within</i></td>
                             <td class="text-center">0.5</td>
                             <td><strong>hours</strong> after receipt of call</td>
-                            <td class="text-center text-red"><strong>{{ $data != null ? $data['Category6Previous'] : 0 }}</strong> hours</td>
-                            <td class="text-center text-red"><strong>{{ $data != null ? $data['Category6Current'] : 0 }}</strong> hours</td>
+                            <td class="text-center text-red"><strong>{{ $data != null ? number_format($data['Category6Previous'], 2) : 0 }}</strong> hours</td>
+                            <td class="text-center text-red"><strong>{{ $data != null ? number_format($data['Category6Current'], 2) : 0 }}</strong> hours</td>
                         </tr>
                         <tr>
                             <td><strong>7. </strong> Response time to reconnection of service due to disconnection</td>
                             <td><i>Within</i></td>
                             <td class="text-center">24</td>
                             <td><strong>hours</strong> after settlement of amount due/compromise agreement</td>
-                            <td class="text-center text-red"><strong>{{ $data != null ? $data['Category7Previous'] : 0 }}</strong> hours</td>
-                            <td class="text-center text-red"><strong>{{ $data != null ? $data['Category7Current'] : 0 }}</strong> hours</td>
+                            <td class="text-center text-red"><strong>{{ $data != null ? number_format($data['Category7Previous'], 2) : 0 }}</strong> hours</td>
+                            <td class="text-center text-red"><strong>{{ $data != null ? number_format($data['Category7Current'], 2) : 0 }}</strong> hours</td>
                         </tr>
                     </tbody>
                 </table>

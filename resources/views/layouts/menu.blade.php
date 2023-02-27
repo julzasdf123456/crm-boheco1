@@ -1231,21 +1231,3 @@ use Illuminate\Support\Facades\Auth;
     </li>
 @endcan
 
-
-
-<li class="nav-item">
-    <a href="{{ route('billsExtensions.index') }}"
-       class="nav-link {{ Request::is('billsExtensions*') ? 'active' : '' }}">
-        <p>Bills Extensions</p>
-    </a>
-</li>
-
-
-<li class="nav-item">
-    <a href="{{ route('paidBills.index') }}"
-       class="nav-link {{ Request::is('paidBills*') ? 'active' : '' }}">
-        <p>Paid Bills</p>
-    </a>
-</li>
-
-

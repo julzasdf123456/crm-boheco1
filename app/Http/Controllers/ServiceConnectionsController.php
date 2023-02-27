@@ -35,6 +35,7 @@ use App\Models\TransactionDetails;
 use App\Models\TransactionIndex;
 use App\Models\ServiceAccounts;
 use App\Models\Notifiers;
+use App\Models\SMSNotifications;
 use App\Models\BillDeposits;
 use App\Exports\ServiceConnectionApplicationsReportExport;
 use App\Exports\ServiceConnectionEnergizationReportExport;
@@ -180,6 +181,14 @@ class ServiceConnectionsController extends AppBaseController
                 $timeFrame->Status = $sc->Status;
                 $timeFrame->Notes = 'Data Updated';
                 $timeFrame->save();
+
+                
+                // SEND SMS
+                if ($sc->ContactNumber != null) {
+                    $msg = "Hello " . $sc->ServiceAccountName . ", \nBOHECO I has received your application and is now being processed." .
+                        "You will receive several SMS notifications in the future regarding the progress of your application. \nHave a gret day!";
+                    SMSNotifications::createFreshSms($sc->ContactNumber, $msg, 'SERVICE CONNECTIONS', $sc->id);
+                }                
                 
                 // CREATE FOLDER FIRST
                 // if (!file_exists('/CRM_FILES//' . $input['id'])) {
@@ -201,21 +210,15 @@ class ServiceConnectionsController extends AppBaseController
                 $timeFrame->Status = 'Received';
                 $timeFrame->save();
 
-                // CREATE NOTIFICATION
+                // SEND SMS
                 if ($input['ContactNumber'] != null) {
                     if (strlen($input['ContactNumber'] > 9)) {
-                        $notifier = new Notifiers;
-                        $notifier->id = IDGenerator::generateIDandRandString();
-                        $notifier->Notification = 'Good day, ' . $serviceConnections->ServiceAccountName . ',\n\nYour application for service connection has been received and will be processed shortly. Expect further notifications for more updates and information regarding your application. Thank you!\n\nBOHECO I Auto-SMS Hub';
-                        $notifier->From = Auth::id();
-                        $notifier->Status = 'SENT';
-                        $notifier->Intent = "SERVICE CONNECTION APPLICATION"; 
-                        $notifier->ObjectId = $input['id'];
-                        $notifier->ContactNumber = $input['ContactNumber'];
-                        $notifier->save();
-                    }
-                }
-                
+                        $msg = "Hello " . $serviceConnections->ServiceAccountName . ", \nYour application for service connection has been received and will be processed shortly." .
+                            "You will receive several SMS notifications in the future regarding the progress of your application. \nHave a gret day!\n\nThis is a system-generated SMS.";
+                        SMSNotifications::createFreshSms($input['ContactNumber'], $msg, 'SERVICE CONNECTIONS', $input['id']);
+                    }                    
+                }   
+
                 // CREATE FOLDER FIRST
                 if (!file_exists('/CRM_FILES//' . $input['id'])) {
                     mkdir('/CRM_FILES//' . $input['id'], 0777, true);
@@ -1039,7 +1042,7 @@ class ServiceConnectionsController extends AppBaseController
                                     'CRM_Barangays.Barangay as Barangay')
                     ->where('CRM_ServiceConnections.Trash', 'Yes')
                     ->orderByDesc('CRM_ServiceConnections.created_at')
-                    ->take(10)
+                    ->take(25)
                     ->get();
             }
 
@@ -1058,14 +1061,9 @@ class ServiceConnectionsController extends AppBaseController
                                                 <h4>' .$row->ServiceAccountName . '</h4>
                                                 <p class="text-muted" style="margin-bottom: 0;">Acount Number: ' . $row->ConsumerId . '</p>
                                                 <p class="text-muted" style="margin-bottom: 0;">' . $row->Barangay . ', ' . $row->Town  . '</p>
-                                                <a href="' . route('serviceConnections.restore', [$row->ConsumerId]) . '" class="text-primary" style="margin-top: 5px; padding: 8px;" title="Restore"><lord-icon
-                                                        src="https://cdn.lordicon.com/ybgqhhgb.json"
-                                                        trigger="loop"
-                                                        delay="1500"
-                                                        colors="primary:#e83a30,secondary:#e83a30"
-                                                        stroke="100"
-                                                        style="width:25px;height:25px">
-                                                    </lord-icon></a>
+                                                <a href="' . route('serviceConnections.restore', [$row->ConsumerId]) . '" class="btn btn-xs btn-primary" title="Restore">
+                                                    <i class="fas fa-recycle ico-tab-mini"></i> Restore
+                                                </a>
                                             </div>     
                                         </div> 
 
@@ -3193,5 +3191,24 @@ class ServiceConnectionsController extends AppBaseController
         $export = new DynamicExport($arr, $headers, $styles, 'METER INSTALLATION REPORT FROM ' . date('M d, Y', strtotime($from)) . ' TO ' . date('M d, Y', strtotime($to)));
 
         return Excel::download($export, 'Meter-Installation-Report.xlsx');
+    }
+    
+    public function updateStatus(Request $request) {
+        $id = $request['id'];
+        $status = $request['Status'];
+
+        ServiceConnections::where('id', $id)
+            ->update(['Status' => $status]);
+
+        // CREATE Timeframes
+        $timeFrame = new ServiceConnectionTimeframes;
+        $timeFrame->id = IDGenerator::generateID();
+        $timeFrame->ServiceConnectionId = $id;
+        $timeFrame->UserId = Auth::id();
+        $timeFrame->Status = $status;
+        $timeFrame->Notes = 'Status updated manually';
+        $timeFrame->save();
+
+        return response()->json('ok', 200);
     }
 }

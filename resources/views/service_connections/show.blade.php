@@ -106,13 +106,16 @@ use Illuminate\Support\Facades\Auth;
                         <p class="text-muted">{{ $serviceConnections->Office}}</p>
 
                         @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Service Connection Assessor'])) 
-                            {{-- <a href="{{ route('serviceConnections.edit', [$serviceConnections->id]) }}" class="text-warning" title="Edit service connection details">
-                                <i class="fas fa-pen"></i>
-                            </a> --}}
-
-                            {{-- <a href="{{ route('serviceConnections.move-to-trash', [$serviceConnections->id]) }}" class="text-danger float-right" title="Move to trash">
-                                <i class="fas fa-trash"></i>
-                            </a>                             --}}
+                            <button id="override" class="btn btn-danger btn-sm float-right" style="margin-left: 10px;">Override Status</button>
+                            <select name="Status" id="Status" class="form-control form-control-sm float-right" style="width: 200px;">
+                                <option {{ $serviceConnections->Status=="Approved" ? 'selected' : '' }} value="Approved">Approved</option>
+                                <option {{ $serviceConnections->Status=="Approved For Change Name" ? 'selected' : '' }} value="Approved For Change Name">Approved For Change Name</option>
+                                <option {{ $serviceConnections->Status=="Closed" ? 'selected' : '' }} value="Closed">Closed</option>
+                                <option {{ $serviceConnections->Status=="Downloaded by Crew" ? 'selected' : '' }} value="Downloaded by Crew">Downloaded by Crew</option>
+                                <option {{ $serviceConnections->Status=="Energized" ? 'selected' : '' }} value="Energized">Energized</option>
+                                <option {{ $serviceConnections->Status=="For Inspection" ? 'selected' : '' }} value="For Inspection">For Inspection</option>
+                                <option {{ $serviceConnections->Status=="Forwarded To Planning" ? 'selected' : '' }} value="Forwarded To Planning">Forwarded To Planning</option>
+                            </select>
                         @endif
                         
                     </div>
@@ -220,6 +223,29 @@ use Illuminate\Support\Facades\Auth;
                 error : function(error) {
                     console.log(error);
                 }
+            })
+
+            $('#override').on('click', function(e) {
+                e.preventDefault()
+                var status = $('#Status').val()
+
+                $.ajax({
+                    url : "{{ route('serviceConnections.update-status') }}",
+                    type : 'GET',
+                    data : {
+                        id : "{{ $serviceConnections->id }}",
+                        Status : status
+                    },
+                    success : function(res) {
+                        location.reload()
+                    },
+                    error : function(err) {
+                        Swal.fire({
+                            icon : 'error',
+                            text : 'Error updating status'
+                        })
+                    }
+                })
             })
         });
     </script>

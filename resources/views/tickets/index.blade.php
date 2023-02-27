@@ -60,12 +60,12 @@
                                         
                                         @else
                                         <a href="{{ route('tickets.print-ticket', [$item->id]) }}" class="btn btn-warning btn-xs" title="Re-print Ticket Order"><i class="fas fa-print"></i></a>
-                                        @endif
-                                        
                                         <a href="{{ route('tickets.edit', [$item->id]) }}"
-                                        class='btn btn-default btn-xs'>
-                                            <i class="far fa-edit"></i>
-                                        </a>
+                                            class='btn btn-default btn-xs'>
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        @endif                                        
+                                        
                                         {!! Form::button('<i class="fas fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure you want to delete this ticket?')"]) !!}                
                                     </div>
                                 {!! Form::close() !!}                                

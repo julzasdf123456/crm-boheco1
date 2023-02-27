@@ -146,6 +146,7 @@ Route::get('/service_connections/energization-per-town', [App\Http\Controllers\S
 Route::get('/service_connections/download-energization-per-town/{mnth}/{year}', [App\Http\Controllers\ServiceConnectionsController::class, 'downloadEnergizationPerTown'])->name('serviceConnections.download-energization-per-town');
 Route::get('/service_connections/meter-installation', [App\Http\Controllers\ServiceConnectionsController::class, 'meterInstallation'])->name('serviceConnections.meter-installation');
 Route::get('/service_connections/download-meter-installation/{from}/{to}/{office}', [App\Http\Controllers\ServiceConnectionsController::class, 'downloadMeterInstallation'])->name('serviceConnections.download-meter-installation');
+Route::get('/service_connections/update-status', [ServiceConnectionsController::class, 'updateStatus'])->name('serviceConnections.update-status');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 
@@ -724,3 +725,6 @@ Route::resource('billsExtensions', App\Http\Controllers\BillsExtensionController
 
 
 Route::resource('paidBills', App\Http\Controllers\PaidBillsController::class);
+
+
+Route::resource('sMSNotifications', App\Http\Controllers\SMSNotificationsController::class);
