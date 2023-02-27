@@ -1219,6 +1219,7 @@ class ServiceConnectionsController extends AppBaseController
                         'CRM_ServiceConnections.ORNumber as ORNumber', 
                         'CRM_ServiceConnections.ORDate as ORDate', 
                         'CRM_ServiceConnections.Sitio as Sitio', 
+                        'CRM_ServiceConnections.ElectricianName', 
                         'CRM_Towns.Town as Town',
                         'CRM_Barangays.Barangay as Barangay',
                         'CRM_ServiceConnectionAccountTypes.AccountType as AccountType')
@@ -1234,6 +1235,14 @@ class ServiceConnectionsController extends AppBaseController
                                 ->first();
 
         $serviceConnectionMeter = ServiceConnectionMtrTrnsfrmr::where('ServiceConnectionId', $id)->first();
+
+        $received = DB::table('CRM_ServiceConnectionTimeframes')
+            ->leftJoin('users', 'CRM_ServiceConnectionTimeframes.UserId', '=', 'users.id')
+            ->where('ServiceConnectionId', $id)
+            ->where('Status', 'Received')
+            ->select('users.name')
+            ->orderByDesc('CRM_ServiceConnectionTimeframes.created_at')
+            ->first();
 
         // CREATE Timeframes
         $timeFrame = new ServiceConnectionTimeframes;
@@ -1253,7 +1262,12 @@ class ServiceConnectionsController extends AppBaseController
          * ASSESS PERMISSIONS
          */
         if(Auth::user()->hasAnyPermission(['create membership', 'sc update energization', 'sc create', 'Super Admin'])) {
-            return view('/service_connections/print_order', ['serviceConnection' => $serviceConnections, 'serviceConnectionInspections' => $serviceConnectionInspections, 'serviceConnectionMeter' => $serviceConnectionMeter]);
+            return view('/service_connections/print_order', [
+                'serviceConnection' => $serviceConnections, 
+                'serviceConnectionInspections' => $serviceConnectionInspections,
+                'serviceConnectionMeter' => $serviceConnectionMeter,
+                'received' => $received,
+            ]);
         } else {
             return abort(403, "You're not authorized to print an energization order.");
         }         

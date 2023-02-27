@@ -108,7 +108,6 @@ use Illuminate\Support\Facades\Auth;
                         @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Service Connection Assessor'])) 
                             <button id="override" class="btn btn-danger btn-sm float-right" style="margin-left: 10px;">Override Status</button>
                             <select name="Status" id="Status" class="form-control form-control-sm float-right" style="width: 200px;">
-                                <option {{ $serviceConnections->Status=="Received" ? 'selected' : '' }} value="Received">Received</option>
                                 <option {{ $serviceConnections->Status=="Approved" ? 'selected' : '' }} value="Approved">Approved</option>
                                 <option {{ $serviceConnections->Status=="Approved For Change Name" ? 'selected' : '' }} value="Approved For Change Name">Approved For Change Name</option>
                                 <option {{ $serviceConnections->Status=="Closed" ? 'selected' : '' }} value="Closed">Closed</option>
