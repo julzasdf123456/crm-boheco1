@@ -13,6 +13,7 @@ use App\Models\TicketLogs;
 use App\Models\Notifiers;
 use App\Models\ServiceConnectionPayTransaction;
 use App\Models\ServiceConnectionTotalPayments;
+use App\Models\SMSNotifications;
 use Illuminate\Support\Facades\DB;
 use Validator;
 
@@ -70,14 +71,8 @@ class ServiceConnectionInspectionsAPI extends Controller {
         // CREATE NOTIFICATION
         if ($contactNumber != null) {
             if (strlen($contactNumber > 9)) {
-                $notifier = new Notifiers;
-                $notifier->id = IDGenerator::generateIDandRandString();
-                $notifier->Notification = 'Good day, ' . $name . ',\n\nA BOHECO I inspector is on its way to inspect the electrical installation of your house within the day. Please ensure to have a representative in your house during the inspection process.\n\nBOHECO I Auto-SMS Hub';
-                $notifier->Status = 'SENT';
-                $notifier->Intent = "SERVICE CONNECTION INSPECTION"; 
-                $notifier->ObjectId = $request['id'];
-                $notifier->ContactNumber = $contactNumber;
-                $notifier->save();
+                $msg = "MR./MS. " . $name . ", \n\nA BOHECO I inspector is on its way to inspect the electrical installation of your house within the day. Please ensure to have a representative in your house during the inspection process. \n\nHave a gret day!";
+                SMSNotifications::createFreshSms($contactNumber, $msg, 'SERVICE CONNECTIONS', $request['id']);
             }
         }
 
