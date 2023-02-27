@@ -16,6 +16,7 @@ use App\Models\IDGenerator;
 use App\Models\BillDeposits;
 use App\Models\ServiceConnectionTotalPayments;
 use App\Models\ServiceConnectionTimeframes;
+use App\Models\SMSNotifications;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Flash;
