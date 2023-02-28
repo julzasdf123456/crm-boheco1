@@ -32,8 +32,6 @@
 		display: inline-block;
 		margin-left: 15px;
 		margin-right: 5px;
-		margin-top: -5px;
-		margin-bottom: -8px;
 	}
 
 	.clabel {
@@ -281,44 +279,16 @@
 
             <!-- REQUIREMENTS -->
             <div class="col-md-12">
-                <div class="col-md-8">
+                <div class="col-md-12">
                     <p><strong>Requirements</strong></p>
-                    <div class="checkbox">
-                        <p class="cbox"></p>
-                        <p class="clabel">PMS</p>
-                    </div>
-                    <br>
-                    <div class="checkbox">
-                        <p class="cbox"></p>
-                        <p class="clabel">VERIFIER'S REPORT</p>
-                    </div>
-                    <br>
-                    <div class="checkbox">
-                        <p class="cbox"></p>
-                        <p class="clabel">CERTIFICATE OF FINAL ELECTRICAL INSPECTION</p>
-                    </div>
-                    <br>
-                    <div class="checkbox">
-                        <p class="cbox"></p>
-                        <p class="clabel">ELECTRICAL PLAN AS-BUILT</p>
-                    </div>
-                    <br>
-                    <div class="checkbox">
-                        <p class="cbox"></p>
-                        <p class="clabel">FIRE SAFETY INSPECTION CERTIFICATE</p>
-                    </div>
-                    <br>
-                    <div class="checkbox">
-                        <p class="cbox"></p>
-                        <p class="clabel">BAPA/ECA CLEARANCE <i>(Optional)</i></p>
-                    </div>
-                    <br>
-                    <div class="checkbox">
-                        <p class="cbox"></p>
-                        <p class="clabel">CONSENT OF LOT OWNER-TRAVERSE SDW <i>(Optional)</i></p>
-                    </div>
+                    @foreach ($checklists as $item)
+                        <div class="checkbox">
+                            <p class="cbox"></p>
+                            <p class="clabel">{{ $item->Checklist }}</p>
+                        </div>
+                    @endforeach
                     <!-- BELOW CHECKLIST -->
-                    <div class="col-md-4">
+                    <div class="col-md-4" style="margin-top: 10px;">
                         <p class="no-line-spacing"><strong>EVALUATOR'S NAME</strong></p>
                         <p class="no-line-spacing">REMARKS</p>
                     </div>
@@ -330,12 +300,14 @@
             </div>
 
             <!-- APPROVED BY -->
-            <div class="col-md-12">
+            <div class="col-md-12" style="margin-top: 30px;">
                 <div class="col-md-8">
-                    
+                    <br><br><br>
+                    <p>Applicant's Signature: ________________</p>
                 </div>
                 <div class="col-md-4">
                     <p class="center-text">Approved By:</p>
+                    <br>
                     <br>
                     <p class="center-text underlined"><strong>ELMER SALUS B. POZON</strong></p>
                     <p class="no-line-spacing center-text"><i>Manager, ISD</i></p>
@@ -344,13 +316,9 @@
 
             <!-- FOOTER -->
             <div class="col-md-12">
+                <br>
+                <br>
                 <p><i>This is to certify that the KWHr-meter was sealed when installed.</i></p>
-                <div class="col-md-7">
-                    
-                </div>
-                <div class="col-md-5">
-                    <p>Applicant's Signature: ________________</p>
-                </div>
 
                 <!-- RECEIVING -->
                 <div class="col-md-2">

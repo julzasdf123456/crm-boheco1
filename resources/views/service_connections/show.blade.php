@@ -107,7 +107,7 @@ use Illuminate\Support\Facades\Auth;
                         <strong><i class="fas fa-warehouse mr-1"></i> Office Registered</strong>
                         <p class="text-muted">{{ $serviceConnections->Office}}</p>
 
-                        @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Service Connection Assessor'])) 
+                        @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers'])) 
                             <button id="override" class="btn btn-danger btn-sm float-right" style="margin-left: 10px;">Override Status</button>
                             <select name="Status" id="Status" class="form-control form-control-sm float-right" style="width: 200px;">
                                 <option {{ $serviceConnections->Status=="Approved" ? 'selected' : '' }} value="Approved">Approved</option>

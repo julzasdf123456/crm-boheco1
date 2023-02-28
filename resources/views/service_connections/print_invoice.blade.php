@@ -277,7 +277,7 @@
                 <br>
                 <br>
                 <p class="text-center" style="padding-left: 20px; padding-right: 20px; border-bottom: 1px solid #898989;"><strong>{{ env('ISD_CHIEF_POWER_USE_DIVISION') }}</strong></p>
-                <p class="text-center"><i>Chief, Housewiring ...</i></p>
+                <p class="text-center"><i>Chief, MCPD</i></p>
             </div>
 
             <div class="third" style="margin-left: 20px;">

@@ -1230,6 +1230,12 @@ class ServiceConnectionsController extends AppBaseController
         })
         ->first(); 
 
+        $checklists = DB::table('CRM_ServiceConnectionChecklist')
+            ->leftJoin('CRM_ServiceConnectionChecklistRepository', 'CRM_ServiceConnectionChecklist.ChecklistId', '=', 'CRM_ServiceConnectionChecklistRepository.id')
+            ->where('ServiceConnectionId', $serviceConnections->id)
+            ->select('CRM_ServiceConnectionChecklistRepository.Checklist')
+            ->get();
+
         $serviceConnectionInspections = ServiceConnectionInspections::where('ServiceConnectionId', $id)
                                 ->orderByDesc('created_at')
                                 ->first();
@@ -1267,6 +1273,7 @@ class ServiceConnectionsController extends AppBaseController
                 'serviceConnectionInspections' => $serviceConnectionInspections,
                 'serviceConnectionMeter' => $serviceConnectionMeter,
                 'received' => $received,
+                'checklists' => $checklists,
             ]);
         } else {
             return abort(403, "You're not authorized to print an energization order.");
