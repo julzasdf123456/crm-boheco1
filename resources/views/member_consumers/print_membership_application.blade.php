@@ -1,6 +1,8 @@
 @php
     use App\Models\MemberConsumers;
     use App\Models\MemberConsumerSpouse;
+    use Illuminate\Support\Facades\Auth;    
+
 @endphp
 
 <style>
@@ -138,7 +140,7 @@ p {
 
 		<div class="col-md-12">
 			<div style="display: inline-table; width: 48%;">
-				<p class="text-underline text-center text-allcaps"><strong>{{ $memberConsumers->name != null ? $memberConsumers->name : '' }}</strong></p>		
+				<p class="text-underline text-center text-allcaps"><strong>{{ strtoupper(Auth::user()->name) }}</strong></p>		
 				<p class="text-center"><i>Facilitating Personnel</i></p>	
 
 				<br>
@@ -162,7 +164,7 @@ p {
 				<br>
 
 				<p>Address: <strong class="text-underline">{{ $memberConsumers->Sitio . ', ' . $memberConsumers->Barangay . ', ' . $memberConsumers->Town }}</strong></p>	
-				<p>Contact Nos: <strong class="{{ $memberConsumers->ContactNumbers == null ? '' : 'text-underline' }}">{{ $memberConsumers->ContactNumbers == null ? '_________________________' : $model->ContactNumber }}</strong></p>	
+				<p>Contact Nos: <strong class="{{ $memberConsumers->ContactNumbers == null ? '' : 'text-underline' }}">{{ $memberConsumers->ContactNumbers == null ? '_________________________' : $memberConsumers->ContactNumbers }}</strong></p>	
 			</div>
 		</div>
 	</div>
