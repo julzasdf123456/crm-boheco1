@@ -127,9 +127,11 @@
                 @endif
             @else
                 @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Inspector', 'Service Connection Assessor'])) 
-                    <a href="{{ route('serviceConnectionInspections.edit', [$serviceConnectionInspections->id]) }}" class="btn btn-sm" title="Update Verification Details">
-                        <i class="fas fa-pen"></i>
-                    </a>
+                    @if ($serviceConnectionInspections != null)
+                        <a href="{{ route('serviceConnectionInspections.edit', [$serviceConnectionInspections->id]) }}" class="btn btn-sm" title="Update Verification Details">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                    @endif                    
                 @endif
                 <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
             @endif
