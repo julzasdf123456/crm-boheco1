@@ -42,9 +42,11 @@ use Illuminate\Support\Facades\Auth;
                                         <i class="fas fa-comments-dollar"></i>
                                     </a>                                    
                                 @endif
+                                @if ($serviceConnectionInspections != null)
                                 <a href="{{ route('serviceConnectionInspections.edit', [$serviceConnectionInspections->id]) }}" class="btn btn-tool text-primary" title="Update Verification/Inspection Details">
                                     <i class="fas fa-clipboard-check"></i>
                                 </a>
+                                @endif
                                 <a class="btn btn-tool text-info" href="{{ route('serviceConnections.assess-checklists', [$serviceConnections->id]) }}" title="Update requirements"><i class="fas fa-check-circle"></i></a>
                                 <a href="{{ route('serviceConnections.move-to-trash', [$serviceConnections->id]) }}" class="btn btn-tool text-danger" title="Move to trash">
                                     <i class="fas fa-trash"></i>
