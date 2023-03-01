@@ -787,7 +787,7 @@ class ServiceConnectionsController extends AppBaseController
 
         $accountTypes = ServiceConnectionAccountTypes::orderBy('id')->get();
 
-        $crew = ServiceConnectionCrew::orderBy('StationName')->pluck('StationName', 'id');
+        $crew = ServiceConnectionCrew::orderBy('StationName')->get();
 
         /**
          * ASSESS PERMISSIONS

@@ -497,7 +497,13 @@ use App\Models\IDGenerator;
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-hard-hat"></i></span>
                 </div>
-                {!! Form::select('StationCrewAssigned', $crew, $cond=='new' ? '' : $serviceConnections->StationCrewAssigned, ['class' => 'form-control form-control-sm']) !!}
+                <select name="StationCrewAssigned" id="StationCrewAssigned" class="form-control form-control-sm">
+                    <option value="">-- Select --</option>
+                    @foreach ($crew as $item)
+                        <option value="{{ $item->id }}">{{ $item->StationName }}</option>
+                    @endforeach
+                </select>
+                {{-- {!! Form::select('StationCrewAssigned', $crew, $cond=='new' ? '' : $serviceConnections->StationCrewAssigned, ['class' => 'form-control form-control-sm']) !!} --}}
             </div>
         </div>
     </div>  

@@ -16,7 +16,7 @@
                 <div class="col-md-8 offset-md-2">
                     <form action="{{ route('serviceConnections.selectmembership') }}" method="GET">
                     <div class="input-group">
-                        <input type="text" id='search' name="search" class="form-control" placeholder="Type Name or Member Consumer ID" value="{{ isset($_GET['search']) ? $_GET['search'] : '' }}">
+                        <input type="text" id='search' name="search" class="form-control" autofocus placeholder="Type Name or Member Consumer ID" value="{{ isset($_GET['search']) ? $_GET['search'] : '' }}">
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-default" id="searchBtn">
                                 <i class="fa fa-search"></i>
