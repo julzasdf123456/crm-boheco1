@@ -470,15 +470,9 @@ use Illuminate\Support\Facades\Auth;
             <li class="nav-item">
                 <a href="{{ route('tickets.crew-field-monitor') }}"
                 class="nav-link {{ Request::is('tickets.crew-field-monitor*') ? 'active' : '' }}">
-                    <i class="fas fa-circle nav-icon text-danger"></i><p>Crew Field Monitor</p>
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>Crew Monitor</p>
                 </a>
             </li>
-            {{-- <li class="nav-item">
-                <a href="{{ route('tickets.assessments-change-meter') }}"
-                class="nav-link {{ Request::is('tickets.assessments-change-meter*') ? 'active' : '' }}">
-                    <i class="fas fa-circle nav-icon text-danger"></i><p>Change Meter Requests</p>
-                </a>
-            </li> --}}
             <li class="nav-item">
                 <a href="{{ route('tickets.assessments-ordinary-ticket') }}"
                 class="nav-link {{ Request::is('tickets.assessments-ordinary-ticket*') ? 'active' : '' }}">

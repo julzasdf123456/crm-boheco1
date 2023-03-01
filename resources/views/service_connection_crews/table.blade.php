@@ -2,11 +2,11 @@
     <table class="table" id="serviceConnectionCrews-table">
         <thead>
         <tr>
-            <th>Stationname</th>
-        <th>Crewleader</th>
+        <th>Group Name</th>
+        <th>Station</th>
         <th>Members</th>
         <th>Notes</th>
-            <th colspan="3">Action</th>
+        <th colspan="3">Action</th>
         </tr>
         </thead>
         <tbody>

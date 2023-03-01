@@ -2477,6 +2477,12 @@ class TicketsController extends AppBaseController
 
         $crew = ServiceConnectionCrew::orderBy('StationName')->get();
 
+        $stations = DB::table('CRM_ServiceConnectionCrew')
+            ->select('CrewLeader')
+            ->groupBy('CrewLeader')
+            ->orderBy('CrewLeader')
+            ->get();
+
         $status = DB::table('CRM_Tickets')
             ->whereRaw("Status NOT IN ('Executed', 'For Payment', 'For Inspection')")
             ->select('Status')
@@ -2487,8 +2493,26 @@ class TicketsController extends AppBaseController
         return view('/tickets/crew_field_monitor', [
             'parentTickets' => $parentTickets,
             'crew' => $crew,
-            'status' => $status
+            'status' => $status,
+            'stations' => $stations,
         ]);
+    }
+
+    public function getCrewFromStation(Request $request) {
+        $crews = ServiceConnectionCrew::where('CrewLeader', $request['Station'])
+            ->orderBy('StationName')
+            ->get();
+
+        $output = "";
+        foreach($crews as $item) {
+            $output .= "
+                    <tr>
+                        <td>" . $item->StationName . "</td>
+                    </tr>
+                ";
+        }
+
+        return response()->json($output, 200);
     }
 
     public function getCrewFieldMonitorData(Request $request) {

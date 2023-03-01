@@ -5,81 +5,67 @@
 @extends('layouts.app')
 
 @section('content')
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-12">
+                <h4>Ticket Crew Monitoring <span><i class="text-muted" style="font-size: .7em; margin-left: 10px;">For the last 45 days</i></span></h4>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="content">
     <div class="row">
-        {{-- PARAMS --}}
-        <div class="col-lg-12">
-            <div class="card shadow-none" style="margin-top: 3px;">
-                <div class="card-body p-1">
-                    <div class="row">
-                        {{-- TICKET --}}
-                        <div class="form-group col-sm-3">
-                            <label for="Ticket">Ticket Type</label>
-                            <select class="custom-select select2"  name="Ticket" id="Ticket">
-                                <option value="All">All</option>
-                                @foreach ($parentTickets as $items)
-                                    <optgroup label="{{ $items->Name }}">
-                                        @php
-                                            $ticketsRep = TicketsRepository::where('ParentTicket', $items->id)->whereNotIn('Id', Tickets::getMeterRelatedComplainsId())->orderBy('Name')->get();
-                                        @endphp
-                                        @foreach ($ticketsRep as $item)
-                                            <option value="{{ $item->id }}">{{ $item->Name }}</option>
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach
-                            </select>
-                        </div>
+        {{-- RESULTS --}}
+        <div class="col-lg-3 col-md-4">
+            {{-- FORM --}}
+            <div class="card shadow-none">
+                <div class="card-body">
+                    {{-- CREW --}}
+                    <div class="form-group">
+                        {!! Form::label('Station', 'Station:') !!}
+                        <select name="Station" id="Station" class="form-control form-control-sm">
+                            <option value="All">All</option>
+                            @foreach ($stations as $item)
+                                <option value="{{ $item->CrewLeader }}">{{ $item->CrewLeader }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                        {{-- STATUS --}}
-                        <div class="form-group col-sm-2">
-                            <label for="Status">Ticket Status</label>
-                            <select name="Status" id="Status" class="form-control">
-                                <option value="All">All</option>
-                                @foreach ($status as $item)
-                                    <option value="{{ $item->Status }}">{{ $item->Status }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        {{-- CREW --}}
-                        <div class="form-group col-sm-2">
-                            {!! Form::label('CrewAssigned', 'Crew Assigned:') !!}
-                            <select name="CrewAssigned" id="CrewAssigned" class="form-control">
-                                <option value="All">All</option>
-                                @foreach ($crew as $item)
-                                    <option value="{{ $item->id }}">{{ $item->StationName }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="">Actions</label><br>
-                            <button class="btn btn-primary" id="filter">Filter</button>
-                        </div>
+                    <div class="form-group">
+                        <label for="">Actions</label><br>
+                        <button class="btn btn-primary btn-sm" id="filter"><i class="fas fa-filter ico-tab-mini"></i>Filter</button>
                     </div>
                 </div>
             </div>
-        </div>
 
-        {{-- RESULTS --}}
-        <div class="col-lg-4">
-            <div class="card shadow-none" style="height: 75vh;">
+            {{-- CREW --}}
+            <div class="card shadow-none">
+                <div class="card-header">
+                    <span class="card-title">Crew Group in this Station</span>
+                </div>
                 <div class="card-body table-responsive p-0">
-                    <table class="table table-hover table-sm" id="res-table">
-                        <thead>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
+                    <table class="table table-sm table-hover" id="crew-table">
+                        <tbody></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
         {{-- MAP --}}
-        <div class="col-lg-8">
+        <div class="col-lg-9 col-md-8">
+            <div class="card shadow-none" style="height: 80vh;">
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
             <div id="map" style="width: 100%; height: 75vh;"></div>
         </div>
     </div>
+</div>
     
 @endsection
 
@@ -99,6 +85,7 @@
 
         $(document).ready(function() {
             $('#filter').on('click', function() {
+                getCrewFromStation($('#Station').val())
                 getTickets()
             })
         })
@@ -212,6 +199,26 @@
                     icon : 'info'
                 })
             }
+        }
+
+        function getCrewFromStation(station) {
+            $('#crew-table tbody tr').remove()
+            $.ajax({
+                url : "{{ route('tickets.get-crew-from-station') }}",
+                type : 'GET',
+                data : {
+                    Station : station,
+                },
+                success : function(res) {
+                    $('#crew-table tbody').append(res)
+                },
+                error : function(err) {
+                    Swal.fire({
+                        text : 'Error getting crew',
+                        icon : 'error'
+                    })
+                }
+            })
         }
     </script>
 @endpush

@@ -399,6 +399,7 @@ Route::get('/tickets/meter-replacements', [App\Http\Controllers\TicketsControlle
 Route::get('/tickets/download-meter-replacements/{from}/{to}/{office}', [App\Http\Controllers\TicketsController::class, 'downloadMeterReplacements'])->name('tickets.download-meter-replacements');
 Route::get('/tickets/disco-reco-reports', [App\Http\Controllers\TicketsController::class, 'disconnectionReconnectionReport'])->name('tickets.disco-reco-reports');
 Route::get('/tickets/download-disco-reco/{from}/{to}/{office}', [App\Http\Controllers\TicketsController::class, 'downloadDiscoReco'])->name('tickets.download-disco-reco');
+Route::get('/tickets/get-crew-from-station', [App\Http\Controllers\TicketsController::class, 'getCrewFromStation'])->name('tickets.get-crew-from-station');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 

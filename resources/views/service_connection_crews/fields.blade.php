@@ -1,12 +1,12 @@
 <!-- Stationname Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('StationName', 'Station/Group Name') !!}
+    {!! Form::label('StationName', 'Group Name(s)') !!}
     {!! Form::text('StationName', null, ['class' => 'form-control','maxlength' => 140,'maxlength' => 140]) !!}
 </div>
 
 <!-- Crewleader Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('CrewLeader', 'Crew/Team Leader') !!}
+    {!! Form::label('CrewLeader', 'Station') !!}
     {!! Form::text('CrewLeader', null, ['class' => 'form-control','maxlength' => 300,'maxlength' => 300]) !!}
 </div>
 
@@ -32,7 +32,7 @@
 <!-- Grouping -->
 <div class="form-group col-sm-6">
     {!! Form::label('Grouping', 'Grouping:') !!}
-    {!! Form::select('Grouping', ['Group' => 'Group', 'Individual' => 'Individual'], null, ['class' => 'form-control',]) !!}
+    {!! Form::select('Grouping', ['Group' => 'Group', 'Individual' => 'Individual'], null, ['class' => 'form-control form-control-sm',]) !!}
 </div>
 
 <!-- Notes Field -->
