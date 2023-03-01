@@ -412,6 +412,15 @@
             /**
             * MEMBERSHIP RELATED SCRIPTS
             */
+            $('#MembershipType').on('change', function() {
+                if (this.value == '1626404547395') {
+                    $('#CivilStatus').val('Married')
+                } else if (this.value == '1626404704667') {
+                    $('#CivilStatus').val('Single')
+                } else {
+                    $('#CivilStatus').val('')
+                }
+            })
 
             /**
              * Initialize Juridical fields
