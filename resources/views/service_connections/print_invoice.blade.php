@@ -222,6 +222,10 @@
                             <th class="text-right">{{ number_format($item->Total, 2) }}</th>
                         </tr>
                     @endforeach
+                    <tr>
+                        <td>ELECTRICIAN</td>
+                        <th class="text-left" colspan="2">{{ strtoupper($serviceConnections->ElectricianName) }}</th>
+                    </tr>
                 </table>
             </div>
 
@@ -230,8 +234,12 @@
 
                 <table class="table" style="width: 100%;">
                     <tr>
-                        <td>Svc. Con. Charge</td>
-                        <th  class="text-right">P {{ number_format($totalTransactions->LaborCharge + $totalTransactions->BOHECOShare, 2) }}</th>
+                        <td>Elec. Labor Charges</td>
+                        <th  class="text-right">P {{ number_format($totalTransactions->LaborCharge, 2) }}</th>
+                    </tr>
+                    <tr>
+                        <td>BOHECO I Share</td>
+                        <th  class="text-right">P {{ number_format($totalTransactions->BOHECOShare, 2) }}</th>
                     </tr>
                     <tr>
                         <td>Bill Deposit</td>
