@@ -45,14 +45,14 @@
             <div class="col-lg-3 col-md-4">
                 <div class="form-group">
                     {!! Form::label('ConsumerName', 'Consumer Name:') !!}
-                    {!! Form::text('ConsumerName', $serviceAccount==null ? '' : $serviceAccount->ConsumerName, ['class' => 'form-control form-control-sm','maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name']) !!}                    
+                    {!! Form::text('ConsumerName', $serviceAccount==null ? '' : $serviceAccount->ConsumerName, ['class' => 'form-control form-control-sm','required' => 'true', 'maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name']) !!}                    
                 </div>
             </div>
 
             <div class="col-lg-3 col-md-4">
                 <div class="form-group">
                     {!! Form::label('Town', 'Town') !!}
-                    {!! Form::select('Town', $towns, $serviceAccount==null ? '' : ($townAnalyzed != null ? $townAnalyzed->id : ''), ['class' => 'form-control form-control-sm']) !!}
+                    {!! Form::select('Town', $towns, $serviceAccount==null ? '' : ($townAnalyzed != null ? $townAnalyzed->id : ''), ['class' => 'form-control form-control-sm','required' => 'true']) !!}
                 </div>
             </div>
 
@@ -60,7 +60,7 @@
             <div class="col-lg-3 col-md-5">
                 <div class="form-group">
                     {!! Form::label('Barangay', 'Barangay') !!}
-                    {!! Form::select('Barangay', [], null, ['class' => 'form-control form-control-sm',]) !!}
+                    {!! Form::select('Barangay', [], null, ['class' => 'form-control form-control-sm','required' => 'true']) !!}
                 </div>
             </div>
 @else
