@@ -80,7 +80,7 @@
                     </tr>
                     <tr>
                         <td>Bill Deposit</td>
-                        <th class="text-right text-primary">₱ <span id="bill-deposit-display" data-toggle="tooltip" data-placement="left">{{ $totalTransactions != null ? number_format($totalTransactions->BillDeposit, 2) : '0.00' }}</span></th>
+                        <th class="text-right text-primary">₱ <span id="bill-deposit-display" data-toggle="tooltip" data-placement="left">{{ $totalTransactions != null ? (is_numeric($totalTransactions->BillDeposit) ? number_format($totalTransactions->BillDeposit, 2) : '0.00') : '0.00' }}</span></th>
                     </tr>
                     <tr>
                         <td>Total VAT</td>
