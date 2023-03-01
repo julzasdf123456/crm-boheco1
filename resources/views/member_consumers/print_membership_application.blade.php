@@ -168,7 +168,7 @@ p {
 
 				<br>
 
-				<p>Address: <strong class="text-underline">{{ $memberConsumers->Sitio . ', ' . $memberConsumers->Barangay . ', ' . $memberConsumers->Town }}</strong></p>	
+				<p>Address: <strong class="text-underline">{{ strtoupper($memberConsumers->Sitio . ', ' . $memberConsumers->Barangay . ', ' . $memberConsumers->Town) }}</strong></p>	
 				<p>Contact Nos: <strong class="{{ $memberConsumers->ContactNumbers == null ? '' : 'text-underline' }}">{{ $memberConsumers->ContactNumbers == null ? '_________________________' : $memberConsumers->ContactNumbers }}</strong></p>	
 			</div>
 		</div>
