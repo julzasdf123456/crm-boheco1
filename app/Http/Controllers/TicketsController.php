@@ -1481,128 +1481,254 @@ class TicketsController extends AppBaseController
         $ticketParam = $request['TicketParam'];
         $from = $request['From'];
         $to = $request['To'];
-        $area = $request['Area'];
+        $area = $request['Office'];
+        $status = $request['Status'];
 
         $results = null;
-        if ($ticketParam == 'All') {
-            if ($area == 'All') {
-                $results = DB::table('CRM_Tickets')
-                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->select('CRM_Tickets.id as id',
-                                    'CRM_Tickets.AccountNumber',
-                                    'CRM_Tickets.ConsumerName',
-                                    'CRM_TicketsRepository.Name as Ticket', 
-                                    'CRM_Tickets.Status',  
-                                    'CRM_Tickets.Sitio as Sitio', 
-                                    'CRM_Tickets.created_at', 
-                                    'CRM_Towns.Town as Town',
-                                    'CRM_Tickets.Office',  
-                                    'CRM_Tickets.Reason',  
-                                    'CRM_Tickets.ContactNumber',  
-                                    'CRM_Tickets.Ticket as TicketID', 
-                                    'CRM_Tickets.DateTimeLinemanExecuted',    
-                                    'CRM_Barangays.Barangay as Barangay')
-                    ->where(function ($query) {
-                                        $query->where('CRM_Tickets.Trash', 'No')
-                                            ->orWhereNull('CRM_Tickets.Trash');
-                                    })
-                    ->whereBetween('CRM_Tickets.created_at', [$from, $to])            
-                    ->orderBy('CRM_Tickets.created_at')
-                    ->get();
+        if ($status == 'All') {
+            if ($ticketParam == 'All') {
+                if ($area == 'All') {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to])            
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                } else {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to])   
+                        ->where('CRM_Tickets.Office', $area)         
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                }
             } else {
-                $results = DB::table('CRM_Tickets')
-                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->select('CRM_Tickets.id as id',
-                                    'CRM_Tickets.AccountNumber',
-                                    'CRM_Tickets.ConsumerName',
-                                    'CRM_TicketsRepository.Name as Ticket', 
-                                    'CRM_Tickets.Status',  
-                                    'CRM_Tickets.Sitio as Sitio', 
-                                    'CRM_Tickets.created_at', 
-                                    'CRM_Towns.Town as Town',
-                                    'CRM_Tickets.Office',  
-                                    'CRM_Tickets.Reason',  
-                                    'CRM_Tickets.ContactNumber',  
-                                    'CRM_Tickets.Ticket as TicketID', 
-                                    'CRM_Tickets.DateTimeLinemanExecuted',    
-                                    'CRM_Barangays.Barangay as Barangay')
-                    ->where(function ($query) {
-                                        $query->where('CRM_Tickets.Trash', 'No')
-                                            ->orWhereNull('CRM_Tickets.Trash');
-                                    })
-                    ->whereBetween('CRM_Tickets.created_at', [$from, $to])   
-                    ->where('CRM_Tickets.Town', $area)         
-                    ->orderBy('CRM_Tickets.created_at')
-                    ->get();
+                if ($area == 'All') {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to]) 
+                        ->where('CRM_Tickets.Ticket', $ticketParam)           
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                } else {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to])
+                        ->where('CRM_Tickets.Ticket', $ticketParam)       
+                        ->where('CRM_Tickets.Office', $area)         
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                }
             }
         } else {
-            if ($area == 'All') {
-                $results = DB::table('CRM_Tickets')
-                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->select('CRM_Tickets.id as id',
-                                    'CRM_Tickets.AccountNumber',
-                                    'CRM_Tickets.ConsumerName',
-                                    'CRM_TicketsRepository.Name as Ticket', 
-                                    'CRM_Tickets.Status',  
-                                    'CRM_Tickets.Sitio as Sitio', 
-                                    'CRM_Tickets.created_at', 
-                                    'CRM_Towns.Town as Town',
-                                    'CRM_Tickets.Office',  
-                                    'CRM_Tickets.Reason',  
-                                    'CRM_Tickets.ContactNumber',  
-                                    'CRM_Tickets.Ticket as TicketID', 
-                                    'CRM_Tickets.DateTimeLinemanExecuted',    
-                                    'CRM_Barangays.Barangay as Barangay')
-                    ->where(function ($query) {
-                                        $query->where('CRM_Tickets.Trash', 'No')
-                                            ->orWhereNull('CRM_Tickets.Trash');
-                                    })
-                    ->whereBetween('CRM_Tickets.created_at', [$from, $to]) 
-                    ->where('CRM_Tickets.Ticket', $ticketParam)           
-                    ->orderBy('CRM_Tickets.created_at')
-                    ->get();
+            if ($ticketParam == 'All') {
+                if ($area == 'All') {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->whereRaw("CRM_Tickets.Status='" . $status . "'")
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to])            
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                } else {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->whereRaw("CRM_Tickets.Status='" . $status . "'")
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to])   
+                        ->where('CRM_Tickets.Office', $area)         
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                }
             } else {
-                $results = DB::table('CRM_Tickets')
-                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->select('CRM_Tickets.id as id',
-                                    'CRM_Tickets.AccountNumber',
-                                    'CRM_Tickets.ConsumerName',
-                                    'CRM_TicketsRepository.Name as Ticket', 
-                                    'CRM_Tickets.Status',  
-                                    'CRM_Tickets.Sitio as Sitio', 
-                                    'CRM_Tickets.created_at', 
-                                    'CRM_Towns.Town as Town',
-                                    'CRM_Tickets.Office',  
-                                    'CRM_Tickets.Reason',  
-                                    'CRM_Tickets.ContactNumber',  
-                                    'CRM_Tickets.Ticket as TicketID', 
-                                    'CRM_Tickets.DateTimeLinemanExecuted',    
-                                    'CRM_Barangays.Barangay as Barangay')
-                    ->where(function ($query) {
-                                        $query->where('CRM_Tickets.Trash', 'No')
-                                            ->orWhereNull('CRM_Tickets.Trash');
-                                    })
-                    ->whereBetween('CRM_Tickets.created_at', [$from, $to])
-                    ->where('CRM_Tickets.Ticket', $ticketParam)       
-                    ->where('CRM_Tickets.Town', $area)         
-                    ->orderBy('CRM_Tickets.created_at')
-                    ->get();
+                if ($area == 'All') {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->whereRaw("CRM_Tickets.Status='" . $status . "'")
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to]) 
+                        ->where('CRM_Tickets.Ticket', $ticketParam)           
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                } else {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->whereRaw("CRM_Tickets.Status='" . $status . "'")
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to])
+                        ->where('CRM_Tickets.Ticket', $ticketParam)       
+                        ->where('CRM_Tickets.Office', $area)         
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                }
             }
-        }
+        }        
 
         $output = "";
         if ($results != null) {
             foreach($results as $item) {
                 $ticketMain = \App\Models\TicketsRepository::find($item->TicketID);
-                $parent = \App\Models\TicketsRepository::where('id', $ticketMain->ParentTicket)->first();
+                if ($ticketMain != null) {
+                    $parent = \App\Models\TicketsRepository::where('id', $ticketMain->ParentTicket)->first();
+                } else {
+                    $parent = null;
+                }
+                
 
                 $output .= '
                     <tr>
@@ -1626,131 +1752,256 @@ class TicketsController extends AppBaseController
         $ticketParam = $request['TicketParam'];
         $from = $request['From'];
         $to = $request['To'];
-        $area = $request['Area'];
+        $area = $request['Office'];
+        $status = $request['Status'];
 
-        return response()->json(['ticket' => $ticketParam, 'from' => $from, 'to' => $to, 'area' => $area], 200);
+        return response()->json(['ticket' => $ticketParam, 'from' => $from, 'to' => $to, 'area' => $area, 'status' => $status], 200);
     } 
 
-    public function downloadTicketsSummaryReport($ticketParam, $from, $to, $area) {
-        $results = null;
-        if ($ticketParam == 'All') {
-            if ($area == 'All') {
-                $results = DB::table('CRM_Tickets')
-                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->select('CRM_Tickets.id as id',
-                                    'CRM_Tickets.AccountNumber',
-                                    'CRM_Tickets.ConsumerName',
-                                    'CRM_TicketsRepository.Name as Ticket', 
-                                    'CRM_Tickets.Status',  
-                                    'CRM_Tickets.Sitio as Sitio', 
-                                    'CRM_Tickets.created_at', 
-                                    'CRM_Towns.Town as Town',
-                                    'CRM_Tickets.Office',  
-                                    'CRM_Tickets.Reason',  
-                                    'CRM_Tickets.ContactNumber',  
-                                    'CRM_Tickets.Ticket as TicketID', 
-                                    'CRM_Tickets.DateTimeLinemanExecuted',    
-                                    'CRM_Barangays.Barangay as Barangay')
-                    ->where(function ($query) {
-                                        $query->where('CRM_Tickets.Trash', 'No')
-                                            ->orWhereNull('CRM_Tickets.Trash');
-                                    })
-                    ->whereBetween('CRM_Tickets.created_at', [$from, $to])            
-                    ->orderBy('CRM_Tickets.created_at')
-                    ->get();
+    public function downloadTicketsSummaryReport($ticketParam, $from, $to, $area, $status) {
+        // $results = null;
+        if ($status == 'All') {
+            if ($ticketParam == 'All') {
+                if ($area == 'All') {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to])            
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                } else {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to])   
+                        ->where('CRM_Tickets.Office', $area)         
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                }
             } else {
-                $results = DB::table('CRM_Tickets')
-                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->select('CRM_Tickets.id as id',
-                                    'CRM_Tickets.AccountNumber',
-                                    'CRM_Tickets.ConsumerName',
-                                    'CRM_TicketsRepository.Name as Ticket', 
-                                    'CRM_Tickets.Status',  
-                                    'CRM_Tickets.Sitio as Sitio', 
-                                    'CRM_Tickets.created_at', 
-                                    'CRM_Towns.Town as Town',
-                                    'CRM_Tickets.Office',  
-                                    'CRM_Tickets.Reason',  
-                                    'CRM_Tickets.ContactNumber',  
-                                    'CRM_Tickets.Ticket as TicketID', 
-                                    'CRM_Tickets.DateTimeLinemanExecuted',    
-                                    'CRM_Barangays.Barangay as Barangay')
-                    ->where(function ($query) {
-                                        $query->where('CRM_Tickets.Trash', 'No')
-                                            ->orWhereNull('CRM_Tickets.Trash');
-                                    })
-                    ->whereBetween('CRM_Tickets.created_at', [$from, $to])   
-                    ->where('CRM_Tickets.Town', $area)         
-                    ->orderBy('CRM_Tickets.created_at')
-                    ->get();
+                if ($area == 'All') {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to]) 
+                        ->where('CRM_Tickets.Ticket', $ticketParam)           
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                } else {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to])
+                        ->where('CRM_Tickets.Ticket', $ticketParam)       
+                        ->where('CRM_Tickets.Office', $area)         
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                }
             }
         } else {
-            if ($area == 'All') {
-                $results = DB::table('CRM_Tickets')
-                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->select('CRM_Tickets.id as id',
-                                    'CRM_Tickets.AccountNumber',
-                                    'CRM_Tickets.ConsumerName',
-                                    'CRM_TicketsRepository.Name as Ticket', 
-                                    'CRM_Tickets.Status',  
-                                    'CRM_Tickets.Sitio as Sitio', 
-                                    'CRM_Tickets.created_at', 
-                                    'CRM_Towns.Town as Town',
-                                    'CRM_Tickets.Office',  
-                                    'CRM_Tickets.Reason',  
-                                    'CRM_Tickets.ContactNumber',  
-                                    'CRM_Tickets.Ticket as TicketID', 
-                                    'CRM_Tickets.DateTimeLinemanExecuted',    
-                                    'CRM_Barangays.Barangay as Barangay')
-                    ->where(function ($query) {
-                                        $query->where('CRM_Tickets.Trash', 'No')
-                                            ->orWhereNull('CRM_Tickets.Trash');
-                                    })
-                    ->whereBetween('CRM_Tickets.created_at', [$from, $to]) 
-                    ->where('CRM_Tickets.Ticket', $ticketParam)           
-                    ->orderBy('CRM_Tickets.created_at')
-                    ->get();
+            if ($ticketParam == 'All') {
+                if ($area == 'All') {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->whereRaw("CRM_Tickets.Status='" . $status . "'")
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to])            
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                } else {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->whereRaw("CRM_Tickets.Status='" . $status . "'")
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to])   
+                        ->where('CRM_Tickets.Office', $area)         
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                }
             } else {
-                $results = DB::table('CRM_Tickets')
-                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->select('CRM_Tickets.id as id',
-                                    'CRM_Tickets.AccountNumber',
-                                    'CRM_Tickets.ConsumerName',
-                                    'CRM_TicketsRepository.Name as Ticket', 
-                                    'CRM_Tickets.Status',  
-                                    'CRM_Tickets.Sitio as Sitio', 
-                                    'CRM_Tickets.created_at', 
-                                    'CRM_Towns.Town as Town',
-                                    'CRM_Tickets.Office',  
-                                    'CRM_Tickets.Reason',  
-                                    'CRM_Tickets.ContactNumber',  
-                                    'CRM_Tickets.Ticket as TicketID', 
-                                    'CRM_Tickets.DateTimeLinemanExecuted',    
-                                    'CRM_Barangays.Barangay as Barangay')
-                    ->where(function ($query) {
-                                        $query->where('CRM_Tickets.Trash', 'No')
-                                            ->orWhereNull('CRM_Tickets.Trash');
-                                    })
-                    ->whereBetween('CRM_Tickets.created_at', [$from, $to])
-                    ->where('CRM_Tickets.Ticket', $ticketParam)       
-                    ->where('CRM_Tickets.Town', $area)         
-                    ->orderBy('CRM_Tickets.created_at')
-                    ->get();
+                if ($area == 'All') {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->whereRaw("CRM_Tickets.Status='" . $status . "'")
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to]) 
+                        ->where('CRM_Tickets.Ticket', $ticketParam)           
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                } else {
+                    $results = DB::table('CRM_Tickets')
+                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                        ->whereRaw("CRM_Tickets.Status='" . $status . "'")
+                        ->select('CRM_Tickets.id as id',
+                                        'CRM_Tickets.AccountNumber',
+                                        'CRM_Tickets.ConsumerName',
+                                        'CRM_TicketsRepository.Name as Ticket', 
+                                        'CRM_Tickets.Status',  
+                                        'CRM_Tickets.Sitio as Sitio', 
+                                        'CRM_Tickets.created_at', 
+                                        'CRM_Towns.Town as Town',
+                                        'CRM_Tickets.Office',  
+                                        'CRM_Tickets.Reason',  
+                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Ticket as TicketID', 
+                                        'CRM_Tickets.DateTimeLinemanExecuted',    
+                                        'CRM_Barangays.Barangay as Barangay')
+                        ->where(function ($query) {
+                                            $query->where('CRM_Tickets.Trash', 'No')
+                                                ->orWhereNull('CRM_Tickets.Trash');
+                                        })
+                        ->whereBetween('CRM_Tickets.created_at', [$from, $to])
+                        ->where('CRM_Tickets.Ticket', $ticketParam)       
+                        ->where('CRM_Tickets.Office', $area)         
+                        ->orderBy('CRM_Tickets.created_at')
+                        ->get();
+                }
             }
-        }
+        } 
 
         $arr = [];
         foreach($results as $item) {
             $ticketMain = \App\Models\TicketsRepository::find($item->TicketID);
-            $parent = \App\Models\TicketsRepository::where('id', $ticketMain->ParentTicket)->first();
+            if ($ticketMain != null) {
+                $parent = \App\Models\TicketsRepository::where('id', $ticketMain->ParentTicket)->first();
+            } else {
+                $parent = null;
+            }
             array_push($arr, [
                 'TicketNo' => $item->id . '',
                 'AccountNo' => $item->AccountNumber,

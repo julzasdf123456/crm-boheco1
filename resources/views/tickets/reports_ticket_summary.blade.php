@@ -40,7 +40,7 @@
                 </div>
 
                 {{-- FROM --}}
-                <div class="form-group col-lg-2">
+                <div class="form-group col-lg-1">
                     <label for="From">From</label>
                     {!! Form::text('From', null, ['class' => 'form-control', 'placeholder' => 'Select Date', 'id' => 'From']) !!}
                 </div>
@@ -55,7 +55,7 @@
                 @endpush
 
                 {{-- TO --}}
-                <div class="form-group col-lg-2">
+                <div class="form-group col-lg-1">
                     <label for="To">To</label>
                     {!! Form::text('To', null, ['class' => 'form-control', 'placeholder' => 'Select Date', 'id' => 'To']) !!}
                 </div>
@@ -69,14 +69,26 @@
                     </script>
                 @endpush
 
+                {{-- STATUS --}}
+                <div class="form-group col-lg-2">
+                    <label for="Status">Status</label>
+                    <select id="Status" class="form-control">
+                        <option value="All">All</option>
+                        <option value="Received">Pending</option>
+                        <option value="Acted">Acted</option>
+                        <option value="Downloaded by Crew">Downloaded by Crew</option>
+                        <option value="Executed">Executed</option>
+                        <option value="Not Executed">Not Executed</option>
+                    </select>
+                </div>
+
                 {{-- AREA --}}
                 <div class="form-group col-lg-2">
-                    <label for="Town">Area</label>
-                    <select id="Town" class="form-control">
+                    <label for="Office">Area</label>
+                    <select id="Office" name="Office" class="form-control">
                         <option value="All">All</option>
-                        @foreach ($towns as $item)
-                            <option value="{{ $item->id }}">{{ $item->Town }}</option>
-                        @endforeach
+                        <option value="MAIN OFFICE">Main Office</option>
+                        <option value="SUB-OFFICE">Sub Office</option>
                     </select>
                 </div>
 
@@ -85,6 +97,9 @@
                     <label style="opacity: 0; width: 100%;">Action</label>
                     <button class="btn btn-primary" id="filterBtn" title="Filter"><i class="fas fa-check"></i></button>
                     <button class="btn btn-success" id="downloadBtn" title="Download Excel"><i class="fas fa-download"></i></button>
+                    <div id="loader" class="spinner-border text-info gone" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,6 +130,7 @@
     <script>
         $(document).ready(function() {
             $('#filterBtn').on('click', function() {
+                $('#loader').removeClass('gone')
                 $('#results-table tbody tr').remove()
                 $.ajax({
                     url : '{{ route("tickets.get-ticket-summary-report") }}',
@@ -123,13 +139,16 @@
                         TicketParam : $('#Ticket').val(),
                         From : $('#From').val(),
                         To : $('#To').val(),
-                        Area : $('#Town').val(),
+                        Office : $('#Office').val(),
+                        Status : $('#Status').val(),
                     },
                     success : function(res) {
                         $('#results-table tbody').append(res)
+                        $('#loader').addClass('gone')
                     },
                     error : function(err) {
                         alert('An error occurred upon filtering your request')
+                        $('#loader').addClass('gone')
                     }
                 })
             })
@@ -142,10 +161,11 @@
                         TicketParam : $('#Ticket').val(),
                         From : $('#From').val(),
                         To : $('#To').val(),
-                        Area : $('#Town').val(),
+                        Office : $('#Office').val(),
+                        Status : $('#Status').val(),
                     },
                     success : function(res) {
-                        window.location.href = "{{ url('/tickets/download-tickets-summary-report') }}" + "/" + res['ticket'] + "/" + res['from'] + "/" + res['to'] + "/" + res['area'];
+                        window.location.href = "{{ url('/tickets/download-tickets-summary-report') }}" + "/" + res['ticket'] + "/" + res['from'] + "/" + res['to'] + "/" + res['area'] + "/" + res['status']
                     },
                     error : function(err) {
                         alert('An error occurred upon downloading')

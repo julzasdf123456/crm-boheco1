@@ -367,7 +367,7 @@ Route::post('/tickets/update-ordinary-ticket-assessment', [App\Http\Controllers\
 Route::get('/tickets/ticket-summary-report', [App\Http\Controllers\TicketsController::class, 'ticketSummaryReport'])->name('tickets.ticket-summary-report');
 Route::get('/tickets/get-ticket-summary-report', [App\Http\Controllers\TicketsController::class, 'getTicketSummaryResults'])->name('tickets.get-ticket-summary-report');
 Route::get('/tickets/ticket-summary-report-download-route', [App\Http\Controllers\TicketsController::class, 'ticketSummaryReportDownloadRoute'])->name('tickets.ticket-summary-report-download-route');
-Route::get('/tickets/download-tickets-summary-report/{ticketParam}/{from}/{to}/{area}', [App\Http\Controllers\TicketsController::class, 'downloadTicketsSummaryReport'])->name('tickets.download-tickets-summary-report');
+Route::get('/tickets/download-tickets-summary-report/{ticketParam}/{from}/{to}/{area}/{status}', [App\Http\Controllers\TicketsController::class, 'downloadTicketsSummaryReport'])->name('tickets.download-tickets-summary-report');
 Route::get('/tickets/disconnection-assessments', [App\Http\Controllers\TicketsController::class, 'disconnectionAssessments'])->name('tickets.disconnection-assessments');
 Route::get('/tickets/get-disconnection-results', [App\Http\Controllers\TicketsController::class, 'getDisconnectionResults'])->name('tickets.get-disconnection-results');
 Route::get('/tickets/disconnection-results-route', [App\Http\Controllers\TicketsController::class, 'disconnectionResultsRoute'])->name('tickets.disconnection-results-route');

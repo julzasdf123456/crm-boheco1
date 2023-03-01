@@ -142,7 +142,7 @@ use Illuminate\Support\Facades\Auth;
                 </li> --}}
             @endcanany
 
-            @if (Auth::user()->hasRole('Metering Personnel'))
+            @canany(['Super Admin', 'update metering data'])
             <li class="nav-item">
                 <a href="{{ route('serviceConnectionMtrTrnsfrmrs.assigning') }}"
                 class="nav-link {{ Request::is('serviceConnectionMtrTrnsfrmrs.assigning') ? 'active' : '' }}">
@@ -152,7 +152,7 @@ use Illuminate\Support\Facades\Auth;
                     </p>
                 </a>
             </li>
-            @endif
+            @endcanany
 
             @canany(['Super Admin', 'sc view'])
             <li class="nav-item">

@@ -287,7 +287,7 @@ class ServiceConnectionMtrTrnsfrmrController extends AppBaseController
                                         'CRM_Towns.Town as Town',
                                         'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
                                         'CRM_Barangays.Barangay as Barangay')
-                        ->whereRaw("CRM_ServiceConnections.id NOT IN (SELECT ServiceConnectionId FROM CRM_ServiceConnectionMeterAndTransformer) AND CRM_ServiceConnections.created_at > '2023-02-28'")
+                        ->whereRaw("CRM_ServiceConnections.id NOT IN (SELECT ServiceConnectionId FROM CRM_ServiceConnectionMeterAndTransformer) AND CRM_ServiceConnections.created_at > '2023-02-28' AND ConnectionApplicationType IN ('Relocation')")
                         ->where(function ($query) {
                             $query->where('CRM_ServiceConnections.Trash', 'No')
                                 ->orWhereNull('CRM_ServiceConnections.Trash');
