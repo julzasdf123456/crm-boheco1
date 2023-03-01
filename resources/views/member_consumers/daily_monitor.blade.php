@@ -35,6 +35,8 @@
                             <th>Membership ID</th>
                             <th>Applicant Name</th>
                             <th>Address</th>
+                            <th>OR Number</th>
+                            <th>OR Date</th>
                         </thead>
                         <tbody>
 

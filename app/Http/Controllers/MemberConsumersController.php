@@ -1027,8 +1027,8 @@ class MemberConsumersController extends AppBaseController
                             'CRM_MemberConsumers.DateApproved as DateApproved', 
                             'CRM_MemberConsumers.ContactNumbers as ContactNumbers', 
                             'CRM_MemberConsumers.EmailAddress as EmailAddress',  
-                            'CRM_MemberConsumers.Notes as Notes', 
-                            'CRM_MemberConsumers.Gender as Gender', 
+                            'CRM_MemberConsumers.ORNumber', 
+                            'CRM_MemberConsumers.ORDate', 
                             'CRM_MemberConsumers.Sitio as Sitio', 
                             'CRM_MemberConsumerTypes.*',
                             'CRM_Towns.Town as Town',
@@ -1044,6 +1044,8 @@ class MemberConsumersController extends AppBaseController
                             <td><a href="' . route('memberConsumers.show', [$item->ConsumerId]) . '">' . $item->ConsumerId . '</a></td>
                             <td>' . MemberConsumers::serializeMemberName($item) . '</td>
                             <td>' . MemberConsumers::getAddress($item) . '</td>
+                            <td>' . $item->ORNumber . '</td>
+                            <td>' . ($item->ORDate != null ? date('M d, Y', strtotime($item->ORDate)) : '') . '</td>
                         </tr>   
                     ';
         }
