@@ -302,9 +302,9 @@ p {
         <div class="col-sm-3">
             <p class="text-center">NAME</p>
             @if ($memberConsumer->MembershipType == MemberConsumers::getJuridicalId())
-                <p class="text-center"><u><strong>{{ MemberConsumers::serializeSpouse($memberConsumer) }}</strong></u></p>
+                <p class="text-center"><u><strong>{{ strtoupper(MemberConsumers::serializeSpouse($memberConsumer)) }}</strong></u></p>
             @else
-                <p class="text-center"><u><strong>{{ MemberConsumers::serializeMemberNameFormal($memberConsumer) }}</strong></u></p>
+                <p class="text-center"><u><strong>{{ strtoupper(MemberConsumers::serializeMemberNameFormal($memberConsumer)) }}</strong></u></p>
             @endif
             <p class="text-center"><u><strong>{{ env('SC_ISD_MANAGER') }}</strong></u></p>
         </div>
@@ -329,7 +329,7 @@ p {
                 before me that the same is their free and voluntary act and deed.</p>
 
             <p class="left-indent-p">
-                <u><strong>{{ $memberConsumer->MembershipType == MemberConsumers::getJuridicalId() ? MemberConsumers::serializeSpouse($memberConsumer) : $serviceConnection->ServiceAccountName }}</strong></u>
+                <u><strong>{{ $memberConsumer->MembershipType == MemberConsumers::getJuridicalId() ? strtoupper(MemberConsumers::serializeSpouse($memberConsumer)) : $serviceConnection->ServiceAccountName }}</strong></u>
                  further acknowledge before me that he executed and signed the foregoing contract In his capacity as ISD Manager of {{ env('APP_COMPANY_ABRV') }}, while
                 <u><strong>{{ env('SC_ISD_MANAGER') }}</strong></u> acknowledges that he/she executed and signed the same as the owner of the premises where the 
                 electrical installation subject matter of this contract is located.

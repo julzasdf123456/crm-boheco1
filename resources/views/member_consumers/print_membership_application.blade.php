@@ -96,6 +96,10 @@ p {
     margin: 3px !important;
 }
 
+.float-left {
+    float: left;
+}
+
 .text-underline {
     border-bottom: 1px solid #878787;
 }
@@ -106,6 +110,7 @@ p {
 <div class="container form-margin wrapper" style="font-size: 1.15em !important;">
 	
 	<div class="content">
+        <img src="{{ URL::asset('imgs/company_logo.png'); }}" class="float-left" style="height: 55px;" alt="Image"> 
 		<p class="text-center">BOHOL I ELECTRIC COOPERATIVE, INC.</p>
 		<p class="text-center">Cabulijan, Tubigon. Bohol</p>
 
@@ -157,7 +162,7 @@ p {
 				<br>
 
 				<?php if($memberConsumerSpouse != null) : ?>
-					<p class="text-underline text-center text-allcaps"><strong>{{ MemberConsumerSpouse::serializeMemberSpouseName($memberConsumerSpouse) }}</strong></p>
+					<p class="text-underline text-center text-allcaps"><strong>{{ strtoupper(MemberConsumerSpouse::serializeMemberSpouseName($memberConsumerSpouse)) }}</strong></p>
 					<p class="text-center"><i>Printed Name & Signature of Spouse</i></p>
 				<?php endif ?>					
 
