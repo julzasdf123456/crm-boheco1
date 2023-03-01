@@ -97,7 +97,7 @@
                     <tr>
                         <th style="border-top: 1px solid #cdcdcd">Over All Total</th>
                         <th class="text-right text-primary" style="font-size: 2em; border-top: 1px solid #cdcdcd">                                
-                            ₱ <span id="overall-total-display">{{ $totalTransactions != null ? number_format($totalTransactions->Total, 2) : '0.00' }}</span></th>
+                            ₱ <span id="overall-total-display">{{ $totalTransactions != null ? (is_numeric($totalTransactions->Total) ? number_format($totalTransactions->Total, 2) : '0.00') : '0.00' }}</span></th>
                     </tr>
                 </table>
             </div>
