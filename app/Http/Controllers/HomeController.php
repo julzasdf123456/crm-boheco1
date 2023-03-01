@@ -32,7 +32,7 @@ class HomeController extends Controller
     public function fetchUnassignedMeters(Request $request) {
         if ($request->ajax()) {            
             $data = DB::table('CRM_ServiceConnections')
-                    ->whereRaw("id NOT IN (SELECT ServiceConnectionId FROM CRM_ServiceConnectionMeterAndTransformer)")
+                    ->whereRaw("id NOT IN (SELECT ServiceConnectionId FROM CRM_ServiceConnectionMeterAndTransformer) AND created_at > '2023-02-28'")
                     ->where(function ($query) {
                         $query->where('Trash', 'No')
                             ->orWhereNull('Trash');
