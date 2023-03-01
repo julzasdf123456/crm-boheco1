@@ -108,7 +108,7 @@
                                             ->first();
                                     @endphp
                                     <div class='form-check'>
-                                        <input type="checkbox" class='form-check-input' id="{{ $item->id }}" value='{{ $item->id }}' name="ChecklistId[]" {{ $checkListRecord != null ? 'checked' : '' }}>
+                                        <input type="checkbox" class='form-check-input' onchange="checkChange('{{ $item->id }}')" id="{{ $item->id }}" value='{{ $item->id }}' name="ChecklistId[]" {{ $checkListRecord != null ? 'checked' : '' }}>
                                         
                                         @if ($item->Minimum == 'Yes')
                                             <span class="text-danger"><strong> * </strong></span>
@@ -139,6 +139,31 @@
 
 @push('page_scripts')
     <script>
+        function checkChange(id) {
+            if ($('#' + id).prop('checked')) {
+                var val = $('#' + id).val()
+                if (val=='1659417607786' | val=='1659417758454' | val=='1659417944097') {
+                    $('#1659417589333').prop('checked', true)
+                    $('#1659417580480').prop('checked', true)
+
+                    $('#1659417741973').prop('checked', true)
+                    $('#1659417750332').prop('checked', true)
+
+                    $('#1659417925173').prop('checked', true)
+                    $('#1659417935911').prop('checked', true)
+                } else {
+                    $('#1659417589333').prop('checked', false)
+                    $('#1659417580480').prop('checked', false)
+
+                    $('#1659417741973').prop('checked', false)
+                    $('#1659417750332').prop('checked', false)
+
+                    $('#1659417925173').prop('checked', false)
+                    $('#1659417935911').prop('checked', false)
+                }
+            }
+        }
+
         function uploadData(id) {
             var formData = new FormData(document.getElementById('upload-' + id))
         

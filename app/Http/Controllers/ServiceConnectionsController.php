@@ -943,7 +943,6 @@ class ServiceConnectionsController extends AppBaseController
             }
         }
         
-
         /**
          * ASSESS PERMISSIONS
          */
