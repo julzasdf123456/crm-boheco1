@@ -152,14 +152,14 @@
                     $('#1659417925173').prop('checked', true)
                     $('#1659417935911').prop('checked', true)
                 } else {
-                    $('#1659417589333').prop('checked', false)
-                    $('#1659417580480').prop('checked', false)
+                    $('#1659417589333').removeAttr('checked')
+                    $('#1659417580480').removeAttr('checked')
 
-                    $('#1659417741973').prop('checked', false)
-                    $('#1659417750332').prop('checked', false)
+                    $('#1659417741973').removeAttr('checked')
+                    $('#1659417750332').removeAttr('checked')
 
-                    $('#1659417925173').prop('checked', false)
-                    $('#1659417935911').prop('checked', false)
+                    $('#1659417925173').removeAttr('checked')
+                    $('#1659417935911').removeAttr('checked')
                 }
             }
         }
