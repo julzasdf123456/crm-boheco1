@@ -60,6 +60,7 @@ class HomeController extends Controller
                     })
                     ->select('CRM_ServiceConnections.id as id',
                         'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName', 
+                        'CRM_ServiceConnections.ConnectionApplicationType', 
                         'CRM_Towns.Town as Town',
                         'CRM_Barangays.Barangay as Barangay',)
                     ->orderBy('CRM_ServiceConnections.ServiceAccountName')

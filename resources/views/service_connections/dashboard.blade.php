@@ -235,6 +235,7 @@
                     <thead>
                         <th>ID</th>
                         <th>Service Account Name</th>
+                        <th>Type</th>
                         <th>Address</th>
                     </thead>
                     <tbody>
@@ -252,11 +253,11 @@
 </div>
 
 @push('page_css')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg==" crossorigin="anonymous" />
+{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg==" crossorigin="anonymous" /> --}}
 @endpush
 
 @push('page_scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-k6/Bkb8Fxf/c1Tkyl39yJwcOZ1P4cRrJu77p83zJjN2Z55prbFHxPs9vN7q3l3+tSMGPDdoH51AEU8Vgo1cgAA==" crossorigin="anonymous"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-k6/Bkb8Fxf/c1Tkyl39yJwcOZ1P4cRrJu77p83zJjN2Z55prbFHxPs9vN7q3l3+tSMGPDdoH51AEU8Vgo1cgAA==" crossorigin="anonymous"></script> --}}
     <script type="text/javascript">
         $(document).ready(function() {
             $("#target").datetimepicker({
@@ -307,21 +308,21 @@
             })
         }
 
-        $("#main").HTMLSVGconnect({
-            stroke: "#787878",
-            strokeWidth: 4,
-            orientation: "auto",
-            paths: [
-                { start: "#receivedDash", end: "#inspectionDash"},
-                { start: "#inspectionDash", end: "#approvedDash"},
-                { start: "#receivedDash", end: "#powerLoadInspectionDash"},
-                { start: "#approvedDash", end: "#meteringDash"},
-                { start: "#meteringDash", end: "#energizationDash"},
-                { start: "#powerLoadInspectionDash", end: "#bomDash"},
-                { start: "#bomDash", end: "#transformerDash"},
-                { start: "#transformerDash", end: "#inspectionDash"},
-            ]
-        });
+        // $("#main").HTMLSVGconnect({
+        //     stroke: "#787878",
+        //     strokeWidth: 4,
+        //     orientation: "auto",
+        //     paths: [
+        //         { start: "#receivedDash", end: "#inspectionDash"},
+        //         { start: "#inspectionDash", end: "#approvedDash"},
+        //         { start: "#receivedDash", end: "#powerLoadInspectionDash"},
+        //         { start: "#approvedDash", end: "#meteringDash"},
+        //         { start: "#meteringDash", end: "#energizationDash"},
+        //         { start: "#powerLoadInspectionDash", end: "#bomDash"},
+        //         { start: "#bomDash", end: "#transformerDash"},
+        //         { start: "#transformerDash", end: "#inspectionDash"},
+        //     ]
+        // });
 
         // NEW CONNECTIONS DASH
         $.ajax({
@@ -460,7 +461,7 @@
                     $('#approved-table tbody tr').remove();
                     $.each(response, function(index, element) {
                         console.log(response[index]['id']);
-                        $('#approved-table tbody').append('<tr><td><a href="/serviceConnections/' + response[index]["id"] + '">' + response[index]['id'] + '</a></td><td>' + response[index]['ServiceAccountName'] + '</td><td>' + response[index]['Barangay'] + ', ' + response[index]['Town'] + '</td></tr>');
+                        $('#approved-table tbody').append('<tr><td><a href="/serviceConnections/' + response[index]["id"] + '">' + response[index]['id'] + '</a></td><td>' + response[index]['ServiceAccountName'] + '</td><td>' + response[index]['ConnectionApplicationType'] + '</td><td>' + response[index]['Barangay'] + ', ' + response[index]['Town'] + '</td></tr>');
                     });
                 },
                 error : function(error) {
@@ -642,7 +643,5 @@
                 console.log(error)
             }
         })
-
-        
     </script>
 @endpush
