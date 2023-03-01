@@ -321,6 +321,52 @@
     </div> 
 </div>
 
+<!-- ORNumber Field -->
+<div class="form-group col-sm-12">
+    <div class="row">
+        <div class="col-lg-3 col-md-5">
+            {!! Form::label('ORNumber', 'OR Number') !!}
+        </div>
+
+        <div class="col-lg-9 col-md-7">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                </div>
+                {!! Form::text('ORNumber', null, ['class' => 'form-control form-control-sm','maxlength' => 255,'maxlength' => 255, 'placeholder' => 'ORNumber']) !!}
+            </div>
+        </div>
+    </div> 
+</div>
+
+<!-- DateApplied Field -->
+<div class="form-group col-sm-12">
+    <div class="row">
+        <div class="col-lg-3 col-md-5">
+            {!! Form::label('ORDate', 'OR Date') !!}
+        </div>
+
+        <div class="col-lg-9 col-md-7">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                </div>
+                {!! Form::text('ORDate', isset($memberConsumers) || $memberConsumers != null ? ($memberConsumers->ORDate != null ? $memberConsumers->ORDate : '') : date('Y-m-d'), ['class' => 'form-control form-control-sm','id'=>'ORDate', 'placeholder' => 'Date Applied']) !!}
+            </div>
+        </div>
+    </div>   
+    
+    @push('page_scripts')
+        <script type="text/javascript">
+            $('#ORDate').datetimepicker({
+                format: 'YYYY-MM-DD',
+                useCurrent: true,
+                sideBySide: true
+            })
+        </script>
+    @endpush
+</div>
+
 <!-- DateApplied Field -->
 <div class="form-group col-sm-12">
     <div class="row">

@@ -64,6 +64,8 @@ Route::get('/member_consumers/monthly-reports', [MemberConsumersController::clas
 Route::get('/member_consumers/download-monthly-reports/{town}/{month}/{year}/{office}', [MemberConsumersController::class, 'downloadMonthlyReports'])->name('memberConsumers.download-monthly-reports');
 Route::get('/member_consumers/quarterly-reports', [MemberConsumersController::class, 'quarterlyReports'])->name('memberConsumers.quarterly-reports');
 Route::get('/member_consumers/download-quarterly-reports/{town}/{quarter}/{year}', [MemberConsumersController::class, 'downloadQuarterlyReports'])->name('memberConsumers.download-quarterly-reports');
+Route::get('/member_consumers/daily-monitor', [MemberConsumersController::class, 'dailyMonitor'])->name('memberConsumers.daily-monitor');
+Route::get('/member_consumers/daily-monitor-data', [MemberConsumersController::class, 'dailyMonitorData'])->name('memberConsumers.daily-monitor-data');
 Route::resource('memberConsumers', MemberConsumersController::class);
 
 

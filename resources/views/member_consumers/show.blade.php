@@ -59,6 +59,12 @@ use App\Models\MemberConsumers;
                                 <b>Status</b> <a class="float-right">{{ $memberConsumers->ApplicationStatus }}</a>
                             </li>
                             <li class="list-group-item">
+                                <b>OR Number</b> <a class="float-right">{{ $memberConsumers->ORNumber }}</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>OR Date</b> <a class="float-right">{{ $memberConsumers->ORDate != null ? date('M d, Y', strtotime($memberConsumers->ORDate)) : '' }}</a>
+                            </li>
+                            <li class="list-group-item">
                                 <b>Date Applied</b> <a class="float-right">{{ date('F d, Y', strtotime($memberConsumers->DateApplied)) }}</a>
                             </li>
                             <li class="list-group-item">

@@ -39,12 +39,12 @@ use Illuminate\Support\Facades\Auth;
                     Reports
                 </li>
 
-                {{-- <li class="nav-item">
-                    <a href="{{ route('memberConsumers.monthly-reports') }}"
-                    class="nav-link {{ Request::is('memberConsumers.monthly-reports*') ? 'active' : '' }}">
+                <li class="nav-item">
+                    <a href="{{ route('memberConsumers.daily-monitor') }}"
+                    class="nav-link {{ Request::is('memberConsumers.daily-monitor*') ? 'active' : '' }}">
                     <i class="fas fa-circle nav-icon text-success"></i><p>Daily Monitor</p>
                     </a>
-                </li> --}}
+                </li>
 
                 <li class="nav-item">
                     <a href="{{ route('memberConsumers.monthly-reports') }}"
