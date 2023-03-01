@@ -243,7 +243,7 @@
                     </tr>
                     <tr>
                         <td>Bill Deposit</td>
-                        <th  class="text-right">P {{ number_format($totalTransactions->BillDeposit, 2) }}</th>
+                        <th  class="text-right">P {{is_numeric($totalTransactions->BillDeposit) ? number_format($totalTransactions->BillDeposit, 2) : '0.00' }}</th>
                     </tr>
                     @foreach ($particularPayments as $item)
                         <tr>
@@ -253,7 +253,7 @@
                     @endforeach
                     <tr>
                         <td>Total VAT</td>
-                        <th  class="text-right">P {{ number_format($totalTransactions->TotalVat, 2) }}</th>
+                        <th  class="text-right">P {{is_numeric($totalTransactions->TotalVAT) ? number_format($totalTransactions->TotalVAT, 2) : '0.00' }}</th>
                     </tr>
                     <tr>
                         <td>2% WItholding Tax</td>
@@ -265,7 +265,7 @@
                     </tr>
                     <tr>
                         <th class="text-left">Total Payables</th>
-                        <th  class="text-right" style="font-size: 1em;">P {{ number_format($totalTransactions->Total, 2) }}</th>
+                        <th  class="text-right" style="font-size: 1em;">P {{ is_numeric($totalTransactions->Total) ? number_format($totalTransactions->Total, 2) : '0.00' }}</th>
                     </tr>
                 </table>       
             </div>
