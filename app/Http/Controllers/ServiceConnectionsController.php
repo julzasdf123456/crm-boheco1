@@ -2977,6 +2977,7 @@ class ServiceConnectionsController extends AppBaseController
             ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
             ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')   
             ->whereRaw("StationCrewAssigned IS NULL AND CRM_ServiceConnections.Status NOT IN('Energized', 'Closed') AND (Trash IS NULL OR Trash='No') AND Office='" . $office . "'") 
+            ->whereRaw("CRM_ServiceConnections.created_at > '2023-02-28'")
             ->select(
                 'CRM_ServiceConnections.id',
                 'ServiceAccountName',
