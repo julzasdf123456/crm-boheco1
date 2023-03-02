@@ -33,6 +33,18 @@ class TicketsController extends Controller {
         }
     }
 
+    public function getArchiveTickets(Request $request) {
+        $endDate = date('Y-m-d', strtotime('today -11 days'));
+        $tickets = Tickets::whereRaw("created_at > '" . $endDate . "' AND CrewAssigned NOT IN ('" . $request['CrewAssigned'] . "')")
+            ->get();
+
+        if ($tickets) {
+            return response()->json($tickets, $this->successStatus);
+        } else {
+            return response()->json(['response' => 'Error fetching tickets', 401]);
+        }
+    }
+
     public function updateDownloadedTicketsStatus(Request $request) {
         $tickets = Tickets::where('CrewAssigned', $request['CrewAssigned'])
             ->whereNotNull('CrewAssigned')
@@ -252,5 +264,13 @@ class TicketsController extends Controller {
         }
 
         return response()->json($tickets, $this->successStatus);
+    }
+
+    public function getCrewsFromStation(Request $request) {
+        $station = $request['CrewLeader'];
+
+        $crews = ServiceConnectionCrew::where('CrewLeader', $station)->get();
+
+        return response()->json($crews, 200);
     }
 }

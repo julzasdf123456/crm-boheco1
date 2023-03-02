@@ -34,7 +34,7 @@ class OtherData extends Controller {
     }
 
     public function getAllCrew() {
-        $crew = ServiceConnectionCrew::all();
+        $crew = ServiceConnectionCrew::get();
 
         if ($crew) {
             return response()->json($crew, $this->successStatus);

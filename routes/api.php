@@ -54,6 +54,8 @@ Route::get('get-ticket-types', [TicketrepositoriesController::class, 'getTicketT
 Route::get('get-downloadable-tickets', [TicketsController::class, 'getDownloadableTickets']);
 Route::get('update-downloaded-tickets-status', [TicketsController::class, 'updateDownloadedTicketsStatus']);
 Route::post('upload-tickets', [TicketsController::class, 'uploadTickets']);
+Route::get('get-crews-from-station', [TicketsController::class, 'getCrewsFromStation']);
+Route::get('get-archive-tickets', [TicketsController::class, 'getArchiveTickets']);
 
 // IMAGES
 Route::post('save-uploaded-images', [ServiceConnectionsEnergization::class, 'saveUploadedImages']);
