@@ -3528,7 +3528,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.ContactNumber',  
                                     'CRM_ServiceConnectionCrew.StationName',
                                     'CRM_Barangays.Barangay as Barangay')
-                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Ticket='" . Tickets::getChangeMeter() . "' AND Status NOT IN ('Executed', 'CANCELLED')")   
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Ticket='" . Tickets::getChangeMeter() . "' AND Status NOT IN ('Executed', 'CANCELLED') AND CRM_Tickets.created_at > '2023-02-28'")   
                     ->orderBy('CRM_Tickets.created_at')
                     ->get();
             } else {
@@ -3550,7 +3550,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.ContactNumber',  
                                     'CRM_ServiceConnectionCrew.StationName',
                                     'CRM_Barangays.Barangay as Barangay')
-                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Ticket='" . Tickets::getChangeMeter() . "' AND Status='" . $status . "'")   
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Ticket='" . Tickets::getChangeMeter() . "' AND Status='" . $status . "' AND CRM_Tickets.created_at > '2023-02-28'")   
                     ->orderBy('CRM_Tickets.created_at')
                     ->get();
             }
@@ -3597,7 +3597,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.ContactNumber',  
                                     'CRM_ServiceConnectionCrew.StationName',
                                     'CRM_Barangays.Barangay as Barangay')
-                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Ticket='" . Tickets::getChangeMeter() . "' AND CrewAssigned='" . $crew . "' AND Status='" . $status . "'")   
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Ticket='" . Tickets::getChangeMeter() . "' AND CrewAssigned='" . $crew . "' AND Status='" . $status . "' AND CRM_Tickets.created_at > '2023-02-28'")   
                     ->orderBy('CRM_Tickets.created_at')
                     ->get();
             }
