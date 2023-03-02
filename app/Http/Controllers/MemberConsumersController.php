@@ -314,120 +314,113 @@ class MemberConsumersController extends AppBaseController
     }
 
     public function fetchmemberconsumer(Request $request) {
-        if ($request->ajax()) {
-            $query = $request->get('query');
+        $query = $request['query'];
             
-            if ($query != '' ) {
-                $data = DB::table('CRM_MemberConsumers')
-                    ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
-                    ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
-                    ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
-                    ->select('CRM_MemberConsumers.Id as ConsumerId',
-                                    'CRM_MemberConsumers.MembershipType as MembershipType', 
-                                    'CRM_MemberConsumers.FirstName as FirstName', 
-                                    'CRM_MemberConsumers.MiddleName as MiddleName', 
-                                    'CRM_MemberConsumers.LastName as LastName', 
-                                    'CRM_MemberConsumers.OrganizationName as OrganizationName', 
-                                    'CRM_MemberConsumers.Suffix as Suffix', 
-                                    'CRM_MemberConsumers.Birthdate as Birthdate', 
-                                    'CRM_MemberConsumers.Barangay as Barangay', 
-                                    'CRM_MemberConsumers.ApplicationStatus as ApplicationStatus',
-                                    'CRM_MemberConsumers.DateApplied as DateApplied', 
-                                    'CRM_MemberConsumers.CivilStatus as CivilStatus', 
-                                    'CRM_MemberConsumers.DateApproved as DateApproved', 
-                                    'CRM_MemberConsumers.ContactNumbers as ContactNumbers', 
-                                    'CRM_MemberConsumers.EmailAddress as EmailAddress',  
-                                    'CRM_MemberConsumers.Notes as Notes', 
-                                    'CRM_MemberConsumers.Gender as Gender', 
-                                    'CRM_MemberConsumers.Sitio as Sitio', 
-                                    'CRM_MemberConsumerTypes.*',
-                                    'CRM_Towns.Town as Town',
-                                    'CRM_Barangays.Barangay as Barangay')
-                    ->where('CRM_MemberConsumers.LastName', 'LIKE', '%' . $query . '%')
-                    ->orWhere('CRM_MemberConsumers.Id', 'LIKE', '%' . $query . '%')
-                    ->orWhere('CRM_MemberConsumers.MiddleName', 'LIKE', '%' . $query . '%')
-                    ->orWhere('CRM_MemberConsumers.FirstName', 'LIKE', '%' . $query . '%')
-                    ->whereRaw("CRM_MemberConsumers.Notes NOT IN ('BILLING ACCOUNT GROUPING PARENT') OR CRM_MemberConsumers.Notes IS NULL")
-                    ->orderBy('CRM_MemberConsumers.FirstName')
-                    ->get();
-            } else {
-                $data = DB::table('CRM_MemberConsumers')
-                    ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
-                    ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
-                    ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
-                    ->select('CRM_MemberConsumers.Id as ConsumerId',
-                                    'CRM_MemberConsumers.MembershipType as MembershipType', 
-                                    'CRM_MemberConsumers.FirstName as FirstName', 
-                                    'CRM_MemberConsumers.MiddleName as MiddleName', 
-                                    'CRM_MemberConsumers.LastName as LastName', 
-                                    'CRM_MemberConsumers.OrganizationName as OrganizationName', 
-                                    'CRM_MemberConsumers.Suffix as Suffix', 
-                                    'CRM_MemberConsumers.Birthdate as Birthdate', 
-                                    'CRM_MemberConsumers.Barangay as Barangay', 
-                                    'CRM_MemberConsumers.ApplicationStatus as ApplicationStatus',
-                                    'CRM_MemberConsumers.DateApplied as DateApplied', 
-                                    'CRM_MemberConsumers.CivilStatus as CivilStatus', 
-                                    'CRM_MemberConsumers.DateApproved as DateApproved', 
-                                    'CRM_MemberConsumers.ContactNumbers as ContactNumbers', 
-                                    'CRM_MemberConsumers.EmailAddress as EmailAddress',  
-                                    'CRM_MemberConsumers.Notes as Notes', 
-                                    'CRM_MemberConsumers.Gender as Gender', 
-                                    'CRM_MemberConsumers.Sitio as Sitio', 
-                                    'CRM_MemberConsumerTypes.*',
-                                    'CRM_Towns.Town as Town',
-                                    'CRM_Barangays.Barangay as Barangay')
-                    ->whereRaw("CRM_MemberConsumers.Notes NOT IN ('BILLING ACCOUNT GROUPING PARENT') OR CRM_MemberConsumers.Notes IS NULL")
-                    ->orderByDesc('CRM_MemberConsumers.created_at')
-                    ->take(10)
-                    ->get();
-            }
+        if (isset($query)) {
+            $data = DB::table('CRM_MemberConsumers')
+                ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                ->select('CRM_MemberConsumers.Id as ConsumerId',
+                                'CRM_MemberConsumers.MembershipType as MembershipType', 
+                                'CRM_MemberConsumers.FirstName as FirstName', 
+                                'CRM_MemberConsumers.MiddleName as MiddleName', 
+                                'CRM_MemberConsumers.LastName as LastName', 
+                                'CRM_MemberConsumers.OrganizationName as OrganizationName', 
+                                'CRM_MemberConsumers.Suffix as Suffix', 
+                                'CRM_MemberConsumers.Birthdate as Birthdate', 
+                                'CRM_MemberConsumers.Barangay as Barangay', 
+                                'CRM_MemberConsumers.ApplicationStatus as ApplicationStatus',
+                                'CRM_MemberConsumers.DateApplied as DateApplied', 
+                                'CRM_MemberConsumers.CivilStatus as CivilStatus', 
+                                'CRM_MemberConsumers.DateApproved as DateApproved', 
+                                'CRM_MemberConsumers.ContactNumbers as ContactNumbers', 
+                                'CRM_MemberConsumers.EmailAddress as EmailAddress',  
+                                'CRM_MemberConsumers.Notes as Notes', 
+                                'CRM_MemberConsumers.Gender as Gender', 
+                                'CRM_MemberConsumers.Sitio as Sitio', 
+                                'CRM_MemberConsumerTypes.*',
+                                'CRM_Towns.Town as Town',
+                                'CRM_Barangays.Barangay as Barangay')
+                ->whereRaw("CRM_MemberConsumers.LastName LIKE '%" . $query . "%' OR CRM_MemberConsumers.Id LIKE '%" . $query . "%' OR CRM_MemberConsumers.MiddleName LIKE '%" . $query . "%' OR CRM_MemberConsumers.FirstName LIKE '%" . $query . "%'")
+                ->orderBy('CRM_MemberConsumers.FirstName')
+                ->get();
+        } else {
+            $data = DB::table('CRM_MemberConsumers')
+                ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                ->select('CRM_MemberConsumers.Id as ConsumerId',
+                                'CRM_MemberConsumers.MembershipType as MembershipType', 
+                                'CRM_MemberConsumers.FirstName as FirstName', 
+                                'CRM_MemberConsumers.MiddleName as MiddleName', 
+                                'CRM_MemberConsumers.LastName as LastName', 
+                                'CRM_MemberConsumers.OrganizationName as OrganizationName', 
+                                'CRM_MemberConsumers.Suffix as Suffix', 
+                                'CRM_MemberConsumers.Birthdate as Birthdate', 
+                                'CRM_MemberConsumers.Barangay as Barangay', 
+                                'CRM_MemberConsumers.ApplicationStatus as ApplicationStatus',
+                                'CRM_MemberConsumers.DateApplied as DateApplied', 
+                                'CRM_MemberConsumers.CivilStatus as CivilStatus', 
+                                'CRM_MemberConsumers.DateApproved as DateApproved', 
+                                'CRM_MemberConsumers.ContactNumbers as ContactNumbers', 
+                                'CRM_MemberConsumers.EmailAddress as EmailAddress',  
+                                'CRM_MemberConsumers.Notes as Notes', 
+                                'CRM_MemberConsumers.Gender as Gender', 
+                                'CRM_MemberConsumers.Sitio as Sitio', 
+                                'CRM_MemberConsumerTypes.*',
+                                'CRM_Towns.Town as Town',
+                                'CRM_Barangays.Barangay as Barangay')
+                ->orderByDesc('CRM_MemberConsumers.created_at')
+                ->take(10)
+                ->get();
+        }
 
-            $total_row = $data->count();
-            if ($total_row > 0) {
-                $output = '';
-                foreach ($data as $row) {
+        $total_row = $data->count();
+        if ($total_row > 0) {
+            $output = '';
+            foreach ($data as $row) {
 
-                    $output .= '
-                        <div class="col-md-10 offset-md-1 col-lg-10 offset-lg-1" style="margin-top: 10px;">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6 col-lg-6">
-                                            <div>
-                                                <h4>' . MemberConsumers::serializeMemberName($row) . '</h4>
-                                                <p class="text-muted" style="margin-bottom: 0;">ID: ' . $row->ConsumerId . '</p>
-                                                <p class="text-muted" style="margin-bottom: 0;">' . $row->Barangay . ', ' . $row->Town  . '</p>
-                                                <a href="' . route('memberConsumers.show', [$row->ConsumerId]) . '" class="text-primary" style="margin-top: 5px; padding: 8px;" title="View"><i class="fas fa-eye"></i></a>
-                                                <a href="' . route('memberConsumers.edit', [$row->ConsumerId]) . '" class="text-warning" style="margin-top: 5px; padding: 8px;" title="Edit"><i class="fas fa-pen"></i></a>
-                                                <a href="' . route('memberConsumers.print-membership-application', [$row->ConsumerId]) . '" class="text-primary" style="margin-top: 5px; padding: 8px;" title="Print Membership Application Form"><i class="fas fa-print"></i></a>
-                                            </div>     
-                                        </div> 
+                $output .= '
+                    <div class="col-md-10 offset-md-1 col-lg-10 offset-lg-1" style="margin-top: 10px;">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6">
+                                        <div>
+                                            <h4>' . MemberConsumers::serializeMemberName($row) . '</h4>
+                                            <p class="text-muted" style="margin-bottom: 0;">ID: ' . $row->ConsumerId . '</p>
+                                            <p class="text-muted" style="margin-bottom: 0;">' . $row->Barangay . ', ' . $row->Town  . '</p>
+                                            <a href="' . route('memberConsumers.show', [$row->ConsumerId]) . '" class="text-primary" style="margin-top: 5px; padding: 8px;" title="View"><i class="fas fa-eye"></i></a>
+                                            <a href="' . route('memberConsumers.edit', [$row->ConsumerId]) . '" class="text-warning" style="margin-top: 5px; padding: 8px;" title="Edit"><i class="fas fa-pen"></i></a>
+                                            <a href="' . route('memberConsumers.print-membership-application', [$row->ConsumerId]) . '" class="text-primary" style="margin-top: 5px; padding: 8px;" title="Print Membership Application Form"><i class="fas fa-print"></i></a>
+                                        </div>     
+                                    </div> 
 
-                                        <div class="col-md-6 col-lg-6 d-sm-none d-md-block d-none d-sm-block" style="border-left: 2px solid #007bff; padding-left: 15px;">
-                                            <div>
-                                                <p class="text-muted" style="margin-bottom: 0;">Birthdate: <strong>' . date('F d, Y', strtotime($row->Birthdate)) . '</strong></p>
-                                                <p class="text-muted" style="margin-bottom: 0;">Contact No: <strong>' . $row->ContactNumbers . '</strong></p>
-                                                <p class="text-muted" style="margin-bottom: 0;">Email Add: <strong>' . $row->EmailAddress . '</strong></p>
-                                                <p class="text-muted" style="margin-bottom: 0;">Membership Type: <strong>' . $row->Type . '</strong></p>
-                                            </div>     
-                                        </div>
+                                    <div class="col-md-6 col-lg-6 d-sm-none d-md-block d-none d-sm-block" style="border-left: 2px solid #007bff; padding-left: 15px;">
+                                        <div>
+                                            <p class="text-muted" style="margin-bottom: 0;">Birthdate: <strong>' . date('F d, Y', strtotime($row->Birthdate)) . '</strong></p>
+                                            <p class="text-muted" style="margin-bottom: 0;">Contact No: <strong>' . $row->ContactNumbers . '</strong></p>
+                                            <p class="text-muted" style="margin-bottom: 0;">Email Add: <strong>' . $row->EmailAddress . '</strong></p>
+                                            <p class="text-muted" style="margin-bottom: 0;">Membership Type: <strong>' . $row->Type . '</strong></p>
+                                        </div>     
                                     </div>
                                 </div>
                             </div>
-                        </div>   
-                    ';
-                }                
-            } else {
-                $output = '
-                    <p class="text-center">No data found.</p>';
-            }
-
-            $data = [
-                'table_data' => $output
-            ];
-
-            echo json_encode($data);
+                        </div>
+                    </div>   
+                ';
+            }                
+        } else {
+            $output = '
+                <p class="text-center">No data found.</p>';
         }
+
+        // $data = [
+        //     'table_data' => $output
+        // ];
+
+        return response()->json($output, 200);
     }
 
     public function assessChecklists($id) {

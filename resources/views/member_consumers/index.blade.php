@@ -10,7 +10,7 @@
                 <!-- SEARCH BAR -->
                 <div class="col-md-8 offset-md-2">
                     <div class="input-group">
-                        <input type="search" id='searchparam' class="form-control" placeholder="Type Name or Member Consumer ID">
+                        <input type="search" id='searchparam' class="form-control" placeholder="Type Name or Member Consumer ID" autofocus>
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-default" id="searchBtn">
                                 <i class="fa fa-search"></i>
@@ -34,21 +34,23 @@
 
             fetchConsumers('');
 
-            function fetchConsumers(query = '') {
+            function fetchConsumers(query) {
                 $.ajax({
                     url : "{{ route('memberConsumers.fetch-member-consumers') }}",
                     method : 'GET',
-                    dataType : 'json',
                     data : { query : query },
                     success : function(data) {
-                        $('#search-results').html(data.table_data);
+                        $('#search-results').html(data);
                         // console.log(query);
                     }
                 });
             }
 
             $('#searchparam').on('keyup', function() {
-                fetchConsumers(this.value);
+                if (this.value.length > 4) {
+                    fetchConsumers(this.value);
+                }
+                
             });
 
             $('#searchBtn').on('click', function() {
