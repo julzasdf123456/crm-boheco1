@@ -79,7 +79,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
                                             </div>
-                                            {!! Form::text('ConsumerName', $serviceAccount==null ? '' : $serviceAccount->ConsumerName, ['class' => 'form-control','maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name']) !!}
+                                            {!! Form::text('ConsumerName', $serviceAccount==null ? '' : $serviceAccount->ConsumerName, ['class' => 'form-control','maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name', 'required' => 'true']) !!}
                                         </div>
                                     </div>  
                                 </div> 
@@ -114,7 +114,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
                                             </div>
-                                            {!! Form::text('ConsumerName', $serviceAccount != null ? $tickets->ConsumerName : '', ['class' => 'form-control','maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name']) !!}
+                                            {!! Form::text('ConsumerName', $serviceAccount != null ? $tickets->ConsumerName : '', ['class' => 'form-control','maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name', 'required' => 'true']) !!}
                                         </div>
                                     </div>  
                                 </div> 
@@ -151,7 +151,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                             </div>
-                                            {!! Form::select('Barangay', [], null, ['class' => 'form-control',]) !!}
+                                            {!! Form::select('Barangay', [], null, ['class' => 'form-control', 'required' => 'true']) !!}
                                         </div>
                                     </div>
                                 </div>    
@@ -208,7 +208,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                             </div>
-                                            {!! Form::text('ContactNumber', "0", ['class' => 'form-control','maxlength' => 100,'maxlength' => 100, 'placeholder' => 'Contact Number']) !!}
+                                            {!! Form::text('ContactNumber', "0", ['class' => 'form-control','maxlength' => 100,'maxlength' => 100, 'placeholder' => 'Contact Number', 'required' => 'true']) !!}
                                         </div>
                                     </div>
                                 </div> 
@@ -247,7 +247,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-user-check"></i></span>
                                             </div>
-                                            {!! Form::text('ReportedBy', null, ['class' => 'form-control','maxlength' => 200,'maxlength' => 200, 'placeholder' => 'Personnel who reported']) !!}
+                                            {!! Form::text('ReportedBy', null, ['class' => 'form-control','maxlength' => 200,'maxlength' => 200, 'placeholder' => 'Personnel who reported', 'required' => 'true']) !!}
                                         </div>
                                     </div>
                                 </div> 
