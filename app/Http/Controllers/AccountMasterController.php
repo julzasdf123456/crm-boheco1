@@ -312,4 +312,21 @@ class AccountMasterController extends AppBaseController
 
         return response()->json($accounts, 200);
     }
+
+    public function getNeighboringByAccount(Request $request) {
+        $accountNumber = $request['AccountNumber'];
+
+        $account = AccountMaster::where('AccountNumber', $accountNumber)->first();
+
+        if ($account != null) {
+            $accounts = DB::connection('sqlsrvbilling')->table('AccountMaster')
+                ->whereRaw("Route='" . $account->Route . "' AND AccountNumber NOT IN ('" . $accountNumber . "') AND Item1 IS NOT NULL")
+                ->select('Item1', 'AccountNumber', 'ConsumerName', 'SequenceNumber', 'Route', 'Pole')
+                ->get();
+        } else {
+            $accounts = [];
+        }
+
+        return response()->json($accounts, 200);
+    }
 }

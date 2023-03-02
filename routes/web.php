@@ -402,6 +402,8 @@ Route::get('/tickets/download-disco-reco/{from}/{to}/{office}', [App\Http\Contro
 Route::get('/tickets/get-crew-from-station', [App\Http\Controllers\TicketsController::class, 'getCrewFromStation'])->name('tickets.get-crew-from-station');
 Route::get('/tickets/forward-to-esd', [App\Http\Controllers\TicketsController::class, 'forwardToESD'])->name('tickets.forward-to-esd');
 Route::get('/tickets/undo-forward', [App\Http\Controllers\TicketsController::class, 'undoForward'])->name('tickets.undo-forward');
+Route::get('/tickets/account-finder', [App\Http\Controllers\TicketsController::class, 'accountFinder'])->name('tickets.account-finder');
+Route::get('/tickets/load-account-in-map', [App\Http\Controllers\TicketsController::class, 'loadAccountInMap'])->name('tickets.load-account-in-map');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 
@@ -704,6 +706,7 @@ Route::get('/account_masters/get-available-account-numbers', [App\Http\Controlle
 Route::get('/account_masters/account-migration-step-two/{id}/{scId}', [App\Http\Controllers\AccountMasterController::class, 'accountMigrationStepTwo'])->name('accountMasters.account-migration-step-two');
 Route::get('/account_masters/account-migration-step-three/{id}/{scId}', [App\Http\Controllers\AccountMasterController::class, 'accountMigrationStepThree'])->name('accountMasters.account-migration-step-three');
 Route::get('/account_masters/get-neighboring-by-barangay', [App\Http\Controllers\AccountMasterController::class, 'getNeighboringByBarangay'])->name('accountMasters.get-neighboring-by-barangay');
+Route::get('/account_masters/get-neighboring-by-account', [App\Http\Controllers\AccountMasterController::class, 'getNeighboringByAccount'])->name('accountMasters.get-neighboring-by-account');
 Route::resource('accountMasters', App\Http\Controllers\AccountMasterController::class);
 
 

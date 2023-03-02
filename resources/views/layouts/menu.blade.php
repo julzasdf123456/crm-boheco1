@@ -463,6 +463,13 @@ use Illuminate\Support\Facades\Auth;
                     @endcanany
                 </ul>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('tickets.account-finder') }}"
+                class="nav-link {{ Request::is('tickets.account-finder*') ? 'active' : '' }}">
+                    <i class="fas fa-map-marker-alt nav-icon text-danger"></i><p>Account Finder</p>
+                </a>
+            </li>
+
             @canany(['Super Admin', 'tickets edit'])
             <li class="nav-header">                
                 ESD/Operations 

@@ -4052,4 +4052,19 @@ class TicketsController extends AppBaseController
 
         return response()->json('ok', 200);
     }
+
+    public function accountFinder(Request $request) {
+        return view('/tickets/account_finder', [
+
+        ]);
+    }
+
+    public function loadAccountInMap(Request $request) {
+        $accountNumber = $request['AccountNumber'];
+
+        $account = AccountMaster::where('AccountNumber', $accountNumber)
+            ->first();
+
+        return response()->json($account, 200);
+    }
 }
