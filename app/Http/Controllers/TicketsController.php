@@ -71,10 +71,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.Office',   
                                     DB::raw("(SELECT TOP 1 Name FROM CRM_TicketsRepository WHERE id=CRM_TicketsRepository.id) AS ParentTicket"),
                                     'CRM_Barangays.Barangay as Barangay')
-                    ->where(function ($query) {
-                                        $query->where('CRM_Tickets.Trash', 'No')
-                                            ->orWhereNull('CRM_Tickets.Trash');
-                                    })
+                    ->whereRaw("(CRM_Tickets.Trash IS NULL OR CRM_Tickets.Trash='No')")
                     ->where('CRM_Tickets.id', 'LIKE', '%' . $params . '%')
                     ->orWhere('CRM_Tickets.ConsumerName', 'LIKE', '%' . $params . '%')
                     ->orWhere('CRM_Tickets.AccountNumber', 'LIKE', '%' . $params . '%')                   
@@ -96,10 +93,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.Office',  
                                     DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
                                     'CRM_Barangays.Barangay as Barangay')
-                    ->where(function ($query) {
-                                        $query->where('CRM_Tickets.Trash', 'No')
-                                            ->orWhereNull('CRM_Tickets.Trash');
-                                    })
+                    ->whereRaw("(CRM_Tickets.Trash IS NULL OR CRM_Tickets.Trash='No')")
                     ->orderByDesc('CRM_Tickets.created_at')
                     ->paginate(25);
         }
