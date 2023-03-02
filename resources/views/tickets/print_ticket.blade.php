@@ -225,12 +225,14 @@
                 <div class="col-6">
                     <p>Serial No</p>
                     <p>Brand</p>
+                    <p>Pullout Reading</p>
                     <p>Seal No.</p>
                 </div>
                 <div class="col-6">
                     <p style="border-bottom: 1px solid #989898;">:  <strong>{{ $tickets->CurrentMeterNo }}</strong></p>
                     <p style="border-bottom: 1px solid #989898;">:  <strong>{{ $tickets->CurrentMeterBrand }}</strong></p>
                     <p style="border-bottom: 1px solid #989898;">:  <strong>{{ $tickets->CurrentMeterReading }}</strong></p>
+                    <p style="border-bottom: 1px solid #989898;">:  <strong></strong></p>
                 </div>
             </div>
 
@@ -244,12 +246,14 @@
                 <div class="col-6">
                     <p>Serial No</p>
                     <p>Brand</p>
+                    <p>Start Reading</p>
                     <p>Seal No.</p>
                 </div>
                 <div class="col-6">
                     <p style="border-bottom: 1px solid #989898;">:  <strong>{{ $tickets->NewMeterNo }}</strong></p>
                     <p style="border-bottom: 1px solid #989898;">:  <strong>{{ $tickets->NewMeterBrand }}</strong></p>
                     <p style="border-bottom: 1px solid #989898;">:  <strong>{{ $tickets->NewMeterReading }}</strong></p>
+                    <p style="border-bottom: 1px solid #989898;">:  <strong></strong></p>
                 </div>
             </div>
 
@@ -275,7 +279,7 @@
         </div>
 
         <div class="col-4">
-            <p style="border-bottom: 1px solid #858585" class="center-text">{{ strtoupper($tickets->StationName) }}</p>
+            <p style="border-bottom: 1px solid #858585" class="center-text">{{ $tickets->StationName != null ? strtoupper($tickets->StationName) : '`' }}</p>
             <p class="center-text"><i>SERVICEMAN</i></p>
         </div>
 

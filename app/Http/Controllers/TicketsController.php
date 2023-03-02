@@ -1280,7 +1280,7 @@ class TicketsController extends AppBaseController
 
                 $right = null;
                 $meter = null;
-                return abort(404, "Account number not found or erroneous!");
+                // return abort(404, "Account number not found or erroneous!");
             }
         } else {
             $serviceAccount = null;

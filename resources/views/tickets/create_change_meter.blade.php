@@ -114,7 +114,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
                                             </div>
-                                            {!! Form::text('ConsumerName', $tickets->ConsumerName, ['class' => 'form-control','maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name']) !!}
+                                            {!! Form::text('ConsumerName', $serviceAccount != null ? $tickets->ConsumerName : '', ['class' => 'form-control','maxlength' => 500,'maxlength' => 500, 'placeholder' => 'Consumer Name']) !!}
                                         </div>
                                     </div>  
                                 </div> 
@@ -132,7 +132,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                             </div>
-                                            {!! Form::select('Town', $towns, $tickets->Town, ['class' => 'form-control']) !!}
+                                            {!! Form::select('Town', $towns, $serviceAccount !=null ? $tickets->Town : '', ['class' => 'form-control']) !!}
                                         </div>
                                     </div>
                                 </div>    
@@ -189,7 +189,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                             </div>
-                                            {!! Form::text('Sitio', $tickets->Sitio, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000, 'placeholder' => 'Sitio']) !!}
+                                            {!! Form::text('Sitio', $serviceAccount != null ? $tickets->Sitio : '', ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000, 'placeholder' => 'Sitio']) !!}
                                         </div>
                                     </div>
                                 </div> 
@@ -301,7 +301,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-street-view"></i></span>
                                             </div>
-                                            {!! Form::text('Neighbor1', $left != null ? $left->ConsumerName : ($tickets != null && $tickets->Neighbor1 != null ? $tickets->Neighbor1 : ''), ['class' => 'form-control form-control-sm', 'placeholder' => 'Neighbor 1']) !!}
+                                            {!! Form::text('Neighbor1', $left != null ? $left->ConsumerName : ($serviceAccount != null ? ($tickets != null && $tickets->Neighbor1 != null ? $tickets->Neighbor1 : '') : ''), ['class' => 'form-control form-control-sm', 'placeholder' => 'Neighbor 1']) !!}
                                         </div>
                                     </div>
                                 </div> 
@@ -319,7 +319,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-street-view"></i></span>
                                             </div>
-                                            {!! Form::text('Neighbor2', $right != null ? $right->ConsumerName : ($tickets != null && $tickets->Neighbor2 != null ? $tickets->Neighbor2 : ''), ['class' => 'form-control form-control-sm', 'placeholder' => 'Neighbor 2']) !!}
+                                            {!! Form::text('Neighbor2', $right != null ? $right->ConsumerName : ($serviceAccount != null ? ($tickets != null && $tickets->Neighbor2 != null ? $tickets->Neighbor2 : '') : ''), ['class' => 'form-control form-control-sm', 'placeholder' => 'Neighbor 2']) !!}
                                         </div>
                                     </div>
                                 </div> 

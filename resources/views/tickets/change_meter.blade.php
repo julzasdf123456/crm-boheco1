@@ -25,6 +25,7 @@
                     </div>
                     <div class="col-md-2">
                         {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
+                        <a href="{{ route('tickets.create-change-meter', ['0']) }}" class="btn btn-warning" style="margin-left: 20px;">Skip</a>
                     </div>
                 </div>
             {!! Form::close() !!}
