@@ -113,7 +113,7 @@ use Illuminate\Support\Facades\Auth;
                                 el.className = 'marker';
                                 el.id = "neighbors";
                                 el.title = res['ConsumerName']
-                                el.innerHTML += '<button id="update" class="btn btn-sm" style="margin-left: -10px;" style="margin-left: 10px;"> <span><i class="fas fa-map-marker-alt text-danger" style="font-size: 2.4em;"></i></span> </button>'
+                                el.innerHTML += '<button id="update" class="btn btn-sm" style="margin-left: -10px;" style="margin-left: 10px;"> <span><i class="fas fa-map-marker-alt text-danger" style="font-size: 3.4em;"></i></span> </button>'
                                 el.style.backgroundColor = `transparent`;                       
                                 el.style.width = `15px`;
                                 el.style.height = `15px`;
