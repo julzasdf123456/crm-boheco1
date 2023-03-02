@@ -71,10 +71,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.Office',   
                                     DB::raw("(SELECT TOP 1 Name FROM CRM_TicketsRepository WHERE id=CRM_TicketsRepository.id) AS ParentTicket"),
                                     'CRM_Barangays.Barangay as Barangay')
-                    ->whereRaw("(CRM_Tickets.Trash IS NULL OR CRM_Tickets.Trash='No')")
-                    ->where('CRM_Tickets.id', 'LIKE', '%' . $params . '%')
-                    ->orWhere('CRM_Tickets.ConsumerName', 'LIKE', '%' . $params . '%')
-                    ->orWhere('CRM_Tickets.AccountNumber', 'LIKE', '%' . $params . '%')                   
+                    ->whereRaw("(CRM_Tickets.Trash IS NULL OR CRM_Tickets.Trash='No') AND (CRM_Tickets.id LIKE '%" . $params . "%' OR CRM_Tickets.ConsumerName LIKE '%" . $params . "%' OR CRM_Tickets.AccountNumber LIKE '%" . $params . "%')")                
                     ->orderBy('CRM_Tickets.ConsumerName')
                     ->paginate(25);
         } else {
