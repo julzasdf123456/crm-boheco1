@@ -3525,6 +3525,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Towns.Town as Town',
                                     'CRM_Tickets.Office',  
                                     'CRM_Tickets.Reason',  
+                                    'CRM_Tickets.KwhRating', 
                                     'CRM_Tickets.ContactNumber',  
                                     'CRM_ServiceConnectionCrew.StationName',
                                     'CRM_Barangays.Barangay as Barangay')
@@ -3547,6 +3548,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Towns.Town as Town',
                                     'CRM_Tickets.Office',  
                                     'CRM_Tickets.Reason',  
+                                    'CRM_Tickets.KwhRating', 
                                     'CRM_Tickets.ContactNumber',  
                                     'CRM_ServiceConnectionCrew.StationName',
                                     'CRM_Barangays.Barangay as Barangay')
@@ -3572,6 +3574,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Towns.Town as Town',
                                     'CRM_Tickets.Office',  
                                     'CRM_Tickets.Reason',  
+                                    'CRM_Tickets.KwhRating', 
                                     'CRM_Tickets.ContactNumber',  
                                     'CRM_ServiceConnectionCrew.StationName',
                                     'CRM_Barangays.Barangay as Barangay')
@@ -3594,6 +3597,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Towns.Town as Town',
                                     'CRM_Tickets.Office',  
                                     'CRM_Tickets.Reason',  
+                                    'CRM_Tickets.KwhRating',  
                                     'CRM_Tickets.ContactNumber',  
                                     'CRM_ServiceConnectionCrew.StationName',
                                     'CRM_Barangays.Barangay as Barangay')
@@ -4140,5 +4144,14 @@ class TicketsController extends AppBaseController
         $export = new DiscoRecoExport($data, $from, $to);
 
         return Excel::download($export, 'Disco-Reco-Reports.xlsx');
+    }
+
+    public function forwardToESD(Request $request) {
+        $id = $request['id'];
+
+        Tickets::where('id', $id)
+            ->update(['KwhRating' => 'Forwarded to ESD']);
+
+        return response()->json('ok', 200);
     }
 }

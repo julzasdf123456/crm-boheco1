@@ -87,8 +87,13 @@
                                     </select>
                                 </td>
                                 <td>{{ $item->Status }}</td>
-                                <td>
+                                <td id="{{ $item->id }}-buttons">
                                     <button class="btn btn-xs btn-primary float-right" onclick="updateCrew('{{ $item->id }}')">Save</button>
+                                    @if ($item->KwhRating == 'Forwarded to ESD')
+                                        <button class="btn btn-xs btn-success float-right ico-tab-mini">Forwarded</button>
+                                    @else
+                                        <button id="{{ $item->id }}-forward" class="btn btn-xs btn-danger float-right ico-tab-mini" onclick="forwardToESD('{{ $item->id }}')">Forward to ESD</button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -130,6 +135,30 @@
                     Swal.fire({
                         icon : 'error',
                         text : 'Error updating crew'
+                    })
+                }
+            })
+        }
+
+        function forwardToESD(id) {
+            $.ajax({
+                url : "{{ route('tickets.forward-to-esd') }}",
+                type : 'GET',
+                data : {
+                    id : id
+                },
+                success : function(res) {
+                    Toast.fire({
+                        icon : 'success',
+                        text : 'Forwarded to ESD'
+                    })
+                    $('#' + id + "-forward").remove()
+                    $('#' + id + "-buttons").append('<button class="btn btn-xs btn-success float-right ico-tab-mini">Forwarded</button>')
+                },
+                error : function(err) {
+                    Toast.fire({
+                        icon : 'error',
+                        text : 'Error Forwarded to ESD'
                     })
                 }
             })
