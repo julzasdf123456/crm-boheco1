@@ -3525,6 +3525,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Towns.Town as Town',
                                     'CRM_Tickets.Office',  
                                     'CRM_Tickets.Reason',  
+                                    'CRM_Tickets.created_at',  
                                     'CRM_Tickets.KwhRating', 
                                     'CRM_Tickets.ContactNumber',  
                                     'CRM_ServiceConnectionCrew.StationName',
@@ -3547,7 +3548,8 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.created_at', 
                                     'CRM_Towns.Town as Town',
                                     'CRM_Tickets.Office',  
-                                    'CRM_Tickets.Reason',  
+                                    'CRM_Tickets.Reason', 
+                                    'CRM_Tickets.created_at', 
                                     'CRM_Tickets.KwhRating', 
                                     'CRM_Tickets.ContactNumber',  
                                     'CRM_ServiceConnectionCrew.StationName',
@@ -3573,7 +3575,8 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.created_at', 
                                     'CRM_Towns.Town as Town',
                                     'CRM_Tickets.Office',  
-                                    'CRM_Tickets.Reason',  
+                                    'CRM_Tickets.Reason', 
+                                    'CRM_Tickets.created_at', 
                                     'CRM_Tickets.KwhRating', 
                                     'CRM_Tickets.ContactNumber',  
                                     'CRM_ServiceConnectionCrew.StationName',
@@ -3596,7 +3599,8 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.created_at', 
                                     'CRM_Towns.Town as Town',
                                     'CRM_Tickets.Office',  
-                                    'CRM_Tickets.Reason',  
+                                    'CRM_Tickets.Reason',
+                                    'CRM_Tickets.created_at',  
                                     'CRM_Tickets.KwhRating',  
                                     'CRM_Tickets.ContactNumber',  
                                     'CRM_ServiceConnectionCrew.StationName',
@@ -3661,40 +3665,13 @@ class TicketsController extends AppBaseController
 
     public function meterInspections(Request $request) {
         $crew = $request['Crew'];
-        $day = $request['Day'];
+        $from = $request['From'];
+        $to = $request['To'];
         $office = $request['Office'];
 
         if ($office == 'All') {
-            if (!isset($day)) {
-                if ($crew == 'All') {
-                    $tickets = DB::table('CRM_Tickets')
-                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                        ->select('CRM_Tickets.id as id',
-                                        'CRM_Tickets.AccountNumber',
-                                        'CRM_Tickets.ConsumerName',
-                                        'CRM_TicketsRepository.Name as Ticket', 
-                                        'CRM_Tickets.Status',  
-                                        'CRM_Tickets.Sitio as Sitio', 
-                                        'CRM_Tickets.created_at', 
-                                        'CRM_Towns.Town as Town',
-                                        'CRM_Tickets.Office',  
-                                        'CRM_Tickets.Reason',  
-                                        'CRM_Tickets.ContactNumber', 
-                                        'DatetimeLinemanExecuted',
-                                        'CRM_ServiceConnectionCrew.StationName',
-                                        DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
-                                        'CRM_Tickets.Ticket as TicketID',   
-                                        'CRM_Barangays.Barangay as Barangay')
-                        ->whereRaw("(Trash IS NULL OR Trash='No') AND Status IN ('Executed', 'Acted') 
-                            AND (TRY_CAST(DateTimeLinemanExecuted AS DATE) BETWEEN '" . date('Y-m-d', strtotime('today -30 days')) . "' AND '" . date('Y-m-d') . "')")
-                        ->whereIn('Ticket', Tickets::getMeterInspectionsId())              
-                        ->orderBy('CRM_Tickets.created_at')
-                        ->get();
-                } else {
-                    $tickets = DB::table('CRM_Tickets')
+            if ($crew == 'All') {
+                $tickets = DB::table('CRM_Tickets')
                     ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
                     ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
                     ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
@@ -3709,107 +3686,50 @@ class TicketsController extends AppBaseController
                                     'CRM_Towns.Town as Town',
                                     'CRM_Tickets.Office',  
                                     'CRM_Tickets.Reason',  
+                                    'CRM_Tickets.created_at',  
                                     'CRM_Tickets.ContactNumber', 
                                     'DatetimeLinemanExecuted',
                                     'CRM_ServiceConnectionCrew.StationName',
                                     DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
                                     'CRM_Tickets.Ticket as TicketID',   
                                     'CRM_Barangays.Barangay as Barangay')
-                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Status IN ('Executed', 'Acted') AND CrewAssigned='" . $crew . "' 
-                        AND (TRY_CAST(DateTimeLinemanExecuted AS DATE) BETWEEN '" . date('Y-m-d', strtotime('today -30 days')) . "' AND '" . date('Y-m-d') . "')")
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Status IN ('Executed', 'Acted') 
+                        AND (TRY_CAST(CRM_Tickets.created_at AS DATE) BETWEEN '" . $from . "' AND '" . $to . "')")
                     ->whereIn('Ticket', Tickets::getMeterInspectionsId())              
                     ->orderBy('CRM_Tickets.created_at')
                     ->get();
-                }
             } else {
-                if ($crew == 'All') {
-                    $tickets = DB::table('CRM_Tickets')
-                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                        ->select('CRM_Tickets.id as id',
-                                        'CRM_Tickets.AccountNumber',
-                                        'CRM_Tickets.ConsumerName',
-                                        'CRM_TicketsRepository.Name as Ticket', 
-                                        'CRM_Tickets.Status',  
-                                        'CRM_Tickets.Sitio as Sitio', 
-                                        'CRM_Tickets.created_at', 
-                                        'CRM_Towns.Town as Town',
-                                        'CRM_Tickets.Office',  
-                                        'CRM_Tickets.Reason',  
-                                        'CRM_Tickets.ContactNumber', 
-                                        'DatetimeLinemanExecuted',
-                                        'CRM_ServiceConnectionCrew.StationName',
-                                        DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
-                                        'CRM_Tickets.Ticket as TicketID',   
-                                        'CRM_Barangays.Barangay as Barangay')
-                        ->whereRaw("(Trash IS NULL OR Trash='No') AND Status IN ('Executed', 'Acted')")
-                        ->whereRaw("TRY_CAST(DatetimeLinemanExecuted AS DATE) = '" . $day . "'")
-                        ->whereIn('Ticket', Tickets::getMeterInspectionsId())              
-                        ->orderBy('CRM_Tickets.created_at')
-                        ->get();
-                } else {
-                    $tickets = DB::table('CRM_Tickets')
-                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                    ->select('CRM_Tickets.id as id',
-                                    'CRM_Tickets.AccountNumber',
-                                    'CRM_Tickets.ConsumerName',
-                                    'CRM_TicketsRepository.Name as Ticket', 
-                                    'CRM_Tickets.Status',  
-                                    'CRM_Tickets.Sitio as Sitio', 
-                                    'CRM_Tickets.created_at', 
-                                    'CRM_Towns.Town as Town',
-                                    'CRM_Tickets.Office',  
-                                    'CRM_Tickets.Reason',  
-                                    'CRM_Tickets.ContactNumber', 
-                                    'DatetimeLinemanExecuted',
-                                    'CRM_ServiceConnectionCrew.StationName',
-                                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
-                                    'CRM_Tickets.Ticket as TicketID',   
-                                    'CRM_Barangays.Barangay as Barangay')
-                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Status IN ('Executed', 'Acted') AND CrewAssigned='" . $crew . "'")
-                    ->whereRaw("TRY_CAST(DatetimeLinemanExecuted AS DATE) = '" . $day . "'")
-                    ->whereIn('Ticket', Tickets::getMeterInspectionsId())              
-                    ->orderBy('CRM_Tickets.created_at')
-                    ->get();
-                }
+                $tickets = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->select('CRM_Tickets.id as id',
+                                'CRM_Tickets.AccountNumber',
+                                'CRM_Tickets.ConsumerName',
+                                'CRM_TicketsRepository.Name as Ticket', 
+                                'CRM_Tickets.Status',  
+                                'CRM_Tickets.Sitio as Sitio', 
+                                'CRM_Tickets.created_at', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_Tickets.Office',  
+                                'CRM_Tickets.created_at', 
+                                'CRM_Tickets.Reason',  
+                                'CRM_Tickets.ContactNumber', 
+                                'DatetimeLinemanExecuted',
+                                'CRM_ServiceConnectionCrew.StationName',
+                                DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                                'CRM_Tickets.Ticket as TicketID',   
+                                'CRM_Barangays.Barangay as Barangay')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND Status IN ('Executed', 'Acted') AND CrewAssigned='" . $crew . "' 
+                    AND (TRY_CAST(CRM_Tickets.created_at AS DATE) BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->whereIn('Ticket', Tickets::getMeterInspectionsId())              
+                ->orderBy('CRM_Tickets.created_at')
+                ->get();
             }
         } else {
-            if (!isset($day)) {
-                if ($crew == 'All') {
-                    $tickets = DB::table('CRM_Tickets')
-                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                        ->select('CRM_Tickets.id as id',
-                                        'CRM_Tickets.AccountNumber',
-                                        'CRM_Tickets.ConsumerName',
-                                        'CRM_TicketsRepository.Name as Ticket', 
-                                        'CRM_Tickets.Status',  
-                                        'CRM_Tickets.Sitio as Sitio', 
-                                        'CRM_Tickets.created_at', 
-                                        'CRM_Towns.Town as Town',
-                                        'CRM_Tickets.Office',  
-                                        'CRM_Tickets.Reason',  
-                                        'CRM_Tickets.ContactNumber', 
-                                        'DatetimeLinemanExecuted',
-                                        'CRM_ServiceConnectionCrew.StationName',
-                                        DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
-                                        'CRM_Tickets.Ticket as TicketID',   
-                                        'CRM_Barangays.Barangay as Barangay')
-                        ->whereRaw("(Trash IS NULL OR Trash='No') AND Status IN ('Executed', 'Acted') 
-                            AND (TRY_CAST(DateTimeLinemanExecuted AS DATE) BETWEEN '" . date('Y-m-d', strtotime('today -30 days')) . "' AND '" . date('Y-m-d') . "')")
-                        ->whereIn('Ticket', Tickets::getMeterInspectionsId())   
-                        ->where('CRM_Tickets.Office', $office)           
-                        ->orderBy('CRM_Tickets.created_at')
-                        ->get();
-                } else {
-                    $tickets = DB::table('CRM_Tickets')
+            if ($crew == 'All') {
+                $tickets = DB::table('CRM_Tickets')
                     ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
                     ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
                     ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
@@ -3822,6 +3742,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.Sitio as Sitio', 
                                     'CRM_Tickets.created_at', 
                                     'CRM_Towns.Town as Town',
+                                    'CRM_Tickets.created_at', 
                                     'CRM_Tickets.Office',  
                                     'CRM_Tickets.Reason',  
                                     'CRM_Tickets.ContactNumber', 
@@ -3830,71 +3751,39 @@ class TicketsController extends AppBaseController
                                     DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
                                     'CRM_Tickets.Ticket as TicketID',   
                                     'CRM_Barangays.Barangay as Barangay')
-                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Status IN ('Executed', 'Acted') AND CrewAssigned='" . $crew . "' 
-                        AND (TRY_CAST(DateTimeLinemanExecuted AS DATE) BETWEEN '" . date('Y-m-d', strtotime('today -30 days')) . "' AND '" . date('Y-m-d') . "')")
-                    ->whereIn('Ticket', Tickets::getMeterInspectionsId()) 
-                    ->where('CRM_Tickets.Office', $office)             
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Status IN ('Executed', 'Acted') AND (TRY_CAST(CRM_Tickets.created_at AS DATE) BETWEEN '" . $from . "' AND '" . $to . "')")
+                    ->whereIn('Ticket', Tickets::getMeterInspectionsId())  
+                    ->where('CRM_Tickets.Office', $office)            
                     ->orderBy('CRM_Tickets.created_at')
                     ->get();
-                }
             } else {
-                if ($crew == 'All') {
-                    $tickets = DB::table('CRM_Tickets')
-                        ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                        ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                        ->select('CRM_Tickets.id as id',
-                                        'CRM_Tickets.AccountNumber',
-                                        'CRM_Tickets.ConsumerName',
-                                        'CRM_TicketsRepository.Name as Ticket', 
-                                        'CRM_Tickets.Status',  
-                                        'CRM_Tickets.Sitio as Sitio', 
-                                        'CRM_Tickets.created_at', 
-                                        'CRM_Towns.Town as Town',
-                                        'CRM_Tickets.Office',  
-                                        'CRM_Tickets.Reason',  
-                                        'CRM_Tickets.ContactNumber', 
-                                        'DatetimeLinemanExecuted',
-                                        'CRM_ServiceConnectionCrew.StationName',
-                                        DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
-                                        'CRM_Tickets.Ticket as TicketID',   
-                                        'CRM_Barangays.Barangay as Barangay')
-                        ->whereRaw("(Trash IS NULL OR Trash='No') AND Status IN ('Executed', 'Acted')")
-                        ->whereIn('Ticket', Tickets::getMeterInspectionsId())  
-                        ->whereRaw("TRY_CAST(DatetimeLinemanExecuted AS DATE) = '" . $day . "'")
-                        ->where('CRM_Tickets.Office', $office)            
-                        ->orderBy('CRM_Tickets.created_at')
-                        ->get();
-                } else {
-                    $tickets = DB::table('CRM_Tickets')
-                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
-                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
-                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                    ->select('CRM_Tickets.id as id',
-                                    'CRM_Tickets.AccountNumber',
-                                    'CRM_Tickets.ConsumerName',
-                                    'CRM_TicketsRepository.Name as Ticket', 
-                                    'CRM_Tickets.Status',  
-                                    'CRM_Tickets.Sitio as Sitio', 
-                                    'CRM_Tickets.created_at', 
-                                    'CRM_Towns.Town as Town',
-                                    'CRM_Tickets.Office',  
-                                    'CRM_Tickets.Reason',  
-                                    'CRM_Tickets.ContactNumber', 
-                                    'DatetimeLinemanExecuted',
-                                    'CRM_ServiceConnectionCrew.StationName',
-                                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
-                                    'CRM_Tickets.Ticket as TicketID',   
-                                    'CRM_Barangays.Barangay as Barangay')
-                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Status IN ('Executed', 'Acted') AND CrewAssigned='" . $crew . "'")
-                    ->whereIn('Ticket', Tickets::getMeterInspectionsId())     
-                    ->whereRaw("TRY_CAST(DatetimeLinemanExecuted AS DATE) = '" . $day . "'")
-                    ->where('CRM_Tickets.Office', $office)         
-                    ->orderBy('CRM_Tickets.created_at')
-                    ->get();
-                }
+                $tickets = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->select('CRM_Tickets.id as id',
+                                'CRM_Tickets.AccountNumber',
+                                'CRM_Tickets.ConsumerName',
+                                'CRM_TicketsRepository.Name as Ticket', 
+                                'CRM_Tickets.Status',  
+                                'CRM_Tickets.Sitio as Sitio', 
+                                'CRM_Tickets.created_at', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_Tickets.created_at', 
+                                'CRM_Tickets.Office',  
+                                'CRM_Tickets.Reason',  
+                                'CRM_Tickets.ContactNumber', 
+                                'DatetimeLinemanExecuted',
+                                'CRM_ServiceConnectionCrew.StationName',
+                                DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                                'CRM_Tickets.Ticket as TicketID',   
+                                'CRM_Barangays.Barangay as Barangay')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND Status IN ('Executed', 'Acted') AND CrewAssigned='" . $crew . "' AND (TRY_CAST(CRM_Tickets.created_at AS DATE) BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->whereIn('Ticket', Tickets::getMeterInspectionsId())     
+                ->where('CRM_Tickets.Office', $office)         
+                ->orderBy('CRM_Tickets.created_at')
+                ->get();
             }
         }
 

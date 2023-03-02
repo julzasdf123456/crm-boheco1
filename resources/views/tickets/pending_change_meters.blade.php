@@ -64,6 +64,7 @@
                         <th>Account No</th>
                         <th>Consumer Name</th>
                         <th>Address</th>
+                        <th>Filed At</th>
                         <th>Crew Assigned</th>
                         <th>Status</th>
                         <th></th>
@@ -77,7 +78,9 @@
                                 <td>{{ Tickets::getAddress($item) }} 
                                     @if ($item->StationName == null)
                                         <i id="Indicator-{{ $item->id }}" class="fas fa-exclamation-circle text-danger float-right"></i>
-                                    @endif</td>
+                                    @endif
+                                </td>
+                                <td>{{ $item->created_at != null ? date('M d, Y', strtotime($item->created_at)) : '' }}</td>
                                 <td>
                                     <select name="CrewItem" id="CrewItem-{{ $item->id }}" class="form-control form-control-sm">
                                         <option value="">-</option>

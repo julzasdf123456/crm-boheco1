@@ -33,7 +33,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
                         <label for="Office">Office</label>
                         <select name="Office" id="Office" class="form-control form-control-sm">
                             <option value="All"  {{ isset($_GET['Office']) && $_GET['Office']=='All' ? 'selected' : '' }}>ALL</option>  
@@ -43,12 +43,26 @@
                     </div>
 
                     <div class="form-group col-lg-2">
-                        <label for="Day">Day</label>
-                        {!! Form::text('Day', isset($_GET['Day']) ? $_GET['Day'] : '', ['class' => 'form-control form-control-sm', 'placeholder' => 'Select Date', 'id' => 'Day', ]) !!}
+                        <label for="From">From</label>
+                        {!! Form::text('From', isset($_GET['From']) ? $_GET['From'] : '', ['class' => 'form-control form-control-sm', 'placeholder' => 'Select Date', 'id' => 'From', ]) !!}
                     </div>
                     @push('page_scripts')
                         <script type="text/javascript">
-                            $('#Day').datetimepicker({
+                            $('#From').datetimepicker({
+                                format: 'YYYY-MM-DD',
+                                useCurrent: true,
+                                sideBySide: true
+                            })
+                        </script>
+                    @endpush
+
+                    <div class="form-group col-lg-2">
+                        <label for="To">To</label>
+                        {!! Form::text('To', isset($_GET['To']) ? $_GET['To'] : '', ['class' => 'form-control form-control-sm', 'placeholder' => 'Select Date', 'id' => 'To', ]) !!}
+                    </div>
+                    @push('page_scripts')
+                        <script type="text/javascript">
+                            $('#To').datetimepicker({
                                 format: 'YYYY-MM-DD',
                                 useCurrent: true,
                                 sideBySide: true
@@ -81,6 +95,7 @@
                         <th>Crew Assigned</th>
                         <th>Status</th>
                         <th>Office</th>
+                        <th>Filed At</th>
                         <th>Executed At</th>
                         <th></th>
                     </thead>
@@ -95,7 +110,8 @@
                                 <td>{{ $item->StationName }}</td>
                                 <td>{{ $item->Status }}</td>
                                 <td>{{ $item->Office }}</td>
-                                <td>{{ $item->DatetimeLinemanExecuted }}</td>
+                                <td>{{ $item->created_at != null ? date('M d, Y', strtotime($item->created_at)) : '' }}</td>
+                                <td>{{ $item->DatetimeLinemanExecuted != null ? date('M d, Y', strtotime($item->DatetimeLinemanExecuted)) : '' }}</td>
                                 <td>
                                     <a class="btn btn-xs btn-primary float-right" href="{{ route('tickets.create-change-meter', [$item->AccountNumber]) }}"><i class="fas fa-plus"></i> Change Meter</a>
                                 </td>
