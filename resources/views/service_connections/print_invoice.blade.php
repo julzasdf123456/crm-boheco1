@@ -253,7 +253,7 @@
                     @endforeach
                     <tr>
                         <td>Total VAT</td>
-                        <th  class="text-right">P {{is_numeric($totalTransactions->TotalVAT) ? number_format($totalTransactions->TotalVAT, 2) : '0.00' }}</th>
+                        <th  class="text-right">P {{is_numeric($totalTransactions->TotalVat) ? number_format($totalTransactions->TotalVat, 2) : '0.00' }}</th>
                     </tr>
                     <tr>
                         <td>2% WItholding Tax</td>

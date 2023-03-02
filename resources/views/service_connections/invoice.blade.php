@@ -84,7 +84,7 @@
                     </tr>
                     <tr>
                         <td>Total VAT</td>
-                        <th class="text-right text-primary">₱ <span id="total-vat-display" data-toggle="tooltip" data-placement="left">{{ $totalTransactions != null ? (is_numeric($totalTransactions->TotalVAT) ? number_format($totalTransactions->TotalVAT, 2) : '0.00') : '0.00' }}</span></th>
+                        <th class="text-right text-primary">₱ <span id="total-vat-display" data-toggle="tooltip" data-placement="left">{{ $totalTransactions != null ? (is_numeric($totalTransactions->TotalVat) ? number_format($totalTransactions->TotalVat, 2) : '0.00') : '0.00' }}</span></th>
                     </tr>
                     <tr>
                         <td>2% WT</td>
