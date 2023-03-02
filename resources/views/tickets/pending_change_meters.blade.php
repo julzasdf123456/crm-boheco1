@@ -90,7 +90,7 @@
                                 <td id="{{ $item->id }}-buttons">
                                     <button class="btn btn-xs btn-primary float-right" onclick="updateCrew('{{ $item->id }}')">Save</button>
                                     @if ($item->KwhRating == 'Forwarded to ESD')
-                                        <button class="btn btn-xs btn-success float-right ico-tab-mini">Forwarded</button>
+                                        <button id="{{ $item->id }}-undo" class="btn btn-xs btn-success float-right ico-tab-mini" onclick="undoForward('{{ $item->id }}')">Forwarded</button>
                                     @else
                                         <button id="{{ $item->id }}-forward" class="btn btn-xs btn-danger float-right ico-tab-mini" onclick="forwardToESD('{{ $item->id }}')">Forward to ESD</button>
                                     @endif
@@ -153,12 +153,36 @@
                         text : 'Forwarded to ESD'
                     })
                     $('#' + id + "-forward").remove()
-                    $('#' + id + "-buttons").append('<button class="btn btn-xs btn-success float-right ico-tab-mini">Forwarded</button>')
+                    $('#' + id + "-buttons").append('<button id="' + id + '-undo" class="btn btn-xs btn-success float-right ico-tab-mini" onclick="undoForward(' + id + ')">Forwarded</button>')
                 },
                 error : function(err) {
                     Toast.fire({
                         icon : 'error',
                         text : 'Error Forwarded to ESD'
+                    })
+                }
+            })
+        }
+
+        function undoForward(id) {
+            $.ajax({
+                url : "{{ route('tickets.undo-forward') }}",
+                type : 'GET',
+                data : {
+                    id : id
+                },
+                success : function(res) {
+                    Toast.fire({
+                        icon : 'success',
+                        text : 'Forward undone'
+                    })
+                    $('#' + id + "-undo").remove()
+                    $('#' + id + "-buttons").append('<button id="' + id + '-forward" class="btn btn-xs btn-danger float-right ico-tab-mini" onclick="forwardToESD(' + id+ ')">Forward to ESD</button>')
+                },
+                error : function(err) {
+                    Toast.fire({
+                        icon : 'error',
+                        text : 'Error Undoing Forwarding'
                     })
                 }
             })

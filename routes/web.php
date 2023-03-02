@@ -401,6 +401,7 @@ Route::get('/tickets/disco-reco-reports', [App\Http\Controllers\TicketsControlle
 Route::get('/tickets/download-disco-reco/{from}/{to}/{office}', [App\Http\Controllers\TicketsController::class, 'downloadDiscoReco'])->name('tickets.download-disco-reco');
 Route::get('/tickets/get-crew-from-station', [App\Http\Controllers\TicketsController::class, 'getCrewFromStation'])->name('tickets.get-crew-from-station');
 Route::get('/tickets/forward-to-esd', [App\Http\Controllers\TicketsController::class, 'forwardToESD'])->name('tickets.forward-to-esd');
+Route::get('/tickets/undo-forward', [App\Http\Controllers\TicketsController::class, 'undoForward'])->name('tickets.undo-forward');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 

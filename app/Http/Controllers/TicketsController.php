@@ -4154,4 +4154,13 @@ class TicketsController extends AppBaseController
 
         return response()->json('ok', 200);
     }
+
+    public function undoForward(Request $request) {
+        $id = $request['id'];
+
+        Tickets::where('id', $id)
+            ->update(['KwhRating' => null]);
+
+        return response()->json('ok', 200);
+    }
 }
