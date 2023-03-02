@@ -101,6 +101,10 @@
                                         <th>Pole Number :</th>
                                         <td>{{ $tickets->PoleNumber }}</td>
                                     </tr>
+                                    <tr>
+                                        <th>Date Filed :</th>
+                                        <td>{{ date('M d, Y h:i:s A', strtotime($tickets->created_at)) }}</td>
+                                    </tr>
                                 </table>             
                             </div>                            
                         </div>

@@ -2506,152 +2506,299 @@ class TicketsController extends AppBaseController
         return response()->json($output, 200);
     }
 
-    public function getCrewFieldMonitorData(Request $request) {
-        $ticket = $request['Ticket'];
-        $status = $request['Status'];
-        $crew = $request['Crew'];
+    public function getTicketsFromStation(Request $request) {
+        // pending
+        $pending = DB::table('CRM_Tickets')
+                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->select('CRM_Tickets.id as id',
+                                    'CRM_Tickets.AccountNumber',
+                                    'CRM_Tickets.ConsumerName',
+                                    'CRM_TicketsRepository.Name as Ticket', 
+                                    'CRM_Tickets.Status',  
+                                    'CRM_Tickets.Sitio as Sitio', 
+                                    'CRM_Tickets.created_at', 
+                                    'CRM_Towns.Town as Town',
+                                    'CRM_Tickets.Office',  
+                                    'CRM_ServiceConnectionCrew.StationName',  
+                                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                                    'CRM_Barangays.Barangay as Barangay')
+                    ->whereRaw("(CRM_Tickets.Trash IS NULL OR CRM_Tickets.Trash='No') AND CRM_Tickets.Status IN ('Received')")
+                    ->whereRaw("CRM_ServiceConnectionCrew.CrewLeader='" . $request['CrewLeader'] . "'")
+                    ->orderByDesc('CRM_Tickets.created_at')
+                    ->get();
 
-        if ($ticket == 'All') {
-            if ($status == 'All') {
-                if ($crew == 'All') {
-                    $data = DB::table('CRM_Tickets') 
-                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                        ->select('CRM_TicketsRepository.Name',
-                            'CRM_Tickets.id',
-                            'CRM_Tickets.ConsumerName',
-                            'CRM_ServiceConnectionCrew.StationName',
-                            'CRM_Tickets.created_at',
-                            'CRM_Tickets.GeoLocation'
-                        )
-                        ->orderByDesc('CRM_Tickets.created_at')
-                        ->get();
-                } else {
-                    $data = DB::table('CRM_Tickets') 
-                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                        ->where('CRM_Tickets.CrewAssigned', $crew)
-                        ->select('CRM_TicketsRepository.Name',
-                            'CRM_Tickets.id',
-                            'CRM_Tickets.ConsumerName',
-                            'CRM_ServiceConnectionCrew.StationName',
-                            'CRM_Tickets.created_at',
-                            'CRM_Tickets.GeoLocation'
-                        )
-                        ->orderByDesc('CRM_Tickets.created_at')
-                        ->get();
-                }
+        $pendingOutput = "";
+        foreach($pending as $item) {
+            $past = new \DateTime($item->created_at);
+            $present = new \DateTime(date('Y-m-d H:i:s'));
+            $days = $present->diff($past);
+            if ($days->format('%a')==0) {
+                $color = '#2e7d32';
+            } elseif ($days->format('%a')==1) {
+                $color = '#ff6f00';
+            } elseif ($days->format('%a')==2) {
+                $color = '#e64a19';
             } else {
-                if ($crew == 'All') {
-                    $data = DB::table('CRM_Tickets') 
-                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                        ->where('CRM_Tickets.Status', $status)
-                        ->select('CRM_TicketsRepository.Name',
-                            'CRM_Tickets.id',
-                            'CRM_Tickets.ConsumerName',
-                            'CRM_ServiceConnectionCrew.StationName',
-                            'CRM_Tickets.created_at',
-                            'CRM_Tickets.GeoLocation'
-                        )
-                        ->orderByDesc('CRM_Tickets.created_at')
-                        ->get();
-                } else {
-                    $data = DB::table('CRM_Tickets') 
-                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                        ->where('CRM_Tickets.Status', $status)
-                        ->where('CRM_Tickets.CrewAssigned', $crew)
-                        ->select('CRM_TicketsRepository.Name',
-                            'CRM_Tickets.id',
-                            'CRM_Tickets.ConsumerName',
-                            'CRM_ServiceConnectionCrew.StationName',
-                            'CRM_Tickets.created_at',
-                            'CRM_Tickets.GeoLocation'
-                        )
-                        ->orderByDesc('CRM_Tickets.created_at')
-                        ->get();
-                }
+                $color = '#c62828';
             }
-            
-        } else {
-            if ($status == 'All') {
-                if ($crew == 'All') {
-                    $data = DB::table('CRM_Tickets') 
-                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                        ->where('CRM_Tickets.Ticket', $ticket)
-                        ->select('CRM_TicketsRepository.Name',
-                            'CRM_Tickets.id',
-                            'CRM_Tickets.ConsumerName',
-                            'CRM_ServiceConnectionCrew.StationName',
-                            'CRM_Tickets.created_at',
-                            'CRM_Tickets.GeoLocation'
-                        )
-                        ->orderByDesc('CRM_Tickets.created_at')
-                        ->get();
-                } else {
-                    $data = DB::table('CRM_Tickets') 
-                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                        ->where('CRM_Tickets.CrewAssigned', $crew)
-                        ->where('CRM_Tickets.Ticket', $ticket)
-                        ->select('CRM_TicketsRepository.Name',
-                            'CRM_Tickets.id',
-                            'CRM_Tickets.ConsumerName',
-                            'CRM_ServiceConnectionCrew.StationName',
-                            'CRM_Tickets.created_at',
-                            'CRM_Tickets.GeoLocation'
-                        )
-                        ->orderByDesc('CRM_Tickets.created_at')
-                        ->get();
-                }
-            } else {
-                if ($crew == 'All') {
-                    $data = DB::table('CRM_Tickets') 
-                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                        ->where('CRM_Tickets.Status', $status)
-                        ->where('CRM_Tickets.Ticket', $ticket)
-                        ->select('CRM_TicketsRepository.Name',
-                            'CRM_Tickets.id',
-                            'CRM_Tickets.ConsumerName',
-                            'CRM_ServiceConnectionCrew.StationName',
-                            'CRM_Tickets.created_at',
-                            'CRM_Tickets.GeoLocation'
-                        )
-                        ->orderByDesc('CRM_Tickets.created_at')
-                        ->get();
-                } else {
-                    $data = DB::table('CRM_Tickets') 
-                        ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
-                        ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
-                        ->where('CRM_Tickets.Status', $status)
-                        ->where('CRM_Tickets.CrewAssigned', $crew)
-                        ->where('CRM_Tickets.Ticket', $ticket)
-                        ->select('CRM_TicketsRepository.Name',
-                            'CRM_Tickets.id',
-                            'CRM_Tickets.ConsumerName',
-                            'CRM_ServiceConnectionCrew.StationName',
-                            'CRM_Tickets.created_at',
-                            'CRM_Tickets.GeoLocation'
-                        )
-                        ->orderByDesc('CRM_Tickets.created_at')
-                        ->get();
-                }
-            }
+            $pendingOutput .= "
+                    <tr>
+                        <td><a href='" . route('tickets.show', [$item->id]) . "'>" . $item->id . "</a></td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . $item->AccountNumber . '</span><br><strong>' . $item->ConsumerName . "</strong></td>
+                        <td>" . Tickets::getAddress($item) . "</td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . $item->ParentTicket . '</span><br><strong>' . $item->Ticket . "</strong></td>
+                        <td><span class='badge bg-info'>" . $item->Status . "</span><br>" . $item->StationName . "</td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . (date('M d, Y', strtotime($item->created_at)) . "</span><br><span class='badge' style='color: white; background-color: " . $color . "'>" . $days->format('%a days & %h hrs') . '') . "</span></td>
+                    </tr>
+                ";
         }
 
-        // $output = "";
-        // foreach($data as $item) {
-        //     $output .= "<tr>
-        //                     <td>
-        //                         (<span><a href='" . route('tickets.show', [$item->id]) . "'>" . $item->id . "</a></span>) <strong>" . $item->Name . "</strong><br>
-        //                         <span>" . $item->ConsumerName . "</span><br>
-        //                         <span>Crew: <strong>" . $item->StationName . "</strong></span><br>
-        //                     </td>
-        //                 </tr>";
-        // }
+        // downloaded
+        $downloaded = DB::table('CRM_Tickets')
+                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->select('CRM_Tickets.id as id',
+                                    'CRM_Tickets.AccountNumber',
+                                    'CRM_Tickets.ConsumerName',
+                                    'CRM_TicketsRepository.Name as Ticket', 
+                                    'CRM_Tickets.Status',  
+                                    'CRM_Tickets.Sitio as Sitio', 
+                                    'CRM_Tickets.created_at', 
+                                    'CRM_Towns.Town as Town',
+                                    'CRM_Tickets.Office',  
+                                    'CRM_ServiceConnectionCrew.StationName',  
+                                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                                    'CRM_Barangays.Barangay as Barangay')
+                    ->whereRaw("(CRM_Tickets.Trash IS NULL OR CRM_Tickets.Trash='No') AND CRM_Tickets.Status IN ('Downloaded by Crew', 'Forwarded to Crew')")
+                    ->whereRaw("CRM_ServiceConnectionCrew.CrewLeader='" . $request['CrewLeader'] . "'")
+                    ->orderByDesc('CRM_Tickets.created_at')
+                    ->get();
+
+        $downloadedOutput = "";
+        foreach($downloaded as $item) {
+            $past = new \DateTime($item->created_at);
+            $present = new \DateTime(date('Y-m-d H:i:s'));
+            $days = $present->diff($past);
+            if ($days->format('%a')==0) {
+                $color = '#2e7d32';
+            } elseif ($days->format('%a')==1) {
+                $color = '#ff6f00';
+            } elseif ($days->format('%a')==2) {
+                $color = '#e64a19';
+            } else {
+                $color = '#c62828';
+            }
+            $downloadedOutput .= "
+                    <tr>
+                        <td><a href='" . route('tickets.show', [$item->id]) . "'>" . $item->id . "</a></td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . $item->AccountNumber . '</span><br><strong>' . $item->ConsumerName . "</strong></td>
+                        <td>" . Tickets::getAddress($item) . "</td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . $item->ParentTicket . '</span><br><strong>' . $item->Ticket . "</strong></td>
+                        <td><span class='badge bg-info'>" . $item->Status . "</span><br>" . $item->StationName . "</td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . (date('M d, Y', strtotime($item->created_at)) . "</span><br><span class='badge' style='color: white; background-color: " . $color . "'>" . $days->format('%a days & %h hrs') . '') . "</span></td>
+                    </tr>
+                ";
+        }
+
+        // acted
+        $acted = DB::table('CRM_Tickets')
+                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->select('CRM_Tickets.id as id',
+                                    'CRM_Tickets.AccountNumber',
+                                    'CRM_Tickets.ConsumerName',
+                                    'CRM_TicketsRepository.Name as Ticket', 
+                                    'CRM_Tickets.Status',  
+                                    'CRM_Tickets.Sitio as Sitio', 
+                                    'CRM_Tickets.created_at', 
+                                    'CRM_Towns.Town as Town',
+                                    'CRM_Tickets.Office',  
+                                    'CRM_Tickets.DateTimeLinemanExecuted',  
+                                    'CRM_ServiceConnectionCrew.StationName',  
+                                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                                    'CRM_Barangays.Barangay as Barangay')
+                    ->whereRaw("(CRM_Tickets.Trash IS NULL OR CRM_Tickets.Trash='No') AND CRM_Tickets.Status IN ('Acted')")
+                    ->whereRaw("CRM_ServiceConnectionCrew.CrewLeader='" . $request['CrewLeader'] . "'")
+                    ->orderByDesc('CRM_Tickets.created_at')
+                    ->get();
+
+        $actedOutput = "";
+        foreach($acted as $item) {
+            $past = new \DateTime($item->created_at);
+            $present = new \DateTime($item->DateTimeLinemanExecuted);
+            $days = $present->diff($past);
+            if ($days->format('%a')==0) {
+                $color = '#2e7d32';
+            } elseif ($days->format('%a')==1) {
+                $color = '#ff6f00';
+            } elseif ($days->format('%a')==2) {
+                $color = '#e64a19';
+            } else {
+                $color = '#c62828';
+            }
+            $actedOutput .= "
+                    <tr>
+                        <td><a href='" . route('tickets.show', [$item->id]) . "'>" . $item->id . "</a></td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . $item->AccountNumber . '</span><br><strong>' . $item->ConsumerName . "</strong></td>
+                        <td>" . Tickets::getAddress($item) . "</td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . $item->ParentTicket . '</span><br><strong>' . $item->Ticket . "</strong></td>
+                        <td><span class='badge bg-info'>" . $item->Status . "</span><br>" . $item->StationName . "</td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . (date('M d, Y', strtotime($item->created_at)) . "</span><br><span class='badge' style='color: white; background-color: " . $color . "'>" . $days->format('%a days & %h hrs') . '') . "</span></td>
+                    </tr>
+                ";
+        }
+
+        // executed
+        $executed = DB::table('CRM_Tickets')
+                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->select('CRM_Tickets.id as id',
+                                    'CRM_Tickets.AccountNumber',
+                                    'CRM_Tickets.ConsumerName',
+                                    'CRM_TicketsRepository.Name as Ticket', 
+                                    'CRM_Tickets.Status',  
+                                    'CRM_Tickets.Sitio as Sitio', 
+                                    'CRM_Tickets.created_at', 
+                                    'CRM_Towns.Town as Town',
+                                    'CRM_Tickets.Office',  
+                                    'CRM_Tickets.DateTimeLinemanExecuted',  
+                                    'CRM_ServiceConnectionCrew.StationName',  
+                                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                                    'CRM_Barangays.Barangay as Barangay')
+                    ->whereRaw("(CRM_Tickets.Trash IS NULL OR CRM_Tickets.Trash='No') AND CRM_Tickets.Status IN ('Executed') AND CRM_Tickets.created_at > DATEADD(day, -45, GETDATE())")
+                    ->whereRaw("CRM_ServiceConnectionCrew.CrewLeader='" . $request['CrewLeader'] . "'")
+                    ->orderByDesc('CRM_Tickets.created_at')
+                    ->get();
+
+        $executedOutput = "";
+        foreach($executed as $item) {
+            $past = new \DateTime($item->created_at);
+            $present = new \DateTime($item->DateTimeLinemanExecuted);
+            $days = $present->diff($past);
+            if ($days->format('%a')==0) {
+                $color = '#2e7d32';
+            } elseif ($days->format('%a')==1) {
+                $color = '#ff6f00';
+            } elseif ($days->format('%a')==2) {
+                $color = '#e64a19';
+            } else {
+                $color = '#c62828';
+            }
+            $executedOutput .= "
+                    <tr>
+                        <td><a href='" . route('tickets.show', [$item->id]) . "'>" . $item->id . "</a></td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . $item->AccountNumber . '</span><br><strong>' . $item->ConsumerName . "</strong></td>
+                        <td>" . Tickets::getAddress($item) . "</td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . $item->ParentTicket . '</span><br><strong>' . $item->Ticket . "</strong></td>
+                        <td><span class='badge bg-info'>" . $item->Status . "</span><br>" . $item->StationName . "</td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . (date('M d, Y', strtotime($item->created_at)) . "</span><br><span class='badge' style='color: white; background-color: " . $color . "'>" . $days->format('%a days & %h hrs') . '') . "</span></td>
+                    </tr>
+                ";
+        }
+
+        // notexecuted
+        $notexecuted = DB::table('CRM_Tickets')
+                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->select('CRM_Tickets.id as id',
+                                    'CRM_Tickets.AccountNumber',
+                                    'CRM_Tickets.ConsumerName',
+                                    'CRM_TicketsRepository.Name as Ticket', 
+                                    'CRM_Tickets.Status',  
+                                    'CRM_Tickets.Sitio as Sitio', 
+                                    'CRM_Tickets.created_at', 
+                                    'CRM_Towns.Town as Town',
+                                    'CRM_Tickets.Office',  
+                                    'CRM_Tickets.DateTimeLinemanExecuted',  
+                                    'CRM_ServiceConnectionCrew.StationName',  
+                                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                                    'CRM_Barangays.Barangay as Barangay')
+                    ->whereRaw("(CRM_Tickets.Trash IS NULL OR CRM_Tickets.Trash='No') AND CRM_Tickets.Status IN ('Not Executed') AND CRM_Tickets.created_at > DATEADD(day, -45, GETDATE())")
+                    ->whereRaw("CRM_ServiceConnectionCrew.CrewLeader='" . $request['CrewLeader'] . "'")
+                    ->orderByDesc('CRM_Tickets.created_at')
+                    ->get();
+
+        $notexecutedOutput = "";
+        foreach($notexecuted as $item) {
+            $past = new \DateTime($item->created_at);
+            $present = new \DateTime($item->DateTimeLinemanExecuted);
+            $days = $present->diff($past);
+            if ($days->format('%a')==0) {
+                $color = '#2e7d32';
+            } elseif ($days->format('%a')==1) {
+                $color = '#ff6f00';
+            } elseif ($days->format('%a')==2) {
+                $color = '#e64a19';
+            } else {
+                $color = '#c62828';
+            }
+            $notexecutedOutput .= "
+                    <tr>
+                        <td><a href='" . route('tickets.show', [$item->id]) . "'>" . $item->id . "</a></td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . $item->AccountNumber . '</span><br><strong>' . $item->ConsumerName . "</strong></td>
+                        <td>" . Tickets::getAddress($item) . "</td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . $item->ParentTicket . '</span><br><strong>' . $item->Ticket . "</strong></td>
+                        <td><span class='badge bg-info'>" . $item->Status . "</span><br>" . $item->StationName . "</td>
+                        <td><span class='text-muted' style='font-size: .9em;'>" . (date('M d, Y', strtotime($item->created_at)) . "</span><br><span class='badge' style='color: white; background-color: " . $color . "'>" . $days->format('%a days & %h hrs') . '') . "</span></td>
+                    </tr>
+                ";
+        }
+
+        $data = [
+            'pending' => $pendingOutput,
+            'downloaded' => $downloadedOutput,
+            'acted' => $actedOutput,
+            'executed' => $executedOutput,
+            'notexecuted' => $notexecutedOutput,
+        ];
+
+        return response()->json($data, 200);
+    }
+
+    public function getCrewFieldMonitorData(Request $request) {
+        $crew = $request['Crew'];
+
+        if ($crew == 'All') {
+            $data = DB::table('CRM_Tickets') 
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->select('CRM_TicketsRepository.Name',
+                    'CRM_Tickets.id',
+                    'CRM_Tickets.ConsumerName',
+                    'CRM_Tickets.Status',
+                    'CRM_ServiceConnectionCrew.StationName',
+                    'CRM_Tickets.created_at',
+                    'CRM_Tickets.GeoLocation'
+                )
+                ->orderByDesc('CRM_Tickets.created_at')
+                ->get();
+        } else {
+            $data = DB::table('CRM_Tickets') 
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("CRM_ServiceConnectionCrew.CrewLeader='" . $crew . "'")
+                ->select('CRM_TicketsRepository.Name',
+                    'CRM_Tickets.id',
+                    'CRM_Tickets.ConsumerName',
+                    'CRM_Tickets.Status',
+                    'CRM_ServiceConnectionCrew.StationName',
+                    'CRM_Tickets.created_at',
+                    'CRM_Tickets.GeoLocation'
+                )
+                ->orderByDesc('CRM_Tickets.created_at')
+                ->get();
+        }
 
         return response()->json($data, 200);
     }

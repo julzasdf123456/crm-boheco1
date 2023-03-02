@@ -52,17 +52,68 @@
             </div>
         </div>
 
-        {{-- MAP --}}
         <div class="col-lg-9 col-md-8">
             <div class="card shadow-none" style="height: 80vh;">
+                <div class="card-header p-2">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item"><a class="nav-link active" href="#pending" data-toggle="tab">
+                            <i class="fas fa-info-circle"></i>
+                            Pending</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#downloaded" data-toggle="tab">
+                            <i class="fas fa-info-circle"></i>
+                            Downloaded/Forwarded to Lineman</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#acted" data-toggle="tab">
+                            <i class="fas fa-info-circle"></i>
+                            Acted</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#executed" data-toggle="tab">
+                            <i class="fas fa-info-circle"></i>
+                            Executed</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#notexecuted" data-toggle="tab">
+                            <i class="fas fa-info-circle"></i>
+                            Not Executed</a></li>
+                    </ul>
+                </div>
                 <div class="card-body">
+                    <div class="tab-content p-0">
+                        <div class="tab-pane p-0 active" id="pending">
+                            @include('tickets.tab_pending')
+                        </div>
+        
+                        <div class="tab-pane p-0" id="downloaded">
+                            @include('tickets.tab_downloaded')
+                        </div>
+        
+                        <div class="tab-pane p-0" id="acted">
+                            @include('tickets.tab_acted')
+                        </div>
 
+                        <div class="tab-pane p-0" id="executed">
+                            @include('tickets.tab_executed')
+                        </div>
+
+                        <div class="tab-pane p-0" id="notexecuted">
+                            @include('tickets.tab_notexecuted')
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="col-lg-12">
-            <div id="map" style="width: 100%; height: 75vh;"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <span><div style="width: 15px; height: 15px; background-color: #0277bd; display: inline-block; margin-right: 3px;"></div>Received</span>
+                        <span style="margin-left: 20px;"><div style="width: 15px; height: 15px; background-color: #ab47bc; display: inline-block; margin-right: 3px;"></div>Downloaded by Crew</span>
+                        <span style="margin-left: 20px;"><div style="width: 15px; height: 15px; background-color: #f57f17; display: inline-block; margin-right: 3px;"></div>Acted</span>
+                        <span style="margin-left: 20px;"><div style="width: 15px; height: 15px; background-color: #00c853; display: inline-block; margin-right: 3px;"></div>Executed</span>
+                        <span style="margin-left: 20px;"><div style="width: 15px; height: 15px; background-color: #c62828; display: inline-block; margin-right: 3px;"></div>Not Executed/Others</span>
+                    </span>
+                </div>
+                <div class="card-body p-0">
+                    <div id="map" style="width: 100%; height: 75vh;"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -78,7 +129,7 @@
             container: 'map', // container ID
             style: 'mapbox://styles/mapbox/satellite-v9',
             center: [124.048419, 9.776509], // starting position [lng, lat], , 
-            zoom: 9 // starting zoom
+            zoom: 10 // starting zoom
         });
 
         var markers = [];
@@ -87,18 +138,40 @@
             $('#filter').on('click', function() {
                 getCrewFromStation($('#Station').val())
                 getTickets()
+                getTicketDetails()
             })
         })
 
+        function getTicketDetails() {
+            $('#pending-table tbody tr').remove()
+            $('#downloaded-table tbody tr').remove()
+            $('#acted-table tbody tr').remove()
+            $('#executed-table tbody tr').remove()
+            $('#not-executed-table tbody tr').remove()
+            $.ajax({
+                url : "{{ route('tickets.get-tickets-from-station') }}",
+                type : 'GET',
+                data : {
+                    CrewLeader : $('#Station').val(),
+                },
+                success : function(res) {
+                    $('#pending-table tbody').append(res.pending)
+                    $('#downloaded-table tbody').append(res.downloaded)
+                    $('#acted-table tbody').append(res.acted)
+                    $('#executed-table tbody').append(res.executed)
+                    $('#not-executed-table tbody').append(res.notexecuted)
+                }
+            })
+        }
+
         function getTickets() {
             $('#res-table tbody tr').remove()
+            $('div[id^="neighbors"]').remove()
             $.ajax({
                 url : "{{ route('tickets.get-crew-field-monitor-data') }}",
                 type : 'GET',
                 data : {
-                    Ticket : $('#Ticket').val(),
-                    Status : $('#Status').val(),
-                    Crew : $('#CrewAssigned').val()
+                    Crew : $('#Station').val()
                 },
                 success : function(res) {
                     if (markers.length > 0) {
@@ -112,12 +185,27 @@
                         $('#res-table tbody').append(addRow(res[index]['id'], res[index]['ConsumerName'], res[index]['Name'], res[index]['StationName'], res[index]['created_at'], res[index]['GeoLocation']))
 
                         if (!jQuery.isEmptyObject(res[index]['GeoLocation'])) {
+                            var status = res[index]['Status']
+
+                            var color = ''
+                            if (status == 'Received') {
+                                color = '#0277bd'
+                            } else if (status == 'Downloaded by Crew' | status == 'Forwarded to Crew') {
+                                color = '#ab47bc'
+                            } else if (status == 'Acted') {
+                                color = '#f57f17'
+                            } else if (status == 'Executed') {
+                                color = '#00c853'
+                            } else {
+                                color = '#c62828'
+                            }
+
                             // CREATE MARKER
                             const el = document.createElement('div');
                             el.className = 'marker';
-                            el.id = res[index]['id'];
+                            el.id = "neighbors";
                             el.title = res[index]['ConsumerName']
-                            el.innerHTML += '<button id="update" class="btn btn-sm" style="margin-left: -10px;" style="margin-left: 10px;"> <span><i class="fas fa-map-marker-alt text-danger" style="font-size: 1.7em;"></i></span> </button>'
+                            el.innerHTML += '<button id="update" class="btn btn-sm" style="margin-left: -10px;" style="margin-left: 10px;"> <span><i class="fas fa-map-marker" style="font-size: 2.3em; color: ' + color + ';"></i></span> </button>'
                             el.style.backgroundColor = `transparent`;                       
                             el.style.width = `15px`;
                             el.style.height = `15px`;
@@ -127,7 +215,7 @@
                             el.addEventListener('click', () => {
                                 Swal.fire({
                                     title : res[index]['ConsumerName'],
-                                    html : '<span>TICKET ID: ' + res[index]['id'] + '</span><br><span>TICKET: ' + res[index]['Name'] + '</span><br><span>' + 'GPS: ' + res[index]['GeoLocation'] + '</span>',
+                                    html : '<span>TICKET ID: ' + res[index]['id'] + '</span><br><span>TICKET: ' + res[index]['Name'] + '</span><br><span>' + 'GPS: ' + res[index]['GeoLocation'] + '</span><br><span>' + 'Status: ' + res[index]['Status'] + '</span>',
                                 })
                             });
 

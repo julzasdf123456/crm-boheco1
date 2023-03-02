@@ -404,6 +404,7 @@ Route::get('/tickets/forward-to-esd', [App\Http\Controllers\TicketsController::c
 Route::get('/tickets/undo-forward', [App\Http\Controllers\TicketsController::class, 'undoForward'])->name('tickets.undo-forward');
 Route::get('/tickets/account-finder', [App\Http\Controllers\TicketsController::class, 'accountFinder'])->name('tickets.account-finder');
 Route::get('/tickets/load-account-in-map', [App\Http\Controllers\TicketsController::class, 'loadAccountInMap'])->name('tickets.load-account-in-map');
+Route::get('/tickets/get-tickets-from-station', [App\Http\Controllers\TicketsController::class, 'getTicketsFromStation'])->name('tickets.get-tickets-from-station');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 
