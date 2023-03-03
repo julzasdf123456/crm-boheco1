@@ -317,7 +317,7 @@ $id = IDGenerator::generateID();
                         </tr>
                         <tr>
                             <td>Total VAT</td>
-                            <th class="text-right text-primary">₱ <span id="total-vat-display" data-toggle="tooltip" data-placement="left">{{ $totalPayments != null ? number_format($totalPayments->TotalVat, 2) : '0.00' }}</span></th>
+                            <th class="text-right text-primary">₱ <span id="total-vat-display" data-toggle="tooltip" data-placement="left">{{ $totalPayments != null ? $totalPayments->TotalVat : '0.00' }}</span></th>
                         </tr>
                         <tr>
                             <td>
