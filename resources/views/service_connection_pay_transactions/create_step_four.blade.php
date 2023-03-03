@@ -309,7 +309,7 @@ $id = IDGenerator::generateID();
                         </tr>
                         <tr title="Bill deposits are being rounded down to the nearest hundredth">
                             <td>Bill Deposit</td>
-                            <th class="text-right text-primary">₱ <span id="bill-deposit-display" data-toggle="tooltip" data-placement="left">{{ $totalPayments != null ? number_format($totalPayments->BillDeposit, 2) : '0.00' }}</span></th>
+                            <th class="text-right text-primary">₱ <span id="bill-deposit-display" data-toggle="tooltip" data-placement="left">{{ $totalPayments != null ? $totalPayments->BillDeposit : '0.00' }}</span></th>
                         </tr>
                         <tr>
                             <td>Other Payables</td>
