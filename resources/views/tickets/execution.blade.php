@@ -9,8 +9,20 @@
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-sm-12">
-                <h4>Tickets | Execution Updating</h4>
+            <div class="col-lg-6">
+                <h4>Tickets | Execution Updating <span class="text-muted" style="font-size: .7em; margin-left: 10px;">Press <strong>F3</strong> to search</span></h4>
+            </div>
+            <div class="col-lg-6">
+                {!! Form::open(['route' => 'tickets.execution', 'method' => 'GET']) !!}
+                <button type="submit" class="btn btn-sm btn-primary float-right" style="margin-left: 10px;"><i class="fas fa-check ico-tab-mini"></i>View</button>
+                <select name="Crew" id="Crew" class="float-right form-control form-control-sm" style="width: 250px; margin-left: 10px;">
+                    <option value="All">All</option>
+                    @foreach ($crews as $item)
+                    <option value="{{ $item->id }}">{{ $item->CrewLeader }} - {{ $item->StationName }}</option>
+                    @endforeach                     
+                </select>
+                <label for="Crew" class="float-right">Filter Crew</label>
+                {!! Form::close() !!}
             </div>
         </div>
     </div>
@@ -21,72 +33,59 @@
         {{-- FORM --}}
         <div class="col-lg-12">
             <div class="card shadow-none">
-                {!! Form::open(['route' => 'tickets.execution', 'method' => 'GET']) !!}
-                <div class="card-body">
-                    <div class="row">
-    
-                        <div class="form-group col-md-3">
-                            <label for="Office">Office</label>
-                            <select name="Office" id="Office" class="form-control form-control-sm">
-                                <option value="MAIN OFFICE"  {{ isset($_GET['Office']) && $_GET['Office']=='MAIN OFFICE' ? 'selected' : '' }}>MAIN OFFICE</option>    
-                                <option value="SUB-OFFICE"  {{ isset($_GET['Office']) && $_GET['Office']=='SUB-OFFICE' ? 'selected' : '' }}>SUB-OFFICE</option>                            
-                            </select>
-                        </div>
-    
-                        <div class="form-group col-md-3">
-                            <label for="Action">Action</label><br>
-                            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-check ico-tab-mini"></i>View</button>
-                        </div>
-                    </div>
-                    
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover table-sm">
+                        <thead>
+                            <th>Ticket No/Acct.No</th>
+                            <th>Consumer Name/Address</th>
+                            <th>Complain</th>
+                            <th>Status</th>
+                            <th>Date/Time of Arrival</th>
+                            <th>Date/Time Executed</th>
+                            <th>Edit Status</th>
+                            <th width="40px"></th>
+                        </thead>
+                        <tbody>
+                            @foreach ($tickets as $item)
+                                <tr id="{{ $item->id }}">
+                                    <td>
+                                        <strong><a href="{{ route('tickets.show', [$item->id]) }}">{{ $item->id }}</a></strong>
+                                        <br>
+                                        <span class="text-muted" style="font-size: .9em;">{{ $item->AccountNumber }}</span>
+                                    </td>
+                                    <td>
+                                        <strong>{{ $item->ConsumerName }}</strong>
+                                        <br>
+                                        <span class="text-muted" style="font-size: .9em;">{{ Tickets::getAddress($item) }}</span>
+                                    </td>
+                                    <th>
+                                        <strong>{{ $item->Ticket }}</strong>
+                                        <br>
+                                        <span class="text-muted" style="font-size: .9em;">{{ $item->ParentTicket }}</span>
+                                    </th>
+                                    <td><span class="badge bg-info">{{ $item->Status }}</span></td>
+                                    <td>
+                                       <input type="datetime-local" class="form-control form-control-sm" id="arrival-{{ $item->id }}" placeholder="Input date of arrival">                                       
+                                    </td>
+                                    <td>
+                                        <input type="datetime-local" class="form-control form-control-sm" id="executed-{{ $item->id }}" placeholder="Input date executed">                                        
+                                     </td>
+                                    <td>
+                                        <select id="status-{{ $item->id }}" class="form-control form-control-sm">
+                                            <option value="Executed">Executed</option>
+                                            <option value="Acted">Acted</option>
+                                            <option value="Not Executed">Not Executed</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button onclick="update('{{ $item->id }}')" class="btn btn-sm btn-primary"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-                {!! Form::close() !!}
             </div>
-        </div>
-
-        {{-- RESULTS --}}
-        <div class="col-lg-12">
-            <table class="table table-hover table-sm">
-                <thead>
-                    <th>Ticket No</th>
-                    <th>Consumer Name</th>
-                    <th>Address</th>
-                    <th>Complain</th>
-                    <th>Datetime Complained</th>
-                    <th>Office</th>
-                    <th>Select Crew</th>
-                    <th width="40px"></th>
-                </thead>
-                <tbody>
-                    @if ($tickets != null)
-                        @foreach ($tickets as $item)
-                            @php
-                                $ticketMain = TicketsRepository::find($item->TicketID);
-                                $parent = TicketsRepository::where('id', $ticketMain->ParentTicket)->first();
-                            @endphp
-                            <tr id="{{ $item->id }}">
-                                <td><a href="{{ route('tickets.show', [$item->id]) }}">{{ $item->id }}</a></td>
-                                <td><strong>{{ $item->ConsumerName }}</strong></td>
-                                <td>{{ Tickets::getAddress($item) }}</td>
-                                <th>{{ $parent != null ? $parent->Name . ' - ' : '' }}{{ $item->Ticket }}</th>
-                                <td>{{ date('M d, Y h:m A', strtotime($item->created_at)) }}</td>
-                                <td>{{ $item->Office }}</td>
-                                <td>
-                                    <select id="crew-{{ $item->id }}" class="form-control form-control-sm">
-                                        <option value="">-</option>
-                                        @foreach ($crew as $crews)
-                                            <option value="{{ $crews->id }}">{{ $crews->StationName }}</option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td>
-                                    <button onclick="changeCrew('{{ $item->id }}')" class="btn btn-sm btn-primary"><i class="fas fa-check"></i></button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
         </div>
     </div>
 </div>
@@ -98,38 +97,34 @@
 
         })
 
-        function changeCrew(id) {
-            var crew = $('#crew-' + id).val()
-            if (!jQuery.isEmptyObject(crew)) {
-                $.ajax({
-                    url : "/tickets/update-ordinary-ticket-assessment",
-                    type : 'POST',
-                    data : {
-                        _token : "{{ csrf_token() }}",
-                        id : id,
-                        CrewAssigned : crew,
-                    },
-                    success : function(res) {
-                        $('#' + id).remove()
-                        Toast.fire({
-                            icon : 'success',
-                            text : 'Crew assigned successfully'
-                        })
-                    },
-                    error : function(err) {
-                        Swal.fire({
-                            icon : 'error',
-                            text : 'An error occurred while attempting to change crew. Contact support for more!'
-                        })
-                    }
-                })
-            } else {
-                Toast.fire({
-                    icon : 'warning',
-                    text : 'No crew selected!'
-                })
-            }
+        function update(id) {
+            var arrival = moment($('#arrival-' + id).val()).format('YYYY-MM-DD HH:mm:ss')
+            var executed = moment($('#executed-' + id).val()).format('YYYY-MM-DD HH:mm:ss')
+            var status = $('#status-' + id).val()
             
+            $.ajax({
+                url : "{{ route('tickets.update-execution-data') }}",
+                type : 'GET',
+                data : {
+                    id : id,
+                    Arrival : arrival,
+                    Executed : executed,
+                    Status : status,
+                },
+                success : function(res) {
+                    Toast.fire({
+                        icon : 'success',
+                        text : 'Execution udpated!',
+                    })
+                    $('#' + id).remove()
+                },
+                error : function(err) {
+                    Toast.fire({
+                        icon : 'error',
+                        text : 'Error updating status!'
+                    })
+                }
+            })
         }
     </script>
 @endpush

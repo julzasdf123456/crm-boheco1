@@ -407,6 +407,7 @@ Route::get('/tickets/account-finder', [App\Http\Controllers\TicketsController::c
 Route::get('/tickets/load-account-in-map', [App\Http\Controllers\TicketsController::class, 'loadAccountInMap'])->name('tickets.load-account-in-map');
 Route::get('/tickets/get-tickets-from-station', [App\Http\Controllers\TicketsController::class, 'getTicketsFromStation'])->name('tickets.get-tickets-from-station');
 Route::get('/tickets/execution', [App\Http\Controllers\TicketsController::class, 'execution'])->name('tickets.execution');
+Route::get('/tickets/update-execution-data', [App\Http\Controllers\TicketsController::class, 'updateExecutionData'])->name('tickets.update-execution-data');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 
