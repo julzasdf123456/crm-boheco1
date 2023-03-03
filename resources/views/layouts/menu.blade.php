@@ -486,6 +486,12 @@ use Illuminate\Support\Facades\Auth;
                     <i class="fas fa-circle nav-icon text-danger"></i><p>Crew Assigning</p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('tickets.execution') }}"
+                class="nav-link {{ Request::is('tickets.execution*') ? 'active' : '' }}">
+                    <i class="fas fa-hard-hat nav-icon text-danger"></i><p>Execution</p>
+                </a>
+            </li>
             @endcanany
             @canany(['Super Admin', 'create metering data'])
             <li class="nav-header">                
