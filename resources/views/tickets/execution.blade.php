@@ -39,7 +39,7 @@
                             <th>Ticket No/Acct.No</th>
                             <th>Consumer Name/Address</th>
                             <th>Complain</th>
-                            <th>Status</th>
+                            <th>Date Filed/Status</th>
                             <th>Date/Time of Arrival</th>
                             <th>Date/Time Executed</th>
                             <th>Edit Status</th>
@@ -63,7 +63,11 @@
                                         <br>
                                         <span class="text-muted" style="font-size: .9em;">{{ $item->ParentTicket }}</span>
                                     </th>
-                                    <td><span class="badge bg-info">{{ $item->Status }}</span></td>
+                                    <td>
+                                        <span class="text-muted">{{ date('M d, Y', strtotime($item->created_at)) }}</span>
+                                        <br>
+                                        <span class="badge bg-info">{{ $item->Status }}</span>
+                                    </td>
                                     <td>
                                        <input type="datetime-local" class="form-control form-control-sm" id="arrival-{{ $item->id }}" placeholder="Input date of arrival">                                       
                                     </td>
