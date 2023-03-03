@@ -106,5 +106,40 @@ class Meters extends Model
         'Remarks' => 'nullable|string|max:255'
     ];
 
-    
+    public static function registeredMeters() {
+        return [
+            '' => '',
+            'ACCURA' => 'ACCURA',
+            'ACLARA KV2C' => 'ACLARA KV2C',
+            'AMERICO' => 'AMERICO',
+            'BAZ' => 'BAZ',
+            'CHINT' => 'CHINT',
+            'EDMI MK10E' => 'EDMI MK10E',
+            'EDMI MK6N' => 'EDMI MK6N',
+            'EDMI MK6E' => 'EDMI MK6E',
+            'EDMI MK7C' => 'EDMI MK7C',
+            'ELETRA' => 'ELETRA',
+            'EVER' => 'EVER',
+            'FUJI' => 'FUJI',
+            'GE' => 'GE',
+            'GE I210' => 'GE I210',
+            'GE KV2C' => 'GE KV2C',
+            'GOLDSTAR' => 'GOLDSTAR',
+            'HARBIN' => 'HARBIN',
+            'HEAG' => 'HEAG',
+            'INTECH' => 'INTECH', 
+            'ITECHENE' => 'ITECHENE',
+            'LANDIS' => 'LANDIS',
+            'LANDIS FOCUS' => 'LANDIS FOCUS',
+            'MITSUBISHI' => 'MITSUBISHI',
+            'ORIENTAL' => 'ORIENTAL',
+            'SAFARI' => 'SAFARI',
+            'SANGAMO' => 'SANGOMO',
+            'SUZSOU' => 'SUZSOU',
+            'TATUNG' => 'TATUNG',
+            'TECHEN' => 'TECHEN',
+            'TOSHIBA' => 'TOSHIBA',
+            'WARBURTON' => 'WARBURTON',
+        ];
+    }
 }

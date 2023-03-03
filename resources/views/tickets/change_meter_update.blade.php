@@ -1,3 +1,6 @@
+@php
+    use App\Models\Meters;
+@endphp
 @extends('layouts.app')
 
 @section('content')
@@ -32,7 +35,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     {!! Form::label('CurrentMeterNo', 'Old Meter No:') !!}
-                                    {!! Form::text('CurrentMeterNo', $ticket->CurrentMeterNo, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100, 'readonly' => true]) !!}
+                                    {!! Form::text('CurrentMeterNo', $ticket->CurrentMeterNo, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100]) !!}
                                 </div>
                             </div>
 
@@ -48,7 +51,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     {!! Form::label('CurrentMeterBrand', 'Old Meter Brand:') !!}
-                                    {!! Form::text('CurrentMeterBrand', $ticket->CurrentMeterBrand, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100, 'readonly' => true]) !!}
+                                    {!! Form::text('CurrentMeterBrand', $ticket->CurrentMeterBrand, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100]) !!}
                                 </div>
                             </div>
 
