@@ -95,6 +95,7 @@ $id = IDGenerator::generateID();
                         <th>Particular</th>
                         <th class='text-center'>Quantity</th>
                         <th class='text-center'>Charge per Unit</th>
+                        <th class='text-center'>Elec. Share</th>
                         <th class='text-center'>BOHECO I<br>Share (P20)</th>
                         <th class='text-center' colspan="2">VAT</th>
                         <th class='text-center'>Total</th>
@@ -107,10 +108,13 @@ $id = IDGenerator::generateID();
                             <tr id="{{ $item->id }}">
                                 <td>{{ $item->Material }}</td>
                                 <td>
-                                    <input type="number" onkeyup="computeLaborCharge('{{ $item->id }}')" step="any" class="form-control form-control-sm text-right" value="{{ $item->Qty }}" name="{{ $item->id }}Quantity" id="{{ $item->id }}Quantity">
+                                    <input type="number" onkeyup="computeLaborCharge('{{ $item->id }}')" step="any" class="form-control form-control-sm text-right" value="{{ $item->Qty != null ? $item->Qty : ($item->Material=='Service Entrance' | $item->Material=='Street Light' ? 0 : $item->Qty) }}" name="{{ $item->id }}Quantity" id="{{ $item->id }}Quantity">
                                 </td>
                                 <td style="width: 120px;">
                                     <input type="number" step="any" class="form-control form-control-sm text-right" id="{{ $item->id }}Charge" value="{{ $item->Rate }}" disabled>
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm text-right" name="{{ $item->id }}ElecShare" value="" id="{{ $item->id }}ElecShare" disabled>
                                 </td>
                                 <td>
                                     <input type="number" step="any" class="form-control form-control-sm text-right" name="{{ $item->id }}BOHECOIShare" value="{{ number_format($item->BOHECOIShare, 2) }}" id="{{ $item->id }}BOHECOIShare" disabled>
@@ -528,7 +532,7 @@ $id = IDGenerator::generateID();
                     });    
                 }
             });
-
+            validateElecShare()
             getOverAllTotal()
         })
 
@@ -616,9 +620,25 @@ $id = IDGenerator::generateID();
             
             $('#' + id + 'VATAmount').val(vatAmnt.toFixed(2))
             $('#' + id + 'BOHECOIShare').val(bohecoShare.toFixed(2))
+            $('#' + id + 'ElecShare').val((subTotal - bohecoShare).toFixed(2))
             $('#' + id + 'Total').val(total.toFixed(2))
 
             getOverAllTotal()
+        }
+
+        function validateElecShare() {
+            $('#labor-charge-table > tbody  > tr').each(function(index, tr) { 
+                var id = $(tr).attr('id')
+
+                  
+                var qty = parseFloat($('#' + id + 'Quantity').val())
+                var charge = parseFloat($('#' + id + 'Charge').val())
+                var subTotal = qty * charge
+                var bohecoShare = qty * 20
+                var elecShare = subTotal - bohecoShare
+                $('#' + id + 'ElecShare').val(elecShare.toFixed(2))           
+            });
+
         }
 
         // VALIDATE LABOR CHARGE
@@ -626,7 +646,6 @@ $id = IDGenerator::generateID();
             if (isAccredited) {
                 $('#wiring-labor-charge-display').text(Number((getTotalLaborCharge()).toFixed(2)).toLocaleString(undefined, {minimumFractionDigits: 2}))
                 $('#boheco-share').text(Number((getBOHECOIShare()).toFixed(2)).toLocaleString(undefined, {minimumFractionDigits: 2}))
-                console.log(getBOHECOIShare())
             } else {
                 $('#wiring-labor-charge-display').text(0.00)
                 $('#boheco-share').text(0.00)
@@ -644,13 +663,22 @@ $id = IDGenerator::generateID();
             $('#labor-charge-table > tbody  > tr').each(function(index, tr) { 
                 var id = $(tr).attr('id')
 
-                var totalVal = $('#' + id + 'Total').val()
-                var vatVal = $('#' + id + 'VATAmount').val()
-                if (!jQuery.isEmptyObject(totalVal) && !jQuery.isEmptyObject(vatVal)) {
-                    totalAmnt += parseFloat(totalVal - 20) - parseFloat(vatVal) // -20 FOR BOHECO SHARE
-                }                
+                // var totalVal = $('#' + id + 'Total').val()
+                // var vatVal = $('#' + id + 'VATAmount').val()
+                // if (!jQuery.isEmptyObject(totalVal) && !jQuery.isEmptyObject(vatVal)) {
+                //     totalAmnt += parseFloat(totalVal - 20) - parseFloat(vatVal) // -20 FOR BOHECO SHARE
+                // }   
+                var bohecoshare = $('#' + id + 'ElecShare').val()
+                if (!jQuery.isEmptyObject(bohecoshare)) {
+                    totalAmnt += parseFloat(bohecoshare)
+                }             
             });
-            return totalAmnt
+            // return totalAmnt
+            if (isAccredited) {
+                return totalAmnt
+            } else {
+                return 0
+            } 
         }
 
         // GET TOTAL BOHECO I SHARE
@@ -670,6 +698,23 @@ $id = IDGenerator::generateID();
                 return 0
             }
             
+        }
+        // GET TOTAL ELECTICIAN I SHARE
+        function getElectricianShare() {
+            var totalAmnt = 0
+            $('#labor-charge-table > tbody  > tr').each(function(index, tr) { 
+                var id = $(tr).attr('id')
+
+                var bohecoshare = $('#' + id + 'ElecShare').val()
+                if (!jQuery.isEmptyObject(bohecoshare)) {
+                    totalAmnt += parseFloat(bohecoshare)
+                }                
+            })
+            if (isAccredited) {
+                return totalAmnt
+            } else {
+                return 0
+            }            
         }
 
         // GET TOTAL LABOR VAT
