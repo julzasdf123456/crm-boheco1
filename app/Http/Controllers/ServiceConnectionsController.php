@@ -82,6 +82,7 @@ class ServiceConnectionsController extends AppBaseController
                                 'CRM_ServiceConnections.Office',
                                 'CRM_ServiceConnections.Sitio as Sitio', 
                                 'CRM_Towns.Town as Town',
+                                'CRM_ServiceConnections.ORNumber',
                                 'CRM_ServiceConnections.LoadCategory',
                                 'CRM_Barangays.Barangay as Barangay',
                                 'CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber')
@@ -107,6 +108,7 @@ class ServiceConnectionsController extends AppBaseController
                                 'CRM_ServiceConnections.Office',
                                 'CRM_ServiceConnections.Sitio as Sitio', 
                                 'CRM_Towns.Town as Town',
+                                'CRM_ServiceConnections.ORNumber',
                                 'CRM_ServiceConnections.LoadCategory',
                                 'CRM_Barangays.Barangay as Barangay',
                                 'CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber')
@@ -3235,6 +3237,18 @@ class ServiceConnectionsController extends AppBaseController
         $timeFrame->Status = $status;
         $timeFrame->Notes = 'Status updated manually';
         $timeFrame->save();
+
+        return response()->json('ok', 200);
+    }
+
+    public function updateOR(Request $request) {
+        $id = $request['id'];
+        $or = $request['ORNumber'];
+        $orDate = $request['ORDate'];
+
+        ServiceConnections::where('id', $id)
+            ->update(['ORNumber' => $or, 'ORDate' => $orDate]);
+
 
         return response()->json('ok', 200);
     }

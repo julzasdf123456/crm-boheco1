@@ -15,9 +15,7 @@
                         {!! Form::button('<i class="fas fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-tool text-danger float-right', 'onclick' => "return confirm('Are you sure you want to delete this ticket?')"]) !!}                
                         {!! Form::close() !!}
                         {{-- IF CHANGE METER --}}
-                        @if ($tickets->TicketRepoId=='1668541254390' | $tickets->TicketRepoId=='1672792232225')
-                            <a href="{{ route('tickets.change-meter-update', [$tickets->id]) }}" class="btn btn-tool text-info float-right" title="Update meter info"><i class="fas fa-tachometer-alt"></i></a>
-                        @endif
+                        <a href="{{ route('tickets.change-meter-update', [$tickets->id]) }}" class="btn btn-tool text-info float-right" title="Update meter info"><i class="fas fa-tachometer-alt"></i></a>
                         @if ($tickets->Status=="Executed")
                             <a class="btn btn-tool text-info float-right" title="This ticket is closed because it's been already tagged as executed."><i class="fas fa-lock"></i></a>
                         @else
@@ -114,9 +112,7 @@
                     <div class="tab-pane fade show" id="meter" role="tabpanel" aria-labelledby="custom-content-below-home-tab">
                         <div class="row">
                             <div class="col-lg-12">
-                                @if ($tickets->TicketRepoId=='1668541254390' | $tickets->TicketRepoId=='1672792232225')
-                                    <a href="{{ route('tickets.change-meter-update', [$tickets->id]) }}" class="btn btn-tool text-info" title="Update meter info" style="margin-top: 5px; margin-bottom: 10px;"><i class="fas fa-pen ico-tab-mini"></i> Update</a>
-                                @endif
+                                <a href="{{ route('tickets.change-meter-update', [$tickets->id]) }}" class="btn btn-xs btn-info" title="Update meter info" style="margin-top: 5px; margin-bottom: 10px;"><i class="fas fa-pen ico-tab-mini"></i> Update</a>
                             </div>
                             <div class="col-lg-6">
                                 <table class="table table-bordered table-hover table-sm">

@@ -1,5 +1,6 @@
 @php
     use App\Models\ServiceConnections;
+    use Illuminate\Support\Facades\Auth;
 @endphp
     
 @extends('layouts.app')
@@ -52,7 +53,14 @@
                         <td>{{ $item->MeterSerialNumber }}</td>           
                         <td><span class="badge {{ ServiceConnections::getOfficeBg($item->Office) }}">{{ $item->Office }}</span></td>     
                         <td>
-                            <a href="{{ route('serviceConnections.show', [$item->ConsumerId]) }}" class="float-right"><i class="fas fa-eye"></i></a>    
+                            <a href="{{ route('serviceConnections.show', [$item->ConsumerId]) }}" class="float-right" style="margin-left: 10px;"><i class="fas fa-eye"></i></a>    
+                            @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Service Connection Assessor']))
+                                @if ($item->ORNumber == null)
+                                    <button class="btn btn-success btn-xs float-right" onclick="updateOR('{{ $item->ConsumerId }}')"><i class="fas fa-dollar-sign ico-tab-mini"></i>Update OR</button>
+                                @else
+                                    <span class="badge bg-warning float-right">{{ $item->ORNumber }}</span>
+                                @endif                                
+                            @endif
                         </td>                  
                     </tr>                    
                 @endforeach
@@ -62,3 +70,52 @@
         {{ $data->links() }}
     </div>
 @endsection
+
+@include('service_connections.modal_update_or')
+
+@push('page_scripts')
+    <script>
+        var scid = ''
+        $(document).ready(function() {
+            $('#save-or').on('click', function() {
+                var or = $('#ornumber').val()
+                var ordate = $('#orDate').val()
+                if (jQuery.isEmptyObject(or) | jQuery.isEmptyObject(ordate)) {
+                    Swal.fire({
+                        icon : 'warning',
+                        text : 'Please input OR Number and OR Date'
+                    })
+                } else {
+                    $.ajax({
+                        url : "{{ route('serviceConnections.update-or') }}",
+                        type : 'GET',
+                        data : {
+                            id : scid,
+                            ORNumber : or,
+                            ORDate : ordate
+                        },
+                        success : function(res) {
+                            Toast.fire({
+                                icon : 'success',
+                                text : 'OR Updated!'
+                            })
+                            location.reload()
+                        },
+                        error : function(err) {
+                            Swal.fire({
+                                icon : 'error',
+                                text : 'Error updating OR'
+                            })
+                        }
+                    })
+                }                
+            })
+        })
+
+        function updateOR(id) {
+            scid = id
+            $('#modal-update-or').modal('show')
+        }
+
+    </script>
+@endpush
