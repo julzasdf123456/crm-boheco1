@@ -23,7 +23,7 @@
             <div class="card-body">
                 <div class="row">
 
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
                         <label for="Crew">Crew</label>
                         <select name="Crew" id="Crew" class="form-control form-control-sm">
                             <option value="All">All</option>
@@ -40,6 +40,14 @@
                             <option value="Received"  {{ isset($_GET['Status']) && $_GET['Status']=='Received' ? 'selected' : '' }}>Received/Logged</option>   
                             <option value="Acted"  {{ isset($_GET['Status']) && $_GET['Status']=='Acted' ? 'selected' : '' }}>Acted</option>         
                             <option value="Download by Crew"  {{ isset($_GET['Status']) && $_GET['Status']=='Download by Crew' ? 'selected' : '' }}>Download by Crew</option>                     
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label for="Office">Office</label>
+                        <select name="Office" id="Office" class="form-control form-control-sm">
+                            <option value="MAIN OFFICE"  {{ isset($_GET['Office']) && $_GET['Office']=='MAIN OFFICE' ? 'selected' : '' }}>Main Office</option>   
+                            <option value="SUB-OFFICE"  {{ isset($_GET['Office']) && $_GET['Office']=='SUB-OFFICE' ? 'selected' : '' }}>Sub-Office</option>                  
                         </select>
                     </div>
 
