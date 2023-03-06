@@ -109,6 +109,7 @@ class MemberConsumersController extends AppBaseController
                 $input['FirstName'] = strtoupper($input['FirstName']);
                 $input['MiddleName'] = strtoupper($input['MiddleName']);
                 $input['LastName'] = strtoupper($input['LastName']);
+                $input['ORDate'] = $input['DateApplied'];
                 $memberConsumers = $this->memberConsumersRepository->update($request->all(), $mco->Id);
 
                 if ($input['CivilStatus'] == 'Married') {
@@ -122,6 +123,7 @@ class MemberConsumersController extends AppBaseController
                 $input['FirstName'] = strtoupper($input['FirstName']);
                 $input['MiddleName'] = strtoupper($input['MiddleName']);
                 $input['LastName'] = strtoupper($input['LastName']);
+                $input['ORDate'] = $input['DateApplied'];
                 $memberConsumers = $this->memberConsumersRepository->create($input);
 
                 Flash::success('Member Consumers saved successfully.');
