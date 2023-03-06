@@ -519,7 +519,8 @@ class ServiceAccountsController extends AppBaseController
                                 $query->where('CRM_ServiceConnections.Trash', 'No')
                                     ->orWhereNull('CRM_ServiceConnections.Trash');
                             })  
-            ->whereIn('Status', ['Energized', 'Approved For Change Name'])          
+            ->whereIn('Status', ['Energized', 'Approved For Change Name'])     
+            ->whereRaw("CRM_ServiceConnections.created_at > '2023-02-28'")     
             ->orderBy('CRM_ServiceConnections.ServiceAccountName')
             ->get();
 
