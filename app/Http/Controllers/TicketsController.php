@@ -3554,6 +3554,7 @@ class TicketsController extends AppBaseController
                 ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
                 ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
                 ->whereRaw("Status='Executed' AND CRM_Tickets.Ticket IN ('1668541254390', '1672792232225') AND ChangeMeterConfirmed IS NULL")
+                ->whereRaw("CRM_Tickets.created_at > '2023-02-28'")
                 ->select('CRM_Tickets.id',
                     'CRM_Tickets.AccountNumber',
                     'CRM_Tickets.ConsumerName',
@@ -3589,6 +3590,7 @@ class TicketsController extends AppBaseController
                 ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
                 ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
                 ->whereRaw("Status='Executed' AND CRM_Tickets.Ticket IN ('1668541254390', '1672792232225') AND CRM_Tickets.Office='" . $office . "' AND ChangeMeterConfirmed IS NULL")
+                ->whereRaw("CRM_Tickets.created_at > '2023-02-28'")
                 ->select('CRM_Tickets.id',
                     'CRM_Tickets.AccountNumber',
                     'CRM_Tickets.ConsumerName',
