@@ -2,6 +2,7 @@
     use App\Models\MemberConsumers;
     use App\Models\ServiceConnections;
     use App\Models\Users;
+    use Illuminate\Support\Facades\Auth;    
 @endphp
 
 <style>
@@ -276,11 +277,11 @@
                 <p>Prepared By:</p>
                 <br>
                 <br>
-                <p class="text-center" style="padding-left: 20px; padding-right: 20px; border-bottom: 1px solid #898989;"><strong>{{ env('ISD_HWRS_ASSESSOR') }}</strong></p>
+                <p class="text-center" style="padding-left: 20px; padding-right: 20px; border-bottom: 1px solid #898989;"><strong>{{ strtoupper(Auth::user()->name) }}</strong></p>
                 <p class="text-center"><i>Housewiring Assessor</i></p>
             </div>
 
-            <div class="third" style="margin-left: 20px;">
+            {{-- <div class="third" style="margin-left: 20px;">
                 <p>Checked By:</p>
                 <br>
                 <br>
@@ -294,7 +295,7 @@
                 <br>
                 <p class="text-center" style="padding-left: 20px; padding-right: 20px; border-bottom: 1px solid #898989;"><strong>{{ env('ISD_MANAGER') }}</strong></p>
                 <p class="text-center"><i>ISD Manager</i></p>
-            </div>
+            </div> --}}
         </div>
 
         @if ($i==0) 

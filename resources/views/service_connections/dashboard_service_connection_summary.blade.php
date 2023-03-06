@@ -24,7 +24,7 @@
                 <div class="icon">
                     <i class="fas fa-forward"></i>
                 </div>
-                <a href="{{ route('serviceConnectionMtrTrnsfrmrs.assigning') }}" id="sent-to-lineman-btn" class="small-box-footer" title="Tickets Sent To Crew" >View <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('serviceConnectionMtrTrnsfrmrs.assigning') }}" class="small-box-footer" title="Tickets Sent To Crew" >View <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
