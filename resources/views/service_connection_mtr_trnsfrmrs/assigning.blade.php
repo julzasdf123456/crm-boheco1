@@ -58,7 +58,9 @@
                                         <td>{{ ServiceConnections::getAddress($item) }}</td>
                                         <td>{{ $item->AccountType }}</td>
                                         <td>
-                                            <a href="{{ route('serviceConnectionMtrTrnsfrmrs.create-step-three', [$item->id]) }}" class="text-muted" title="Proceed Assigning"> <i class="fas fa-arrow-alt-circle-right"></i> </a>
+                                            @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Metering Personnel', 'Energization Clerk'])) 
+                                                <a href="{{ route('serviceConnectionMtrTrnsfrmrs.create-step-three', [$item->id]) }}" class="text-muted" title="Proceed Assigning"> <i class="fas fa-arrow-alt-circle-right"></i> </a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach                                

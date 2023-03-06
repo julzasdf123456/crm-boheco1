@@ -4,8 +4,10 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <br>
+        @include('service_connections.dashboard_service_connection_summary')
         
+        @include('tickets.dashboard_ticket_summary')
+
         @include('tickets.ticket_crew_monitor')
     </div>
 </div>

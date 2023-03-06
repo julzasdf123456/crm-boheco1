@@ -63,15 +63,19 @@
                                         <td>{{ $item->StationName }}</td>
                                         <td><span class="badge bg-info">{{ $item->Status }}</span></td>
                                         <td class="text-center">
-                                            <a href="{{ route('serviceConnections.print-order', [$item->id]) }}" class="{{ $item->EnergizationOrderIssued==null ? 'text-primary' : 'text-success' }}" title="Issue and Print Energization Order/Ticket"> <i class="fas fa-print"></i> </a>
-                                            @if ($item->Status=='Downloaded by Crew')
-                                                
-                                            @else
-                                                <button id="reAssign" class="btn text-muted" data-toggle="modal" data-target="#modal-default" data-id="{{ $item->id }}" fromData="{{ $item->StationName }}" style="margin-left: 10px;" title="Re-assign station and crew"> <i class="fas fa-hard-hat"></i> </button>
+                                            @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Metering Personnel', 'Energization Clerk', 'Service Connection Assessor'])) 
+                                                <a href="{{ route('serviceConnections.print-order', [$item->id]) }}" class="{{ $item->EnergizationOrderIssued==null ? 'text-primary' : 'text-success' }}" title="Issue and Print Energization Order/Ticket"> <i class="fas fa-print"></i> </a>
+                                                @if ($item->Status=='Downloaded by Crew')
+                                                    
+                                                @else
+                                                    <button id="reAssign" class="btn text-muted" data-toggle="modal" data-target="#modal-default" data-id="{{ $item->id }}" fromData="{{ $item->StationName }}" style="margin-left: 10px;" title="Re-assign station and crew"> <i class="fas fa-hard-hat"></i> </button>
+                                                @endif
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <button id="update-energization" class="btn {{ $item->Status=='Not Energized' ? 'text-danger' : 'text-primary' }}" data-toggle="modal" data-target="#modal-energization" data-id="{{ $item->id }}" title="Update Energization Order"> <i class="fas fa-clipboard-check"></i> </button>
+                                            @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Metering Personnel', 'Energization Clerk'])) 
+                                                <button id="update-energization" class="btn {{ $item->Status=='Not Energized' ? 'text-danger' : 'text-primary' }}" data-toggle="modal" data-target="#modal-energization" data-id="{{ $item->id }}" title="Update Energization Order"> <i class="fas fa-clipboard-check"></i> </button>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach                                
