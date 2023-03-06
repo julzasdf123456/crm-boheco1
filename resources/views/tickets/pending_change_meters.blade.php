@@ -43,7 +43,35 @@
                         </select>
                     </div>
 
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-lg-2">
+                        <label for="From">From</label>
+                        {!! Form::text('From', isset($_GET['From']) ? $_GET['From'] : '', ['class' => 'form-control form-control-sm', 'placeholder' => 'Select Date', 'id' => 'From', 'required' => 'true']) !!}
+                    </div>
+                    @push('page_scripts')
+                        <script type="text/javascript">
+                            $('#From').datetimepicker({
+                                format: 'YYYY-MM-DD',
+                                useCurrent: true,
+                                sideBySide: true
+                            })
+                        </script>
+                    @endpush
+
+                    <div class="form-group col-lg-2">
+                        <label for="To">To</label>
+                        {!! Form::text('To', isset($_GET['To']) ? $_GET['To'] : '', ['class' => 'form-control form-control-sm', 'placeholder' => 'Select Date', 'id' => 'To', 'required' => 'true']) !!}
+                    </div>
+                    @push('page_scripts')
+                        <script type="text/javascript">
+                            $('#To').datetimepicker({
+                                format: 'YYYY-MM-DD',
+                                useCurrent: true,
+                                sideBySide: true
+                            })
+                        </script>
+                    @endpush
+
+                    <div class="form-group col-md-2">
                         <label for="Action">Action</label><br>
                         <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-check ico-tab-mini"></i>View</button>
                     </div>
