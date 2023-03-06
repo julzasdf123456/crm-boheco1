@@ -154,6 +154,17 @@ use Illuminate\Support\Facades\Auth;
             </li>
             @endcanany
 
+            @canany(['Super Admin', 'update metering data'])
+            <li class="nav-item">
+                <a href="{{ route('serviceConnections.energization') }}"
+                class="nav-link {{ Request::is('serviceConnections.energization') ? 'active' : '' }}">
+                    <i class="fas fa-tools nav-icon text-warning"></i>
+                    <p>Energization
+                    </p>
+                </a>
+            </li>
+            @endcanany
+
             @canany(['Super Admin', 'sc view'])
             <li class="nav-item">
                 <a href="#" class="nav-link">

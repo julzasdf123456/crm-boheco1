@@ -4235,6 +4235,7 @@ class TicketsController extends AppBaseController
                                 'CRM_Towns.Town as Town',
                                 'CRM_Tickets.Office',  
                                 'CRM_Tickets.Reason',  
+                                'CRM_Tickets.CrewAssigned',  
                                 'CRM_Tickets.ContactNumber',  
                                 'CRM_Tickets.Ticket as TicketID', 
                                 DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"),   
@@ -4256,7 +4257,8 @@ class TicketsController extends AppBaseController
                                 'CRM_Tickets.created_at', 
                                 'CRM_Towns.Town as Town',
                                 'CRM_Tickets.Office',  
-                                'CRM_Tickets.Reason',  
+                                'CRM_Tickets.Reason', 
+                                'CRM_Tickets.CrewAssigned', 
                                 'CRM_Tickets.ContactNumber',  
                                 'CRM_Tickets.Ticket as TicketID', 
                                 DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"),   
@@ -4277,10 +4279,11 @@ class TicketsController extends AppBaseController
         $id = $request['id'];
         $arrival = $request['Arrival'];
         $executed = $request['Executed'];
+        $crew = $request['CrewAssigned'];
         $status = $request['Status'];
 
         Tickets::where('id', $id)
-            ->update(['DateTimeLinemanArrived' => $arrival, 'DateTimeLinemanExecuted' => $executed, 'Status' => $status]);
+            ->update(['DateTimeLinemanArrived' => $arrival, 'DateTimeLinemanExecuted' => $executed, 'Status' => $status, 'CrewAssigned' => $crew]);
 
         return response()->json('ok', 200);
     }

@@ -18,7 +18,7 @@
                 <select name="Crew" id="Crew" class="float-right form-control form-control-sm" style="width: 250px; margin-left: 10px;">
                     <option value="All">All</option>
                     @foreach ($crews as $item)
-                    <option value="{{ $item->id }}">{{ $item->CrewLeader }} - {{ $item->StationName }}</option>
+                    <option value="{{ $item->id }}"{{ isset($_GET['Crew']) && $item->id==$_GET['Crew'] ? 'selected' : '' }}>{{ $item->CrewLeader }} - {{ $item->StationName }}</option>
                     @endforeach                     
                 </select>
                 <label for="Crew" class="float-right">Filter Crew</label>
@@ -40,6 +40,7 @@
                             <th>Consumer Name/Address</th>
                             <th>Complain</th>
                             <th>Date Filed/Status</th>
+                            <th>Crew Assigned</th>
                             <th>Date/Time of Arrival</th>
                             <th>Date/Time Executed</th>
                             <th>Edit Status</th>
@@ -67,6 +68,14 @@
                                         <span class="text-muted">{{ date('M d, Y', strtotime($item->created_at)) }}</span>
                                         <br>
                                         <span class="badge bg-info">{{ $item->Status }}</span>
+                                    </td>
+                                    <td>
+                                        <select name="CrewAssigned" id="CrewAssigned-{{ $item->id }}" class="float-right form-control form-control-sm" style="width: 250px; margin-left: 10px;">
+                                            <option value="All">All</option>
+                                            @foreach ($crews as $itemx)
+                                                <option value="{{ $itemx->id }}" {{ $item->CrewAssigned==$itemx->id ? 'selected' : '' }}>{{ $itemx->StationName }}</option>
+                                            @endforeach                     
+                                        </select>
                                     </td>
                                     <td>
                                        <input type="datetime-local" class="form-control form-control-sm" id="arrival-{{ $item->id }}" placeholder="Input date of arrival">                                       
@@ -105,6 +114,7 @@
             var arrival = moment($('#arrival-' + id).val()).format('YYYY-MM-DD HH:mm:ss')
             var executed = moment($('#executed-' + id).val()).format('YYYY-MM-DD HH:mm:ss')
             var status = $('#status-' + id).val()
+            var crew = $('#CrewAssigned-' + id).val()
             
             $.ajax({
                 url : "{{ route('tickets.update-execution-data') }}",
@@ -113,6 +123,7 @@
                     id : id,
                     Arrival : arrival,
                     Executed : executed,
+                    CrewAssigned : crew,
                     Status : status,
                 },
                 success : function(res) {
