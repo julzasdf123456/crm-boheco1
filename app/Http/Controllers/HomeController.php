@@ -98,7 +98,8 @@ class HomeController extends Controller
                     ->whereNotNull('ORNumber')
                     ->where(function ($query) {
                         $query->where('Status', 'Approved')
-                            ->orWhere('Status', 'Not Energized');
+                            ->orWhere('Status', 'Not Energized')
+                            ->orWhere('Status', 'Downloaded By Crew');
                     })
                     ->whereIn('id', DB::table('CRM_ServiceConnectionMeterAndTransformer')->pluck('ServiceConnectionId'))
                     ->select('*')
