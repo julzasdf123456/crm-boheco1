@@ -87,6 +87,8 @@
                         <th>Address</th>
                         <th>Category</th>
                         <th>Date Registered</th>
+                        <th>OR Number</th>
+                        <th>OR Date</th>
                     </thead>
                     <tbody>
                         @php
@@ -101,6 +103,8 @@
                                 <td>{{ strtoupper(MemberConsumers::getAddress($item)) }}</td>
                                 <td>{{ strtoupper($item->Type) }}</td>
                                 <td>{{ date('M d, Y', strtotime($item->DateApplied)) }}</td>
+                                <td>{{ $item->ORNumber }}</td>
+                                <td>{{ $item->ORNumber != null ? ($item->ORDate != null ? date('M d, Y', strtotime($item->ORDate)) : '') : '' }}</td>
                             </tr>
                             @php
                                 $i++;

@@ -578,6 +578,8 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumers.Sitio', 
                                     'CRM_MemberConsumerTypes.Type',
                                     'CRM_Towns.Town',
+                                    'CRM_MemberConsumers.ORNumber',
+                                    'CRM_MemberConsumers.ORDate',  
                                     'CRM_Barangays.Barangay',
                                     'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseLastName', 
@@ -603,6 +605,8 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumers.Sitio', 
                                     'CRM_MemberConsumerTypes.Type',
                                     'CRM_Towns.Town',
+                                    'CRM_MemberConsumers.ORNumber',
+                                    'CRM_MemberConsumers.ORDate',  
                                     'CRM_Barangays.Barangay',
                                     'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
@@ -630,6 +634,8 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumers.Sitio', 
                                     'CRM_MemberConsumerTypes.Type',
                                     'CRM_Towns.Town',
+                                    'CRM_MemberConsumers.ORNumber',
+                                    'CRM_MemberConsumers.ORDate',  
                                     'CRM_Barangays.Barangay',
                                     'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
@@ -655,6 +661,8 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumers.Sitio', 
                                     'CRM_MemberConsumerTypes.Type',
                                     'CRM_Towns.Town',
+                                    'CRM_MemberConsumers.ORNumber',
+                                    'CRM_MemberConsumers.ORDate',  
                                     'CRM_Barangays.Barangay',
                                     'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
@@ -694,6 +702,8 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumers.Sitio', 
                                     'CRM_MemberConsumerTypes.Type',
                                     'CRM_Towns.Town',
+                                    'CRM_MemberConsumers.ORNumber',
+                                    'CRM_MemberConsumers.ORDate',  
                                     'CRM_Barangays.Barangay',
                                     'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseLastName', 
@@ -719,6 +729,8 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumers.Sitio', 
                                     'CRM_MemberConsumerTypes.Type',
                                     'CRM_Towns.Town',
+                                    'CRM_MemberConsumers.ORNumber',
+                                    'CRM_MemberConsumers.ORDate',  
                                     'CRM_Barangays.Barangay',
                                     'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
@@ -746,6 +758,8 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumers.Sitio', 
                                     'CRM_MemberConsumerTypes.Type',
                                     'CRM_Towns.Town',
+                                    'CRM_MemberConsumers.ORNumber',
+                                    'CRM_MemberConsumers.ORDate',  
                                     'CRM_Barangays.Barangay',
                                     'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
@@ -771,6 +785,8 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumers.Sitio', 
                                     'CRM_MemberConsumerTypes.Type',
                                     'CRM_Towns.Town',
+                                    'CRM_MemberConsumers.ORNumber',
+                                    'CRM_MemberConsumers.ORDate',  
                                     'CRM_Barangays.Barangay',
                                     'CRM_MemberConsumerSpouse.FirstName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
@@ -792,7 +808,8 @@ class MemberConsumersController extends AppBaseController
                 'Spouse' => strtoupper(MemberConsumers::serializeSpouseDeclared($item)),
                 'Address' => strtoupper(MemberConsumers::getAddress($item)),
                 'Category' => strtoupper($item->Type),
-                'DateApplied' => date('M d, Y', strtotime($item->DateApplied)),
+                'ORNumber' => $item->ORNumber,
+                'ORDate' => date('M d, Y', strtotime($item->ORDate)),
             ]);
             $i++;
         }
@@ -804,7 +821,8 @@ class MemberConsumersController extends AppBaseController
             'Applicant Spouse',
             'Address',
             'Category',
-            'Date Applied'
+            'OR Number',
+            'OR Date'
         ];
 
         $export = new DynamicExport($arr, $headers, null, 'Membership Report for ' . date('F Y', strtotime($from)));
