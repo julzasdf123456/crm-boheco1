@@ -154,7 +154,7 @@ use Illuminate\Support\Facades\Auth;
             </li>
             @endcanany
 
-            @canany(['Super Admin', 'update metering data'])
+            @canany(['Super Admin', 'update metering data', 'sc update energization'])
             <li class="nav-item">
                 <a href="{{ route('serviceConnections.energization') }}"
                 class="nav-link {{ Request::is('serviceConnections.energization') ? 'active' : '' }}">
