@@ -50,6 +50,8 @@ class HomeController extends Controller
             $data = DB::table('CRM_ServiceConnections')
                     ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
                     ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                    ->leftJoin('CRM_ServiceConnectionInspections', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionInspections.ServiceConnectionId')
+                    ->leftJoin('users', 'users.id', '=', 'CRM_ServiceConnectionInspections.Inspector')
                     ->where(function($query) {
                         $query->where('CRM_ServiceConnections.Status', "For Inspection")
                             ->orWhere('CRM_ServiceConnections.Status', "For Re-Inspection");
@@ -62,6 +64,7 @@ class HomeController extends Controller
                         'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName', 
                         'CRM_ServiceConnections.ConnectionApplicationType', 
                         'CRM_Towns.Town as Town',
+                        'users.name',
                         'CRM_Barangays.Barangay as Barangay',)
                     ->orderBy('CRM_ServiceConnections.ServiceAccountName')
                     ->get();
