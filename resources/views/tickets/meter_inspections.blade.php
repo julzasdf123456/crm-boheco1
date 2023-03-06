@@ -113,7 +113,10 @@
                                 <td>{{ $item->created_at != null ? date('M d, Y', strtotime($item->created_at)) : '' }}</td>
                                 <td>{{ $item->DatetimeLinemanExecuted != null ? date('M d, Y', strtotime($item->DatetimeLinemanExecuted)) : '' }}</td>
                                 <td>
+                                    @if ($item->AccountNumber != null)
                                     <a class="btn btn-xs btn-primary float-right" href="{{ route('tickets.create-change-meter', [$item->AccountNumber]) }}"><i class="fas fa-plus"></i> Change Meter</a>
+                                    @endif
+                                    
                                 </td>
                             </tr>
                         @endforeach
