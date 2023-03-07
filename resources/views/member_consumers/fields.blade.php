@@ -442,7 +442,7 @@
 </div>
 
 <!-- HIDDEN INPUTS -->
-<input type="hidden" name="DateApplied" value="<?= date('Y-m-d') ?>">
+{{-- <input type="hidden" name="DateApplied" value="<?= date('Y-m-d') ?>"> --}}
 
 <input type="hidden" name="Trashed" value="No">
 
