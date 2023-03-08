@@ -301,7 +301,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-street-view"></i></span>
                                             </div>
-                                            {!! Form::text('Neighbor1', $left != null ? $left->ConsumerName : ($serviceAccount != null ? ($tickets != null && $tickets->Neighbor1 != null ? $tickets->Neighbor1 : '') : ''), ['class' => 'form-control form-control-sm', 'placeholder' => 'Neighbor 1']) !!}
+                                            {!! Form::text('Neighbor1', $left != null ? $left->ConsumerName : ($tickets != null && $tickets->Neighbor1 != null ? $tickets->Neighbor1 : ''), ['class' => 'form-control form-control-sm', 'placeholder' => 'Neighbor 1']) !!}
                                         </div>
                                     </div>
                                 </div> 
@@ -319,7 +319,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-street-view"></i></span>
                                             </div>
-                                            {!! Form::text('Neighbor2', $right != null ? $right->ConsumerName : ($serviceAccount != null ? ($tickets != null && $tickets->Neighbor2 != null ? $tickets->Neighbor2 : '') : ''), ['class' => 'form-control form-control-sm', 'placeholder' => 'Neighbor 2']) !!}
+                                            {!! Form::text('Neighbor2', $right != null ? $right->ConsumerName : ($tickets != null && $tickets->Neighbor2 != null ? $tickets->Neighbor2 : ''), ['class' => 'form-control form-control-sm', 'placeholder' => 'Neighbor 2']) !!}
                                         </div>
                                     </div>
                                 </div> 
@@ -346,7 +346,7 @@
                             @if ($cond == 'new')
                             <p id="Def_Brgy" style="display: none;">{{ $serviceAccount==null ? '' : ($brgyProxy != null ? $brgyProxy->id : '') }}</p>
                             @else
-                            <p id="Def_Brgy" style="display: none;">{{ $tickets != null ? $tickets->Barangay : '0' }}</p> 
+                            {{-- <p id="Def_Brgy" style="display: none;">{{ $tickets != null ? $tickets->Barangay : '0' }}</p>  --}}
                             @endif
 
 

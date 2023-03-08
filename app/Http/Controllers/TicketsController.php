@@ -1326,6 +1326,7 @@ class TicketsController extends AppBaseController
             'right' => $right,
             'crew' => $crew,
             'meter' => $meter,
+            'tickets' => $tickets,
         ]);
 
     }
