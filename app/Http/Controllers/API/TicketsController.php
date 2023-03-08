@@ -64,6 +64,15 @@ class TicketsController extends Controller {
             $ticketLog->LogDetails = "Downloaded by " . ($crew != null ? $crew->StationName : "-") . " at " . $dateTimeDownloaded;
             $ticketLog->UserId = $request['UserId'];
             $ticketLog->save();
+
+            // SEND SMS
+            if ($item->ContactNumber != null) {
+                if (strlen($item->ContactNumber) > 10) {
+                    $msg = "Good day, " . $item->ConsumerName . ", \n\nYour complaint/request with ticket number " . $item->id . " has been received by BOHECO I Technical Team." .
+                        "Expect the team's arrival in your premises within the next 48 hours. \n\nHave a gret day!";
+                    SMSNotifications::createFreshSms($item->ContactNumber, $msg, 'TICKETS', $item->id);
+                }
+            } 
         }
 
         DB::table('CRM_Tickets')
@@ -102,6 +111,25 @@ class TicketsController extends Controller {
             $ticketLog->LogDetails = $tickets->Notes;          
             $ticketLog->UserId = $request['UserId'];
             $ticketLog->save();
+
+            // SEND SMS
+            if ($tickets->ContactNumber != null) {
+                if (strlen($tickets->ContactNumber) > 10) {
+                    if ($request['Status'] == 'Executed') {
+                        $msg = "Good day, " . $tickets->ConsumerName . ", \n\nThis is to inform you that your complaint/request with ticket number " . $tickets->id . " has been successfully acted by BOHECO I Technical Team." .
+                        "\n\nHave a gret day!";
+                    } elseif ($request['Status'] == 'Acted') {
+                        $msg = "Good day, " . $tickets->ConsumerName . ", \n\nYour complaint/request with ticket number " . $tickets->id . " was not success carried out by BOHECO I Technical Team due to the following findings: \n\n " .
+                        $request['Notes'] . "\n\nShould these findings have been addressed, please notify us through our hotlines so we can schedule our re-visit." .
+                        "\n\nHave a gret day!";
+                    } else {
+                        $msg = "Good day, " . $tickets->ConsumerName . ", \n\nYour complaint/request with ticket number " . $tickets->id . " was not success carried out by BOHECO I Technical Team due to the following findings: \n\n " .
+                        $request['Notes'] . "\n\nShould these findings have been addressed, please notify us through our hotlines so we can schedule our re-visit." .
+                        "\n\nHave a gret day!";
+                    }
+                    SMSNotifications::createFreshSms($tickets->ContactNumber, $msg, 'TICKETS', $tickets->id);
+                }
+            } 
 
             // FILTER TICKETS
             // if ($tickets->Ticket == Tickets::getDisconnectionDelinquencyId()) {
