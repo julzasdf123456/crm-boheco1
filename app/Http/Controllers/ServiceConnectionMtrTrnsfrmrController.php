@@ -92,7 +92,7 @@ class ServiceConnectionMtrTrnsfrmrController extends AppBaseController
                 $msg = "Hello " . $serviceConnection->ServiceAccountName . ", \nThis is to inform you that your BOHECO I Service Connection Application with application no. " . $serviceConnection->id .
                     " has been assigned with a new electric meter with the following details: \n\n" .
                     "Brand: " . $serviceConnectionMtrTrnsfrmr->MeterBrand . "\n" . 
-                    "Serial Number: " . $serviceConnectionMtrTrnsfrmr->MeterSealNumber . "\n\n" .
+                    "Serial Number: " . $serviceConnectionMtrTrnsfrmr->MeterSerialNumber . "\n\n" .
                     "\nHave a great day!";
                 SMSNotifications::createFreshSms($serviceConnection->ContactNumber, $msg, 'SERVICE CONNECTIONS - METER', $serviceConnection->id);
             }
