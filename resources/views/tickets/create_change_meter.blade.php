@@ -398,7 +398,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     {!! Form::label('CurrentMeterBrand', 'Old Meter Brand:') !!}
-                                    {!! Form::text('CurrentMeterBrand', $meter != null ? $meter->Make : '', ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100, 'readonly' => true]) !!}
+                                    {!! Form::text('CurrentMeterBrand', $meter != null ? $meter->Make : '', ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100]) !!}
                                 </div>
                             </div>
 
