@@ -87,7 +87,7 @@ use Illuminate\Support\Facades\Auth;
 
 <!-- SERVICE CONNECTION MENU -->
 @canany(['Super Admin', 'sc view'])
-    <li class="nav-item has-treeview">
+    <li class="nav-item has-treeview {{ Auth::user()->hasAnyRole(['Service Connection Assessor']) ? 'menu-open' : '' }}">
         <a href="#" class="nav-link">
             <i class="fas fa-plug nav-icon text-warning"></i>
             <p>
@@ -418,7 +418,7 @@ use Illuminate\Support\Facades\Auth;
 
 {{-- TICKETS --}}
 @canany(['Super Admin', 'tickets view'])
-    <li class="nav-item has-treeview">
+    <li class="nav-item has-treeview {{ Auth::user()->hasAnyRole(['Energization Clerk', 'CWD', 'Metering Personnel']) ? 'menu-open' : '' }}">
         <a href="#" class="nav-link">
             <i class="fas fa-ambulance nav-icon text-danger"></i>
             <p>
