@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\BillingMeters;
 use App\Models\Bills;
 use App\Models\ChangeMeterLogs;
+use App\Models\SMSNotifications;
 use Validator;
 
 class TicketsController extends Controller {
