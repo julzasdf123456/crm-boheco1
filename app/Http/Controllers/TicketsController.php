@@ -126,7 +126,7 @@ class TicketsController extends AppBaseController
     public function store(CreateTicketsRequest $request)
     {
         $input = $request->all();
-
+        $input['id'] = IDGenerator::generateID();
         $tickets = $this->ticketsRepository->create($input);
 
         // FILTER METER RELATED TICKETS
@@ -2408,7 +2408,7 @@ class TicketsController extends AppBaseController
 
     public function storeRelocation(Request $request) {
         $input = $request->all();
-
+        $input['id'] = IDGenerator::generateID();
         $scId = IDGenerator::generateID();
 
         $input['ServiceConnectionId'] = $scId;
@@ -2471,6 +2471,15 @@ class TicketsController extends AppBaseController
         $ticketLog->Log = "Received";
         $ticketLog->UserId = Auth::id();
         $ticketLog->save();
+
+        // SEND SMS
+        if ($tickets->ContactNumber != null) {
+            if (strlen($tickets->ContactNumber) > 10) {
+                $msg = "Good day, " . $tickets->ConsumerName . ", \nBOHECO I has received your complaint/request with ticket number " . $tickets->id . ". " .
+                    "You can use this ticket number to follow up your complaint/request. You will also receive SMS notifications regarding the progress of your complaint/request. \nHave a gret day!";
+                SMSNotifications::createFreshSms($tickets->ContactNumber, $msg, 'TICKETS', $tickets->id);
+            }
+        } 
 
         return redirect(route('tickets.show', [$tickets->id]));
     }
