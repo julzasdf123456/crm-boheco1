@@ -298,7 +298,7 @@ class TicketsController extends Controller {
     public function getCrewsFromStation(Request $request) {
         $station = $request['CrewLeader'];
 
-        $crews = ServiceConnectionCrew::where('CrewLeader', $station)->get();
+        $crews = ServiceConnectionCrew::all();
 
         return response()->json($crews, 200);
     }
