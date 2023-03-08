@@ -824,6 +824,15 @@ class TicketsController extends AppBaseController
             $ticketLog->UserId = Auth::id();
             $ticketLog->save();
 
+            // SEND SMS
+            if ($ticket->ContactNumber != null) {
+                if (strlen($ticket->ContactNumber) > 10) {
+                    $msg = "Good day, " . $ticket->ConsumerName . ", \n\nYour complaint/request with ticket number " . $ticket->id . " has been forwarded by BOHECO I Technical Team." .
+                        "Expect the team's arrival in your premises within the next 48 hours. \n\nHave a gret day!";
+                    SMSNotifications::createFreshSms($ticket->ContactNumber, $msg, 'TICKETS', $ticket->id);
+                }
+            } 
+
             return response()->json(['response' => 'ok'], 200);
         }
     }
@@ -888,6 +897,15 @@ class TicketsController extends AppBaseController
             }            
             $ticketLog->UserId = Auth::id();
             $ticketLog->save();
+
+            // SEND SMS
+            if ($ticket->ContactNumber != null) {
+                if (strlen($ticket->ContactNumber) > 10) {
+                    $msg = "Good day, " . $ticket->ConsumerName . ", \n\nYour complaint/request with ticket number " . $ticket->id . " has been forwarded by BOHECO I Technical Team." .
+                        "Expect the team's arrival in your premises within the next 48 hours. \n\nHave a gret day!";
+                    SMSNotifications::createFreshSms($ticket->ContactNumber, $msg, 'TICKETS', $ticket->id);
+                }
+            }
 
             return response()->json($ticket, 200);
         }
