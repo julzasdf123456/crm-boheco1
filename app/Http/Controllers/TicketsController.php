@@ -24,6 +24,7 @@ use App\Models\DisconnectionHistory;
 use App\Models\AccountMaster;
 use App\Models\User;
 use App\Models\Meters;
+use App\Models\SMSNotifications;
 use App\Exports\TicketSummaryReportDownloadExport;
 use App\Exports\KPSTicketsExport;
 use App\Exports\DynamicExport;
@@ -160,6 +161,15 @@ class TicketsController extends AppBaseController
         $ticketLog->Log = "Received";
         $ticketLog->UserId = Auth::id();
         $ticketLog->save();
+
+        // SEND SMS
+        if ($tickets->ContactNumber != null) {
+            if (strlen($tickets->ContactNumber) > 10) {
+                $msg = "Good day, " . $tickets->ConsumerName . ", \nBOHECO I has received your complaint/request with ticket number " . $tickets->id . ". " .
+                    "You can use this ticket number to follow up your complaint/request. You will also receive SMS notifications regarding the progress of your complaint/request. \nHave a gret day!";
+                SMSNotifications::createFreshSms($tickets->ContactNumber, $msg, 'TICKETS', $tickets->id);
+            }
+        }  
 
         return redirect(route('tickets.print-ticket', [$tickets->id]));
     }
