@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ServiceConnectionTimeframes;
 use App\Models\IDGenerator;
 use App\Models\Notifiers;
+use App\Models\SMSNotifications;
 use Flash;
 use Response;
 
@@ -75,21 +76,6 @@ class ServiceConnectionMtrTrnsfrmrController extends AppBaseController
 
         $serviceConnection = ServiceConnections::find($input['ServiceConnectionId']);
 
-        // CREATE NOTIFICATION
-        if ($serviceConnection != null && $serviceConnection->ContactNumber != null) {
-            if (strlen($serviceConnection->ContactNumber > 9)) {
-                $notifier = new Notifiers;
-                $notifier->id = IDGenerator::generateIDandRandString();
-                $notifier->Notification = 'Good day, ' . $serviceConnection->ServiceAccountName . ',\n\nYour service connection application has been assigned a meter with the serial no ' . $input['MeterSerialNumber'] . '.\n\nBOHECO I Auto-SMS Hub';
-                $notifier->From = Auth::id();
-                $notifier->Status = 'SENT';
-                $notifier->Intent = "METER ASSIGNING"; 
-                $notifier->ObjectId = $serviceConnection->id;
-                $notifier->ContactNumber = $serviceConnection->ContactNumber;
-                $notifier->save();
-            }
-        }
-
         Flash::success('Service Connection Mtr Trnsfrmr saved successfully.');
 
         // CREATE Timeframes
@@ -99,6 +85,18 @@ class ServiceConnectionMtrTrnsfrmrController extends AppBaseController
         $timeFrame->UserId = Auth::id();
         $timeFrame->Status = 'Meter and Transformer Assigned';
         $timeFrame->save();
+
+        // SEND SMS
+        if ($serviceConnection->ContactNumber != null) {
+            if (strlen($serviceConnection->ContactNumber) > 10) {
+                $msg = "Hello " . $serviceConnection->ServiceAccountName . ", \nThis is to inform you that your BOHECO I Service Connection Application with application no. " . $serviceConnection->id .
+                    " has been assigned with a new electric meter with the following details: \n\n" .
+                    "Brand: " . $serviceConnectionMtrTrnsfrmr->MeterBrand . "\n" . 
+                    "Serial Number: " . $serviceConnectionMtrTrnsfrmr->MeterSealNumber . "\n\n" .
+                    "\nHave a great day!";
+                SMSNotifications::createFreshSms($serviceConnection->ContactNumber, $msg, 'SERVICE CONNECTIONS - METER', $serviceConnection->id);
+            }
+        }  
 
         // return redirect()->action([ServiceConnectionsController::class, 'show'], [$input['ServiceConnectionId']]);        
         // return redirect(route('serviceConnectionPayTransactions.create-step-four', [$input['ServiceConnectionId']]));

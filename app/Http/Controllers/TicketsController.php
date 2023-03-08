@@ -166,7 +166,7 @@ class TicketsController extends AppBaseController
         if ($tickets->ContactNumber != null) {
             if (strlen($tickets->ContactNumber) > 10) {
                 $msg = "Good day, " . $tickets->ConsumerName . ", \nBOHECO I has received your complaint/request with ticket number " . $tickets->id . ". " .
-                    "You can use this ticket number to follow up your complaint/request. You will also receive SMS notifications regarding the progress of your complaint/request. \nHave a gret day!";
+                    "You can use this ticket number to follow up your complaint/request. You will also receive SMS notifications regarding the progress of your complaint/request. \nHave a great day!";
                 SMSNotifications::createFreshSms($tickets->ContactNumber, $msg, 'TICKETS', $tickets->id);
             }
         }  
@@ -828,7 +828,7 @@ class TicketsController extends AppBaseController
             if ($ticket->ContactNumber != null) {
                 if (strlen($ticket->ContactNumber) > 10) {
                     $msg = "Good day, " . $ticket->ConsumerName . ", \n\nYour complaint/request with ticket number " . $ticket->id . " has been forwarded by BOHECO I Technical Team." .
-                        "Expect the team's arrival in your premises within the next 48 hours. \n\nHave a gret day!";
+                        "Expect the team's arrival in your premises within the next 48 hours. \n\nHave a great day!";
                     SMSNotifications::createFreshSms($ticket->ContactNumber, $msg, 'TICKETS', $ticket->id);
                 }
             } 
@@ -903,15 +903,15 @@ class TicketsController extends AppBaseController
                 if (strlen($ticket->ContactNumber) > 10) {
                     if ($request['Status'] == 'Executed') {
                         $msg = "Good day, " . $ticket->ConsumerName . ", \n\nThis is to inform you that your complaint/request with ticket number " . $ticket->id . " has been successfully acted by BOHECO I Technical Team." .
-                        "\n\nHave a gret day!";
+                        "\n\nHave a graet day!";
                     } elseif ($request['Status'] == 'Acted') {
                         $msg = "Good day, " . $ticket->ConsumerName . ", \n\nYour complaint/request with ticket number " . $ticket->id . " was not success carried out by BOHECO I Technical Team due to the following findings: \n\n " .
                         $request['Notes'] . "\n\nShould these findings have been addressed, please notify us through our hotlines so we can schedule our re-visit." .
-                        "\n\nHave a gret day!";
+                        "\n\nHave a great day!";
                     } else {
                         $msg = "Good day, " . $ticket->ConsumerName . ", \n\nYour complaint/request with ticket number " . $ticket->id . " was not success carried out by BOHECO I Technical Team due to the following findings: \n\n " .
                         $request['Notes'] . "\n\nShould these findings have been addressed, please notify us through our hotlines so we can schedule our re-visit." .
-                        "\n\nHave a gret day!";
+                        "\n\nHave a great day!";
                     }
                     SMSNotifications::createFreshSms($ticket->ContactNumber, $msg, 'TICKETS', $ticket->id);
                 }
@@ -2504,7 +2504,7 @@ class TicketsController extends AppBaseController
         if ($tickets->ContactNumber != null) {
             if (strlen($tickets->ContactNumber) > 10) {
                 $msg = "Good day, " . $tickets->ConsumerName . ", \nBOHECO I has received your complaint/request with ticket number " . $tickets->id . ". " .
-                    "You can use this ticket number to follow up your complaint/request. You will also receive SMS notifications regarding the progress of your complaint/request. \nHave a gret day!";
+                    "You can use this ticket number to follow up your complaint/request. You will also receive SMS notifications regarding the progress of your complaint/request. \nHave a great day!";
                 SMSNotifications::createFreshSms($tickets->ContactNumber, $msg, 'TICKETS', $tickets->id);
             }
         } 
