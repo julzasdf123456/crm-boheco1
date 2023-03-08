@@ -187,9 +187,11 @@ class ServiceConnectionsController extends AppBaseController
                 
                 // SEND SMS
                 if ($sc->ContactNumber != null) {
-                    $msg = "Hello " . $sc->ServiceAccountName . ", \nBOHECO I has received your application and is now being processed. " .
-                        "You will receive several SMS notifications in the future regarding the progress of your application. \nHave a gret day!";
-                    SMSNotifications::createFreshSms($sc->ContactNumber, $msg, 'SERVICE CONNECTIONS', $sc->id);
+                    if (strlen($sc->ContactNumber) > 10) {
+                        $msg = "Hello " . $sc->ServiceAccountName . ", \nBOHECO I has received your application and is now being processed. " .
+                            "You will receive several SMS notifications in the future regarding the progress of your application. \nHave a gret day!";
+                        SMSNotifications::createFreshSms($sc->ContactNumber, $msg, 'SERVICE CONNECTIONS', $sc->id);
+                    }
                 }                
                 
                 // CREATE FOLDER FIRST
@@ -214,7 +216,7 @@ class ServiceConnectionsController extends AppBaseController
 
                 // SEND SMS
                 if ($input['ContactNumber'] != null) {
-                    if (strlen($input['ContactNumber'] > 9)) {
+                    if (strlen($input['ContactNumber']) > 10) {
                         $msg = "Hello " . $serviceConnections->ServiceAccountName . ", \nYour application for service connection has been received and will be processed shortly. " .
                             "You will receive several SMS notifications in the future regarding the progress of your application. \nHave a gret day!\n\nThis is a system-generated SMS.";
                         SMSNotifications::createFreshSms($input['ContactNumber'], $msg, 'SERVICE CONNECTIONS', $input['id']);
