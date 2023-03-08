@@ -29,6 +29,8 @@ class CreateTableCRMServiceConnectionTotalPayments extends Migration
             $table->string('LaborCharge', 60)->nullable();
             $table->decimal('BOHECOShare', 15, 2)->nullable();
             $table->decimal('Particulars', 12, 2)->nullable();
+            $table->string('BOHECOShareOnly', 12)->nullable();
+            $table->string('ElectricianShareOnly', 12)->nullable();
             $table->timestamps();
         });
     }

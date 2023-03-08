@@ -52,7 +52,9 @@ class ServiceConnectionTotalPayments extends Model
         'WitholdableVat',
         'LaborCharge',
         'BOHECOShare',
-        'Particulars'
+        'Particulars',
+        'BOHECOShareOnly',
+        'ElectricianShareOnly'
     ];
 
     /**
@@ -74,7 +76,9 @@ class ServiceConnectionTotalPayments extends Model
         'WitholdableVat' => 'string',
         'LaborCharge' => 'string',
         'BOHECOShare' => 'string',
-        'Particulars' => 'string'
+        'Particulars' => 'string',
+        'BOHECOShareOnly' => 'string',
+        'ElectricianShareOnly' => 'string'
     ];
 
     /**
@@ -98,7 +102,9 @@ class ServiceConnectionTotalPayments extends Model
         'WitholdableVat' => 'nullable|string',
         'LaborCharge' => 'nullable|string',
         'BOHECOShare' => 'nullable|string',
-        'Particulars' => 'nullable|string'
+        'Particulars' => 'nullable|string',
+        'BOHECOShareOnly' => 'nullable|string',
+        'ElectricianShareOnly' => 'nullable|string'
     ];
 
     

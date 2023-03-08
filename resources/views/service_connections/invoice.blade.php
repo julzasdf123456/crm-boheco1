@@ -79,7 +79,7 @@
                         <th class="text-right text-primary">₱ <span id="bill-deposit-display" data-toggle="tooltip" data-placement="left">{{ $totalTransactions != null ? number_format($totalTransactions->Particulars, 2) : '0.00' }}</span></th>
                     </tr>
                     <tr>
-                        <td>Bill Deposit</td>
+                        <td>{{ ServiceConnections::isResidentials($serviceConnections->AccountTypeRaw) ? 'Bill Deposit' : 'Energy Deposit' }}</td>
                         <th class="text-right text-primary">₱ <span id="bill-deposit-display" data-toggle="tooltip" data-placement="left">{{ $totalTransactions != null ? (is_numeric($totalTransactions->BillDeposit) ? number_format($totalTransactions->BillDeposit, 2) : '0.00') : '0.00' }}</span></th>
                     </tr>
                     <tr>
@@ -129,6 +129,10 @@
                         <tr>
                             <td>Contact No</td>
                             <th>{{ $serviceConnections->ElectricianContactNo }}</th>
+                        </tr>
+                        <tr>
+                            <td class="text-danger">BOHECO I Share Only</td>
+                            <th class="text-danger">{{ $totalTransactions->BOHECOShareOnly=='Yes' ? 'Yep' : 'Nope' }}</th>
                         </tr>
                     </tbody>
                 </table>

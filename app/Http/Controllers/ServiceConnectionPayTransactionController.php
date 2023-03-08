@@ -304,6 +304,7 @@ class ServiceConnectionPayTransactionController extends AppBaseController
         $total->BOHECOShare = $request['BOHECOShare'];
         $total->LaborCharge = $request['LaborCharge'];
         $total->Particulars = $request['Particulars'];
+        $total->BOHECOShareOnly = $request['BOHECOShareOnly'];
         $total->save();
 
         $timeFrame = new ServiceConnectionTimeframes;

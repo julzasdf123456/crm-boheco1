@@ -232,6 +232,14 @@ class ServiceConnections extends Model
         return '1627280880118';
     }
 
+    public static function isResidentials($id) {
+        if ($id == '1627280880118' || $id == '1659574416842' || $id == '1659574427037' || $id == '1659574498651') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static function getStreetLightId() {
         return '1643002557527';
     }

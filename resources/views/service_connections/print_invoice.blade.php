@@ -243,7 +243,7 @@
                         <th  class="text-right">P {{ number_format($totalTransactions->BOHECOShare, 2) }}</th>
                     </tr>
                     <tr>
-                        <td>Bill Deposit</td>
+                        <td>{{ ServiceConnections::isResidentials($serviceConnections->AccountTypeRaw) ? 'Bill Deposit' : 'Energy Deposit' }}</td>
                         <th  class="text-right">P {{is_numeric($totalTransactions->BillDeposit) ? number_format($totalTransactions->BillDeposit, 2) : '0.00' }}</th>
                     </tr>
                     @foreach ($particularPayments as $item)

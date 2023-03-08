@@ -136,6 +136,20 @@ $id = IDGenerator::generateID();
                     </tbody>
                 </table>
             </div>
+            <div class="card-footer">
+                <table class="table table-sm table-hover table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>BOHECO Share Only</td>
+                            <td>
+                                <input type="checkbox" name="BOHECOShareOnly" id="BOHECOShareOnly" {{ $totalPayments==null ? '' : ($totalPayments->BOHECOShareOnly=='Yes' ? 'checked' : '') }} data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         {{-- OTHER PAYMENTS --}}
@@ -312,7 +326,7 @@ $id = IDGenerator::generateID();
                             <th class="text-right text-primary">₱ <span id="boheco-share" data-toggle="tooltip" data-placement="left">{{ $totalPayments != null ? number_format($totalPayments->BOHECOShare, 2) : '0.00' }}</span></th>
                         </tr>
                         <tr title="Bill deposits are being rounded down to the nearest hundredth">
-                            <td>Bill Deposit</td>
+                            <td>{{ ServiceConnections::isResidentials($serviceConnection->AccountType) ? 'Bill Deposit' : 'Energy Deposit' }}</td>
                             <th class="text-right text-primary">₱ <span id="bill-deposit-display" data-toggle="tooltip" data-placement="left">{{ $totalPayments != null ? $totalPayments->BillDeposit : '0.00' }}</span></th>
                         </tr>
                         <tr>
@@ -377,6 +391,8 @@ $id = IDGenerator::generateID();
         var is2Percent = false
         var is5Percent = false
 
+        var bohecoShareOnly = false
+
         var accountTypeAlias = ''
 
         $(document).ready(function() {
@@ -427,6 +443,25 @@ $id = IDGenerator::generateID();
                     $('#ElectricianName').removeAttr('disabled')
                     $('#ElectricianAddress').removeAttr('disabled')
                     $('#ElectricianContactNo').removeAttr('disabled')
+                }
+                getOverAllTotal()
+            })
+
+            // VALIDATE IF ELECTRiCIAN IS CHECKED
+            if ($('#BOHECOShareOnly').prop('checked')) {
+                bohecoShareOnly = true
+            } else {
+                bohecoShareOnly = false
+            }
+
+            // TOGGLE IF BOHECO SHARE ONLY IS CHECKED
+            $('#BOHECOShareOnly').on('switchChange.bootstrapSwitch', function() {
+                if ($(this).prop('checked')) {
+                    bohecoShareOnly = true
+                    // validateLaborCharge()
+                } else {
+                    bohecoShareOnly = false
+                    // validateLaborCharge()
                 }
                 getOverAllTotal()
             })
@@ -644,8 +679,13 @@ $id = IDGenerator::generateID();
         // VALIDATE LABOR CHARGE
         function validateLaborCharge() {
             if (isAccredited) {
-                $('#wiring-labor-charge-display').text(Number((getTotalLaborCharge()).toFixed(2)).toLocaleString(undefined, {minimumFractionDigits: 2}))
-                $('#boheco-share').text(Number((getBOHECOIShare()).toFixed(2)).toLocaleString(undefined, {minimumFractionDigits: 2}))
+                if (bohecoShareOnly) {
+                    $('#wiring-labor-charge-display').text('0')
+                    $('#boheco-share').text(Number((getBOHECOIShare()).toFixed(2)).toLocaleString(undefined, {minimumFractionDigits: 2}))
+                } else {
+                    $('#wiring-labor-charge-display').text(Number((getTotalLaborCharge()).toFixed(2)).toLocaleString(undefined, {minimumFractionDigits: 2}))
+                    $('#boheco-share').text(Number((getBOHECOIShare()).toFixed(2)).toLocaleString(undefined, {minimumFractionDigits: 2}))
+                }
             } else {
                 $('#wiring-labor-charge-display').text(0.00)
                 $('#boheco-share').text(0.00)
@@ -758,9 +798,15 @@ $id = IDGenerator::generateID();
         // GET OVER ALL TOTAL
         function getOverAllTotal() {
             if (isAccredited) {
-                overAllSubTotal = getTotalLaborCharge() + getBOHECOIShare() + serviceConnectionFees + getBillDepositNormal() + calculateTableColumnRaw('particulars_table', 1)
-                witholdableVat = getTotalLaborVat() + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
-                overAllVat = getTotalLaborVat() + (getBillDepositNormal() * .12) + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
+                if (bohecoShareOnly) {
+                    overAllSubTotal = getBOHECOIShare() + serviceConnectionFees + getBillDepositNormal() + calculateTableColumnRaw('particulars_table', 1)
+                    witholdableVat = (getBOHECOIShare() * .12) + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
+                    overAllVat = (getBOHECOIShare() * .12) + (getBillDepositNormal() * .12) + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
+                } else {
+                    overAllSubTotal = getTotalLaborCharge() + getBOHECOIShare() + serviceConnectionFees + getBillDepositNormal() + calculateTableColumnRaw('particulars_table', 1)
+                    witholdableVat = getTotalLaborVat() + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
+                    overAllVat = getTotalLaborVat() + (getBillDepositNormal() * .12) + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
+                }                
             } else {
                 overAllSubTotal = serviceConnectionFees + getBillDepositNormal() + calculateTableColumnRaw('particulars_table', 1)
                 witholdableVat = (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
@@ -812,6 +858,7 @@ $id = IDGenerator::generateID();
                 if ($('#ElectricianId').val()!='NULL') {
                     saveElectricianInfo()
                 } else {
+                    $('#save-payment').removeAttr('disabled')
                     Swal.fire({
                         title : 'Select Electrician First!',
                         icon : 'error'
@@ -819,6 +866,7 @@ $id = IDGenerator::generateID();
                 }                
             } else {
                 if (jQuery.isEmptyObject($('#ElectricianName').val())) {
+                    $('#save-payment').removeAttr('disabled')
                     Swal.fire({
                         title : 'Provide Electrician First!',
                         icon : 'error'
@@ -830,7 +878,7 @@ $id = IDGenerator::generateID();
         }
 
         function saveElectricianInfo() {
-            $(this).attr('disabled', 'true')
+            // $(this).attr('disabled', 'true')
             $('#loader').removeClass('gone')
             $.ajax({
                 url : "{{ route('serviceConnections.save-electrician-info') }}",
@@ -848,6 +896,7 @@ $id = IDGenerator::generateID();
                     saveBillDeposits()
                 },
                 error : function(err) {
+                    $('#save-payment').removeAttr('disabled')
                     Swal.fire({
                         title : 'Error updating Electrician info',
                         icon : 'error'
@@ -880,6 +929,7 @@ $id = IDGenerator::generateID();
                         
                     },
                     error : function(err) {
+                        $('#save-payment').removeAttr('disabled')
                         Swal.fire({
                             title : 'Error saving wiring labor',
                             icon : 'error'
@@ -908,6 +958,7 @@ $id = IDGenerator::generateID();
                     saveTransaction()
                 },
                 error : function(err) {
+                    $('#save-payment').removeAttr('disabled')
                     Swal.fire({
                         title : 'Error saving bill deposit labor',
                         icon : 'error'
@@ -931,8 +982,9 @@ $id = IDGenerator::generateID();
                     BillDeposit : getBillDepositNormal(),
                     WitholdableVat : witholdableVat,
                     BOHECOShare : getBOHECOIShare(),
-                    LaborCharge : isAccredited ? getTotalLaborCharge() : 0,
+                    LaborCharge : isAccredited ? (bohecoShareOnly ? 0 : getTotalLaborCharge()) : 0,
                     Particulars : calculateTableColumnRaw('particulars_table', 1),
+                    BOHECOShareOnly : bohecoShareOnly ? 'Yes' : null,
                 },
                 success : function(res) {
                     Swal.fire({
@@ -947,6 +999,7 @@ $id = IDGenerator::generateID();
                     window.location.href = "{{ url(route('serviceConnections.show', [$serviceConnection->id])) }}"
                 },
                 error : function(err) {
+                    $('#save-payment').removeAttr('disabled')
                     Swal.fire({
                         title : 'Error saving payables',
                         icon : 'error'
