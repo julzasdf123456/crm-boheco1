@@ -26,7 +26,7 @@
                     {!! Form::open(['route' => 'tickets.store']) !!}
                     <div class="card-header">
                         <div class="form-group row">
-                            <label for="DateTimeComplainLogged" class="col-md-4">Date and Time Comlaint Logged/Called</label>
+                            <label for="DateTimeComplainLogged" class="col-md-4">Date and Time Complaint Logged/Called</label>
                             {!! Form::text('DateTimeComplainLogged', date('Y-m-d h:i:s'), ['id' => 'DateTimeComplainLogged', 'class' => 'form-control form-control-sm col-md-4', 'placeholder' => 'Datetime Log']) !!}
 
                             @push('page_scripts')
