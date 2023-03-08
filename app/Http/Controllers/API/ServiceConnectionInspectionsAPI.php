@@ -70,7 +70,7 @@ class ServiceConnectionInspectionsAPI extends Controller {
         $contactNumber = $request['ContactNumber'];
         // CREATE NOTIFICATION
         if ($contactNumber != null) {
-            if (strlen($contactNumber > 9)) {
+            if (strlen($contactNumber > 10)) {
                 $msg = "MR./MS. " . $name . ", \n\nA BOHECO I inspector is on its way to inspect the electrical installation of your house within the day. Please ensure to have a representative in your house during the inspection process. \n\nHave a gret day!";
                 SMSNotifications::createFreshSms($contactNumber, $msg, 'SERVICE CONNECTIONS', $request['id']);
             }
