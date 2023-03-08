@@ -2436,7 +2436,7 @@ class TicketsController extends AppBaseController
         $inspections->ServiceConnectionId = $scId;
         $inspections->Status = 'FOR INSPECTION';
         $inspections->Inspector = $input['Inspector'];
-        $inspections->Status = $input['Approved'];
+        $inspections->Status = 'Approved';
         $inspections->save();
 
         // FILTER METER RELATED TICKETS
