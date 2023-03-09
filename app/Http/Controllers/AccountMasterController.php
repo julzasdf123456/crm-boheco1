@@ -301,6 +301,33 @@ class AccountMasterController extends AppBaseController
         return response()->json($output, 200);
     }
 
+    public function getAvailableSequenceNumbers(Request $request) {
+        $route = $request['Route'];
+
+        // GET ALL ACCOUNT NOS FIRST
+        $accounts = AccountMaster::whereRaw("Route='" . $route . "'")->get();
+        $existing = [];
+        foreach($accounts as $item) {
+            array_push($existing, $item->SequenceNumber);
+        }
+
+        // generate ten thousand samples
+        $samples = [];
+        $sample = 99999;
+        for ($i = 1; $i <= $sample; $i++) {
+            array_push($samples, $i);
+        }
+
+        $finalData = array_diff($samples, $existing);
+        $output = "";
+        foreach($finalData as $key => $value) {
+            $output .= "<tr onclick=selectRoute('" . $value . "')>" .
+                "<td>" . $value . "</td>" .
+            "</tr>";
+        }
+        return response()->json($output, 200);
+    }
+
     public function getNeighboringByBarangay(Request $request) {
         $town = $request['Town'];
         $barangay = $request['Barangay'];

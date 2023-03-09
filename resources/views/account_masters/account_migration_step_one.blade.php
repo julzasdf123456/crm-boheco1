@@ -48,7 +48,7 @@ use Illuminate\Support\Facades\Auth;
 
                     {{-- FIELDS --}}
                     <!-- Account Number Field -->
-                    <div class="form-group col-lg-6 col-md-5 col-sm-12">
+                    <div class="form-group col-lg-4 col-md-5 col-sm-12">
                         <div class="row">
                             <div class="col-lg-3 col-md-4">
                                 {!! Form::label('AccountNumber', 'Account Number:') !!}
@@ -68,27 +68,31 @@ use Illuminate\Support\Facades\Auth;
                     <!-- Sequencecode Field -->
                     <div class="form-group col-lg-3 col-md-3 col-sm-12">
                         <div class="row">
-                            <div class="col-lg-3 col-md-5">
+                            <div class="col-lg-4 col-md-4">
                                 {!! Form::label('SequenceNumber', 'Seq. No:') !!}
                             </div>
 
-                            <div class="col-lg-9 col-md-7">
+                            <div class="col-lg-4 col-md-4">
                                 <div class="input-group">
                                     {!! Form::text('SequenceNumber', null, ['class' => 'form-control form-control-sm','maxlength' => 50,'maxlength' => 50, 'required' => true]) !!}
                                 </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-4">
+                                <button class="btn btn-sm btn-info" id="check-sequence-availability">Check Available</button>
                             </div>
                         </div> 
                     </div>
 
                     <!-- Route Field -->
-                    <div class="form-group col-lg-3 col-md-3 col-sm-12">
+                    <div class="form-group col-lg-2 col-md-3 col-sm-12">
                         <div class="row">
                             <!-- Route Field -->
-                            <div class="col-lg-3 col-md-2">
+                            <div class="col-lg-5 col-md-6">
                                 {!! Form::label('Route', 'Route:') !!}
                             </div>
 
-                            <div class="col-lg-9 col-md-2">
+                            <div class="col-lg-7 col-md-6">
                                 <div class="input-group">
                                     {!! Form::text('Route', null, ['class' => 'form-control form-control-sm','maxlength' => 5, 'required' => true]) !!}
                                 </div>
@@ -303,6 +307,9 @@ use Illuminate\Support\Facades\Auth;
 </div>
 
 @include('account_masters.modal_check_available_account')
+
+@include('account_masters.modal_check_available_sequence')
+
 @endsection
 
 @push('page_scripts')
@@ -328,6 +335,19 @@ use Illuminate\Support\Facades\Auth;
                     $('#Route').val(this.value.substring(2,6))
                 } else {
                     $('#check-acct-availability').attr('disabled', 'true')
+                }
+            })
+
+            $('#check-sequence-availability').on('click', function(e) {
+                e.preventDefault()
+                if ($('#AccountNumber').val().length == 10) {
+                    $('#modal-check-available-sequence').modal('show')
+                    $('#route-check').val('').val($('#Route').val())  
+                } else {
+                    Swal.fire({
+                        icon : 'info',
+                        text : 'Account number invalid'
+                    })
                 }
             })
 
