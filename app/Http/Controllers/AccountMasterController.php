@@ -356,4 +356,29 @@ class AccountMasterController extends AppBaseController
 
         return response()->json($accounts, 200);
     }
+
+    public function reportsNewAccounts(Request $request) {
+        $from = $request['From'];
+        $to = $request['To'];
+
+        $accounts = AccountMaster::whereRaw("TRY_CAST(DateEntry AS DATE) BETWEEN '" . $from . "' AND '" . $to . "'")
+            ->orderBy('AccountNumber')
+            ->get();
+
+        return view('/account_masters/reports_new_accounts', [
+            'accounts' => $accounts
+        ]);
+    }
+
+    public function printNewAccounts($from, $to) {
+        $accounts = AccountMaster::whereRaw("TRY_CAST(DateEntry AS DATE) BETWEEN '" . $from . "' AND '" . $to . "'")
+            ->orderBy('AccountNumber')
+            ->get();
+
+        return view('/account_masters/print_new_accounts', [
+            'accounts' => $accounts,
+            'from' => $from,
+            'to' => $to,
+        ]);
+    }
 }

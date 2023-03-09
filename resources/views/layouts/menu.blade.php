@@ -658,6 +658,16 @@ use Illuminate\Support\Facades\Auth;
                    <i class="fas fa-circle nav-icon text-primary"></i><p>New Change Meters</p>
                 </a>
             </li>
+
+            <li class="nav-header">                
+                Reports 
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('accountMasters.reports-new-accounts') }}"
+                   class="nav-link {{ Request::is('accountMasters.reports-new-accounts*') ? 'active' : '' }}">                   
+                   <i class="fas fa-circle nav-icon text-primary"></i><p>New Accounts</p>
+                </a>
+            </li>
             {{-- <li class="nav-item">
                 <a href="{{ route('serviceAccounts.manual-account-migration-one') }}"
                    class="nav-link {{ Request::is('serviceAccounts.manual-account-migration-one*') ? 'active' : '' }}">                   

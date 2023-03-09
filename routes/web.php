@@ -712,6 +712,8 @@ Route::get('/account_masters/account-migration-step-three/{id}/{scId}', [App\Htt
 Route::get('/account_masters/get-neighboring-by-barangay', [App\Http\Controllers\AccountMasterController::class, 'getNeighboringByBarangay'])->name('accountMasters.get-neighboring-by-barangay');
 Route::get('/account_masters/get-neighboring-by-account', [App\Http\Controllers\AccountMasterController::class, 'getNeighboringByAccount'])->name('accountMasters.get-neighboring-by-account');
 Route::get('/account_masters/get-available-sequence-numbers', [App\Http\Controllers\AccountMasterController::class, 'getAvailableSequenceNumbers'])->name('accountMasters.get-available-sequence-numbers');
+Route::get('/account_masters/reports-new-accounts', [App\Http\Controllers\AccountMasterController::class, 'reportsNewAccounts'])->name('accountMasters.reports-new-accounts');
+Route::get('/account_masters/print-new-accounts/{from}/{to}', [App\Http\Controllers\AccountMasterController::class, 'printNewAccounts'])->name('accountMasters.print-new-accounts');
 Route::resource('accountMasters', App\Http\Controllers\AccountMasterController::class);
 
 
