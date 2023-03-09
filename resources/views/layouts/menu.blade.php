@@ -658,6 +658,12 @@ use Illuminate\Support\Facades\Auth;
                    <i class="fas fa-circle nav-icon text-primary"></i><p>New Change Meters</p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('accountMasters.new-bapa-energized') }}"
+                   class="nav-link {{ Request::is('accountMasters.new-bapa-energized*') ? 'active' : '' }}">                   
+                   <i class="fas fa-circle nav-icon text-primary"></i><p>New Energized BAPA</p>
+                </a>
+            </li>
 
             <li class="nav-header">                
                 Reports 

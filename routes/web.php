@@ -714,6 +714,7 @@ Route::get('/account_masters/get-neighboring-by-account', [App\Http\Controllers\
 Route::get('/account_masters/get-available-sequence-numbers', [App\Http\Controllers\AccountMasterController::class, 'getAvailableSequenceNumbers'])->name('accountMasters.get-available-sequence-numbers');
 Route::get('/account_masters/reports-new-accounts', [App\Http\Controllers\AccountMasterController::class, 'reportsNewAccounts'])->name('accountMasters.reports-new-accounts');
 Route::get('/account_masters/print-new-accounts/{from}/{to}', [App\Http\Controllers\AccountMasterController::class, 'printNewAccounts'])->name('accountMasters.print-new-accounts');
+Route::get('/account_masters/new-bapa-energized', [App\Http\Controllers\AccountMasterController::class, 'newEnergizedBapa'])->name('accountMasters.new-bapa-energized');
 Route::resource('accountMasters', App\Http\Controllers\AccountMasterController::class);
 
 

@@ -395,4 +395,34 @@ class AccountMasterController extends AppBaseController
             'to' => $to,
         ]);
     }
+
+    public function newEnergizedBapa() {
+        $serviceConnections = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->select('CRM_ServiceConnections.id as id',
+                            'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                            'CRM_ServiceConnections.Status as Status',
+                            'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                            'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                            'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                            'CRM_ServiceConnections.AccountCount as AccountCount',  
+                            'CRM_ServiceConnections.ConnectionApplicationType',  
+                            'CRM_ServiceConnections.AccountNumber',  
+                            'CRM_ServiceConnections.Sitio as Sitio', 
+                            'CRM_Towns.Town as Town',
+                            'CRM_Barangays.Barangay as Barangay')
+            ->where(function ($query) {
+                                $query->where('CRM_ServiceConnections.Trash', 'No')
+                                    ->orWhereNull('CRM_ServiceConnections.Trash');
+                            })  
+            ->whereIn('Status', ['Energized', 'Approved For Change Name'])
+            ->whereRaw("CRM_ServiceConnections.created_at > '2023-02-28' AND CRM_ServiceConnections.AccountType IN " . ServiceConnections::getBapaAccountCodes())
+            ->orderBy('CRM_ServiceConnections.ServiceAccountName')
+            ->get();
+
+        return view('/account_masters/new_bapa_energized', [
+            'serviceConnections' => $serviceConnections,
+        ]);
+    }
 }
