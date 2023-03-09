@@ -246,10 +246,24 @@ class AccountMasterController extends AppBaseController
         $serviceConnection = ServiceConnections::find($scId);
         $meterAndTransformer = ServiceConnectionMtrTrnsfrmr::where('ServiceConnectionId', $scId)->first();
 
+        $meters = DB::connection('sqlsrvbilling')
+            ->table('Meter')
+            ->whereRaw("MeterNumber='" . $meterAndTransformer->MeterSerialNumber . "'")
+            ->first();
+        
+        if ($meters != null) {
+            $meterOwner = AccountMaster::where('MeterNumber', $meters->MeterNumber)->first();
+        } else {
+            $meterOwner = null;
+        }
+        
+
         return view('/account_masters/account_migration_step_two', [
             'serviceAccount' => $serviceAccount,
             'serviceConnection' => $serviceConnection,
             'meter' => $meterAndTransformer,
+            'meters' => $meters,
+            'meterOwner' => $meterOwner,
         ]);
     }
 

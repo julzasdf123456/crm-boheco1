@@ -6,6 +6,16 @@
 @extends('layouts.app')
 
 @section('content')
+@if ($meters != null)
+    @push('page_scripts')
+        <script>
+            Swal.fire({
+                icon : 'warning',
+                text : 'This Meter Number already exists!'
+            })
+        </script>
+    @endpush
+@endif
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -20,6 +30,17 @@
 </section>
 
 <div class="row">
+    @if ($meters != null)
+        <div class="col-lg-12">
+            <div class="card bg-danger">
+                <div class="card-body">
+                    <p><strong>Meter Already Exists!</strong></p>
+                    <span>Owner: {{ $meterOwner != null ? $meterOwner->ConsumerName : '-' }} (Acct. No: {{ $meterOwner != null ? $meterOwner->AccountNumber : '-' }})</span>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="col-lg-3 col-md-4">
         <div class="card shadow-none">
             <div class="card-header border-0">
