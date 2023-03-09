@@ -362,7 +362,7 @@ class AccountMasterController extends AppBaseController
         $to = $request['To'];
 
         $accounts = AccountMaster::whereRaw("TRY_CAST(DateEntry AS DATE) BETWEEN '" . $from . "' AND '" . $to . "'")
-            ->orderBy('AccountNumber')
+            ->orderByDesc('DateEntry')
             ->get();
 
         return view('/account_masters/reports_new_accounts', [
@@ -372,7 +372,7 @@ class AccountMasterController extends AppBaseController
 
     public function printNewAccounts($from, $to) {
         $accounts = AccountMaster::whereRaw("TRY_CAST(DateEntry AS DATE) BETWEEN '" . $from . "' AND '" . $to . "'")
-            ->orderBy('AccountNumber')
+            ->orderByDesc('DateEntry')
             ->get();
 
         return view('/account_masters/print_new_accounts', [
