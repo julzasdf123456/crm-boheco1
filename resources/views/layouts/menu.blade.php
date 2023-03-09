@@ -658,7 +658,7 @@ use Illuminate\Support\Facades\Auth;
                    <i class="fas fa-circle nav-icon text-primary"></i><p>New Change Meters</p>
                 </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="{{ route('serviceAccounts.manual-account-migration-one') }}"
                    class="nav-link {{ Request::is('serviceAccounts.manual-account-migration-one*') ? 'active' : '' }}">                   
                    <i class="fas fa-user-plus nav-icon text-primary"></i><p>Add New Account
@@ -678,7 +678,7 @@ use Illuminate\Support\Facades\Auth;
                    <i class="fas fa-map-marked-alt nav-icon text-primary"></i><p>Relocation
                    </p>                   
                 </a>
-            </li>
+            </li> --}}
         </ul>
     </li>
 

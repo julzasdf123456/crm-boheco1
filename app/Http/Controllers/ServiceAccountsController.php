@@ -501,8 +501,8 @@ class ServiceAccountsController extends AppBaseController
 
     public function pendingAccounts() {
         $serviceConnections = DB::table('CRM_ServiceConnections')
-            ->join('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
-            ->join('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
             ->select('CRM_ServiceConnections.id as id',
                             'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
                             'CRM_ServiceConnections.Status as Status',
@@ -519,8 +519,8 @@ class ServiceAccountsController extends AppBaseController
                                 $query->where('CRM_ServiceConnections.Trash', 'No')
                                     ->orWhereNull('CRM_ServiceConnections.Trash');
                             })  
-            ->whereIn('Status', ['Energized', 'Approved For Change Name'])     
-            ->whereRaw("CRM_ServiceConnections.created_at > '2023-02-28'")     
+            ->whereIn('Status', ['Energized', 'Approved For Change Name'])
+            ->whereRaw("CRM_ServiceConnections.created_at > '2023-02-28' AND CRM_ServiceConnections.AccountType NOT IN " . ServiceConnections::getBapaAccountCodes())
             ->orderBy('CRM_ServiceConnections.ServiceAccountName')
             ->get();
 

@@ -240,6 +240,10 @@ class ServiceConnections extends Model
         }
     }
 
+    public static function getBapaAccountCodes() {
+        return "('1659574416842', '1659574427037')";
+    }
+
     public static function getStreetLightId() {
         return '1643002557527';
     }
