@@ -14,6 +14,7 @@
                     </div>
                     <div class="col-md-3">
                         {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
+                        <a href="{{ route('tickets.create-relocation', ['0']) }}" class="btn btn-warning" style="margin-left: 20px;">Skip</a>
                     </div>
                 </div>
             {!! Form::close() !!}

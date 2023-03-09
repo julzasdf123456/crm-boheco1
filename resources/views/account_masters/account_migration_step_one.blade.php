@@ -33,7 +33,6 @@ use Illuminate\Support\Facades\Auth;
                     <input type="hidden" value="{{ $serviceConnection->EmailAddress }}" name="Email">
                     <input type="hidden" value="{{ Auth::user()->name }}" name="UserName">
                     <input type="hidden" value="{{ $inspection->GeoMeteringPole }}" name="Item1">
-                    <input type="hidden" value="{{ $serviceConnection->Town }}" name="Area">
                     <input type="hidden" value="{{ $serviceConnection != null ? $serviceConnection->DateTimeOfEnergization : null }}" name="ConnectionDate">
                     <input type="hidden" value="{{ date('Y-m-d H:i:s') }}" name="DateEntry">
                     <input type="hidden" value="{{ $crew != null ? substr($crew->StationName, 0, 29) : null }}" name="InstalledBy">
@@ -95,6 +94,22 @@ use Illuminate\Support\Facades\Auth;
                             <div class="col-lg-7 col-md-6">
                                 <div class="input-group">
                                     {!! Form::text('Route', null, ['class' => 'form-control form-control-sm','maxlength' => 5, 'required' => true]) !!}
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+
+                    <!-- Area Field -->
+                    <div class="form-group col-lg-2 col-md-3 col-sm-12">
+                        <div class="row">
+                            <!-- Area Field -->
+                            <div class="col-lg-5 col-md-6">
+                                {!! Form::label('Area', 'Area:') !!}
+                            </div>
+
+                            <div class="col-lg-7 col-md-6">
+                                <div class="input-group">
+                                    {!! Form::text('Area', $town != null ? $town->Station : $serviceConnection->Town, ['class' => 'form-control form-control-sm','maxlength' => 5, 'required' => true]) !!}
                                 </div>
                             </div>
                         </div> 

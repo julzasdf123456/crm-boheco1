@@ -2454,7 +2454,7 @@ class TicketsController extends AppBaseController
         $serviceConnection->Barangay = $input['Barangay'];
         $serviceConnection->Town = $input['Town'];
         $serviceConnection->ConnectionApplicationType = 'Relocation';
-        $serviceConnection->Status = 'For Inspection';
+        $serviceConnection->Status = 'Approved';
         $serviceConnection->Office = env('APP_LOCATION');
         $serviceConnection->save();
 

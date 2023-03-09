@@ -12,10 +12,6 @@
 
 <!-- Station Field -->
 <div class="form-group col-sm-4">
-    {!! Form::label('Station', 'Station:') !!}
-    <select name="Station" id="Station" class="form-control">
-        @foreach ($crews as $item)
-            <option value="{{ $item->id }}">{{ $item->StationName }}</option>
-        @endforeach
-    </select>
+    {!! Form::label('Station', 'Area Code (CEBCOS):') !!}
+    {!! Form::text('Station', null, ['class' => 'form-control','maxlength' => 300,'maxlength' => 300]) !!}
 </div>
