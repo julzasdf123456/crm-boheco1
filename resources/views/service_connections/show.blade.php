@@ -40,8 +40,12 @@ use Illuminate\Support\Facades\Auth;
 
                                     <a href="{{ route('serviceConnections.print-invoice', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Print Payment Slip">
                                         <i class="fas fa-comments-dollar"></i>
-                                    </a>                                    
+                                    </a>  
+                                @else
+                                    <a href="{{ route('serviceConnectionPayTransactions.create-step-four', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Update service connection payment">
+                                        <i class="fas fa-dollar-sign"></i></a>
                                 @endif
+
                                 @if ($serviceConnectionInspections != null)
                                 <a href="{{ route('serviceConnectionInspections.edit', [$serviceConnectionInspections->id]) }}" class="btn btn-tool text-primary" title="Update Verification/Inspection Details">
                                     <i class="fas fa-clipboard-check"></i>
