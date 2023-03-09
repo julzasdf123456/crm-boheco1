@@ -55,7 +55,7 @@
                                 @elseif ($item->ConnectionApplicationType == 'Change Name')
                                     {{-- <a href="{{ route('serviceAccounts.confirm-change-name', [$item->id]) }}" title="Proceed Change Name"><i class="fas fa-arrow-circle-right text-success"></i></a> --}}
                                 @else
-                                    <a href="{{ route('accountMasters.account-migration-step-one', [$item->id]) }}" title="Proceed activating {{ $item->ServiceAccountName }}" ><i class="fas fa-arrow-circle-right text-success"></i></a>
+                                    {{-- <a href="{{ route('accountMasters.account-migration-step-one', [$item->id]) }}" title="Proceed activating {{ $item->ServiceAccountName }}" ><i class="fas fa-arrow-circle-right text-success"></i></a> --}}
                                 @endif                                
                             </td>
                         </tr>
