@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Auth;
                 @include('flash::message')
                 <div class="row">                    
                     {{-- HIDDEN FIELDS --}}
+                    <input type="hidden" value="{{ $serviceConnection->id }}" name="ServiceConnectionId">
                     <input type="hidden" value="{{ $serviceConnection->id }}" name="UniqueID">
                     <input type="hidden" value="{{ $serviceConnection->ContactNumber }}" name="ContactNumber">
                     <input type="hidden" value="{{ $serviceConnection->EmailAddress }}" name="Email">
