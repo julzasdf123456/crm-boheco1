@@ -208,7 +208,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                             </div>
-                                            {!! Form::text('ContactNumber', "0", ['class' => 'form-control','maxlength' => 100,'maxlength' => 100, 'placeholder' => 'Contact Number', 'required' => 'true']) !!}
+                                            {!! Form::number('ContactNumber', $serviceAccount != null ? ($serviceAccount->ContactNumber != null ? $serviceAccount->ContactNumber : 0) : 0, ['class' => 'form-control','maxlength' => 100,'maxlength' => 100, 'placeholder' => 'Contact Number', 'required' => 'true']) !!}
                                         </div>
                                     </div>
                                 </div> 

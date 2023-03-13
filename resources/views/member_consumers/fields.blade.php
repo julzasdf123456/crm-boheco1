@@ -243,7 +243,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-phone-alt"></i></span>
                 </div>
-                {!! Form::text('ContactNumbers', null, ['class' => 'form-control form-control-sm','maxlength' => 300,'maxlength' => 300, 'placeholder' => 'Contact Numbers']) !!}
+                {!! Form::number('ContactNumbers', null, ['class' => 'form-control form-control-sm','maxlength' => 300,'maxlength' => 300, 'placeholder' => 'Contact Numbers']) !!}
             </div>
         </div>
     </div> 
