@@ -151,6 +151,7 @@ Route::get('/service_connections/download-meter-installation/{from}/{to}/{office
 Route::get('/service_connections/update-status', [ServiceConnectionsController::class, 'updateStatus'])->name('serviceConnections.update-status');
 Route::get('/service_connections/update-or', [ServiceConnectionsController::class, 'updateOR'])->name('serviceConnections.update-or');
 Route::get('/service_connections/summary-report', [ServiceConnectionsController::class, 'summaryReport'])->name('serviceConnections.summary-report');
+Route::get('/service_connections/download-summary-report/{month}/{year}', [ServiceConnectionsController::class, 'downloadSummaryReport'])->name('serviceConnections.download-summary-report');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 

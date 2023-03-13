@@ -40,6 +40,7 @@ use App\Models\BillDeposits;
 use App\Exports\ServiceConnectionApplicationsReportExport;
 use App\Exports\ServiceConnectionEnergizationReportExport;
 use App\Exports\DynamicExport;
+use App\Exports\SummaryReportExport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -3307,5 +3308,84 @@ class ServiceConnectionsController extends AppBaseController
             'summaryData' => $summaryData,
             'billsSummary' => $billsSummary,
         ]);
+    }
+
+    public function downloadSummaryReport($month, $year) {
+        $from = $year . '-' . $month . '-01';
+        $to = date('Y-m-d', strtotime('last day of ' . $from));
+        $prevMonthPeriod = date('Y-m-01', strtotime($from . ' -1 month'));
+
+        if (isset($month)) {
+            $data = DB::table('CRM_Towns')
+                ->select(
+                    'Town',
+                    DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No')) AS TotalApplicants"),
+                    DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
+                        WHERE s.Town=CRM_Towns.id AND (s.DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status='Approved') AS ApprovedThisMonth"),
+                    DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
+                        WHERE s.Town=CRM_Towns.id AND (s.DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status='FOR INSPECTION') AS ForInspectionThisMonth"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Status IN ('Energized', 'Closed')) AS ExecutedThisMonth"),
+                    DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
+                        WHERE s.Town=CRM_Towns.id AND i.DateOfVerification IS NOT NULL AND (TRY_CAST(i.DateOfVerification AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status='Approved') AS TotalInspections"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (TRY_CAST(DateTimeOfEnergization AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Status IN ('Energized', 'Closed')) AS TotalEnergizations"),
+                )
+                ->orderBy('Town')
+                ->get();
+
+            $summaryData = DB::table('CRM_Towns')
+                    ->select(
+                        DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE EnergizationOrderIssued='Yes' AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Office='MAIN OFFICE') AS EOIssuedMain"),
+                        DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE EnergizationOrderIssued='Yes' AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Office='SUB-OFFICE') AS EOIssuedSub"),                        
+                    )
+                    ->first();
+
+            $billsSummary = DB::connection('sqlsrvbilling')
+                    ->table('Bills')
+                    ->select(
+                        DB::connection('sqlsrvbilling')->raw("(SELECT COUNT(AccountNumber) FROM Bills WHERE ServicePeriodEnd='" . $prevMonthPeriod . "') AS PrevMonthBillsTotal"),
+                        DB::raw("'" . $prevMonthPeriod . "' AS PrevMonth"),
+                        DB::connection('sqlsrvbilling')->raw("(SELECT COUNT(AccountNumber) FROM Bills WHERE ServicePeriodEnd='" . $from . "') AS BillsTotalAsOf"),
+                        DB::raw("'" . $from . "' AS CurrentMonth"),
+                    )
+                    ->first();
+        } else {
+            $data = [];
+            $summaryData = null;
+            $billsSummary = null;
+        }
+
+
+        $applicants = 0;
+        $approvedThisMonth = 0;
+        $inspectionThisMonth = 0;
+        $executedThisMonth = 0;
+        $inspectionsTotal = 0;
+        $energizationsTotal = 0;
+        foreach ($data as $item) {
+            $applicants += intval($item->TotalApplicants);
+            $approvedThisMonth += intval($item->ApprovedThisMonth);
+            $inspectionThisMonth += intval($item->ForInspectionThisMonth);
+            $executedThisMonth += intval($item->ExecutedThisMonth);
+            $inspectionsTotal += intval($item->TotalInspections);
+            $energizationsTotal += intval($item->TotalEnergizations);
+        }
+
+        $data = $data->toArray();
+
+        array_push($data, [
+            "Town" => 'TOTAL',
+            "TotalApplicants" => $applicants,
+            "ApprovedThisMonth" => $approvedThisMonth,
+            "ForInspectionThisMonth" => $inspectionThisMonth,
+            "ExecutedThisMonth" => $executedThisMonth,
+            "TotalInspections" => $inspectionsTotal,
+            "TotalEnergizations" => $energizationsTotal,
+        ]);
+
+        $export = new SummaryReportExport($data, $from, $summaryData, $billsSummary);
+
+        $monthSpelled = date('F-Y', strtotime($from));
+
+        return Excel::download($export, 'Housewiring-SummaryReport-' . $monthSpelled . '.xlsx');
     }
 }

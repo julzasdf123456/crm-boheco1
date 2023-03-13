@@ -170,7 +170,7 @@
         $(document).ready(function() {
             $('#download').on('click', function(e) {
                 e.preventDefault()
-                window.location.href = "{{ url('/member_consumers/download-monthly-reports') }}" + "/" + $('#Town').val() + "/" + $('#Month').val() + "/" + $('#Year').val() + "/" + $('#Office').val()
+                window.location.href = "{{ url('/service_connections/download-summary-report') }}" + "/" + $('#Month').val() + "/" + $('#Year').val()
             })
         })
 
