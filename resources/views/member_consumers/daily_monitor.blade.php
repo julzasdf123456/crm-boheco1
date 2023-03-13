@@ -14,6 +14,7 @@
 <div class="content px-3">
     <div class="row">
         <div class="col-lg-2 col-md-4">
+            {{-- FORM --}}
             <div class="card card-primary card-outline">
                 <div class="card-header">
                     <span class="card-title">Pick Date</span>
@@ -24,7 +25,31 @@
                     </div>
                 </div>
             </div>
-            
+
+            {{-- TOTAL --}}
+            <div class="card shadow-none">
+                <div class="card-header">
+                    <span class="card-title">Summary</span>
+                </div>
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-sm table-hover">
+                        <tbody>
+                            <tr>
+                                <td>Main Office</td>
+                                <td><strong id="main-total"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Sub-Office</td>
+                                <td><strong id="sub-total"></strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td><strong id="total"></strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <div class="col-lg-10 col-md-8">
@@ -66,9 +91,11 @@
         });
 
         fetchData($('#daypicker').val())
+        fetchSummary($('#daypicker').val())
 
         $("#target").on('change.datetimepicker', function() {
-            fetchData($('#daypicker').val())            
+            fetchData($('#daypicker').val())   
+            fetchSummary($('#daypicker').val())         
         })
     })
 
@@ -85,6 +112,27 @@
             },
             error : function(err) {
                 alert('An error occurred while fetching data. See console for details!')
+            }
+        })
+    }
+
+    function fetchSummary(day) {
+        $.ajax({
+            url : "{{ route('memberConsumers.daily-monitor-total') }}",
+            type : 'GET',
+            data : {
+                Date : day,
+            },
+            success : function(res) {
+                $('#main-total').text(res['MainOfficeCount'])
+                $('#sub-total').text(res['SubOfficeCount'])
+                $('#total').text(parseInt(res['SubOfficeCount']) + parseInt(res['MainOfficeCount']))
+            },
+            error : function(err) {
+                Toast.fire({
+                    icon : 'error',
+                    text : 'Error getting membership summary'
+                })
             }
         })
     }

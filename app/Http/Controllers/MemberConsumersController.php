@@ -1065,4 +1065,17 @@ class MemberConsumersController extends AppBaseController
 
         return response()->json($output, 200);
     }
+
+    public function dailyMonitorTotal(Request $request) {
+        $date = $request['Date'];
+
+        $data = DB::table('CRM_MemberConsumers')
+            ->select(
+                DB::raw("(SELECT COUNT(Id) FROM CRM_MemberConsumers WHERE DateApplied='" . $date . "' AND Office='MAIN OFFICE') As MainOfficeCount"),
+                DB::raw("(SELECT COUNT(Id) FROM CRM_MemberConsumers WHERE DateApplied='" . $date . "' AND Office='SUB-OFFICE') As SubOfficeCount"),
+            )
+            ->first();
+
+        return response()->json($data, 200);
+    }
 }
