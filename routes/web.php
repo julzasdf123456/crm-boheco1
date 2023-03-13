@@ -410,6 +410,8 @@ Route::get('/tickets/execution', [App\Http\Controllers\TicketsController::class,
 Route::get('/tickets/update-execution-data', [App\Http\Controllers\TicketsController::class, 'updateExecutionData'])->name('tickets.update-execution-data');
 Route::get('/tickets/meter-transfers', [App\Http\Controllers\TicketsController::class, 'meterTransfers'])->name('tickets.meter-transfers');
 Route::get('/tickets/download-meter-transfers/{from}/{to}/{office}', [App\Http\Controllers\TicketsController::class, 'downloadMeterTransfers'])->name('tickets.download-meter-transfers');
+Route::get('/tickets/service-conductor-transfers', [App\Http\Controllers\TicketsController::class, 'serviceConductorTransfers'])->name('tickets.service-conductor-transfers');
+Route::get('/tickets/download-service-conductor-transfers/{from}/{to}/{office}', [App\Http\Controllers\TicketsController::class, 'downloadServiceConductorTransfers'])->name('tickets.download-service-conductor-transfers');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 

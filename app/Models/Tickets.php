@@ -236,4 +236,8 @@ class Tickets extends Model
     public static function getMeterTransfers() {
         return ['1668541254393', '1668541254394', '1668541254395', '1668541254396', '1668541254397'];
     }
+
+    public static function getServiceConductorTransfers() {
+        return ['1668541254406', '1668541254407'];
+    }
 }

@@ -587,6 +587,13 @@ use Illuminate\Support\Facades\Auth;
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a href="{{ route('tickets.service-conductor-transfers') }}"
+                class="nav-link {{ Request::is('tickets.service-conductor-transfers*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>Svc. Condctr. Transfers</p>
+                </a>
+            </li>
+
             <li class="nav-header">                
                 Settings and Others 
             </li>
