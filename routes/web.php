@@ -408,6 +408,8 @@ Route::get('/tickets/load-account-in-map', [App\Http\Controllers\TicketsControll
 Route::get('/tickets/get-tickets-from-station', [App\Http\Controllers\TicketsController::class, 'getTicketsFromStation'])->name('tickets.get-tickets-from-station');
 Route::get('/tickets/execution', [App\Http\Controllers\TicketsController::class, 'execution'])->name('tickets.execution');
 Route::get('/tickets/update-execution-data', [App\Http\Controllers\TicketsController::class, 'updateExecutionData'])->name('tickets.update-execution-data');
+Route::get('/tickets/meter-transfers', [App\Http\Controllers\TicketsController::class, 'meterTransfers'])->name('tickets.meter-transfers');
+Route::get('/tickets/download-meter-transfers/{from}/{to}/{office}', [App\Http\Controllers\TicketsController::class, 'downloadMeterTransfers'])->name('tickets.download-meter-transfers');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 

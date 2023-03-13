@@ -232,4 +232,8 @@ class Tickets extends Model
     public static function getDiscoReco() {
         return ['1668541254422', '1668541254427'];
     }
+
+    public static function getMeterTransfers() {
+        return ['1668541254393', '1668541254394', '1668541254395', '1668541254396', '1668541254397'];
+    }
 }

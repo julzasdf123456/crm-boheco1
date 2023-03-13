@@ -580,6 +580,13 @@ use Illuminate\Support\Facades\Auth;
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a href="{{ route('tickets.meter-transfers') }}"
+                class="nav-link {{ Request::is('tickets.meter-transfers*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>Meter Transfers</p>
+                </a>
+            </li>
+
             <li class="nav-header">                
                 Settings and Others 
             </li>

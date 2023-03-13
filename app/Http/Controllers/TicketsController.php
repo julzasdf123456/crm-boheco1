@@ -30,6 +30,7 @@ use App\Exports\KPSTicketsExport;
 use App\Exports\DynamicExport;
 use App\Exports\DiscoRecoExport;
 use App\Exports\MeterReplacementsExport;
+use App\Exports\MeterTransferExport;
 use Illuminate\Support\Facades\Auth;
 use Flash;
 use Response;
@@ -4344,5 +4345,125 @@ class TicketsController extends AppBaseController
             ->update(['DateTimeLinemanArrived' => $arrival, 'DateTimeLinemanExecuted' => $executed, 'Status' => $status, 'CrewAssigned' => $crew]);
 
         return response()->json('ok', 200);
+    }
+
+    public function meterTransfers(Request $request) {
+        $from = $request['From'];
+        $to = $request['To'];
+        $office = $request['Office'];
+
+        if ($office == 'All') {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->whereIn('CRM_Tickets.Ticket', Tickets::getMeterTransfers())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'NewMeterBrand',
+                    'NewMeterNo',
+                    'NewMeterReading',
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        } else {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_Tickets.Office='" . $office . "'")
+                ->whereIn('CRM_Tickets.Ticket', Tickets::getMeterTransfers())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'NewMeterBrand',
+                    'NewMeterNo',
+                    'NewMeterReading',
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        }
+
+        return view('/tickets/meter_transfers', [
+            'data' => $data,
+        ]);
+    }
+
+    public function downloadMeterTransfers($from, $to, $office) {
+        if ($office == 'All') {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->whereIn('CRM_Tickets.Ticket', Tickets::getMeterTransfers())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'NewMeterBrand',
+                    'NewMeterNo',
+                    'NewMeterReading',
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        } else {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_Tickets.Office='" . $office . "'")
+                ->whereIn('CRM_Tickets.Ticket', Tickets::getMeterTransfers())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'NewMeterBrand',
+                    'NewMeterNo',
+                    'NewMeterReading',
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        }
+
+        $export = new MeterTransferExport($data, $from, $to);
+
+        return Excel::download($export, 'Meter-Transfer-Reports.xlsx');
     }
 }
