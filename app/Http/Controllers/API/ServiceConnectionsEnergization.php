@@ -87,7 +87,7 @@ class ServiceConnectionsEnergization extends Controller {
                 $query->where('CRM_ServiceConnections.Trash', 'No')
                     ->orWhereNull('CRM_ServiceConnections.Trash');
             })
-            ->update(['Status' => 'Downloaded by Crew']);
+            ->update(['Status' => 'Downloaded by Crew', 'EnergizationOrderIssued' => 'Yes']);
         
         return response()->json(['res' => 'ok'], $this->successStatus);   
     }

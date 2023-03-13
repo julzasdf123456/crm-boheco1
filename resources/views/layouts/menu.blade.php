@@ -248,13 +248,6 @@ use Illuminate\Support\Facades\Auth;
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('serviceConnections.daily-monitor') }}"
-                        class="nav-link {{ Request::is('serviceConnections.daily-monitor*') ? 'active' : '' }}">
-                        <i class="fas fa-clipboard-list nav-icon text-warning"></i><p>Summary</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
                         <a href="{{ route('tickets.kps-customer-service-parameters') }}"
                         class="nav-link {{ Request::is('tickets.kps-customer-service-parameters*') ? 'active' : '' }}">
                             <i class="fas fa-circle nav-icon text-warning"></i><p>KPS Cust. Svc. Params.</p>
@@ -275,6 +268,12 @@ use Illuminate\Support\Facades\Auth;
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a href="{{ route('serviceConnections.summary-report') }}"
+                        class="nav-link {{ Request::is('serviceConnections.summary-report*') ? 'active' : '' }}">
+                            <i class="fas fa-circle nav-icon text-warning"></i><p>Summary</p>
+                        </a>
+                    </li>
                 </ul>
             </li>
             @endcanany

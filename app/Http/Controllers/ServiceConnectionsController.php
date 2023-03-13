@@ -3254,4 +3254,45 @@ class ServiceConnectionsController extends AppBaseController
 
         return response()->json('ok', 200);
     }
+
+    public function summaryReport(Request $request) {
+        $month = $request['Month'];
+        $year = $request['Year'];
+        $from = $year . '-' . $month . '-01';
+        $to = date('Y-m-d', strtotime('last day of ' . $from));
+
+        if (isset($month)) {
+            $data = DB::table('CRM_Towns')
+                ->select(
+                    'id',
+                    'Town',
+                    DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No')) AS TotalApplicants"),
+                    DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
+                        WHERE s.Town=CRM_Towns.id AND (s.DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status='Approved') AS ApprovedThisMonth"),
+                    DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
+                        WHERE s.Town=CRM_Towns.id AND (s.DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status='FOR INSPECTION') AS ForInspectionThisMonth"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Status IN ('Energized', 'Closed')) AS ExecutedThisMonth"),
+                    DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
+                        WHERE s.Town=CRM_Towns.id AND i.DateOfVerification IS NOT NULL AND (TRY_CAST(i.DateOfVerification AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status='Approved') AS TotalInspections"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (TRY_CAST(DateTimeOfEnergization AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Status IN ('Energized', 'Closed')) AS TotalEnergizations"),
+                )
+                ->orderBy('Town')
+                ->get();
+
+            $summaryData = DB::table('CRM_Towns')
+                    ->select(
+                        DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE EnergizationOrderIssued='Yes' AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Office='MAIN OFFICE') AS EOIssuedMain"),
+                        DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE EnergizationOrderIssued='Yes' AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Office='SUB-OFFICE') AS EOIssuedSub"),
+                    )
+                    ->first();
+        } else {
+            $data = [];
+            $summaryData = null;
+        }
+
+        return view('/service_connections/summary_report', [
+            'data' => $data,
+            'summaryData' => $summaryData,
+        ]);
+    }
 }
