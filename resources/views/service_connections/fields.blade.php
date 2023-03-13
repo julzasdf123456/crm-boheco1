@@ -392,7 +392,7 @@ use App\Models\IDGenerator;
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-phone-alt"></i></span>
                 </div>
-                {!! Form::text('ContactNumber', $cond=='new' ? $memberConsumer->ContactNumbers : $serviceConnections->ContactNumber, ['class' => 'form-control form-control-sm','maxlength' => 300,'maxlength' => 300, 'placeholder' => 'Contact Numbers']) !!}
+                {!! Form::number('ContactNumber', $cond=='new' ? $memberConsumer->ContactNumbers : $serviceConnections->ContactNumber, ['class' => 'form-control form-control-sm','maxlength' => 300,'maxlength' => 300, 'placeholder' => 'Contact Numbers']) !!}
             </div>
         </div>
     </div> 
