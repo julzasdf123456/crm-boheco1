@@ -119,7 +119,7 @@ class SummaryReportExport implements FromArray, ShouldAutoSize, WithColumnFormat
                 $event->sheet->setCellValue('K7', number_format($this->billSummary->PrevMonthBillsTotal));
                 $event->sheet->setCellValue('L7', number_format($this->billSummary->BillsTotalAsOf));
 
-                $event->sheet->getStyle('A30:L30')
+                $event->sheet->getStyle('A33:L33')
                     ->getFont()->setBold(true);
             }
         ];
