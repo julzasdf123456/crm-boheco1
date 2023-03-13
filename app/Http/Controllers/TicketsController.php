@@ -973,7 +973,7 @@ class TicketsController extends AppBaseController
             ->select(DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Status='Received' AND (Trash IS NULL OR Trash = 'No')) AS 'Received'"),
                 DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Status IN ('Forwareded to Crew', 'Downloaded by Crew', 'Forwarded to Crew') AND (Trash IS NULL OR Trash = 'No')) AS 'SentToLineman'"),
                 DB::raw("(SELECT COUNT(id) FROM CRM_Tickets WHERE Status='Executed' AND (DateTimeLinemanExecuted BETWEEN '" . $startDate . "' AND '" . $endDate . "') AND (Trash IS NULL OR Trash = 'No')) AS 'ExecutedThisMonth'"),
-                DB::raw($average . " AS 'AverageExecutionTime'"))
+                DB::raw(round($average, 2) . " AS 'AverageExecutionTime'"))
             ->limit(1)
             ->get();
 
