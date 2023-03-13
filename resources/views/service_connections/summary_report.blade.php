@@ -114,6 +114,7 @@
     </div>
 
     <div class="col-lg-4">
+        {{-- ENERGIZATION ORDER --}}
         <div class="card shadow-none">
             <div class="card-header">
                 <span class="card-title">Energization Order Issuance Summary</span>
@@ -131,6 +132,29 @@
                                 <td>{{ $summaryData->EOIssuedMain }}</td>
                                 <td>{{ $summaryData->EOIssuedSub }}</td>
                                 <td>{{ $summaryData->EOIssuedSub + $summaryData->EOIssuedMain }}</td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {{-- BILLED CONSUMERS ORDER --}}
+        <div class="card shadow-none">
+            <div class="card-header">
+                <span class="card-title">Billed Consumers Summary</span>
+            </div>
+            <div class="card-body table-responsive p-0">
+                <table class="table table-sm table-hover">
+                    <tbody>
+                        @if ($billsSummary != null)
+                            <tr>
+                                <td><strong>Complete Billed Consumers for {{ date('M Y', strtotime($billsSummary->PrevMonth)) }}</strong></td>
+                                <td>{{ number_format($billsSummary->PrevMonthBillsTotal) }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Billed Consumers for Selected Month ({{ date('M Y', strtotime($billsSummary->CurrentMonth)) }})</strong></td>
+                                <td>{{ number_format($billsSummary->BillsTotalAsOf) }}</td>
                             </tr>
                         @endif
                     </tbody>

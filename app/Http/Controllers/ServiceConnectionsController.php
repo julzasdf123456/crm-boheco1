@@ -3260,6 +3260,7 @@ class ServiceConnectionsController extends AppBaseController
         $year = $request['Year'];
         $from = $year . '-' . $month . '-01';
         $to = date('Y-m-d', strtotime('last day of ' . $from));
+        $prevMonthPeriod = date('Y-m-01', strtotime($from . ' -1 month'));
 
         if (isset($month)) {
             $data = DB::table('CRM_Towns')
@@ -3282,17 +3283,29 @@ class ServiceConnectionsController extends AppBaseController
             $summaryData = DB::table('CRM_Towns')
                     ->select(
                         DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE EnergizationOrderIssued='Yes' AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Office='MAIN OFFICE') AS EOIssuedMain"),
-                        DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE EnergizationOrderIssued='Yes' AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Office='SUB-OFFICE') AS EOIssuedSub"),
+                        DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE EnergizationOrderIssued='Yes' AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Office='SUB-OFFICE') AS EOIssuedSub"),                        
+                    )
+                    ->first();
+
+            $billsSummary = DB::connection('sqlsrvbilling')
+                    ->table('Bills')
+                    ->select(
+                        DB::connection('sqlsrvbilling')->raw("(SELECT COUNT(AccountNumber) FROM Bills WHERE ServicePeriodEnd='" . $prevMonthPeriod . "') AS PrevMonthBillsTotal"),
+                        DB::raw("'" . $prevMonthPeriod . "' AS PrevMonth"),
+                        DB::connection('sqlsrvbilling')->raw("(SELECT COUNT(AccountNumber) FROM Bills WHERE ServicePeriodEnd='" . $from . "') AS BillsTotalAsOf"),
+                        DB::raw("'" . $from . "' AS CurrentMonth"),
                     )
                     ->first();
         } else {
             $data = [];
             $summaryData = null;
+            $billsSummary = null;
         }
 
         return view('/service_connections/summary_report', [
             'data' => $data,
             'summaryData' => $summaryData,
+            'billsSummary' => $billsSummary,
         ]);
     }
 }
