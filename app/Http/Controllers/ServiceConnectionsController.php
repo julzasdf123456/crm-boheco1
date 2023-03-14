@@ -88,6 +88,7 @@ class ServiceConnectionsController extends AppBaseController
                                 'CRM_ServiceConnections.LoadCategory',
                                 'CRM_Barangays.Barangay as Barangay',
                                 'CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber')
+                ->whereRaw("ConnectionApplicationType NOT IN ('Relocation')")
                 ->where(function ($query) {
                                     $query->where('CRM_ServiceConnections.Trash', 'No')
                                         ->orWhereNull('CRM_ServiceConnections.Trash');
@@ -114,6 +115,7 @@ class ServiceConnectionsController extends AppBaseController
                                 'CRM_ServiceConnections.LoadCategory',
                                 'CRM_Barangays.Barangay as Barangay',
                                 'CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber')
+                ->whereRaw("ConnectionApplicationType NOT IN ('Relocation')")
                 ->where(function ($query) {
                                     $query->where('CRM_ServiceConnections.Trash', 'No')
                                         ->orWhereNull('CRM_ServiceConnections.Trash');
