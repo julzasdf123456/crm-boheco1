@@ -177,6 +177,7 @@
                         events : scheds,
                         eventOrderStrict : true,
                         editable  : true,
+                        height : 500,
                     });
 
                     calendar.render();
