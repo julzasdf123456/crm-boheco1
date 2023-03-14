@@ -40,7 +40,7 @@
     <div class="col-lg-12">
         <div class="card shadow-none">
             <div class="card-header">
-                <p>Inspection Summary</p>
+                <p>Inspection Assignment Summary</p>
             </div>
             <div class="card-body p-0 table-responsive">
                 <table class="table table-sm table-hover table-bordered" id="table-summary">
@@ -66,7 +66,7 @@
     <div class="col-lg-8">
         <div class="card shadow-none">
             <div class="card-header">
-                <span class="card-title">Calendar View</span>
+                <span class="card-title">Accomplished Inspections Per Day</span>
                 <div class="card-tools">
                     <select name="Inspector" id="Inspector" class="form-control form-control-sm">
                         @foreach ($inspectors as $item)
