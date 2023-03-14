@@ -2933,7 +2933,8 @@ class ServiceConnectionsController extends AppBaseController
             ->whereRaw("Inspector='" . $inspector . "'")
             ->select(
                 DB::raw("TRY_CAST(DateOfVerification AS DATE) AS DateOfVerification"),
-                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND TRY_CAST(a.DateOfVerification AS DATE)=TRY_CAST(CRM_ServiceConnectionInspections.DateOfVerification AS DATE)) AS Count"),
+                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL 
+                    AND TRY_CAST(a.DateOfVerification AS DATE)=TRY_CAST(CRM_ServiceConnectionInspections.DateOfVerification AS DATE) AND a.Inspector='" . $inspector . "') AS Count"),
             )
             ->groupBy(DB::raw("TRY_CAST(DateOfVerification AS DATE)"))
             ->orderBy(DB::raw("TRY_CAST(DateOfVerification AS DATE)"))
