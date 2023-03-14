@@ -2936,6 +2936,7 @@ class ServiceConnectionsController extends AppBaseController
                 DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND TRY_CAST(a.DateOfVerification AS DATE)=TRY_CAST(CRM_ServiceConnectionInspections.DateOfVerification AS DATE)) AS Count"),
             )
             ->groupBy(DB::raw("TRY_CAST(DateOfVerification AS DATE)"))
+            ->orderBy(DB::raw("TRY_CAST(DateOfVerification AS DATE)"))
             ->get();
 
         return response()->json($data, 200);
