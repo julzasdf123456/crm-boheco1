@@ -3413,4 +3413,22 @@ class ServiceConnectionsController extends AppBaseController
 
         return Excel::download($export, 'Housewiring-SummaryReport-' . $monthSpelled . '.xlsx');
     }
+
+    public function convertToBapa(Request $request) {
+        $id = $request['id'];
+
+        ServiceConnections::where('id', $id)
+            ->update(['AccountType' => '1659574416842']);
+
+        return response()->json('ok', 200);
+    }
+
+    public function convertToEca(Request $request) {
+        $id = $request['id'];
+
+        ServiceConnections::where('id', $id)
+            ->update(['AccountType' => '1659574427037']);
+
+        return response()->json('ok', 200);
+    }
 }

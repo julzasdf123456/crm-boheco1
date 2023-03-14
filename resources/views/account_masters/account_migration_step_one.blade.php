@@ -294,6 +294,9 @@ use Illuminate\Support\Facades\Auth;
             <div class="card-footer">
                 {!! Form::submit('Next', ['class' => 'btn btn-primary btn-sm float-right']) !!}
                 <a href="{{ route('serviceConnections.show', [$serviceConnection->id]) }}" class="btn btn-success btn-sm" target="_blank">View Application Info</a>
+                
+                <button id="bapa-member" class="btn btn-default btn-sm" style="margin-left: 20px;">BAPA Member</button>
+                <button id="eca-member" class="btn btn-default btn-sm">ECA Member</button>
             </div>
 
             {!! Form::close() !!}
@@ -386,6 +389,70 @@ use Illuminate\Support\Facades\Auth;
             
             $('#clear').on('click', function() {
                 $('div[id^="neighbors"]').remove()
+            })
+
+            $('#bapa-member').on('click', function(e) {
+                e.preventDefault()
+
+                Swal.fire({
+                    title : 'Move to BAPA',
+                    text: 'Are you sure you want to move this to the BAPA section?',
+                    showDenyButton: true,
+                    confirmButtonText: 'Yes',
+                    denyButtonText: `No`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url : "{{ route('serviceConnections.convert-to-bapa') }}",
+                            type : 'GET',
+                            data : {
+                                id : "{{ $serviceConnection->id }}",
+                            },
+                            success : function(res) {
+                                Toast.fire({
+                                    icon : 'success',
+                                    text : 'Application moved to BAPA'
+                                })
+                                location.href = "{{ route('serviceAccounts.pending-accounts') }}"
+                            }
+                        })
+                    } else if (result.isDenied) {
+                        
+                    }
+                })
+            })
+
+            $('#eca-member').on('click', function(e) {
+                e.preventDefault()
+
+                Swal.fire({
+                    title : 'Move to ECA',
+                    text: 'Are you sure you want to move this to the ECA section?',
+                    showDenyButton: true,
+                    confirmButtonText: 'Yes',
+                    denyButtonText: `No`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url : "{{ route('serviceConnections.convert-to-eca') }}",
+                            type : 'GET',
+                            data : {
+                                id : "{{ $serviceConnection->id }}",
+                            },
+                            success : function(res) {
+                                Toast.fire({
+                                    icon : 'success',
+                                    text : 'Application moved to ECA'
+                                })
+                                location.href = "{{ route('serviceAccounts.pending-accounts') }}"
+                            }
+                        })
+                    } else if (result.isDenied) {
+                        
+                    }
+                })
             })
         })
 

@@ -503,6 +503,7 @@ class ServiceAccountsController extends AppBaseController
         $serviceConnections = DB::table('CRM_ServiceConnections')
             ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
             ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
             ->select('CRM_ServiceConnections.id as id',
                             'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
                             'CRM_ServiceConnections.Status as Status',
@@ -511,6 +512,8 @@ class ServiceAccountsController extends AppBaseController
                             'CRM_ServiceConnections.EmailAddress as EmailAddress',  
                             'CRM_ServiceConnections.AccountCount as AccountCount',  
                             'CRM_ServiceConnections.ConnectionApplicationType',  
+                            'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                            'CRM_ServiceConnectionAccountTypes.Alias',
                             'CRM_ServiceConnections.AccountNumber',  
                             'CRM_ServiceConnections.Sitio as Sitio', 
                             'CRM_Towns.Town as Town',

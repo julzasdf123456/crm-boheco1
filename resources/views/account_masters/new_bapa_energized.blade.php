@@ -35,6 +35,7 @@
                     <th>Account No.</th>
                     <th>Account Name</th>
                     <th>Account Address</th>
+                    <th>Account Type</th>
                     <th>Application</th>
                     <th width="8%"></th>
                 </thead>
@@ -45,9 +46,10 @@
                     @foreach ($serviceConnections as $item)
                         <tr>
                             <th>{{ $i }}</th>
-                            <td>{{ $item->id }}</td>
+                            <td><a href="{{ route('serviceConnections.show', [$item->id]) }}" target="_blank">{{ $item->id }}</a></td>
                             <td>{{ $item->ServiceAccountName }} ({{ $item->AccountCount }})<i class="fas fa-check-circle text-primary" style="font-size: .75em;"></i></td>
                             <td>{{ ServiceConnections::getAddress($item) }}</td>
+                            <td>{{ $item->AccountType }} ({{ $item->Alias }})</td>
                             <td>{{ $item->ConnectionApplicationType }}</td>
                             <td class="text-right" >
                                 @if ($item->ConnectionApplicationType == 'Relocation')
