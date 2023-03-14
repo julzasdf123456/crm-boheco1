@@ -822,7 +822,7 @@ $id = IDGenerator::generateID();
 
             // 5%
             if (is5Percent) {
-                fivePercentVat = witholdableVat * (5/12)
+                fivePercentVat = overAllVat * (5/12)
             } else {
                 fivePercentVat = 0
             }
