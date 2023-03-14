@@ -37,6 +37,7 @@ use App\Models\ServiceAccounts;
 use App\Models\Notifiers;
 use App\Models\SMSNotifications;
 use App\Models\BillDeposits;
+use App\Models\User;
 use App\Exports\ServiceConnectionApplicationsReportExport;
 use App\Exports\ServiceConnectionEnergizationReportExport;
 use App\Exports\DynamicExport;
@@ -2878,7 +2879,7 @@ class ServiceConnectionsController extends AppBaseController
 
     public function inspectionFullReport() {
         return view('/service_connections/inspection_report_full', [
-
+            'inspectors' => User::role('Inspector')->get(),
         ]);
     }
 
@@ -2919,6 +2920,25 @@ class ServiceConnectionsController extends AppBaseController
         }
 
         return response()->json($output, 200);
+    }
+
+    public function getInspectionSummaryDataCalendar(Request $request) {
+        $month = $request['ServicePeriod'];
+        $from = date('Y-m-d', strtotime($month));
+        $to = date('Y-m-d', strtotime($from . ' +1 month'));
+        $inspector = $request['Inspector'];
+
+        $data = DB::table('CRM_ServiceConnectionInspections')
+            ->whereNotNull('CRM_ServiceConnectionInspections.Inspector')
+            ->whereRaw("Inspector='" . $inspector . "'")
+            ->select(
+                DB::raw("TRY_CAST(DateOfVerification AS DATE) AS DateOfVerification"),
+                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND TRY_CAST(a.DateOfVerification AS DATE)=TRY_CAST(CRM_ServiceConnectionInspections.DateOfVerification AS DATE)) AS Count"),
+            )
+            ->groupBy(DB::raw("TRY_CAST(DateOfVerification AS DATE)"))
+            ->get();
+
+        return response()->json($data, 200);
     }
 
     public function energizationPerBarangay(Request $request) {

@@ -154,6 +154,7 @@ Route::get('/service_connections/update-status', [ServiceConnectionsController::
 Route::get('/service_connections/update-or', [ServiceConnectionsController::class, 'updateOR'])->name('serviceConnections.update-or');
 Route::get('/service_connections/summary-report', [ServiceConnectionsController::class, 'summaryReport'])->name('serviceConnections.summary-report');
 Route::get('/service_connections/download-summary-report/{month}/{year}', [ServiceConnectionsController::class, 'downloadSummaryReport'])->name('serviceConnections.download-summary-report');
+Route::get('/service_connections/get-inspection-summary-data-calendar', [ServiceConnectionsController::class, 'getInspectionSummaryDataCalendar'])->name('serviceConnections.get-inspection-summary-data-calendar');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 

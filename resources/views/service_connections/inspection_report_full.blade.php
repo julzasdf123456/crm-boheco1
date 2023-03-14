@@ -36,6 +36,7 @@
 </section>
 
 <div class="row">
+    {{-- INDEX --}}
     <div class="col-lg-12">
         <div class="card shadow-none">
             <div class="card-header">
@@ -59,16 +60,49 @@
             </div>
         </div>        
     </div>
+
+    {{-- CALENDAR --}}
+
+    <div class="col-lg-8">
+        <div class="card shadow-none">
+            <div class="card-header">
+                <span class="card-title">Calendar View</span>
+                <div class="card-tools">
+                    <select name="Inspector" id="Inspector" class="form-control form-control-sm">
+                        @foreach ($inspectors as $item)
+                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="calendar" style="height: 400px;"></div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
 @push('page_scripts')
     <script>
+        var scheds = [];
+        
+        var Calendar
+        var calendarEl
+        var calendar
+
         $(document).ready(function() {
+            Calendar = FullCalendar.Calendar
+            calendarEl = document.getElementById('calendar')
             getSummary()
+            fetchCalendarData()
 
             $('#ServicePeriod').on('change', function() {
                 getSummary()
+            })
+
+            $('#Inspector').on('change', function() {
+                fetchCalendarData()
             })
         })
 
@@ -88,6 +122,70 @@
                         icon : 'error',
                         title : 'Error fetching inspection summary'
                     })
+                }
+            })
+        }
+
+        function fetchCalendarData() {
+            scheds = []
+            // QUERY SCHEDS
+            $.ajax({
+                url : '{{ route("serviceConnections.get-inspection-summary-data-calendar") }}',
+                type : 'GET',
+                data : {
+                    ServicePeriod : $('#ServicePeriod').val(),
+                    Inspector : $('#Inspector').val()
+                },
+                success : function(res) {
+                    
+                    var hrFormat = "YYYY-MM-DD HH:mm:ss"
+                    
+
+                    $.each(res, function(index, element) {
+                        var obj = {}
+                        var timestamp = moment(res[index]['DateOfVerification'], 'YYYY-MM-DD')
+
+                        obj['title'] = res[index]['Count']
+                        obj['backgroundColor'] = '#66bb6a';
+                        obj['borderColor'] = '#66bb6a';
+                        
+                        obj['start'] = moment(timestamp).format('YYYY-MM-DD');
+                        
+                        // urlShow = urlShow.replace("rsId", res[index]['id'])
+                        // obj['url'] = urlShow
+
+                        obj['allDay'] = true;
+                        scheds.push(obj)
+                    })
+
+                    //         /* initialize the calendar
+                    // -----------------------------------------------------------------*/
+                    //Date for the calendar events (dummy data)
+                    var date = new Date()
+                    var d    = date.getDate(),
+                        m    = date.getMonth(),
+                        y    = date.getFullYear()
+
+                    if (calendar != null) {
+                        calendar.removeAllEvents()
+                    }
+                
+                    calendar = new Calendar(calendarEl, {
+                        headerToolbar: {
+                            left  : 'prev,next today',
+                            center: 'title',
+                            right : 'dayGridMonth,timeGridWeek,timeGridDay'
+                        },
+                        themeSystem: 'bootstrap',
+                        events : scheds,
+                        eventOrderStrict : true,
+                        editable  : true,
+                    });
+
+                    calendar.render();
+                },
+                error : function(err) {
+                    alert('An error occurred while trying to query the schedules')
                 }
             })
         }
