@@ -63,7 +63,7 @@
 
     {{-- CALENDAR --}}
 
-    <div class="col-lg-8">
+    <div class="col-lg-12">
         <div class="card shadow-none">
             <div class="card-header">
                 <span class="card-title">Accomplished Inspections Per Day</span>
