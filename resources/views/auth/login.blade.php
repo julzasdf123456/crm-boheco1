@@ -87,11 +87,12 @@
                 </div>
             </form>
 
-            {{-- <p class="mb-1">
-                <a href="{{ route('password.request') }}">I forgot my password</a>
-            </p> --}}
             <p class="mb-0">
                 <a href="{{ route('register') }}" class="text-center">Register a new membership</a>
+            </p>
+
+            <p class="mb-1">
+                <a href="{{ route('password.request') }}">I forgot my password</a>
             </p>
         </div>
         <!-- /.login-card-body -->

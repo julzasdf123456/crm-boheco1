@@ -48,6 +48,7 @@ Route::get('/users/remove-permission/{id}/{permission}', [UsersController::class
 Route::get('/users/remove-roles/{id}', [UsersController::class, 'clearRoles'])->name('users.remove_roles');
 
 Route::post('/users/authenticate', [UsersController::class, 'authenticate'])->name('users.authenticate');
+Route::get('/users/profile/{id}', [UsersController::class, 'profile'])->name('users.profile');
 Route::resource('users', UsersController::class);
 
 Route::resource('roles', App\Http\Controllers\RoleController::class);

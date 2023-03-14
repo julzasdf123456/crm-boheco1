@@ -12,6 +12,8 @@ use App\Models\User;
 use App\Models\Users;
 use App\Models\Permission;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Flash;
 use Response;
 
@@ -239,4 +241,10 @@ class UsersController extends AppBaseController
             return response()->json(['res' => 'error'], 404);
         }        
     } 
+
+    public function profile($id) {
+        return view('/users/profile', [
+            'user' => DB::table('users')->whereRaw("TRY_CAST(id AS VARCHAR) = '" . $id . "'")->first(),
+        ]);
+    }
 }

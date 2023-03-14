@@ -2898,6 +2898,7 @@ class ServiceConnectionsController extends AppBaseController
                 DB::raw("(SELECT AVG(DATEDIFF(day, b.DateOfApplication, a.DateOfVerification)) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND a.Inspector=users.id AND (a.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS AverageHours"),
             )
             ->groupBy('users.name', 'users.id')
+            ->orderBy('users.name')
             ->get();
 
         $days = round((strtotime($to) - strtotime($from)) / (60 * 60 * 24));

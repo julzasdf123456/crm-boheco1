@@ -29,6 +29,11 @@ class User extends Authenticatable
         'employee_id',
     ];
 
+    public function routeNotificationForMail($notification)
+    {
+        return $this->email;
+    }
+
     /**
      * The attributes that should be hidden for arrays.
      *
