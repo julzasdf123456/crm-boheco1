@@ -137,10 +137,7 @@
                     Inspector : $('#Inspector').val()
                 },
                 success : function(res) {
-                    
-                    var hrFormat = "YYYY-MM-DD HH:mm:ss"
-                    
-
+                    console.log(res)
                     $.each(res, function(index, element) {
                         var obj = {}
                         var timestamp = moment(res[index]['DateOfVerification'], 'YYYY-MM-DD')
