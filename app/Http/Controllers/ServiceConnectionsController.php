@@ -2892,11 +2892,11 @@ class ServiceConnectionsController extends AppBaseController
             ->leftJoin('users', 'CRM_ServiceConnectionInspections.Inspector', '=', 'users.id')
             ->whereNotNull('CRM_ServiceConnectionInspections.Inspector')
             ->select('users.name', 'users.id',
-                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND a.Status='FOR INSPECTION' AND a.Inspector=users.id AND (a.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS ForInspection"),
-                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND a.Status='Approved' AND a.Inspector=users.id AND (a.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS ApprovedThisMonth"),
-                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND a.Inspector=users.id AND (a.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Total"),
-                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND a.Inspector=users.id AND (a.created_at BETWEEN '" . date('Y-m-d') . "' AND '" . date('Y-m-d', strtotime('tomorrow')) . "')) AS Today"),
-                DB::raw("(SELECT AVG(DATEDIFF(day, b.DateOfApplication, a.DateOfVerification)) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND a.Inspector=users.id AND (a.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS AverageHours"),
+                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND b.ConnectionApplicationType NOT IN('Relocation') AND a.Status='FOR INSPECTION' AND a.Inspector=users.id AND (a.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS ForInspection"),
+                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND b.ConnectionApplicationType NOT IN('Relocation') AND a.Status='Approved' AND a.Inspector=users.id AND (a.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS ApprovedThisMonth"),
+                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND b.ConnectionApplicationType NOT IN('Relocation') AND a.Inspector=users.id AND (a.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Total"),
+                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND b.ConnectionApplicationType NOT IN('Relocation') AND a.Inspector=users.id AND (a.created_at BETWEEN '" . date('Y-m-d') . "' AND '" . date('Y-m-d', strtotime('tomorrow')) . "')) AS Today"),
+                DB::raw("(SELECT AVG(DATEDIFF(day, b.DateOfApplication, a.DateOfVerification)) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND b.ConnectionApplicationType NOT IN('Relocation') AND a.Inspector=users.id AND (a.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS AverageHours"),
             )
             ->groupBy('users.name', 'users.id')
             ->orderBy('users.name')
@@ -2933,7 +2933,7 @@ class ServiceConnectionsController extends AppBaseController
             ->whereRaw("Inspector='" . $inspector . "'")
             ->select(
                 DB::raw("TRY_CAST(DateOfVerification AS DATE) AS DateOfVerification"),
-                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL 
+                DB::raw("(SELECT COUNT(a.id) FROM CRM_ServiceConnectionInspections a LEFT JOIN CRM_ServiceConnections b ON a.ServiceConnectionId=b.id WHERE b.Trash IS NULL AND b.ConnectionApplicationType NOT IN('Relocation') 
                     AND TRY_CAST(a.DateOfVerification AS DATE)=TRY_CAST(CRM_ServiceConnectionInspections.DateOfVerification AS DATE) AND a.Inspector='" . $inspector . "') AS Count"),
             )
             ->groupBy(DB::raw("TRY_CAST(DateOfVerification AS DATE)"))
