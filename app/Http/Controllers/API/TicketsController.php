@@ -70,7 +70,7 @@ class TicketsController extends Controller {
             if ($item->ContactNumber != null) {
                 if (strlen($item->ContactNumber) > 10 && strlen($item->ContactNumber) < 13) {
                     $msg = "Good day, " . $item->ConsumerName . ", \n\nYour complaint/request with ticket number " . $item->id . " has been received by BOHECO I Technical Team." .
-                        "Expect the team's arrival in your premises within the next 48 hours. \n\nHave a graet day!";
+                        "Expect the team's arrival in your premises within the next 48 hours. \n\nHave a great day!";
                     SMSNotifications::createFreshSms($item->ContactNumber, $msg, 'TICKETS', $item->id);
                 }
             } 
