@@ -10,7 +10,17 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-user-check"></i></span>
                 </div>
-                {!! Form::select('Inspector', $inspectors, $serviceConnectionInspections==null ? null : $serviceConnectionInspections->Inspector, ['class' => 'form-control form-control-sm']) !!}
+                <div class="radio-group">
+                    @if ($inspectors != null)
+                        @foreach ($inspectors as $item)
+                        <div class="form-check" style="margin-left: 30px;">
+                            <input class="form-check-input" type="radio" name="Inspector" id="{{ $item->id }}" value="{{ $item->id }}" required {{ $serviceConnectionInspections!=null && $serviceConnectionInspections->Inspector==$item->id ? 'checked' : '' }}>
+                            <label class="form-check-label" for="{{ $item->id }}">{{ $item->name }}</label>
+                        </div>
+                        @endforeach
+                    @endif
+                </div> 
+                {{-- {!! Form::select('Inspector', $inspectors, $serviceConnectionInspections==null ? null : $serviceConnectionInspections->Inspector, ['class' => 'form-control form-control-sm']) !!} --}}
             </div>
         </div>
     </div>  

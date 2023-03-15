@@ -192,7 +192,7 @@ class ServiceConnectionInspectionsController extends AppBaseController
     {
         $serviceConnectionInspections = $this->serviceConnectionInspectionsRepository->find($id);
 
-        $inspectors = User::permission('sc verifier')->pluck('name', 'id'); // CHANGE PERMISSION TO WHATEVER VERIFIER NAME IS
+        $inspectors = User::role('Inspector')->get(); // CHANGE PERMISSION TO WHATEVER VERIFIER NAME IS
 
         if (empty($serviceConnectionInspections)) {
             Flash::error('Service Connection Inspections not found');
@@ -301,7 +301,7 @@ class ServiceConnectionInspectionsController extends AppBaseController
         })
         ->first(); 
 
-        $inspectors = User::role('Inspector')->pluck('name', 'id'); // CHANGE PERMISSION TO WHATEVER VERIFIER NAME IS
+        $inspectors = User::role('Inspector')->get(); // CHANGE PERMISSION TO WHATEVER VERIFIER NAME IS
 
         $serviceConnectionInspections = null;
 
