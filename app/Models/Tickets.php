@@ -91,6 +91,9 @@ class Tickets extends Model
         'DateTimeComplainLogged',
         'ChangeMeterConfirmed',
         'LinemanCrewExecuted',
+        'TaggedTicketId',
+        'Assessment',
+        'Recommendation',
     ];
 
     /**
@@ -137,7 +140,10 @@ class Tickets extends Model
         'InspectionId' => 'string',
         'DateTimeComplainLogged' => 'string',
         'ChangeMeterConfirmed' => 'string',
-        'LinemanCrewExecuted' => 'string'
+        'LinemanCrewExecuted' => 'string',
+        'TaggedTicketId' => 'string',
+        'Assessment' => 'string',
+        'Recommendation' => 'string',
     ];
 
     /**
@@ -186,7 +192,10 @@ class Tickets extends Model
         'InspectionId' => 'nullable|string',
         'DateTimeComplainLogged' => 'nullable|string',
         'ChangeMeterConfirmed' => 'nullable|string',
-        'LinemanCrewExecuted' => 'nullable|string'
+        'LinemanCrewExecuted' => 'nullable|string',
+        'TaggedTicketId' => 'nullable|string',
+        'Assessment' => 'nullable|string',
+        'Recommendation' => 'nullable|string',
     ];
 
     public static function getAddress($ticket) {
@@ -210,7 +219,7 @@ class Tickets extends Model
     }
 
     public static function getMeterInspectionsId() {
-        return ['1672792149359', '1668541254388']; 
+        return ['1672792149359', '1668541254388', '1678839448841']; 
     }
 
     public static function getChangeMeter() {
@@ -239,5 +248,9 @@ class Tickets extends Model
 
     public static function getServiceConductorTransfers() {
         return ['1668541254406', '1668541254407'];
+    }
+
+    public static function getPreTransferInpsection() {
+        return '1678839448841';
     }
 }

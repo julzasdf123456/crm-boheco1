@@ -82,7 +82,7 @@
                                     </td>
                                     <td>
                                         <input type="datetime-local" class="form-control form-control-sm" id="executed-{{ $item->id }}" placeholder="Input date executed">                                        
-                                     </td>
+                                    </td>
                                     <td>
                                         <select id="status-{{ $item->id }}" class="form-control form-control-sm">
                                             <option value="Executed">Executed</option>
@@ -129,7 +129,7 @@
                 success : function(res) {
                     Toast.fire({
                         icon : 'success',
-                        text : 'Execution udpated!',
+                        text : 'Execution updated!',
                     })
                     $('#' + id).remove()
                 },

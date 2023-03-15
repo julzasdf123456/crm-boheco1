@@ -291,11 +291,9 @@
 </div>
 
 <script>
-   window.onload = function() {
-        window.print(); 
-        
-        window.setTimeout(function(){
-            window.location.href = "{{ url('/tickets') }}" + "/{{ $tickets->id }}"
-        }, 800);
-    }
+window.print();
+
+window.setTimeout(function(){
+    window.history.go(-1)
+}, 1000); 
 </script>

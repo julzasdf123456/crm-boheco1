@@ -522,7 +522,13 @@ use Illuminate\Support\Facades\Auth;
             <li class="nav-item">
                 <a href="{{ route('tickets.meter-inspections') }}"
                 class="nav-link {{ Request::is('tickets.meter-inspections*') ? 'active' : '' }}">
-                    <i class="fas fa-circle nav-icon text-danger"></i><p>Meter Inspections</p>
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>Change Meter Inspections</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('tickets.meter-transfer-inspections') }}"
+                class="nav-link {{ Request::is('tickets.meter-transfer-inspections*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>Meter Transfer Inspections</p>
                 </a>
             </li>
             @endcanany

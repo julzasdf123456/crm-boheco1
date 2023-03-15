@@ -142,12 +142,12 @@
                                     </div>
 
                                     <!-- Inspector Field -->
-                                    <div class="col-lg-3 col-md-5">
+                                    {{-- <div class="col-lg-3 col-md-5">
                                         <div class="form-group">
                                             {!! Form::label('Inspector', ' Verifier:') !!}
                                             {!! Form::select('Inspector', $inspectors, null, ['class' => 'form-control form-control-sm',]) !!}
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="col-lg-12">
                                         <div class="divider"></div>

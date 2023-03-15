@@ -53,6 +53,9 @@ class CreateTableCRMTickets extends Migration
             $table->string('InspectionId')->nullable();
             $table->datetime('DateTimeComplainLogged')->nullable();
             $table->string('LinemanCrewExecuted')->nullable();
+            $table->string('TaggedTicketId')->nullable();
+            $table->string('Assessment', 300)->nullable();
+            $table->string('Recommendation', 500)->nullable();
             $table->timestamps();
         });
     }

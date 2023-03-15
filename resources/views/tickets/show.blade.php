@@ -29,7 +29,7 @@
                 @if ($serviceConnectionInspections != null)
                     <li class="nav-item"><a class="nav-link" href="#inspection" data-toggle="tab">
                         <i class="fas fa-info-circle"></i>
-                        Inspection Data</a></li>
+                        Inspection Ticket</a></li>
                 @endif
             </ul>
         </div>
@@ -45,7 +45,7 @@
 
                 @if ($serviceConnectionInspections != null)
                     <div class="tab-pane" id="inspection">
-                        @include('tickets.inspection_data')
+                        @include('tickets.ticket_inspection_ticket')
                     </div>
                 @endif
             </div>

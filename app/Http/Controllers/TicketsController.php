@@ -230,6 +230,7 @@ class TicketsController extends AppBaseController
                     'CRM_Tickets.Trash',
                     'CRM_Tickets.ServiceConnectionId',
                     'CRM_Tickets.InspectionId',  
+                    'CRM_Tickets.TaggedTicketId',  
                     )
                 ->first();
 
@@ -1472,7 +1473,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.ContactNumber',  
                                     'CRM_Tickets.Ticket as TicketID',   
                                     'CRM_Barangays.Barangay as Barangay')
-                    ->whereRaw("(Trash IS NULL OR Trash='No') AND CrewAssigned IS NULL AND Status NOT IN ('Executed', 'CANCELLED', 'Acted', 'Downloaded by Crew') AND CRM_Tickets.created_at > '2023-02-28'")
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND CrewAssigned IS NULL AND Status NOT IN ('Executed', 'CANCELLED', 'Acted', 'Downloaded by Crew', 'For Inspection') AND CRM_Tickets.created_at > '2023-02-28'")
                     ->where('Office', $office)
                     ->whereNotIn('Ticket', Tickets::getMeterInspectionsId())              
                     ->orderBy('CRM_Tickets.created_at')
@@ -2437,13 +2438,17 @@ class TicketsController extends AppBaseController
     }
 
     public function storeRelocation(Request $request) {
+        $ticketId = IDGenerator::generateID() . '-T';
+        $inspectionId = IDGenerator::generateID() . '-I';
+
         $input = $request->all();
-        $input['id'] = IDGenerator::generateID();
+        $input['id'] = $ticketId;
         $scId = IDGenerator::generateID();
 
         $input['ServiceConnectionId'] = $scId;
         $input['InspectionId'] = $scId;
         $input['Status'] = 'For Inspection';
+        $input['TaggedTicketId'] = $inspectionId;
 
         $tickets = $this->ticketsRepository->create($input);
 
@@ -2465,20 +2470,20 @@ class TicketsController extends AppBaseController
         $inspections->id = $scId;
         $inspections->ServiceConnectionId = $scId;
         $inspections->Status = 'FOR INSPECTION';
-        $inspections->Inspector = $input['Inspector'];
+        // $inspections->Inspector = $input['Inspector'];
         $inspections->Status = 'Approved';
         $inspections->save();
 
-        // FILTER METER RELATED TICKETS
-        // $ticket = DB::table('CRM_TicketsRepository')
-        //     ->where('id', $tickets->Ticket)
-        //     ->whereIn('ParentTicket', ['1668541254365', '1668541254387', '1668541254387', '1668541254422', '1668541254427']) // Mother Meter, KWH Meter, KWH Meter Transfer, Disconnection, Reconnection
-        //     ->first(); 
-            
-        // if ($ticket != null) {
-            
-        // }
-        // SAVE METER INFO
+        // ADD PRE-INSPECTION TICKET
+        $input['id'] = $inspectionId;
+        $input['Ticket'] = Tickets::getPreTransferInpsection();
+        $input['ServiceConnectionId'] = $scId;
+        $input['InspectionId'] = $scId;
+        $input['Status'] = 'Received';
+        $input['TaggedTicketId'] = $ticketId;
+
+        $ticketsInspection = $this->ticketsRepository->create($input);
+
         $accountMeterInfo = DB::connection('sqlsrvbilling')
             ->table('AccountMaster')
             ->where('AccountNumber', $tickets->AccountNumber)
@@ -2490,6 +2495,11 @@ class TicketsController extends AppBaseController
             // EDIT LATER
             $tickets->GeoLocation = $accountMeterInfo->Item1;
             $tickets->save();
+
+            $ticketsInspection->CurrentMeterNo = $accountMeterInfo->MeterNumber;
+            // EDIT LATER
+            $ticketsInspection->GeoLocation = $accountMeterInfo->Item1;
+            $ticketsInspection->save();
         }
 
         Flash::success('Tickets saved successfully.');
@@ -2498,6 +2508,14 @@ class TicketsController extends AppBaseController
         $ticketLog = new TicketLogs;
         $ticketLog->id = IDGenerator::generateID();
         $ticketLog->TicketId = $tickets->id;
+        $ticketLog->Log = "Received";
+        $ticketLog->UserId = Auth::id();
+        $ticketLog->save();
+
+        // CREATE LOG
+        $ticketLog = new TicketLogs;
+        $ticketLog->id = IDGenerator::generateID();
+        $ticketLog->TicketId = $ticketsInspection->id;
         $ticketLog->Log = "Received";
         $ticketLog->UserId = Auth::id();
         $ticketLog->save();
@@ -4345,7 +4363,7 @@ class TicketsController extends AppBaseController
         Tickets::where('id', $id)
             ->update(['DateTimeLinemanArrived' => $arrival, 'DateTimeLinemanExecuted' => $executed, 'Status' => $status, 'CrewAssigned' => $crew]);
 
-        return response()->json('ok', 200);
+        return response()->json(Tickets::find($id), 200);
     }
 
     public function meterTransfers(Request $request) {
@@ -4586,5 +4604,179 @@ class TicketsController extends AppBaseController
         $export = new ServiceConductorTransferExport($data, $from, $to);
 
         return Excel::download($export, 'ServiceConductor-Transfer-Reports.xlsx');
+    }
+
+    public function meterTransferInspections(Request $request) {
+        $crew = $request['Crew'];
+        $from = isset($request['From']) ? $request['From'] : date('Y-m-d');
+        $to = isset($request['To']) ? $request['To'] : date('Y-m-d');
+        $office = $request['Office'];
+
+        if ($office == 'All') {
+            $tickets = DB::table('CRM_Tickets')
+                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->select('CRM_Tickets.id as id',
+                                    'CRM_Tickets.AccountNumber',
+                                    'CRM_Tickets.ConsumerName',
+                                    'CRM_TicketsRepository.Name as Ticket', 
+                                    'CRM_Tickets.Status',  
+                                    'CRM_Tickets.Sitio as Sitio', 
+                                    'CRM_Tickets.created_at', 
+                                    'CRM_Towns.Town as Town',
+                                    'CRM_Tickets.Office',  
+                                    'CRM_Tickets.Reason',  
+                                    'CRM_Tickets.created_at',  
+                                    'CRM_Tickets.ContactNumber', 
+                                    'CRM_Tickets.CrewAssigned', 
+                                    'DatetimeLinemanExecuted',
+                                    'TaggedTicketId',
+                                    'CRM_ServiceConnectionCrew.StationName',
+                                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                                    'CRM_Tickets.Ticket as TicketID',   
+                                    'CRM_Barangays.Barangay as Barangay')
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Status NOT IN ('Executed', 'Not Executed') 
+                        AND (TRY_CAST(CRM_Tickets.created_at AS DATE) BETWEEN '" . $from . "' AND '" . $to . "')")
+                    ->whereRaw("CRM_Tickets.Ticket='" . Tickets::getPreTransferInpsection() . "'")            
+                    ->orderBy('CRM_Tickets.created_at')
+                    ->get();
+        } else {
+            $tickets = DB::table('CRM_Tickets')
+                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->select('CRM_Tickets.id as id',
+                                    'CRM_Tickets.AccountNumber',
+                                    'CRM_Tickets.ConsumerName',
+                                    'CRM_TicketsRepository.Name as Ticket', 
+                                    'CRM_Tickets.Status',  
+                                    'CRM_Tickets.Sitio as Sitio', 
+                                    'CRM_Tickets.created_at', 
+                                    'CRM_Towns.Town as Town',
+                                    'CRM_Tickets.created_at', 
+                                    'CRM_Tickets.Office',  
+                                    'CRM_Tickets.Reason',  
+                                    'CRM_Tickets.ContactNumber', 
+                                    'CRM_Tickets.CrewAssigned', 
+                                    'DatetimeLinemanExecuted',
+                                    'TaggedTicketId',
+                                    'CRM_ServiceConnectionCrew.StationName',
+                                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                                    'CRM_Tickets.Ticket as TicketID',   
+                                    'CRM_Barangays.Barangay as Barangay')
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND Status NOT IN ('Executed', 'Not Executed') 
+                        AND (TRY_CAST(CRM_Tickets.created_at AS DATE) BETWEEN '" . $from . "' AND '" . $to . "')")
+                    ->whereRaw("CRM_Tickets.Ticket='" . Tickets::getPreTransferInpsection() . "'")
+                    ->where('CRM_Tickets.Office', $office)            
+                    ->orderBy('CRM_Tickets.created_at')
+                    ->get();
+        }
+
+        $crews = ServiceConnectionCrew::orderBy('CrewLeader')->get();
+
+        return view('/tickets/meter_transfer_inspections', [
+            'crews' => $crews,
+            'data' => $tickets
+        ]);
+    }
+
+    public function updateStatusAndCrew(Request $request) {
+        $ticket = Tickets::find($request['id']);
+
+        if ($ticket != null) {
+            $ticket->CrewAssigned = $request['CrewAssigned'];
+            $ticket->Status = $request['Status'];
+            $ticket->save();
+        }
+
+        return response()->json($ticket, 200);
+    }
+
+    public function updateTransferInspectionData(Request $request) {
+        $id = $request['id'];
+        $executed = isset($request['Executed']) ? $request['Executed'] : date('Y-m-d H:i:s');
+        $crew = isset($request['CrewAssigned']) ? $request['CrewAssigned'] : null;
+        $status = $request['Status'];
+        $remarks = $request['Remarks'];
+
+        Tickets::where('id', $id)
+            ->update(['DateTimeLinemanExecuted' => $executed, 'Status' => $status, 'CrewAssigned' => $crew, 'Notes' => $remarks]);
+
+        $ticket = Tickets::find($id);
+
+        if ($ticket != null) {
+            if ($status == 'Executed') {
+                Tickets::where('id', $ticket->TaggedTicketId)
+                    ->update(['Status' => 'Received']);
+            }            
+        }
+
+        return response()->json($ticket, 200);
+    }
+
+    public function printTicketGoBack($id) {
+        $tickets = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->leftJoin('users', 'CRM_Tickets.UserId', '=', 'users.id')
+                ->where('CRM_Tickets.id', $id)
+                ->select('CRM_Tickets.id',
+                    'CRM_Tickets.AccountNumber',
+                    'CRM_Tickets.ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'CRM_Tickets.Sitio',
+                    'CRM_TicketsRepository.ParentTicket',
+                    'CRM_TicketsRepository.Name as Ticket',
+                    'CRM_TicketsRepository.Type as TicketType',
+                    'CRM_Tickets.Reason',
+                    'CRM_Tickets.ContactNumber',
+                    'CRM_Tickets.ReportedBy',
+                    'CRM_Tickets.ORNumber',
+                    'CRM_Tickets.ORDate',
+                    'CRM_Tickets.GeoLocation',
+                    'CRM_Tickets.PoleNumber',
+                    'CRM_Tickets.Neighbor1',
+                    'CRM_Tickets.Neighbor2',
+                    'CRM_Tickets.Notes',
+                    'CRM_Tickets.Status',
+                    'CRM_Tickets.DateTimeDownloaded',
+                    'CRM_Tickets.CurrentMeterNo',
+                    'CRM_Tickets.CurrentMeterBrand',
+                    'CRM_Tickets.CurrentMeterReading',
+                    'CRM_Tickets.NewMeterNo',
+                    'CRM_Tickets.NewMeterBrand',
+                    'CRM_Tickets.NewMeterReading',
+                    'CRM_Tickets.DateTimeLinemanArrived',
+                    'CRM_Tickets.DateTimeLinemanExecuted',
+                    'CRM_Tickets.UserId',
+                    'CRM_ServiceConnectionCrew.StationName',
+                    'CRM_Tickets.created_at',
+                    'CRM_Tickets.updated_at',
+                    'CRM_Tickets.Trash',
+                    'users.name')
+                ->first();
+
+        if ($tickets->AccountNumber != null) {
+            $account = ServiceAccounts::find($tickets->AccountNumber);
+        } else {
+            $account = null;
+        }
+
+        if (empty($tickets)) {
+            Flash::error('Tickets not found');
+
+            return redirect(route('tickets.index'));
+        }
+
+        return view('/tickets/print_ticket_go_back', [
+            'tickets' => $tickets,
+            'account' => $account
+        ]);
     }
 }

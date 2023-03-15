@@ -419,6 +419,10 @@ Route::get('/tickets/meter-transfers', [App\Http\Controllers\TicketsController::
 Route::get('/tickets/download-meter-transfers/{from}/{to}/{office}', [App\Http\Controllers\TicketsController::class, 'downloadMeterTransfers'])->name('tickets.download-meter-transfers');
 Route::get('/tickets/service-conductor-transfers', [App\Http\Controllers\TicketsController::class, 'serviceConductorTransfers'])->name('tickets.service-conductor-transfers');
 Route::get('/tickets/download-service-conductor-transfers/{from}/{to}/{office}', [App\Http\Controllers\TicketsController::class, 'downloadServiceConductorTransfers'])->name('tickets.download-service-conductor-transfers');
+Route::get('/tickets/meter-transfer-inspections', [App\Http\Controllers\TicketsController::class, 'meterTransferInspections'])->name('tickets.meter-transfer-inspections');
+Route::post('/tickets/update-status-and-crew', [App\Http\Controllers\TicketsController::class, 'updateStatusAndCrew'])->name('tickets.update-status-and-crew');
+Route::get('/tickets/update-transfer-inspection-data', [App\Http\Controllers\TicketsController::class, 'updateTransferInspectionData'])->name('tickets.update-transfer-inspection-data');
+Route::get('/tickets/print-ticket-go-back/{id}', [App\Http\Controllers\TicketsController::class, 'printTicketGoBack'])->name('tickets.print-ticket-go-back');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 
