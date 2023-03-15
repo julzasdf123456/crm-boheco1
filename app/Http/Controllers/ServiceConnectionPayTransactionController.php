@@ -320,14 +320,17 @@ class ServiceConnectionPayTransactionController extends AppBaseController
         if ($serviceConnection != null) {
             // SEND SMS
             if ($serviceConnection->ContactNumber != null) {
-                $msg = "MR./MS. " . $serviceConnection->ServiceAccountName . ", \n\nHere are your BOHECO I Service Connection Fees:\nElectrician's Labor Charge - P" . number_format($total->LaborCharge, 2) . "\n" .
-                    "Bill Deposit - P" . number_format($total->BillDeposit, 2) . "\n " .
-                    "Others (Meter, etc.) - P" . number_format($total->Particulars, 2) . "\n " .
-                    "Withholdable - (P" . number_format(round($total->Form2307TwoPercent, 2) + round($total->Form2307FivePercent, 2), 2) . ")\n " .
-                    "VAT - P" . number_format($total->TotalVat, 2) . "\n " .
-                    "OVERALL TOTAL - P" . number_format($total->Total, 2) . "\n\n " .
-                    "NOTE that you can only pay this once BOHECO I has completed the installation inspection process. \n\nHave a gret day!";
-                SMSNotifications::createFreshSms($serviceConnection->ContactNumber, $msg, 'SERVICE CONNECTIONS', $serviceConnection->id);
+                if (strlen($serviceConnection->ContactNumber) > 10 && strlen($serviceConnection->ContactNumber) < 13) {
+                    $msg = "MR./MS. " . $serviceConnection->ServiceAccountName . ", \n\nHere are your BOHECO I Service Connection Fees:\nElectrician's Labor Charge - P" . number_format($total->LaborCharge, 2) . "\n" .
+                        "Bill Deposit - P" . number_format($total->BillDeposit, 2) . "\n " .
+                        "Others (Meter, etc.) - P" . number_format($total->Particulars, 2) . "\n " .
+                        "Withholdable - (P" . number_format(round($total->Form2307TwoPercent, 2) + round($total->Form2307FivePercent, 2), 2) . ")\n " .
+                        "VAT - P" . number_format($total->TotalVat, 2) . "\n " .
+                        "OVERALL TOTAL - P" . number_format($total->Total, 2) . "\n\n " .
+                        "NOTE that you can only pay this once BOHECO I has completed the installation inspection process. \n\nHave a gret day!";
+                    SMSNotifications::createFreshSms($serviceConnection->ContactNumber, $msg, 'SERVICE CONNECTIONS', $serviceConnection->id);
+                }
+                
             }  
         }
 

@@ -191,7 +191,7 @@ class ServiceConnectionsController extends AppBaseController
                 
                 // SEND SMS
                 if ($sc->ContactNumber != null) {
-                    if (strlen($sc->ContactNumber) > 10) {
+                    if (strlen($sc->ContactNumber) > 10 && strlen($sc->ContactNumber) < 13) {
                         $msg = "Hello " . $sc->ServiceAccountName . ", \nYour BOHECO I application for Service Connection with application no. " . $sc->id . " has been received and will be processed shortly. " .
                             "You will receive several SMS notifications in the future regarding the progress of your application. \nHave a great day!";
                         SMSNotifications::createFreshSms($sc->ContactNumber, $msg, 'SERVICE CONNECTIONS', $sc->id);
@@ -220,7 +220,7 @@ class ServiceConnectionsController extends AppBaseController
 
                 // SEND SMS
                 if ($input['ContactNumber'] != null) {
-                    if (strlen($input['ContactNumber']) > 10) {
+                    if (strlen($input['ContactNumber']) > 10 && strlen($input['ContactNumber']) < 13) {
                         $msg = "Hello " . $serviceConnections->ServiceAccountName . ", \nYour BOHECO I application for Service Connection with application no. " . $input['id'] . " has been received and will be processed shortly. " .
                             "You will receive several SMS notifications in the future regarding the progress of your application. \nHave a great day!";
                         SMSNotifications::createFreshSms($input['ContactNumber'], $msg, 'SERVICE CONNECTIONS', $input['id']);

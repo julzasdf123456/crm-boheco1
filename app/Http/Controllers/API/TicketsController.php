@@ -68,7 +68,7 @@ class TicketsController extends Controller {
 
             // SEND SMS
             if ($item->ContactNumber != null) {
-                if (strlen($item->ContactNumber) > 10) {
+                if (strlen($item->ContactNumber) > 10 && strlen($item->ContactNumber) < 13) {
                     $msg = "Good day, " . $item->ConsumerName . ", \n\nYour complaint/request with ticket number " . $item->id . " has been received by BOHECO I Technical Team." .
                         "Expect the team's arrival in your premises within the next 48 hours. \n\nHave a graet day!";
                     SMSNotifications::createFreshSms($item->ContactNumber, $msg, 'TICKETS', $item->id);
@@ -115,7 +115,7 @@ class TicketsController extends Controller {
 
             // SEND SMS
             if ($tickets->ContactNumber != null) {
-                if (strlen($tickets->ContactNumber) > 10) {
+                if (strlen($tickets->ContactNumber) > 10 && strlen($tickets->ContactNumber) < 13) {
                     if ($request['Status'] == 'Executed') {
                         $msg = "Good day, " . $tickets->ConsumerName . ", \n\nThis is to inform you that your complaint/request with ticket number " . $tickets->id . " has been successfully acted by BOHECO I Technical Team." .
                         "\n\nHave a great day!";

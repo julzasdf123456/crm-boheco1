@@ -11,6 +11,7 @@ use App\Models\ServiceConnectionImages;
 use App\Models\ServiceConnectionCrew;
 use App\Models\MastPoles;
 use App\Models\IDGenerator;
+use App\Models\SMSNotifications;
 use App\Models\Notifiers;
 
 class ServiceConnectionsEnergization extends Controller {
@@ -199,15 +200,9 @@ class ServiceConnectionsEnergization extends Controller {
         $contactNumber = $request['ContactNumber'];
         // CREATE NOTIFICATION
         if ($contactNumber != null) {
-            if (strlen($contactNumber > 9)) {
-                $notifier = new Notifiers;
-                $notifier->id = IDGenerator::generateIDandRandString();
-                $notifier->Notification = 'Good day, ' . $name . ',\n\nBOHECO I linemen are on its way to energize your house within 24 hours. Please ensure to have a representative in your house during the energization activity.\n\nBOHECO I Auto-SMS Hub';
-                $notifier->Status = 'SENT';
-                $notifier->Intent = "SERVICE CONNECTION ENERGIZATION"; 
-                $notifier->ObjectId = $request['id'];
-                $notifier->ContactNumber = $contactNumber;
-                $notifier->save();
+            if (strlen($contactNumber) > 10 && strlen($contactNumber) < 13) {
+                $msg = "Hello " . $name . ", \nBOHECO I linemen are on its way to energize your house within 24 hours. Please ensure to have a representative in your house during the energization activity.\nHave a great day!";
+                        SMSNotifications::createFreshSms($contactNumber, $msg, 'SERVICE CONNECTION ENERGIZATION', $request['id']);
             }
         }
 
