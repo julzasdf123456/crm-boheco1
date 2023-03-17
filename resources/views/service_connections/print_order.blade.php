@@ -184,8 +184,8 @@
                 </div>
                 <div class="col-md-8">
                     <p class="underlined no-line-spacing">: {{ $serviceConnection->ConnectionApplicationType }}</p>
-                    <p class="underlined no-line-spacing">: {{ $serviceConnectionInspections->FirstNeighborName }}</p>
-                    <p class="underlined no-line-spacing">: {{ $serviceConnectionInspections->SecondNeighborName }}</p>	
+                    <p class="underlined no-line-spacing">: {{ $serviceConnectionInspections != null ? $serviceConnectionInspections->FirstNeighborName : '' }}</p>
+                    <p class="underlined no-line-spacing">: {{ $serviceConnectionInspections != null ? $serviceConnectionInspections->SecondNeighborName : '' }}</p>	
                 </div>
             </div>
             <div class="col-md-6">
@@ -196,8 +196,8 @@
                 </div>
                 <div class="col-md-7">
                     <p class="no-line-spacing" style="opacity: 0;">:</p>
-                    <p class="underlined no-line-spacing">: {{ $serviceConnectionInspections->FirstNeighborMeterSerial }}</p>
-                    <p class="underlined no-line-spacing">: {{ $serviceConnectionInspections->SecondNeighborMeterSerial }}</p>	
+                    <p class="underlined no-line-spacing">: {{ $serviceConnectionInspections != null ? $serviceConnectionInspections->FirstNeighborMeterSerial : '' }}</p>
+                    <p class="underlined no-line-spacing">: {{ $serviceConnectionInspections != null ? $serviceConnectionInspections->SecondNeighborMeterSerial : '' }}</p>	
                 </div>
             </div>
             <!-- POLE TO CONSUMER'S TYPE -->
@@ -211,7 +211,7 @@
                 </div>
                 <div class="col-md-10">
                     <p class="underlined no-line-spacing">: -</p>
-                    <p class="underlined no-line-spacing">: {{ $serviceConnectionInspections->SDWSizeAsInstalled }}</p>
+                    <p class="underlined no-line-spacing">: {{ $serviceConnectionInspections != null ? $serviceConnectionInspections->SDWSizeAsInstalled : '' }}</p>
                     <p class="underlined no-line-spacing">: {{ $serviceConnection->AccountType }}</p>
                     <p class="underlined no-line-spacing">: {{ $serviceConnection->ElectricianName }}</p>
                     <p class="underlined no-line-spacing">: {{ $inspector != null ? $inspector->name : '-' }}</p>
