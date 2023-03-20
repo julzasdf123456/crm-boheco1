@@ -12,6 +12,7 @@ use App\Models\ServiceConnections;
 use App\Exports\DynamicExport;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\IDGenerator;
 use Flash;
 use Response;
 
@@ -60,6 +61,7 @@ class ElectriciansController extends AppBaseController
      */
     public function store(CreateElectriciansRequest $request)
     {
+        $input['id'] = IDGenerator::generateID();
         $input = $request->all();
 
         $electricians = $this->electriciansRepository->create($input);
