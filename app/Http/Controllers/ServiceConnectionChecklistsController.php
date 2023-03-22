@@ -196,7 +196,7 @@ class ServiceConnectionChecklistsController extends AppBaseController
 
         foreach($inputs as $input){
             $scChecklists = new ServiceConnectionChecklists;
-            $scChecklists->id = IDGenerator::generateID();
+            $scChecklists->id = IDGenerator::generateIDandRandString();
             $scChecklists->ServiceConnectionId = $id;
             $scChecklists->ChecklistId = $input;
 
