@@ -54,11 +54,14 @@
                             <td><span class="badge {{ ServiceConnections::getOfficeBg($item->Office) }}">{{ $item->Office }}</span></td>     
                             <td>
                                 {{-- <a href="{{ route('tickets.show', [$item->id]) }}" class="float-right"><i class="fas fa-eye"></i></a>    --}}
+                                
+                                @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'CWD'])) 
                                 {!! Form::open(['route' => ['tickets.destroy', $item->id], 'method' => 'delete']) !!}
                                     <div class='btn-group float-right'>
                                         @if ($item->Status=="Executed")
                                         
                                         @else
+                                        
                                         <a href="{{ route('tickets.print-ticket', [$item->id]) }}" class="btn btn-warning btn-xs" title="Re-print Ticket Order"><i class="fas fa-print"></i></a>
                                         <a href="{{ route('tickets.edit', [$item->id]) }}"
                                             class='btn btn-default btn-xs'>
@@ -68,7 +71,8 @@
                                         
                                         {!! Form::button('<i class="fas fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure you want to delete this ticket?')"]) !!}                
                                     </div>
-                                {!! Form::close() !!}                                
+                                {!! Form::close() !!}   
+                                @endif                             
                             </td>                  
                         </tr>                    
                     @endforeach
