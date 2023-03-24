@@ -708,9 +708,9 @@ $id = IDGenerator::generateID();
                 // if (!jQuery.isEmptyObject(totalVal) && !jQuery.isEmptyObject(vatVal)) {
                 //     totalAmnt += parseFloat(totalVal - 20) - parseFloat(vatVal) // -20 FOR BOHECO SHARE
                 // }   
-                var bohecoshare = $('#' + id + 'ElecShare').val()
-                if (!jQuery.isEmptyObject(bohecoshare)) {
-                    totalAmnt += parseFloat(bohecoshare)
+                var elecShare = $('#' + id + 'ElecShare').val()
+                if (!jQuery.isEmptyObject(elecShare)) {
+                    totalAmnt += parseFloat(elecShare)
                 }             
             });
             // return totalAmnt

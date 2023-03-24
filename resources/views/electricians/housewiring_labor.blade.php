@@ -92,7 +92,12 @@
                         <th>Service Account Name</th>
                         <th>Address</th>
                         <th>Electrician</th>
+                        <th>Breakers</th>
+                        <th>Outlets</th>
+                        <th>Lights</th>
+                        <th class="text-right">BOHECO I Share</th>
                         <th class="text-right">Labor Share</th>
+                        <th class="text-right">Total</th>
                     </thead>
                     <tbody>
                         @php
@@ -106,7 +111,15 @@
                                 <td><a href="{{ route('serviceConnections.show', [$item->id]) }}">{{ $item->ServiceAccountName }}</a></td>
                                 <td>{{ ServiceConnections::getAddress($item) }}</td>
                                 <td>{{ $item->ElectricianName }}</td>
+                                <td class="text-right">{{ $item->Breakers }}</td>
+                                <td class="text-right">{{ $item->Outlets }}</td>
+                                <td class="text-right">{{ $item->Lights }}</td>
+                                <td class="text-right text-red"><strong>₱ {{ is_numeric($item->BOHECOShare) ? number_format($item->BOHECOShare, 2) : $item->BOHECOShare }}</strong></td>
                                 <td class="text-right text-red"><strong>₱ {{ is_numeric($item->LaborCharge) ? number_format($item->LaborCharge, 2) : $item->LaborCharge }}</strong></td>
+                                @php
+                                    $total = (is_numeric($item->BOHECOShare) ? round($item->BOHECOShare, 2) : 0) + (is_numeric($item->LaborCharge) ? round($item->LaborCharge, 2) : 0);
+                                @endphp
+                                <td class="text-right text-red"><strong>₱ {{ number_format($total, 2) }}</strong></td>
                             </tr>
                             @php
                                 $i++;

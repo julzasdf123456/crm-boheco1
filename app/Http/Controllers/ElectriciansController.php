@@ -203,7 +203,11 @@ class ElectriciansController extends AppBaseController
                 'CRM_Barangays.Barangay',
                 'CRM_Towns.Town',
                 'ElectricianName',
-                'LaborCharge'
+                DB::raw("(SELECT SUM(TRY_CAST(Quantity AS INTEGER)) FROM CRM_ServiceConnectionMaterialPayments WHERE ServiceConnectionId=CRM_ServiceConnections.id AND Material IN ('1659509010096', '1659509088407')) AS Breakers"),
+                DB::raw("(SELECT SUM(TRY_CAST(Quantity AS INTEGER)) FROM CRM_ServiceConnectionMaterialPayments WHERE ServiceConnectionId=CRM_ServiceConnections.id AND Material IN ('1629263248908', '1629263170665')) AS Outlets"),
+                DB::raw("(SELECT SUM(TRY_CAST(Quantity AS INTEGER)) FROM CRM_ServiceConnectionMaterialPayments WHERE ServiceConnectionId=CRM_ServiceConnections.id AND Material IN ('1629263231086', '1629263060281')) AS Lights"),
+                'LaborCharge',
+                'BOHECOShare'
             )
             ->orderBy('ORDate')
             ->orderBy('ServiceAccountName')
@@ -246,7 +250,11 @@ class ElectriciansController extends AppBaseController
                 'CRM_Barangays.Barangay',
                 'CRM_Towns.Town',
                 'ElectricianName',
-                'LaborCharge'
+                DB::raw("(SELECT SUM(TRY_CAST(Quantity AS INTEGER)) FROM CRM_ServiceConnectionMaterialPayments WHERE ServiceConnectionId=CRM_ServiceConnections.id AND Material IN ('1659509010096', '1659509088407')) AS Breakers"),
+                DB::raw("(SELECT SUM(TRY_CAST(Quantity AS INTEGER)) FROM CRM_ServiceConnectionMaterialPayments WHERE ServiceConnectionId=CRM_ServiceConnections.id AND Material IN ('1629263248908', '1629263170665')) AS Outlets"),
+                DB::raw("(SELECT SUM(TRY_CAST(Quantity AS INTEGER)) FROM CRM_ServiceConnectionMaterialPayments WHERE ServiceConnectionId=CRM_ServiceConnections.id AND Material IN ('1629263231086', '1629263060281')) AS Lights"),
+                'LaborCharge',
+                'BOHECOShare'
             )
             ->orderBy('ORDate')
             ->orderBy('ServiceAccountName')
@@ -262,7 +270,12 @@ class ElectriciansController extends AppBaseController
                 'ServiceAccountName' => $item->ServiceAccountName,
                 'Address' => ServiceConnections::getAddress($item),
                 'ElecName' => strtoupper($item->ElectricianName),
+                'ES' => $item->Breakers,
+                'LO' => $item->Outlets,
+                'CO' => $item->Lights,
+                'BOHECO I Share' => is_numeric($item->BOHECOShare) ? number_format($item->BOHECOShare, 2) : $item->BOHECOShare,
                 'Labor' => is_numeric($item->LaborCharge) ? number_format($item->LaborCharge, 2) : $item->LaborCharge,
+                'Total' => number_format((is_numeric($item->LaborCharge) ? round($item->LaborCharge, 2) : 0) + (is_numeric($item->BOHECOShare) ? round($item->BOHECOShare, 2) : 0), 2),
             ]);
             $i++;
         }
@@ -274,7 +287,12 @@ class ElectriciansController extends AppBaseController
             'Service Account Name',
             'Address',
             'Electrician',
-            'Labor Charge'
+            'ES',
+            'LO',
+            'CO',
+            'BOHECO I Share',
+            'Labor Charge',
+            'Total',
         ];
 
         $export = new DynamicExport($arr, $headers, null, 'Housewiring Labor Data for ' . date('F d, Y', strtotime($from)) . ' - ' . date('F d, Y', strtotime($to)));
