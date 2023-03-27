@@ -1474,6 +1474,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.Ticket as TicketID',   
                                     'CRM_Barangays.Barangay as Barangay')
                     ->whereRaw("(Trash IS NULL OR Trash='No') AND CrewAssigned IS NULL AND Status NOT IN ('Executed', 'CANCELLED', 'Acted', 'Downloaded by Crew', 'For Inspection') AND CRM_Tickets.created_at > '2023-02-28'")
+                    ->whereRaw("CRM_Tickets.Ticket NOT IN ('1672793267152')")
                     ->where('Office', $office)
                     ->whereNotIn('Ticket', Tickets::getMeterInspectionsId())              
                     ->orderBy('CRM_Tickets.created_at')
