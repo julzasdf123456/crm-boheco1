@@ -586,7 +586,8 @@ class ServiceConnectionsController extends AppBaseController
                                     'CRM_Barangays.Barangay as Barangay')
                     ->whereRaw("(LastName LIKE '%" . $search . "%' OR FirstName LIKE '%" . $search . "%' OR MiddleName LIKE '%" . $search . "%' OR 
                         OrganizationName LIKE '%" . $search . "%' OR CRM_MemberConsumers.Id LIKE '%" . $search . "%' 
-                        OR CONCAT(LastName, ',', FirstName) LIKE '%" . $search . "%')")
+                        OR CONCAT(LastName, ', ', FirstName) LIKE '%" . $search . "%' OR CONCAT(FirstName, ' ', LastName) LIKE '%" . $search . "%' 
+                        OR CONCAT(LastName, ',', FirstName) LIKE '%" . $search . "%' OR CONCAT(FirstName, ',', LastName) LIKE '%" . $search . "%' )")
                     ->paginate(25);
             } else {
                 $data = DB::table('CRM_MemberConsumers')
