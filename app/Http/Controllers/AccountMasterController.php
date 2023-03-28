@@ -428,4 +428,37 @@ class AccountMasterController extends AppBaseController
             'serviceConnections' => $serviceConnections,
         ]);
     }
+
+    public function abruptIncreaseDecrease(Request $request) {
+        return view('/account_masters/abrupt_increase_decrease', [
+            'consumerTypes' => AccountMaster::whereNotNull('ConsumerType')->select('ConsumerType')->groupBy('ConsumerType')->get()
+        ]);
+    }
+
+    public function getAbruptIncreaseDecrease(Request $request) {
+        $consumerType = $request['ConsumerType'];
+
+        $data = DB::connection("sqlsrvbilling")->select("SET NOCOUNT ON; EXEC AbruptDecreaseIncreaseAnalyzer @ConsumerType='" . $consumerType . "'");
+
+        usort($data, function($a, $b) {
+            return $a->PercentageChange < $b->PercentageChange;
+        });
+
+        $output = "";
+        foreach ($data as $item) {
+            $output .= "<tr>" .
+                            "<td>" . $item->AccountNumber . "</td>" .
+                            "<td>" . $item->ConsumerName . "</td>" .
+                            "<td>" . $item->ConsumerAddress . "</td>" .
+                            "<td>" . date('M Y', strtotime($item->BillingMonth)) . "</td>" .
+                            "<td class='text-right'>" . $item->PresentKwhUsed . "</td>" .
+                            "<td>" . date('M Y', strtotime($item->BillingMonth . ' -1 month')) . "</td>" .
+                            "<td class='text-right'>" . $item->PrevKwhUsed . "</td>" .
+                            "<td class='text-right " . AccountMaster::PNColors($item->DiffFromPrev) . "'><strong><i class='fas " . AccountMaster::PNIcons($item->DiffFromPrev) . " ico-tab-mini'></i>" . number_format($item->DiffFromPrev, 2) . "</strong></td>" .
+                            "<td class='text-right " . AccountMaster::PNColors($item->PercentageChange) . "'><strong><i class='fas " . AccountMaster::PNIcons($item->PercentageChange) . " ico-tab-mini'></i>" . number_format($item->PercentageChange, 2) . " %</strong></td>" .
+                        "</tr>";
+        }
+
+        return response()->json($output, 200);
+    }
 }

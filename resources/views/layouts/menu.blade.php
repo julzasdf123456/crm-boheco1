@@ -685,6 +685,16 @@ use Illuminate\Support\Facades\Auth;
             </li>
 
             <li class="nav-header">                
+                Monitoring 
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('accountMasters.abrupt-increase-decrease') }}"
+                   class="nav-link {{ Request::is('accountMasters.abrupt-increase-decrease*') ? 'active' : '' }}">                   
+                   <i class="fas fa-circle nav-icon text-primary"></i><p>Abrupt Inc/Dec Monitor</p>
+                </a>
+            </li>
+
+            <li class="nav-header">                
                 Reports 
             </li>
             <li class="nav-item">

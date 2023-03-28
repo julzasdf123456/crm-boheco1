@@ -317,4 +317,24 @@ class AccountMaster extends Model
             return 'non-conc';
         }
     }
+
+    public static function PNColors($value) {
+        $value = floatval($value);
+
+        if ($value >= 0) {
+            return 'text-success';
+        } else {
+            return 'text-danger';
+        }
+    }
+
+    public static function PNIcons($value) {
+        $value = floatval($value);
+
+        if ($value >= 0) {
+            return 'fa-caret-up';
+        } else {
+            return 'fa-caret-down';
+        }
+    }
 }
