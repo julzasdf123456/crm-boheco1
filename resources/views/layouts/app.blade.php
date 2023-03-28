@@ -210,6 +210,10 @@
         .tooltipj:hover .tooltipjtext {
             visibility: visible;
         }
+
+        .text-orange {
+            color : #ff6200;
+        }
     </style>
 
     @yield('third_party_stylesheets')

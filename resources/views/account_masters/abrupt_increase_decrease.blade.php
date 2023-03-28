@@ -52,10 +52,10 @@
                         <th>Consumer Name</th>
                         <th>Address</th>
                         <th>From</th>
-                        <th>Kwh Usage</th>
+                        <th>kWh Usage</th>
                         <th>To </th>
-                        <th>Kwh Usage</th>
-                        <th>Difference</th>
+                        <th>kWh Usage</th>
+                        <th>Difference <br> (in kWh)</th>
                         <th>% Inc/Dec</th>
                     </thead>
                     <tbody>
