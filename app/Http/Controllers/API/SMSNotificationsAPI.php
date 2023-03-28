@@ -28,9 +28,10 @@ class SMSNotificationsAPI extends Controller {
 
     public function updateSMSNotification(Request $request) {
         $id = $request['id'];
+        $status = $request['Status'];
 
         SMSNotifications::where('id', $id)
-            ->update(['Status' => 'SENT']);
+            ->update(['Status' => $status]);
 
         return response()->json('ok', 200);
     }
