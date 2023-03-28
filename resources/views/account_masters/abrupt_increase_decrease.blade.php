@@ -51,10 +51,10 @@
                         <th>Account No</th>
                         <th>Consumer Name</th>
                         <th>Address</th>
-                        <th>Current Month</th>
-                        <th>Current Usage</th>
-                        <th>Prev. Month</th>
-                        <th>Prev. Month Usage</th>
+                        <th>From</th>
+                        <th>Kwh Usage</th>
+                        <th>To </th>
+                        <th>Kwh Usage</th>
                         <th>Difference</th>
                         <th>% Inc/Dec</th>
                     </thead>
