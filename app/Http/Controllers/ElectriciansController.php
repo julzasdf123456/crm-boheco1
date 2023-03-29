@@ -421,14 +421,13 @@ class ElectriciansController extends AppBaseController
             ->leftJoin('CRM_ServiceConnectionTotalPayments', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionTotalPayments.ServiceConnectionId')
             ->leftJoin('CRM_Electricians', 'CRM_ServiceConnections.ElectricianId', '=', 'CRM_Electricians.id')
             ->whereRaw("CRM_ServiceConnections.ORDate IS NOT NULL AND (ORDate BETWEEN '" . $from . "' AND '" . $to . "') AND ElectricianAcredited='Yes' 
-                AND (CRM_ServiceConnections.Trash IS NULL OR CRM_ServiceConnections.Trash='No')")
+                AND (CRM_ServiceConnections.Trash IS NULL OR CRM_ServiceConnections.Trash='No') AND ElectricianId IS NOT NULL")
             ->select(
                 'ElectricianName',
                 DB::raw("COUNT(CRM_ServiceConnections.id) AS ConsumerCount"),
                 DB::raw("SUM(TRY_CAST(LaborCharge AS DECIMAL(15,2))) AS LaborCharge"),
                 'BankNumber'
             )
-            ->whereNotNull('ElectricianId')
             ->groupBy('ElectricianId', 'ElectricianName', 'BankNumber')
             ->orderBy('ElectricianName')
             ->get();
