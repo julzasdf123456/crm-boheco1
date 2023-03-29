@@ -428,6 +428,7 @@ class ElectriciansController extends AppBaseController
                 DB::raw("SUM(TRY_CAST(LaborCharge AS DECIMAL(15,2))) AS LaborCharge"),
                 'BankNumber'
             )
+            ->whereNotNull('ElectricianId')
             ->groupBy('ElectricianId', 'ElectricianName', 'BankNumber')
             ->orderBy('ElectricianName')
             ->get();
