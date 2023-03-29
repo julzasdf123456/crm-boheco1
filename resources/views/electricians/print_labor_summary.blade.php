@@ -92,6 +92,11 @@
         padding-bottom: 4px;
     }
 
+    .half {
+        width: 49.5%;
+        display: inline-block;
+    }
+
 </style>
 
 <div>
@@ -111,10 +116,10 @@
                 <!-- <th style="width: 25px;"></th> -->
                 <th>#</th>
                 <th>Electrician</th>
-                <th>Gross Labor Share</th>
+                <th>Gross Share</th>
                 <th>2% WT</th>
-                <th>Net Labor Share</th>
-                <th>Signature</th>
+                <th>Net Share</th>
+                <th style="width: 24% !important;">Signature</th>
             </tr>            
         </thead>
         <tbody>
@@ -148,7 +153,47 @@
                 <th></th>
             </tr>
         </tbody>
-    </table>    
+    </table>  
+    
+    <div class="half">
+        <br>
+        <br>
+        <p>Prepared By:</p>
+        <br>
+        <br>
+        <p><strong>ESTRELLA GEROCHE</strong></p>
+        <p style="margin-top: 5px;"><i>Payroll Clerk</i></p>
+    </div>
+
+    <div class="half">
+        <br>
+        <br>
+        <p>Verified By:</p>
+        <br>
+        <br>
+        <p><strong>MARISSA LEORNA</strong></p>
+        <p style="margin-top: 5px;"><i>OSD Manager</i></p>
+    </div>
+
+    <div class="half">
+        <br>
+        <br>
+        <p>Audited By:</p>
+        <br>
+        <br>
+        <p><strong>MARLYN MANAPSAL</strong></p>
+        <p style="margin-top: 5px;"><i>Internal Auditor</i></p>
+    </div>
+
+    <div class="half">
+        <br>
+        <br>
+        <p>Approved By:</p>
+        <br>
+        <br>
+        <p><strong>DINO NICOLAS T. ROXAS</strong></p>
+        <p style="margin-top: 5px;"><i>General Manager, BOHECO I</i></p>
+    </div>
 </div>
 <script type="text/javascript">
     window.print();
