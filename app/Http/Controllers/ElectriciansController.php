@@ -399,4 +399,47 @@ class ElectriciansController extends AppBaseController
 
         return Excel::download($export, 'Labor-Share-Summary'  . date('F d, Y', strtotime($from)) . '-' . date('F d, Y', strtotime($to)) . '.xlsx');
     }
+
+    public function printLaborShare($month, $term, $year, $office) {
+        if ($month != null && $year != null && $term != null) {
+            if ($term == '1') {
+                $from = $year . '-' . $month . '-01';
+                $to = $year . '-' . $month . '-15';
+            } elseif ($term == '2') {
+                $from = $year . '-' . $month . '-16';
+                $to = date('Y-m-d', strtotime('last day of ' . $from));
+            } else {
+                $from = '1997-01-01';
+                $to = '1997-01-01';
+            }
+        } else {
+            $from = '1997-01-01';
+            $to = '1997-01-01';
+        }
+
+        $data = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_ServiceConnectionTotalPayments', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionTotalPayments.ServiceConnectionId')
+            ->leftJoin('CRM_Electricians', 'CRM_ServiceConnections.ElectricianId', '=', 'CRM_Electricians.id')
+            ->whereRaw("CRM_ServiceConnections.ORDate IS NOT NULL AND (ORDate BETWEEN '" . $from . "' AND '" . $to . "') AND ElectricianAcredited='Yes' 
+                AND (CRM_ServiceConnections.Trash IS NULL OR CRM_ServiceConnections.Trash='No')")
+            ->select(
+                'ElectricianName',
+                DB::raw("COUNT(CRM_ServiceConnections.id) AS ConsumerCount"),
+                DB::raw("SUM(TRY_CAST(LaborCharge AS DECIMAL(15,2))) AS LaborCharge"),
+                'BankNumber'
+            )
+            ->groupBy('ElectricianId', 'ElectricianName', 'BankNumber')
+            ->orderBy('ElectricianName')
+            ->get();
+
+        return view('/electricians/print_labor_summary', [
+            'data' => $data,
+            'month' => $month,
+            'term' => $term,
+            'year' => $year,
+            'office' => $office,
+            'from' => $from,
+            'to' => $to
+        ]);
+    }
 }

@@ -71,6 +71,7 @@
                     <div class="form-group col-md-2">
                         <label for="">Action</label><br>
                         {!! Form::submit('View', ['class' => 'btn btn-primary btn-sm']) !!}
+                        <button class="btn btn-sm btn-warning" id="print">Print</button>
                         <button class="btn btn-sm btn-success" id="download">Download</button>
                     </div>
                 </div>
@@ -88,24 +89,42 @@
                         <th style="width: 30px;">#</th>
                         <th>Electrician</th>
                         <th class="text-right">No. of Applications</th>
-                        <th class="text-right">Labor Share</th>
+                        <th class="text-right">Gross Labor Share Amnt.</th>
+                        <th class="text-right">2% WT</th>
+                        <th class="text-right">Net Labor Share Amnt.</th>
                     </thead>
                     <tbody>
                         @php
                             $i=1;
+                            $laborTotal = 0;
+                            $percent2 = 0;
+                            $netTotal = 0;
                         @endphp
                         @foreach ($data as $item)
                             <tr>
                                 <td>{{ $i }}</td>
                                 <td>{{ $item->ElectricianName }}</td>
                                 <td class="text-right">{{ $item->ConsumerCount }}</td>
-                                <td class="text-right text-red"><strong>₱ {{ is_numeric($item->LaborCharge) ? number_format($item->LaborCharge, 2) : $item->LaborCharge }}</strong></td>
+                                <td class="text-right text-info">₱ {{ is_numeric($item->LaborCharge) ? number_format($item->LaborCharge, 2) : $item->LaborCharge }}</td>
+                                <td class="text-right text-red"><strong>- ₱ {{ is_numeric($item->LaborCharge) ? number_format(floatval($item->LaborCharge) * .02, 2) : 'error' }}</strong></td>
+                                <td class="text-right text-success"><strong>₱ {{ is_numeric($item->LaborCharge) ? number_format(floatval($item->LaborCharge) - (floatval($item->LaborCharge) * .02), 2) : 'error' }}</strong></td>
                             </tr>
                             @php
                                 $i++;
+                                $laborTotal += is_numeric($item->LaborCharge) ? floatval($item->LaborCharge) : 0;
+                                $percent2 += is_numeric($item->LaborCharge) ? (floatval($item->LaborCharge) * .02) : 0;
+                                $netTotal += is_numeric($item->LaborCharge) ? (floatval($item->LaborCharge) - (floatval($item->LaborCharge) * .02)) : 0;
                             @endphp
                         @endforeach
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3">Total</th>
+                            <th class="text-right text-info">₱ {{ number_format($laborTotal, 2) }}</th>
+                            <th class="text-right text-red">- ₱ {{ number_format($percent2, 2) }}</th>
+                            <th class="text-right text-success">₱ {{ number_format($netTotal, 2) }}</th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -118,6 +137,11 @@
             $('#download').on('click', function(e) {
                 e.preventDefault()
                 window.location.href = "{{ url('/electricians/download-labor-share') }}" + "/" + $('#Month').val() + "/" + $('#Term').val() + "/" + $('#Year').val() + "/" + $('#Office').val()
+            }) 
+
+            $('#print').on('click', function(e) {
+                e.preventDefault()
+                window.location.href = "{{ url('/electricians/print-labor-share') }}" + "/" + $('#Month').val() + "/" + $('#Term').val() + "/" + $('#Year').val() + "/" + $('#Office').val()
             }) 
         })
     </script>

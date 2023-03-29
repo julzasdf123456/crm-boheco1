@@ -709,6 +709,7 @@ Route::get('/electricians/housewiring-labor', [App\Http\Controllers\Electricians
 Route::get('/electricians/download-housewiring-labor/{month}/{term}/{year}/{office}', [App\Http\Controllers\ElectriciansController::class, 'downloadHousewiringLabor'])->name('electricians.download-housewiring-labor');
 Route::get('/electricians/labor-summary', [App\Http\Controllers\ElectriciansController::class, 'laborSummary'])->name('electricians.labor-summary');
 Route::get('/electricians/download-labor-share/{month}/{term}/{year}/{office}', [App\Http\Controllers\ElectriciansController::class, 'downloadLaborShare'])->name('electricians.download-labor-share');
+Route::get('/electricians/print-labor-share/{month}/{term}/{year}/{office}', [App\Http\Controllers\ElectriciansController::class, 'printLaborShare'])->name('electricians.print-labor-share');
 Route::resource('electricians', App\Http\Controllers\ElectriciansController::class);
 
 
