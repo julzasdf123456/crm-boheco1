@@ -132,7 +132,7 @@
             @foreach ($data as $item)
                 <tr class="border-collapse">
                     <td>{{ $i }}</td>
-                    <td>{{ $item->ElectricianName }}</td>
+                    <td>{{ strtoupper($item->ElectricianName) }}</td>
                     <td class="text-right">₱ {{ is_numeric($item->LaborCharge) ? number_format($item->LaborCharge, 2) : $item->LaborCharge }}</td>
                     <td class="text-right"><strong>- ₱ {{ is_numeric($item->LaborCharge) ? number_format(floatval($item->LaborCharge) * .02, 2) : 'error' }}</strong></td>
                     <td class="text-right"><strong>₱ {{ is_numeric($item->LaborCharge) ? number_format(floatval($item->LaborCharge) - (floatval($item->LaborCharge) * .02), 2) : 'error' }}</strong></td>
