@@ -110,7 +110,7 @@
                 <th colspan="10" class="text-center">{{ strtoupper(env('APP_ADDRESS')) }}</th>
             </tr>
             <tr>
-                <th colspan="10" class="text-center" style="padding-bottom: 15px; padding-top: 15px;">LABOR SHARE SUMMARY FOR {{ strtoupper(date('F Y', strtotime($from))) }}, {{ date('d', strtotime($from)) . '-' . date('d', strtotime($to)) }} | {{ $office }}</th>
+                <th colspan="10" class="text-center" style="padding-bottom: 15px; padding-top: 15px;">LABOR SHARE SUMMARY FOR {{ strtoupper(date('F', strtotime($from))) }} {{ date('d', strtotime($from)) . '-' . date('d', strtotime($to)) }}, {{ strtoupper(date('Y', strtotime($from))) }} | {{ $office }}</th>
             </tr>
             <tr class="border-collapse">
                 <!-- <th style="width: 25px;"></th> -->
