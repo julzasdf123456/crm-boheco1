@@ -96,7 +96,7 @@ class ServiceConnectionsEnergization extends Controller {
         return response()->json(['res' => 'ok'], $this->successStatus);   
     }
 
-    public function getInspectionsForEnergizationData() {
+    public function getInspectionsForEnergizationData(Request $request) {
         $crew = $request['Crew'];
 
         $serviceConnections = DB::table('CRM_ServiceConnections')
