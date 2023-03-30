@@ -18,7 +18,9 @@ class ServiceConnectionsEnergization extends Controller {
 
     public $successStatus = 200;
 
-    public function getForEnergizationData() {
+    public function getForEnergizationData(Request $request) {
+        $crew = $request['Crew'];
+
         $serviceConnections = DB::table('CRM_ServiceConnections')
             ->leftJoin('CRM_ServiceConnectionInspections', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionInspections.ServiceConnectionId')
             ->leftJoin('CRM_ServiceConnectionMeterAndTransformer', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId')
@@ -30,6 +32,7 @@ class ServiceConnectionsEnergization extends Controller {
                     ->orWhereNull('CRM_ServiceConnections.Trash');
             })
             ->whereRaw("CRM_ServiceConnections.id IN (SELECT DISTINCT ServiceConnectionId FROM CRM_ServiceConnectionMeterAndTransformer WHERE ServiceConnectionId IS NOT NULL)")
+            ->whereRaw("StationCrewAssigned='" . $crew . "'")
             ->select('CRM_ServiceConnections.*', 
                 'CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber', 
                 'CRM_ServiceConnectionMeterAndTransformer.MeterBrand',
@@ -94,17 +97,20 @@ class ServiceConnectionsEnergization extends Controller {
     }
 
     public function getInspectionsForEnergizationData() {
+        $crew = $request['Crew'];
+
         $serviceConnections = DB::table('CRM_ServiceConnections')
             ->leftJoin('CRM_ServiceConnectionInspections', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionInspections.ServiceConnectionId')
-            ->where(function ($query) {
-                $query->where('CRM_ServiceConnections.Status', 'Approved')
-                    ->orWhere('CRM_ServiceConnections.Status', 'Not Energized');
-            })
+            ->leftJoin('CRM_ServiceConnectionMeterAndTransformer', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId')
+            ->leftJoin('users', 'users.id', '=', 'CRM_ServiceConnectionInspections.Inspector')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+            ->whereRaw("CRM_ServiceConnections.Status IN ('Approved', 'Not Energized')")
             ->where(function ($query) {
                 $query->where('CRM_ServiceConnections.Trash', 'No')
                     ->orWhereNull('CRM_ServiceConnections.Trash');
             })
-            ->whereIn('CRM_ServiceConnections.id', DB::table('CRM_ServiceConnectionMeterAndTransformer')->pluck('ServiceConnectionId'))
+            ->whereRaw("CRM_ServiceConnections.id IN (SELECT DISTINCT ServiceConnectionId FROM CRM_ServiceConnectionMeterAndTransformer WHERE ServiceConnectionId IS NOT NULL)")
+            ->whereRaw("StationCrewAssigned='" . $crew . "'")
             ->select('CRM_ServiceConnectionInspections.*')
             ->orderBy('CRM_ServiceConnections.ServiceAccountName')
             ->get();
