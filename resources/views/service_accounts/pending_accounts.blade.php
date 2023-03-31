@@ -8,11 +8,24 @@
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-sm-12">
+            <div class="col-sm-6">
                 <span>
                     <h4 style="display: inline; margin-right: 15px;">Pending Accounts</h4>
                     <i class="text-muted">Energized service connection accounts for activation</i>
                 </span>
+            </div>
+
+            <div class="col-lg-6">
+                <form action="{{ route('serviceAccounts.pending-accounts') }}" method="GET">
+                    <button class="btn btn-sm btn-warning float-right" id="print">Print</button>
+                    <button class="btn btn-sm btn-primary float-right" style="margin-right: 10px;" type="submit">Filter</button>
+                    <select name="Office" id="Office" class="form-control form-control-sm float-right" style="width: 150px; margin-right: 10px; margin-left: 5px;">
+                        <option value="All">All</option>
+                        <option value="MAIN OFFICE" {{ isset($_GET['Office']) && $_GET['Office']=='MAIN OFFICE' ? 'selected' : '' }}>MAIN OFFICE</option>
+                        <option value="SUB-OFFICE" {{ isset($_GET['Office']) && $_GET['Office']=='SUB-OFFICE' ? 'selected' : '' }}>SUB-OFFICE</option>
+                    </select>
+                    <label for="Office" class="float-right">Select Office</label>
+                </form> 
             </div>
         </div>
     </div>
@@ -71,5 +84,15 @@
     </div>
 </div>
 
-
 @endsection
+
+@push('page_scripts')
+    <script>
+        $(document).ready(function() {
+            $('#print').on('click', function(e) {
+                e.preventDefault()
+                window.location.href = "{{ url('/account_masters/print-sdir') }}" + "/" + $('#Office').val()
+            })
+        })
+    </script>
+@endpush

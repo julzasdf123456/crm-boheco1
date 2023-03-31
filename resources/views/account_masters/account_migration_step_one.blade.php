@@ -60,7 +60,7 @@ use Illuminate\Support\Facades\Auth;
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-3">
-                                <button class="btn btn-sm btn-info" id="check-acct-availability" disabled>Check Available</button>
+                                <button class="btn btn-sm btn-info" id="check-acct-availability">Check Available</button>
                             </div>
                         </div> 
                     </div>
@@ -350,10 +350,10 @@ use Illuminate\Support\Facades\Auth;
             $('#AccountNumber').on('keyup', function() {
                 var len = this.value.length
                 if (len > 5) {
-                    $('#check-acct-availability').removeAttr('disabled')
+                    // $('#check-acct-availability').removeAttr('disabled')
                     $('#Route').val(this.value.substring(2,6))
                 } else {
-                    $('#check-acct-availability').attr('disabled', 'true')
+                    // $('#check-acct-availability').attr('disabled', 'true')
                 }
             })
 

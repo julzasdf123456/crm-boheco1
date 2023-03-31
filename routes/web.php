@@ -268,6 +268,7 @@ Route::get('/service_accounts/relocation-manual', [App\Http\Controllers\ServiceA
 Route::get('/service_accounts/relocation-form-manual/{id}', [App\Http\Controllers\ServiceAccountsController::class, 'relocationFormManual'])->name('serviceAccounts.relocation-form-manual');
 Route::get('/service_accounts/print-group-bills-list/{period}/{groupId}', [App\Http\Controllers\ServiceAccountsController::class, 'printGroupBillsList'])->name('serviceAccounts.print-group-bills-list');
 Route::get('/service_accounts/check-available-account-numbers', [App\Http\Controllers\ServiceAccountsController::class, 'checkAvailableAccountNumbers'])->name('serviceAccounts.check-available-account-numbers');
+
 Route::resource('serviceAccounts', App\Http\Controllers\ServiceAccountsController::class);
 
 
@@ -733,6 +734,8 @@ Route::get('/account_masters/print-new-accounts/{from}/{to}', [App\Http\Controll
 Route::get('/account_masters/new-bapa-energized', [App\Http\Controllers\AccountMasterController::class, 'newEnergizedBapa'])->name('accountMasters.new-bapa-energized');
 Route::get('/account_masters/abrupt-increase-decrease', [App\Http\Controllers\AccountMasterController::class, 'abruptIncreaseDecrease'])->name('accountMasters.abrupt-increase-decrease');
 Route::get('/account_masters/get-abrupt-increase-decrease', [App\Http\Controllers\AccountMasterController::class, 'getAbruptIncreaseDecrease'])->name('accountMasters.get-abrupt-increase-decrease');
+Route::get('/account_masters/check-left-available-account-numbers', [App\Http\Controllers\AccountMasterController::class, 'getLeftAvailableAccountNumbers'])->name('accountMasters.check-left-available-account-numbers');
+Route::get('/account_masters/print-sdir/{office}', [App\Http\Controllers\AccountMasterController::class, 'printSDIR'])->name('accountMasters.print-sdir');
 Route::resource('accountMasters', App\Http\Controllers\AccountMasterController::class);
 
 

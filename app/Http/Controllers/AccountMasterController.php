@@ -321,14 +321,26 @@ class AccountMasterController extends AppBaseController
         // GET ALL ACCOUNT NOS FIRST
         $accounts = AccountMaster::whereRaw("Route='" . $route . "'")->get();
         $existing = [];
+        $x = 0;
+        $len = count($accounts);
+        $start = 0;
+        $end = 0;
         foreach($accounts as $item) {
             array_push($existing, $item->SequenceNumber);
+            if ($x == 0) {
+                $start = intval($item->SequenceNumber);
+            }
+
+            if ($x == ($len-1)) {
+                $end = intval($item->SequenceNumber);
+            }
+            $x++;
         }
 
         // generate ten thousand samples
         $samples = [];
         $sample = 99999;
-        for ($i = 1; $i <= $sample; $i++) {
+        for ($i = $start; $i <= $end; $i++) {
             array_push($samples, $i);
         }
 
@@ -460,5 +472,131 @@ class AccountMasterController extends AppBaseController
         }
 
         return response()->json($output, 200);
+    }
+
+    public function getLeftAvailableAccountNumbers(Request $request) {
+        $acctNoR = $request['AccountNumberSample'];
+
+        if (strlen($acctNoR) == 10) {
+            $acctNo = substr($acctNoR, 0, 6);
+            $seq = substr($acctNoR, 6, 9);
+            $seq = intval($seq);
+
+            // GET ALL ACCOUNT NOS FIRST
+            $accounts = AccountMaster::whereRaw("AccountNumber LIKE '" . $acctNo . "%'")->get();
+            $existing = [];
+            foreach($accounts as $item) {
+                array_push($existing, $item->AccountNumber);
+            }
+
+            // generate ten thousand samples LEFT
+            $samples = [];
+            $sample = $seq > 500 ? ($seq-500) : 1;
+            for ($i = $seq; $i >= $sample; $i--) {
+                $head = sprintf("%0004d", $i);
+                array_push($samples, $acctNo . $head);
+            }
+
+            $finalData = array_diff($samples, $existing);
+            $output = "";
+            foreach($finalData as $key => $value) {
+                $output .= "<tr onclick=selectAccount('" . $value . "')>" .
+                    "<td>" . $value . "</td>" .
+                "</tr>";
+            }
+
+            // generate ten thousand samples RIGHT
+            $samples = [];
+            $sample = ($seq+500) > 9999 ? 9999 : ($seq+500);
+            for ($i = $seq; $i <= $sample; $i++) {
+                $head = sprintf("%0004d", $i);
+                array_push($samples, $acctNo . $head);
+            }
+
+            $finalData = array_diff($samples, $existing);
+            $outputRight = "";
+            foreach($finalData as $key => $value) {
+                $outputRight .= "<tr onclick=selectAccount('" . $value . "')>" .
+                    "<td>" . $value . "</td>" .
+                "</tr>";
+            }
+
+            $data = [
+                'left' => $output,
+                'right' => $outputRight,
+            ];
+
+            return response()->json($data, 200);
+        } else {
+            return response()->json('Invalid', 404);
+        }        
+    }
+
+    public function printSDIR($office) {
+        if ($office == 'All') {
+            $serviceConnections = DB::table('CRM_ServiceConnections')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+                ->leftJoin('CRM_ServiceConnectionMeterAndTransformer', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId', '=', 'CRM_ServiceConnections.id')
+                ->select('CRM_ServiceConnections.id as id',
+                                'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                                'CRM_ServiceConnections.Status as Status',
+                                'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                                'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                                'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                                'CRM_ServiceConnections.AccountCount as AccountCount',  
+                                'CRM_ServiceConnections.ConnectionApplicationType',  
+                                'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                                'CRM_ServiceConnectionAccountTypes.Alias',
+                                'CRM_ServiceConnections.AccountNumber',  
+                                'CRM_ServiceConnections.Sitio as Sitio', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_Barangays.Barangay as Barangay',
+                                'CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber',
+                                )
+                ->where(function ($query) {
+                                    $query->where('CRM_ServiceConnections.Trash', 'No')
+                                        ->orWhereNull('CRM_ServiceConnections.Trash');
+                                })  
+                ->whereIn('Status', ['Energized', 'Approved For Change Name'])
+                ->whereRaw("CRM_ServiceConnections.created_at > '2023-02-28' AND CRM_ServiceConnections.AccountType NOT IN " . ServiceConnections::getBapaAccountCodes())
+                ->orderBy('CRM_ServiceConnections.ServiceAccountName')
+                ->get();
+        } else {
+            $serviceConnections = DB::table('CRM_ServiceConnections')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+                ->leftJoin('CRM_ServiceConnectionMeterAndTransformer', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId', '=', 'CRM_ServiceConnections.id')
+                ->select('CRM_ServiceConnections.id as id',
+                                'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                                'CRM_ServiceConnections.Status as Status',
+                                'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                                'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                                'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                                'CRM_ServiceConnections.AccountCount as AccountCount',  
+                                'CRM_ServiceConnections.ConnectionApplicationType',  
+                                'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                                'CRM_ServiceConnectionAccountTypes.Alias',
+                                'CRM_ServiceConnections.AccountNumber',  
+                                'CRM_ServiceConnections.Sitio as Sitio', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_Barangays.Barangay as Barangay',
+                                'CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber',
+                                )
+                ->where(function ($query) {
+                                    $query->where('CRM_ServiceConnections.Trash', 'No')
+                                        ->orWhereNull('CRM_ServiceConnections.Trash');
+                                })  
+                ->whereIn('Status', ['Energized', 'Approved For Change Name'])
+                ->whereRaw("CRM_ServiceConnections.Office='" . $office . "' AND CRM_ServiceConnections.created_at > '2023-02-28' AND CRM_ServiceConnections.AccountType NOT IN " . ServiceConnections::getBapaAccountCodes())
+                ->orderBy('CRM_ServiceConnections.ServiceAccountName')
+                ->get();
+        }        
+
+        return view('/account_masters/print_sdir', [
+            'serviceConnections' => $serviceConnections,
+        ]);
     }
 }
