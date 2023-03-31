@@ -500,7 +500,7 @@ class ServiceAccountsController extends AppBaseController
     }
 
     public function pendingAccounts(Request $request) {
-        $office = $request['Office'];
+        $office = isset($request['Office']) ? $request['Office'] : 'All';
 
         if ($office == 'All') {
             $serviceConnections = DB::table('CRM_ServiceConnections')
