@@ -74,7 +74,8 @@ class MemberConsumersController extends AppBaseController
                                 'CRM_Towns.Town as Town',
                                 'CRM_Barangays.Barangay as Barangay')
                 ->whereRaw("Trashed IS NULL AND (CRM_MemberConsumers.LastName LIKE '%" . $param . "%' OR CRM_MemberConsumers.Id LIKE '%" . $param . "%' OR CRM_MemberConsumers.MiddleName LIKE '%" . $param . "%' OR CRM_MemberConsumers.FirstName LIKE '%" . $param . "%' OR 
-                    CONCAT(LastName, ',', FirstName) LIKE '%" . $param . "%' OR CONCAT(LastName, ', ', FirstName) LIKE '%" . $param . "%' OR CONCAT(FirstName, ' ', LastName) LIKE '%" . $param . "%' OR CONCAT(LastName, ' ', FirstName) LIKE '%" . $param . "%')")
+                    CONCAT(LastName, ',', FirstName) LIKE '%" . $param . "%' OR CONCAT(LastName, ', ', FirstName) LIKE '%" . $param . "%' OR CONCAT(FirstName, ' ', LastName) LIKE '%" . $param . "%' OR CONCAT(LastName, ' ', FirstName) LIKE '%" . $param . "%' OR 
+                    CRM_MemberConsumers.OrganizationName LIKE '%" . $param . "%' OR ORNumber LIKE '%" . $param . "%')")
                 ->orderBy('CRM_MemberConsumers.FirstName')
                 ->paginate(50);
         } else {
@@ -651,7 +652,7 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseLastName', 
                                     'CRM_MemberConsumerSpouse.Suffix AS SpouseSuffix')
                     ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "')")
-                    ->whereRaw("Trashed IS NULL")
+                    ->whereRaw("CRM_MemberConsumers.Trashed IS NULL")
                     ->orderBy('CRM_MemberConsumers.DateApplied')
                     ->orderBy('CRM_MemberConsumers.LastName')
                     ->get();
@@ -679,7 +680,7 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
                     ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND Office='" . $office . "'")
-                    ->whereRaw("Trashed IS NULL")
+                    ->whereRaw("CRM_MemberConsumers.Trashed IS NULL")
                     ->orderBy('CRM_MemberConsumers.DateApplied')
                     ->orderBy('CRM_MemberConsumers.LastName')
                     ->get();
@@ -709,7 +710,7 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
                     ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_MemberConsumers.Town='" . $town . "'")
-                    ->whereRaw("Trashed IS NULL")
+                    ->whereRaw("CRM_MemberConsumers.Trashed IS NULL")
                     ->orderBy('CRM_MemberConsumers.DateApplied')
                     ->orderBy('CRM_MemberConsumers.LastName')
                     ->get();
@@ -737,7 +738,7 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
                     ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND Office='" . $office . "' AND CRM_MemberConsumers.Town='" . $town . "'")
-                    ->whereRaw("Trashed IS NULL")
+                    ->whereRaw("CRM_MemberConsumers.Trashed IS NULL")
                     ->orderBy('CRM_MemberConsumers.DateApplied')
                     ->orderBy('CRM_MemberConsumers.LastName')
                     ->get();
@@ -779,7 +780,7 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseLastName', 
                                     'CRM_MemberConsumerSpouse.Suffix AS SpouseSuffix')
                     ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "')")
-                    ->whereRaw("Trashed IS NULL")
+                    ->whereRaw("CRM_MemberConsumers.Trashed IS NULL")
                     ->orderBy('CRM_MemberConsumers.DateApplied')
                     ->orderBy('CRM_MemberConsumers.LastName')
                     ->get();
@@ -807,7 +808,7 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
                     ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND Office='" . $office . "'")
-                    ->whereRaw("Trashed IS NULL")
+                    ->whereRaw("CRM_MemberConsumers.Trashed IS NULL")
                     ->orderBy('CRM_MemberConsumers.DateApplied')
                     ->orderBy('CRM_MemberConsumers.LastName')
                     ->get();
@@ -837,7 +838,7 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
                     ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_MemberConsumers.Town='" . $town . "'")
-                    ->whereRaw("Trashed IS NULL")
+                    ->whereRaw("CRM_MemberConsumers.Trashed IS NULL")
                     ->orderBy('CRM_MemberConsumers.DateApplied')
                     ->orderBy('CRM_MemberConsumers.LastName')
                     ->get();
@@ -865,7 +866,7 @@ class MemberConsumersController extends AppBaseController
                                     'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
                                     'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
                     ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND Office='" . $office . "' AND CRM_MemberConsumers.Town='" . $town . "'")
-                    ->whereRaw("Trashed IS NULL")
+                    ->whereRaw("CRM_MemberConsumers.Trashed IS NULL")
                     ->orderBy('CRM_MemberConsumers.DateApplied')
                     ->orderBy('CRM_MemberConsumers.LastName')
                     ->get();
@@ -946,7 +947,7 @@ class MemberConsumersController extends AppBaseController
                                         'CRM_MemberConsumerSpouse.LastName AS SpouseLastName', 
                                         'CRM_MemberConsumerSpouse.Suffix AS SpouseSuffix')
                         ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "')")
-                        ->whereRaw("Trashed IS NULL")
+                        ->whereRaw("CRM_MemberConsumers.Trashed IS NULL")
                         ->orderBy('CRM_MemberConsumers.DateApplied')
                         ->orderBy('CRM_MemberConsumers.LastName')
                         ->get();
@@ -972,7 +973,7 @@ class MemberConsumersController extends AppBaseController
                                         'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
                                         'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
                         ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_MemberConsumers.Town='" . $town . "'")
-                        ->whereRaw("Trashed IS NULL")
+                        ->whereRaw("CRM_MemberConsumers.Trashed IS NULL")
                         ->orderBy('CRM_MemberConsumers.DateApplied')
                         ->orderBy('CRM_MemberConsumers.LastName')
                         ->get();
@@ -1025,7 +1026,7 @@ class MemberConsumersController extends AppBaseController
                                         'CRM_MemberConsumerSpouse.LastName AS SpouseLastName', 
                                         'CRM_MemberConsumerSpouse.Suffix AS SpouseSuffix')
                         ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "')")
-                        ->whereRaw("Trashed IS NULL")
+                        ->whereRaw("CRM_MemberConsumers.Trashed IS NULL")
                         ->orderBy('CRM_MemberConsumers.DateApplied')
                         ->orderBy('CRM_MemberConsumers.LastName')
                         ->get();
@@ -1051,7 +1052,7 @@ class MemberConsumersController extends AppBaseController
                                         'CRM_MemberConsumerSpouse.LastName AS SpouseFirstName', 
                                         'CRM_MemberConsumerSpouse.Suffix AS SpouseFirstName')
                         ->whereRaw("(DateApplied BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_MemberConsumers.Town='" . $town . "'")
-                        ->whereRaw("Trashed IS NULL")
+                        ->whereRaw("CRM_MemberConsumers.Trashed IS NULL")
                         ->orderBy('CRM_MemberConsumers.DateApplied')
                         ->orderBy('CRM_MemberConsumers.LastName')
                         ->get();
