@@ -71,7 +71,8 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.Sitio as Sitio', 
                                     'CRM_Tickets.created_at', 
                                     'CRM_Towns.Town as Town',
-                                    'CRM_Tickets.Office',   
+                                    'CRM_Tickets.Office',  
+                                    'CRM_Tickets.CurrentMeterNo',   
                                     DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
                                     'CRM_Barangays.Barangay as Barangay')
                     ->whereRaw("(CRM_Tickets.Trash IS NULL OR CRM_Tickets.Trash='No') AND (CRM_Tickets.id LIKE '%" . $params . "%' OR CRM_Tickets.ConsumerName LIKE '%" . $params . "%' OR CRM_Tickets.AccountNumber LIKE '%" . $params . "%' OR CurrentMeterNo LIKE '%" . $params . "%' OR NewMeterNo LIKE '%" . $params . "%')")                
@@ -91,6 +92,7 @@ class TicketsController extends AppBaseController
                                     'CRM_Tickets.created_at', 
                                     'CRM_Towns.Town as Town',
                                     'CRM_Tickets.Office',  
+                                    'CRM_Tickets.CurrentMeterNo',
                                     DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
                                     'CRM_Barangays.Barangay as Barangay')
                     ->whereRaw("(CRM_Tickets.Trash IS NULL OR CRM_Tickets.Trash='No')")

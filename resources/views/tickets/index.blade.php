@@ -31,10 +31,10 @@
             <table class="table table-hover">
                 <thead>
                     <th>Ticket ID</th>
-                    <th>Consumer Name</th>
+                    <th>Consumer Name<br>Account No.</th>
                     <th>Ticket</th>
                     <th>Address</th>
-                    <th>Account No</th>
+                    <th>Meter No</th>
                     <th>Status</th>
                     <th>Office</th>
                     <th></th>
@@ -45,11 +45,17 @@
                             <td><strong><a href="{{ route('tickets.show', [$item->id]) }}">{{ $item->id }}</a></strong>
                             </td>
                             <td>
-                                <img src="{{ URL::asset('imgs/prof-icon.png'); }}" style="width: 30px; margin-right: 15px;" class="img-circle" alt="profile"><strong>
-                                    {{ $item->ConsumerName }}</strong></td>
+                                {{-- <img src="{{ URL::asset('imgs/prof-icon.png'); }}" style="width: 30px; margin-right: 15px;" class="img-circle" alt="profile"> --}}
+                                
+                                <span>
+                                    <strong>{{ $item->ConsumerName }}</strong><br>
+                                    {{ $item->AccountNumber }}
+                                </span>
+                                
+                            </td>
                             <td>{{ $item->ParentTicket }}-<strong>{{ $item->Ticket }}</strong></td>    
                             <td>{{ Tickets::getAddress($item) }}</td>
-                            <td>{{ $item->AccountNumber }}</td>   
+                            <td>{{ $item->CurrentMeterNo }}</td>   
                             <td>{{ $item->Status }}</td>              
                             <td><span class="badge {{ ServiceConnections::getOfficeBg($item->Office) }}">{{ $item->Office }}</span></td>     
                             <td>
