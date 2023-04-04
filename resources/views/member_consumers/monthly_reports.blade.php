@@ -84,7 +84,9 @@
                         <th>ID</th>
                         <th>Applicant Name</th>
                         <th>Spouse Name</th>
-                        <th>Address</th>
+                        <th>Purok</th>
+                        <th>Barangay</th>
+                        <th>Town</th>
                         <th>Category</th>
                         <th>Date Registered</th>
                         <th>OR Number</th>
@@ -100,7 +102,9 @@
                                 <td><a href="{{ route('memberConsumers.show', [$item->Id]) }}">{{ $item->Id }}</a></td>
                                 <td>{{ strtoupper(MemberConsumers::serializeMemberNameFormal($item)) }}</td>
                                 <td>{{ strtoupper(MemberConsumers::serializeSpouseDeclared($item)) }}</td>
-                                <td>{{ strtoupper(MemberConsumers::getAddress($item)) }}</td>
+                                <td>{{ $item->Sitio }}</td>
+                                <td>{{ $item->Barangay }}</td>
+                                <td>{{ $item->Town }}</td>
                                 <td>{{ strtoupper($item->Type) }}</td>
                                 <td>{{ date('M d, Y', strtotime($item->DateApplied)) }}</td>
                                 <td>{{ $item->ORNumber }}</td>

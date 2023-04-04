@@ -212,7 +212,7 @@ class MemberConsumers extends Model
     }
 
     public static function serializeSpouseDeclared($memberconsumer) {
-        if ($memberconsumer->SpouseFirstName != null && $memberconsumer->SpouseLastName != null) {
+        if ($memberconsumer->SpouseFirstName != null && isset($memberconsumer->SpouseLastName)) {
             return $memberconsumer->SpouseFirstName . ' ' . $memberconsumer->SpouseLastName . ' ' . $memberconsumer->SpouseSuffix;
         } else {
             return "-";
