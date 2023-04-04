@@ -159,6 +159,7 @@ Route::get('/service_connections/download-summary-report/{month}/{year}', [Servi
 Route::get('/service_connections/get-inspection-summary-data-calendar', [ServiceConnectionsController::class, 'getInspectionSummaryDataCalendar'])->name('serviceConnections.get-inspection-summary-data-calendar');
 Route::get('/service_connections/convert-to-bapa', [ServiceConnectionsController::class, 'convertToBapa'])->name('serviceConnections.convert-to-bapa');
 Route::get('/service_connections/convert-to-eca', [ServiceConnectionsController::class, 'convertToEca'])->name('serviceConnections.convert-to-eca');
+Route::get('/service_connections/remove-material-payment', [ServiceConnectionsController::class, 'removeMaterialPayment'])->name('serviceConnections.remove-material-payment');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 

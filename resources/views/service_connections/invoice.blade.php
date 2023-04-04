@@ -159,7 +159,12 @@
                     <tbody>
                         @foreach ($laborWiringCharges as $item)
                             <tr>
-                                <td>{{ $item->Material }}</td>
+                                <td>
+                                    {{ $item->Material }}
+                                    @if (Auth::user()->hasAnyRole(['Administrator'])) 
+                                        <button class="btn btn-link text-danger float-right" onclick="removePayable('{{ $item->id }}')"><i class="fas fa-trash"></i></button>
+                                    @endif
+                                </td>
                                 <td class="text-right">{{ $item->Rate }}</td>
                                 <td class="text-right">{{ $item->Quantity }}</td>
                                 <td class="text-right">{{ number_format($item->Vat, 2) }}</td>
@@ -245,3 +250,39 @@
 </div>
 
 @endif
+
+@push('page_scripts')
+    <script>
+        function removePayable(id) {
+            Swal.fire({
+                title: 'Confirm delete?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url : "{{ route('serviceConnections.remove-material-payment') }}",
+                        type : 'GET',
+                        data : {
+                            id : id,
+                        },
+                        success : function(res) {
+                            Toast.fire({
+                                icon : 'success',
+                                text : 'Record deleted!'
+                            })
+                            location.reload()
+                        },
+                        error : function(err) {
+                            Toast.fire({
+                                icon : 'error',
+                                text : 'Error deleting payable!'
+                            })
+                        }
+                    })
+                } 
+            })
+        }    
+    </script>    
+@endpush

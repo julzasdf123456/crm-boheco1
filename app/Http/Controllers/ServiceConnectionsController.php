@@ -38,6 +38,7 @@ use App\Models\Notifiers;
 use App\Models\SMSNotifications;
 use App\Models\BillDeposits;
 use App\Models\User;
+use App\Models\ServiceConnectionMatPayments;
 use App\Exports\ServiceConnectionApplicationsReportExport;
 use App\Exports\ServiceConnectionEnergizationReportExport;
 use App\Exports\DynamicExport;
@@ -313,7 +314,8 @@ class ServiceConnectionsController extends AppBaseController
                 'CRM_ServiceConnectionMaterialPayables.Rate',
                 'CRM_ServiceConnectionMaterialPayments.Quantity',
                 'CRM_ServiceConnectionMaterialPayments.Vat',
-                'CRM_ServiceConnectionMaterialPayments.Total'
+                'CRM_ServiceConnectionMaterialPayments.Total',
+                'CRM_ServiceConnectionMaterialPayments.id'
             )
             ->get();
 
@@ -3430,6 +3432,14 @@ class ServiceConnectionsController extends AppBaseController
 
         ServiceConnections::where('id', $id)
             ->update(['AccountType' => '1659574427037']);
+
+        return response()->json('ok', 200);
+    }
+
+    public function removeMaterialPayment(Request $request) {
+        $id = $request['id'];
+
+        ServiceConnectionMatPayments::find($id)->delete();
 
         return response()->json('ok', 200);
     }
