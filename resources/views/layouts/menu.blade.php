@@ -80,6 +80,18 @@ use Illuminate\Support\Facades\Auth;
                     </a>
                 </li>
             @endcanany
+            @canany(['Super Admin', 'update membership'])
+                <li class="nav-header">                
+                    Others
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('memberConsumers.trash') }}"
+                    class="nav-link {{ Request::is('memberConsumers.trash*') ? 'active' : '' }}">
+                    <i class="fas fa-trash nav-icon text-success"></i><p>Trash</p>
+                    </a>
+                </li>
+            @endcanany
         </ul>
     </li>    
 @endcanany

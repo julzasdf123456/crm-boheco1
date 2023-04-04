@@ -444,7 +444,6 @@
 <!-- HIDDEN INPUTS -->
 {{-- <input type="hidden" name="DateApplied" value="<?= date('Y-m-d') ?>"> --}}
 
-<input type="hidden" name="Trashed" value="No">
 
 <input type="hidden" name="ApplicationStatus" value="Pending">
 

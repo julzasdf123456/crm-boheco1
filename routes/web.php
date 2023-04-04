@@ -68,6 +68,7 @@ Route::get('/member_consumers/download-quarterly-reports/{town}/{quarter}/{year}
 Route::get('/member_consumers/daily-monitor', [MemberConsumersController::class, 'dailyMonitor'])->name('memberConsumers.daily-monitor');
 Route::get('/member_consumers/daily-monitor-data', [MemberConsumersController::class, 'dailyMonitorData'])->name('memberConsumers.daily-monitor-data');
 Route::get('/member_consumers/daily-monitor-total', [MemberConsumersController::class, 'dailyMonitorTotal'])->name('memberConsumers.daily-monitor-total');
+Route::get('/member_consumers/trash', [MemberConsumersController::class, 'trash'])->name('memberConsumers.trash');
 Route::resource('memberConsumers', MemberConsumersController::class);
 
 
