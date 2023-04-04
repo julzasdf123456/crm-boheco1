@@ -43,21 +43,10 @@
                                 <td>{{ $item->Type }}</td>              
                                 <td><span class="badge {{ ServiceConnections::getOfficeBg($item->Office) }}">{{ $item->Office }}</span></td>     
                                 <td class="text-right">
-                                    {!! Form::open(['route' => ['memberConsumers.destroy', $item->ConsumerId], 'method' => 'delete']) !!}
-                                    <div class='btn-group'>
-                                        <a href="{{ route('memberConsumers.show', [$item->ConsumerId]) }}"
-                                        class='btn btn-default btn-xs'>
-                                            <i class="far fa-eye"></i>
-                                        </a>
-                                        @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers'])) 
-                                            <a href="{{ route('memberConsumers.edit', [$item->ConsumerId]) }}"
-                                            class='btn btn-default btn-xs'>
-                                                <i class="far fa-edit"></i>
-                                            </a>
-                                            {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
-                                        @endif
-                                    </div>
-                                    {!! Form::close() !!}
+                                    <a href="{{ route('memberConsumers.restore', [$item->ConsumerId]) }}"
+                                       class='btn btn-success btn-xs'>
+                                          <i class="fas fa-recycle"></i> Restore
+                                       </a>
                                 </td>                  
                             </tr>                    
                         @endforeach
@@ -69,11 +58,3 @@
         </div>        
     </div>
 @endsection
-
-@push('page_scripts')
-    <script>
-        $(document).ready(function() {
-     
-        });
-    </script>
-@endpush

@@ -69,6 +69,7 @@ Route::get('/member_consumers/daily-monitor', [MemberConsumersController::class,
 Route::get('/member_consumers/daily-monitor-data', [MemberConsumersController::class, 'dailyMonitorData'])->name('memberConsumers.daily-monitor-data');
 Route::get('/member_consumers/daily-monitor-total', [MemberConsumersController::class, 'dailyMonitorTotal'])->name('memberConsumers.daily-monitor-total');
 Route::get('/member_consumers/trash', [MemberConsumersController::class, 'trash'])->name('memberConsumers.trash');
+Route::get('/member_consumers/restore/{id}', [MemberConsumersController::class, 'restore'])->name('memberConsumers.restore');
 Route::resource('memberConsumers', MemberConsumersController::class);
 
 
