@@ -54,12 +54,11 @@
 
                 {{-- AREA --}}
                 <div class="form-group col-lg-2">
-                    <label for="Town">Area</label>
-                    <select id="Town" name="Town" class="form-control form-control-sm">
-                        <option value="All">All</option>
-                        @foreach ($towns as $item)
-                            <option value="{{ $item->id }}" {{ isset($_GET['Town']) && $_GET['Town']==$item->id ? 'selected' : '' }}>{{ $item->Town }}</option>
-                        @endforeach
+                    <label for="Office">Office</label>
+                    <select id="Office" name="Office" class="form-control form-control-sm">
+                        <option value="All" {{ isset($_GET['Office']) && $_GET['Office']=='All' ? 'selected' : '' }}>All</option>
+                        <option value="MAIN OFFICE" {{ isset($_GET['Office']) && $_GET['Office']=='MAIN OFFICE' ? 'selected' : '' }}>MAIN OFFICE</option>
+                        <option value="SUB-OFFICE" {{ isset($_GET['Office']) && $_GET['Office']=='SUB-OFFICE' ? 'selected' : '' }}>SUB-OFFICE</option>
                     </select>
                 </div>
 
@@ -244,7 +243,7 @@
         $(document).ready(function() {
             $('#downloadBtn').on('click', function(e) {
                 e.preventDefault()
-                window.location.href = "{{ url('/tickets/download-kps-summary-report') }}" + "/" + $('#Town').val() + "/" + $('#From').val() + "/" + $('#To').val() 
+                window.location.href = "{{ url('/tickets/download-kps-summary-report') }}" + "/" + $('#Office').val() + "/" + $('#From').val() + "/" + $('#To').val() 
             })
         })    
     </script>    
