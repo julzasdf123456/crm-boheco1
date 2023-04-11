@@ -297,7 +297,7 @@ class ElectriciansController extends AppBaseController
 
         $export = new DynamicExport($arr, $headers, null, 'Housewiring Labor Data for ' . date('F d, Y', strtotime($from)) . ' - ' . date('F d, Y', strtotime($to)));
 
-        return Excel::download($export, 'Housewiring-Labor-Data'  . date('F d, Y', strtotime($from)) . '-' . date('F d, Y', strtotime($to)) . '.xlsx');
+        return Excel::download($export, 'Housewiring-Labor-Data-' . $office . '-' . date('F d, Y', strtotime($from)) . '-' . date('F d, Y', strtotime($to)) . '.xlsx');
     }
 
     public function laborSummary(Request $request) {
