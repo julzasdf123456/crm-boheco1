@@ -193,7 +193,7 @@ class ElectriciansController extends AppBaseController
             ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
             ->leftJoin('CRM_ServiceConnectionTotalPayments', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionTotalPayments.ServiceConnectionId')
             ->whereRaw("CRM_ServiceConnections.ORDate IS NOT NULL AND (ORDate BETWEEN '" . $from . "' AND '" . $to . "') AND ElectricianAcredited='Yes' 
-                AND (CRM_ServiceConnections.Trash IS NULL OR CRM_ServiceConnections.Trash='No')")
+                AND (CRM_ServiceConnections.Trash IS NULL OR CRM_ServiceConnections.Trash='No') AND CRM_ServiceConnections.Office='" . $office . "'")
             ->select(
                 'CRM_ServiceConnections.id',
                 'ORDate',
@@ -240,7 +240,7 @@ class ElectriciansController extends AppBaseController
             ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
             ->leftJoin('CRM_ServiceConnectionTotalPayments', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionTotalPayments.ServiceConnectionId')
             ->whereRaw("CRM_ServiceConnections.ORDate IS NOT NULL AND (ORDate BETWEEN '" . $from . "' AND '" . $to . "') AND ElectricianAcredited='Yes' 
-                AND (CRM_ServiceConnections.Trash IS NULL OR CRM_ServiceConnections.Trash='No')")
+                AND (CRM_ServiceConnections.Trash IS NULL OR CRM_ServiceConnections.Trash='No') AND CRM_ServiceConnections.Office='" . $office . "'")
             ->select(
                 'CRM_ServiceConnections.id',
                 'ORDate',
