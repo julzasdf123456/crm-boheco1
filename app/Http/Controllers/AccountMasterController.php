@@ -491,7 +491,7 @@ class AccountMasterController extends AppBaseController
 
             // generate ten thousand samples LEFT
             $samples = [];
-            $sample = $seq > 1000 ? ($seq-1000) : 1;
+            $sample = $seq > 4000 ? ($seq-4000) : 1;
             for ($i = $seq; $i >= $sample; $i--) {
                 $head = sprintf("%0004d", $i);
                 array_push($samples, $acctNo . $head);
@@ -507,7 +507,7 @@ class AccountMasterController extends AppBaseController
 
             // generate ten thousand samples RIGHT
             $samples = [];
-            $sample = ($seq+1000) > 9999 ? 9999 : ($seq+1000);
+            $sample = ($seq+4000) > 9999 ? 9999 : ($seq+4000);
             for ($i = $seq; $i <= $sample; $i++) {
                 $head = sprintf("%0004d", $i);
                 array_push($samples, $acctNo . $head);
