@@ -36,6 +36,11 @@ use Illuminate\Support\Facades\Auth;
                                     @if ($totalTransactions->Notes == null && $serviceConnections->ORNumber == null) 
                                         <a href="{{ route('serviceConnectionPayTransactions.create-step-four', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Update service connection payment">
                                         <i class="fas fa-dollar-sign"></i></a>
+                                    @else
+                                        @if (Auth::user()->hasAnyRole(['Administrator'])) 
+                                            <a href="{{ route('serviceConnectionPayTransactions.create-step-four', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Update service connection payment">
+                                            <i class="fas fa-dollar-sign"></i></a>
+                                        @endif
                                     @endif
 
                                     <a href="{{ route('serviceConnections.print-invoice', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Print Payment Slip">
