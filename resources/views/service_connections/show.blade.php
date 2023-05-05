@@ -46,6 +46,12 @@ use Illuminate\Support\Facades\Auth;
                                     <a href="{{ route('serviceConnections.print-invoice', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Print Payment Slip">
                                         <i class="fas fa-comments-dollar"></i>
                                     </a>  
+
+                                    @if (!ServiceConnections::isResidentials($serviceConnections->AccountTypeRaw))
+                                        <a href="{{ route('serviceConnections.print-quotation-form', [$serviceConnections->id]) }}" class="btn btn-tool" style="color: #ff7b00;" title="Print Quotation">
+                                            <i class="fas fa-file-contract"></i>
+                                        </a> 
+                                    @endif
                                 @else
                                     <a href="{{ route('serviceConnectionPayTransactions.create-step-four', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Update service connection payment">
                                         <i class="fas fa-dollar-sign"></i></a>

@@ -160,6 +160,7 @@ Route::get('/service_connections/get-inspection-summary-data-calendar', [Service
 Route::get('/service_connections/convert-to-bapa', [ServiceConnectionsController::class, 'convertToBapa'])->name('serviceConnections.convert-to-bapa');
 Route::get('/service_connections/convert-to-eca', [ServiceConnectionsController::class, 'convertToEca'])->name('serviceConnections.convert-to-eca');
 Route::get('/service_connections/remove-material-payment', [ServiceConnectionsController::class, 'removeMaterialPayment'])->name('serviceConnections.remove-material-payment');
+Route::get('/service_connections/print-quotation-form/{id}', [ServiceConnectionsController::class, 'printQuotationForm'])->name('serviceConnections.print-quotation-form');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 

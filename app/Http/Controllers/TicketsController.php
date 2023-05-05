@@ -1754,7 +1754,6 @@ class TicketsController extends AppBaseController
                     $parent = null;
                 }
                 
-
                 $output .= '
                     <tr>
                         <td><a href="' . route("tickets.show", [$item->id]) . '">' . $item->id . '</a></td>

@@ -240,7 +240,7 @@
                     </tr>
                     <tr>
                         <td>BOHECO I Share</td>
-                        <th  class="text-right">P {{ number_format($totalTransactions->BOHECOShare, 2) }}</th>
+                        <th class="text-right">P {{ number_format($totalTransactions->BOHECOShare, 2) }}</th>
                     </tr>
                     <tr>
                         <td>{{ ServiceConnections::isResidentials($serviceConnections->AccountTypeRaw) ? 'Bill Deposit' : 'Energy Deposit' }}</td>
