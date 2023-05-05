@@ -1,3 +1,7 @@
+@php
+    use App\Models\Tickets;
+@endphp
+
 @extends('layouts.app')
 
 @section('content')
@@ -188,6 +192,22 @@
                         </div>
                     </div>
 
+                    @if (in_array($tickets->TicketRepoId, Tickets::getMeterInspectionsId()))
+                        <div class="form-group">
+                            <label>Recommendation</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="Assessment" id="replace" value="Replace" {{ $tickets->Assessment=='Replace' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="replace">Replace</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="Assessment" id="retain" value="Retain" {{ $tickets->Assessment=='Retain' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="retain">Retain</label>
+                            </div>
+                        </div>
+                    @else
+                        <input class="form-check-input" type="hidden" name="Assessment" value="">
+                    @endif
+
                     <div class="form-group">
                         <label for="DateTimeLinemanExecuted">Date of Execution</label>
                         <input type="text" name="DateTimeLinemanExecuted" id="DateTimeLinemanExecuted" value="{{ $tickets->DateTimeLinemanExecuted }}" class="form-control">
@@ -287,6 +307,7 @@
                         DateTimeLinemanExecuted : $('#DateTimeLinemanExecuted').val(),
                         id : "{{ $tickets->id }}",
                         Status : $('input[name="Status"]:checked').val(),
+                        Assessment : $('input[name="Assessment"]:checked').val(),
                         Notes : $('#Notes').val(),
                     },
                     success : function(response) {

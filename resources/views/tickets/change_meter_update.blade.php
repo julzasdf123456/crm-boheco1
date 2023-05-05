@@ -51,7 +51,41 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     {!! Form::label('CurrentMeterBrand', 'Old Meter Brand:') !!}
-                                    {!! Form::text('CurrentMeterBrand', $ticket->CurrentMeterBrand, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100]) !!}
+                                    {{-- {!! Form::text('CurrentMeterBrand', $ticket->CurrentMeterBrand, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100]) !!} --}}
+                                    {!! Form::select('CurrentMeterBrand', [
+                                        '' => '',
+                                        'ACCURA' => 'ACCURA',
+                                        'ACLARA KV2C' => 'ACLARA KV2C',
+                                        'AMERICO' => 'AMERICO',
+                                        'BAZ' => 'BAZ',
+                                        'CHINT' => 'CHINT',
+                                        'EDMI MK10E' => 'EDMI MK10E',
+                                        'EDMI MK6N' => 'EDMI MK6N',
+                                        'EDMI MK6E' => 'EDMI MK6E',
+                                        'EDMI MK7C' => 'EDMI MK7C',
+                                        'ELETRA' => 'ELETRA',
+                                        'EVER' => 'EVER',
+                                        'FUJI' => 'FUJI',
+                                        'GE' => 'GE',
+                                        'GE I210' => 'GE I210',
+                                        'GE KV2C' => 'GE KV2C',
+                                        'GOLDSTAR' => 'GOLDSTAR',
+                                        'HARBIN' => 'HARBIN',
+                                        'HEAG' => 'HEAG',
+                                        'INTECH' => 'INTECH', 
+                                        'ITECHENE' => 'ITECHENE',
+                                        'LANDIS' => 'LANDIS',
+                                        'LANDIS FOCUS' => 'LANDIS FOCUS',
+                                        'MITSUBISHI' => 'MITSUBISHI',
+                                        'ORIENTAL' => 'ORIENTAL',
+                                        'SAFARI' => 'SAFARI',
+                                        'SANGAMO' => 'SANGOMO',
+                                        'SUZSOU' => 'SUZSOU',
+                                        'TATUNG' => 'TATUNG',
+                                        'TECHEN' => 'TECHEN',
+                                        'TOSHIBA' => 'TOSHIBA',
+                                        'WARBURTON' => 'WARBURTON',
+                                    ], $ticket->CurrentMeterBrand, ['class' => 'form-control form-control-sm']) !!}
                                 </div>
                             </div>
 
@@ -59,7 +93,41 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     {!! Form::label('NewMeterBrand', 'New Meter Brand:') !!}
-                                    {!! Form::text('NewMeterBrand', $ticket->NewMeterBrand, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100]) !!}
+                                    {{-- {!! Form::text('NewMeterBrand', $ticket->NewMeterBrand, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100]) !!} --}}
+                                    {!! Form::select('NewMeterBrand', [
+                                        '' => '',
+                                        'ACCURA' => 'ACCURA',
+                                        'ACLARA KV2C' => 'ACLARA KV2C',
+                                        'AMERICO' => 'AMERICO',
+                                        'BAZ' => 'BAZ',
+                                        'CHINT' => 'CHINT',
+                                        'EDMI MK10E' => 'EDMI MK10E',
+                                        'EDMI MK6N' => 'EDMI MK6N',
+                                        'EDMI MK6E' => 'EDMI MK6E',
+                                        'EDMI MK7C' => 'EDMI MK7C',
+                                        'ELETRA' => 'ELETRA',
+                                        'EVER' => 'EVER',
+                                        'FUJI' => 'FUJI',
+                                        'GE' => 'GE',
+                                        'GE I210' => 'GE I210',
+                                        'GE KV2C' => 'GE KV2C',
+                                        'GOLDSTAR' => 'GOLDSTAR',
+                                        'HARBIN' => 'HARBIN',
+                                        'HEAG' => 'HEAG',
+                                        'INTECH' => 'INTECH', 
+                                        'ITECHENE' => 'ITECHENE',
+                                        'LANDIS' => 'LANDIS',
+                                        'LANDIS FOCUS' => 'LANDIS FOCUS',
+                                        'MITSUBISHI' => 'MITSUBISHI',
+                                        'ORIENTAL' => 'ORIENTAL',
+                                        'SAFARI' => 'SAFARI',
+                                        'SANGAMO' => 'SANGOMO',
+                                        'SUZSOU' => 'SUZSOU',
+                                        'TATUNG' => 'TATUNG',
+                                        'TECHEN' => 'TECHEN',
+                                        'TOSHIBA' => 'TOSHIBA',
+                                        'WARBURTON' => 'WARBURTON',
+                                    ], $ticket->NewMeterBrand, ['class' => 'form-control form-control-sm']) !!}
                                 </div>
                             </div>
 

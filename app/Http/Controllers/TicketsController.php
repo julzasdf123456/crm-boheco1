@@ -220,6 +220,8 @@ class TicketsController extends AppBaseController
                     'CRM_Tickets.Neighbor2',
                     'CRM_Tickets.Notes',
                     'CRM_Tickets.Status',
+                    'CRM_Tickets.Recommendation',
+                    'CRM_Tickets.Assessment',
                     'CRM_Tickets.DateTimeDownloaded',
                     'CRM_Tickets.DateTimeLinemanArrived',
                     'CRM_Tickets.DateTimeLinemanExecuted',
@@ -243,7 +245,7 @@ class TicketsController extends AppBaseController
             ->orderByDesc('created_at')
             ->get();
 
-        if ($tickets->AccountNumber != null) {
+        if ($tickets != null && $tickets->AccountNumber != null) {
             $history = DB::table('CRM_Tickets')
                 ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
                 ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
@@ -288,7 +290,7 @@ class TicketsController extends AppBaseController
             $history = null;
         }
 
-        if ($tickets->InspectionId != null) {
+        if ($tickets != null && $tickets->InspectionId != null) {
             $inspections = ServiceConnectionInspections::find($tickets->InspectionId);
         } else {
             $inspections = null;
@@ -863,67 +865,46 @@ class TicketsController extends AppBaseController
     }
 
     public function updateExecution(Request $request) {
-        if ($request->ajax()) {
-            $ticket = Tickets::find($request['id']);
-            $ticket->Status = $request['Status'];
-            $ticket->Notes = $request['Notes'];
-            $ticket->DateTimeLinemanExecuted = date('Y-m-d H:i:s', strtotime($request['DateTimeLinemanExecuted']));
-            $ticket->save();
+        $ticket = Tickets::find($request['id']);
+        $ticket->Status = $request['Status'];
+        $ticket->Assessment = $request['Assessment'];
+        $ticket->Notes = $request['Notes'];
+        $ticket->DateTimeLinemanExecuted = date('Y-m-d H:i:s', strtotime($request['DateTimeLinemanExecuted']));
+        $ticket->save();
 
-            // UPDATE ACCOUNTS
-            if ($ticket->Ticket == Tickets::getReconnection() && $ticket->Status == 'Executed') {
-                $account = ServiceAccounts::find($ticket->AccountNumber);
-                if ($account != null) {
-                    $account->AccountStatus = 'ACTIVE';
-                    $account->save();
+        // CREATE LOG
+        $ticketLog = new TicketLogs;
+        $ticketLog->id = IDGenerator::generateID();
+        $ticketLog->TicketId = $request['id'];
+        $ticketLog->Log = $request['Status'];
+        if($request['Status'] == 'Executed') {
+            $ticketLog->LogDetails = "Lineman performed action at " . $request['DateTimeLinemanExecuted'];
+        } else {
+            $ticketLog->LogDetails = $request['Notes'];
+        }            
+        $ticketLog->UserId = Auth::id();
+        $ticketLog->save();
 
-                    // ADD TO DISCO/RECO HISTORY
-                    $recoHist = new DisconnectionHistory;
-                    $recoHist->id = IDGenerator::generateIDandRandString();
-                    $recoHist->AccountNumber = $account->id;
-                    $recoHist->ServicePeriod = $ticket->ServicePeriod;
-                    $recoHist->Status = 'RECONNECTED';
-                    $recoHist->UserId = Auth::id();
-                    $recoHist->DateDisconnected = date('Y-m-d', strtotime($ticket->DateTimeLinemanExecuted));
-                    $recoHist->TimeDisconnected = date('H:i:s', strtotime($ticket->DateTimeLinemanExecuted));
-                    $recoHist->save();
+        // SEND SMS
+        if ($ticket->ContactNumber != null) {
+            if (strlen($ticket->ContactNumber) > 10 && strlen($ticket->ContactNumber) < 13) {
+                if ($request['Status'] == 'Executed') {
+                    $msg = "Good day, " . $ticket->ConsumerName . ", \n\nThis is to inform you that your complaint/request with ticket number " . $ticket->id . " has been successfully acted by BOHECO I Technical Team." .
+                    "\n\nHave a graet day!";
+                } elseif ($request['Status'] == 'Acted') {
+                    $msg = "Good day, " . $ticket->ConsumerName . ", \n\nYour complaint/request with ticket number " . $ticket->id . " was not success carried out by BOHECO I Technical Team due to the following findings: \n\n " .
+                    $request['Notes'] . "\n\nShould these findings have been addressed, please notify us through our hotlines so we can schedule our re-visit." .
+                    "\n\nHave a great day!";
+                } else {
+                    $msg = "Good day, " . $ticket->ConsumerName . ", \n\nYour complaint/request with ticket number " . $ticket->id . " was not success carried out by BOHECO I Technical Team due to the following findings: \n\n " .
+                    $request['Notes'] . "\n\nShould these findings have been addressed, please notify us through our hotlines so we can schedule our re-visit." .
+                    "\n\nHave a great day!";
                 }
+                SMSNotifications::createFreshSms($ticket->ContactNumber, $msg, 'TICKETS', $ticket->id);
             }
-
-            // CREATE LOG
-            $ticketLog = new TicketLogs;
-            $ticketLog->id = IDGenerator::generateID();
-            $ticketLog->TicketId = $request['id'];
-            $ticketLog->Log = $request['Status'];
-            if($request['Status'] == 'Executed') {
-                $ticketLog->LogDetails = "Lineman performed action at " . $request['DateTimeLinemanExecuted'];
-            } else {
-                $ticketLog->LogDetails = $request['Notes'];
-            }            
-            $ticketLog->UserId = Auth::id();
-            $ticketLog->save();
-
-            // SEND SMS
-            if ($ticket->ContactNumber != null) {
-                if (strlen($ticket->ContactNumber) > 10 && strlen($ticket->ContactNumber) < 13) {
-                    if ($request['Status'] == 'Executed') {
-                        $msg = "Good day, " . $ticket->ConsumerName . ", \n\nThis is to inform you that your complaint/request with ticket number " . $ticket->id . " has been successfully acted by BOHECO I Technical Team." .
-                        "\n\nHave a graet day!";
-                    } elseif ($request['Status'] == 'Acted') {
-                        $msg = "Good day, " . $ticket->ConsumerName . ", \n\nYour complaint/request with ticket number " . $ticket->id . " was not success carried out by BOHECO I Technical Team due to the following findings: \n\n " .
-                        $request['Notes'] . "\n\nShould these findings have been addressed, please notify us through our hotlines so we can schedule our re-visit." .
-                        "\n\nHave a great day!";
-                    } else {
-                        $msg = "Good day, " . $ticket->ConsumerName . ", \n\nYour complaint/request with ticket number " . $ticket->id . " was not success carried out by BOHECO I Technical Team due to the following findings: \n\n " .
-                        $request['Notes'] . "\n\nShould these findings have been addressed, please notify us through our hotlines so we can schedule our re-visit." .
-                        "\n\nHave a great day!";
-                    }
-                    SMSNotifications::createFreshSms($ticket->ContactNumber, $msg, 'TICKETS', $ticket->id);
-                }
-            }
-
-            return response()->json($ticket, 200);
         }
+
+        return response()->json($ticket, 200);
     }
 
     public function dashboard() {
@@ -1539,6 +1520,7 @@ class TicketsController extends AppBaseController
                                         'CRM_Tickets.Office',  
                                         'CRM_Tickets.Reason',  
                                         'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Assessment',  
                                         'CRM_Tickets.Ticket as TicketID', 
                                         'CRM_Tickets.DateTimeLinemanExecuted',    
                                         'CRM_Barangays.Barangay as Barangay')
@@ -1565,6 +1547,7 @@ class TicketsController extends AppBaseController
                                         'CRM_Tickets.Office',  
                                         'CRM_Tickets.Reason',  
                                         'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Assessment',  
                                         'CRM_Tickets.Ticket as TicketID', 
                                         'CRM_Tickets.DateTimeLinemanExecuted',    
                                         'CRM_Barangays.Barangay as Barangay')
@@ -1594,6 +1577,7 @@ class TicketsController extends AppBaseController
                                         'CRM_Tickets.Office',  
                                         'CRM_Tickets.Reason',  
                                         'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Assessment',  
                                         'CRM_Tickets.Ticket as TicketID', 
                                         'CRM_Tickets.DateTimeLinemanExecuted',    
                                         'CRM_Barangays.Barangay as Barangay')
@@ -1621,6 +1605,7 @@ class TicketsController extends AppBaseController
                                         'CRM_Tickets.Office',  
                                         'CRM_Tickets.Reason',  
                                         'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Assessment',  
                                         'CRM_Tickets.Ticket as TicketID', 
                                         'CRM_Tickets.DateTimeLinemanExecuted',    
                                         'CRM_Barangays.Barangay as Barangay')
@@ -1653,7 +1638,8 @@ class TicketsController extends AppBaseController
                                         'CRM_Towns.Town as Town',
                                         'CRM_Tickets.Office',  
                                         'CRM_Tickets.Reason',  
-                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.ContactNumber', 
+                                        'CRM_Tickets.Assessment',   
                                         'CRM_Tickets.Ticket as TicketID', 
                                         'CRM_Tickets.DateTimeLinemanExecuted',    
                                         'CRM_Barangays.Barangay as Barangay')
@@ -1680,7 +1666,8 @@ class TicketsController extends AppBaseController
                                         'CRM_Towns.Town as Town',
                                         'CRM_Tickets.Office',  
                                         'CRM_Tickets.Reason',  
-                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.ContactNumber', 
+                                        'CRM_Tickets.Assessment',   
                                         'CRM_Tickets.Ticket as TicketID', 
                                         'CRM_Tickets.DateTimeLinemanExecuted',    
                                         'CRM_Barangays.Barangay as Barangay')
@@ -1710,7 +1697,8 @@ class TicketsController extends AppBaseController
                                         'CRM_Towns.Town as Town',
                                         'CRM_Tickets.Office',  
                                         'CRM_Tickets.Reason',  
-                                        'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.ContactNumber', 
+                                        'CRM_Tickets.Assessment',   
                                         'CRM_Tickets.Ticket as TicketID', 
                                         'CRM_Tickets.DateTimeLinemanExecuted',    
                                         'CRM_Barangays.Barangay as Barangay')
@@ -1739,6 +1727,7 @@ class TicketsController extends AppBaseController
                                         'CRM_Tickets.Office',  
                                         'CRM_Tickets.Reason',  
                                         'CRM_Tickets.ContactNumber',  
+                                        'CRM_Tickets.Assessment',  
                                         'CRM_Tickets.Ticket as TicketID', 
                                         'CRM_Tickets.DateTimeLinemanExecuted',    
                                         'CRM_Barangays.Barangay as Barangay')
@@ -1774,6 +1763,7 @@ class TicketsController extends AppBaseController
                         <td>' . Tickets::getAddress($item) . '</td>
                         <td>' . ($parent != null ? $parent->Name . ' - ' : '') . $item->Ticket . '</td>
                         <td>' . $item->Status . '</td>
+                        <td>' . $item->Assessment . '</td>
                         <td>' . date("F d, Y h:i A", strtotime($item->created_at)) . '</td>
                         <td>' . ($item->DateTimeLinemanExecuted!=null ? date("F d, Y h:i A", strtotime($item->DateTimeLinemanExecuted)) : "") . '</td>
                     </tr>

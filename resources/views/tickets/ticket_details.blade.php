@@ -72,6 +72,10 @@
                                         <td>{{ $tickets->LinemanCrewExecuted }}</td>
                                     </tr>
                                     <tr>
+                                        <th>Recommendation :</th>
+                                        <td>{{ $tickets->Assessment }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>OR Number :</th>
                                         <td>{{ $tickets->ORNumber }}</td>
                                     </tr>

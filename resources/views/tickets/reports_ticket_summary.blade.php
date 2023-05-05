@@ -114,6 +114,7 @@
                     <th>Address</th>
                     <th>Complaint/Request</th>
                     <th>Status</th>
+                    <th>Recommendation</th>
                     <th>Date Recorded</th>
                     <th>Date Executed</th>
                 </thead>
