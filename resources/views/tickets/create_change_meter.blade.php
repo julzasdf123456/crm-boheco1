@@ -363,6 +363,7 @@
 
                             @if ($serviceAccount != null)  
                                 <input type="hidden" value="{{ $serviceAccount->AccountNumber }}" name="AccountNumber">
+                                <input type="hidden" value="{{ $serviceAccount->Pole }}" name="PoleNumber">
                             @endif  
                             
                         </div>
