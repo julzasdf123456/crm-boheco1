@@ -4349,9 +4349,10 @@ class TicketsController extends AppBaseController
         $executed = $request['Executed'];
         $crew = $request['CrewAssigned'];
         $status = $request['Status'];
+        $notes = $request['Notes'];
 
         Tickets::where('id', $id)
-            ->update(['DateTimeLinemanArrived' => $arrival, 'DateTimeLinemanExecuted' => $executed, 'Status' => $status, 'CrewAssigned' => $crew]);
+            ->update(['DateTimeLinemanArrived' => $arrival, 'DateTimeLinemanExecuted' => $executed, 'Status' => $status, 'CrewAssigned' => $crew, 'Notes' => $notes]);
 
         return response()->json(Tickets::find($id), 200);
     }
