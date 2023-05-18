@@ -61,7 +61,7 @@ class ElectriciansController extends AppBaseController
      */
     public function store(CreateElectriciansRequest $request)
     {
-        $input['id'] = IDGenerator::generateID();
+        // $input['id'] = IDGenerator::generateID();
         $input = $request->all();
 
         $electricians = $this->electriciansRepository->create($input);

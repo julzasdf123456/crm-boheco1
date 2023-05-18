@@ -73,6 +73,7 @@ class Electricians extends Model
      * @var array
      */
     public static $rules = [
+        'id' => 'string',
         'IDNumber' => 'nullable|string|max:500',
         'Name' => 'nullable|string|max:500',
         'Address' => 'nullable|string|max:500',
