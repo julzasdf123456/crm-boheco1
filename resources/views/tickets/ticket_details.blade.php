@@ -20,8 +20,8 @@
                             <a class="btn btn-tool text-info float-right" title="This ticket is closed because it's been already tagged as executed."><i class="fas fa-lock"></i></a>
                         @else
                             <a href="{{ route('tickets.edit', [$tickets->id]) }}" class="btn btn-tool float-right" title="Edit this ticket"><i class="fas fa-pen"></i></a>
-                            <a href="{{ route('tickets.print-ticket', [$tickets->id]) }}" class="btn btn-tool float-right" title="Re-print Ticket Order"><i class="fas fa-print"></i></a>
                         @endif
+                        <a href="{{ route('tickets.print-ticket', [$tickets->id]) }}" class="btn btn-tool float-right" title="Re-print Ticket Order"><i class="fas fa-print"></i></a>
                     </div>
                 </div>                
                 <p class="text-muted">Ticket No: {{ $tickets->id }}</p>
