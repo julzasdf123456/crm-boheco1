@@ -98,10 +98,20 @@ class AccountMasterController extends AppBaseController
 
             // Flash::success('Account Master saved successfully.');
 
-            $extension = new AccountMasterExtension;
-            $extension->AccountNumber = $input['AccountNumber'];
-            $extension->Item2 = $input['ServiceConnectionId'];
-            $extension->save();
+            $extension = AccountMasterExtension::where('AccountNumber', $input['AccountNumber'])->first();
+            if ($extension != null) {
+                $extension->delete();
+
+                $extension = new AccountMasterExtension;
+                $extension->AccountNumber = $input['AccountNumber'];
+                $extension->Item2 = $input['ServiceConnectionId'];
+                $extension->save();
+            } else {
+                $extension = new AccountMasterExtension;
+                $extension->AccountNumber = $input['AccountNumber'];
+                $extension->Item2 = $input['ServiceConnectionId'];
+                $extension->save();
+            }
 
             return redirect(route('accountMasters.account-migration-step-two', [$input['AccountNumber'], $input['ServiceConnectionId']]));
         }
@@ -237,7 +247,7 @@ class AccountMasterController extends AppBaseController
                 'barangay' => $barangays,
                 'accountTypes' => $accountTypes,
                 'crew' => $crew,
-            ] 
+            ]
         );
     }
 
