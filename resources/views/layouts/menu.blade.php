@@ -286,6 +286,13 @@ use Illuminate\Support\Facades\Auth;
                             <i class="fas fa-circle nav-icon text-warning"></i><p>Summary</p>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('serviceConnections.service-drop') }}"
+                        class="nav-link {{ Request::is('serviceConnections.service-drop*') ? 'active' : '' }}">
+                            <i class="fas fa-circle nav-icon text-warning"></i><p>Energization Service Drop</p>
+                        </a>
+                    </li>
                 </ul>
             </li>
             @endcanany

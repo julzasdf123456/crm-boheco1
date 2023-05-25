@@ -3524,4 +3524,33 @@ class ServiceConnectionsController extends AppBaseController
             'particularPayments' => $particularPayments,
         ]);
     }
+
+    public function serviceDrop(Request $request) {
+        $from = $request['From'];
+        $to = $request['To'];
+
+        $data = DB::table('CRM_ServiceConnections')
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+                ->leftJoin('CRM_ServiceConnectionInspections', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionInspections.ServiceConnectionId')
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_ServiceConnections.StationCrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->leftJoin('users', 'CRM_ServiceConnectionInspections.Inspector', '=', 'users.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_ServiceConnections.DateTimeOfEnergization BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->select(
+                    'CRM_ServiceConnections.id',
+                    'ServiceAccountName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'DateTimeOfEnergization',
+                    'SDWLengthAsInstalled',
+                    'StationName',
+                    'users.name'
+                    )
+                ->orderBy('CRM_ServiceConnections.DateTimeOfEnergization')
+                ->get();
+
+        return view('/service_connections/service_drop', [
+            'data' => $data,
+        ]);
+    }
 }

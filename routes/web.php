@@ -161,6 +161,7 @@ Route::get('/service_connections/convert-to-bapa', [ServiceConnectionsController
 Route::get('/service_connections/convert-to-eca', [ServiceConnectionsController::class, 'convertToEca'])->name('serviceConnections.convert-to-eca');
 Route::get('/service_connections/remove-material-payment', [ServiceConnectionsController::class, 'removeMaterialPayment'])->name('serviceConnections.remove-material-payment');
 Route::get('/service_connections/print-quotation-form/{id}', [ServiceConnectionsController::class, 'printQuotationForm'])->name('serviceConnections.print-quotation-form');
+Route::get('/service_connections/service-drop', [ServiceConnectionsController::class, 'serviceDrop'])->name('serviceConnections.service-drop');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 
