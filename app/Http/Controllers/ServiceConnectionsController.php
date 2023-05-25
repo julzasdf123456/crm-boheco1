@@ -3529,7 +3529,8 @@ class ServiceConnectionsController extends AppBaseController
         $from = $request['From'];
         $to = $request['To'];
 
-        $data = DB::table('CRM_ServiceConnections')
+        if ($from != null && $to != null) {
+            $data = DB::table('CRM_ServiceConnections')
                 ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
                 ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
                 ->leftJoin('CRM_ServiceConnectionInspections', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionInspections.ServiceConnectionId')
@@ -3548,6 +3549,9 @@ class ServiceConnectionsController extends AppBaseController
                     )
                 ->orderBy('CRM_ServiceConnections.DateTimeOfEnergization')
                 ->get();
+        } else {
+            $data = [];
+        }
 
         return view('/service_connections/service_drop', [
             'data' => $data,
