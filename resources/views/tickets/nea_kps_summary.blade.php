@@ -150,8 +150,8 @@
                     <tr>
                         <td>3.b</td>
                         <td>Change/ Upgrade Service Drop</td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ $data->Received3b }}</td>
+                        <td>{{ $data->Acted3b }}</td>
                     </tr>
                     <tr>
                         <td>3.c</td>
