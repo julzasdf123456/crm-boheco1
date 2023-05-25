@@ -2904,6 +2904,9 @@ class TicketsController extends AppBaseController
                     DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.c' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received2c"),
                     DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.c' AND Status != 'Received' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted2c"),
 
+                    DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.a' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received3a"),
+                    DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.a' AND Status != 'Received' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted3a"),
+
                     DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.c' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received3c"),
                     DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.c' AND Status != 'Received' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted3c"),
 
@@ -2940,6 +2943,9 @@ class TicketsController extends AppBaseController
 
                 DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.c' AND Trash IS NULL AND Office='" . $office . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received2c"),
                 DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.c' AND Status != 'Received' AND Trash IS NULL AND Office='" . $office . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted2c"),
+
+                DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.a' AND Trash IS NULL AND Office='" . $office . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received3a"),
+                DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.a' AND Status != 'Received' AND Trash IS NULL AND Office='" . $office . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted3a"),
 
                 DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.c' AND Trash IS NULL AND Office='" . $office . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received3c"),
                 DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.c' AND Status != 'Received' AND Trash IS NULL AND Office='" . $office . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted3c"),
@@ -2984,6 +2990,9 @@ class TicketsController extends AppBaseController
                     DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.c' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received2c"),
                     DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.c' AND Status != 'Received' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted2c"),
 
+                    DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.a' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received3a"),
+                    DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.a' AND Status != 'Received' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted3a"),
+
                     DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.c' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received3c"),
                     DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.c' AND Status != 'Received' AND Trash IS NULL AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted3c"),
 
@@ -3018,6 +3027,9 @@ class TicketsController extends AppBaseController
                 DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.c' AND Trash IS NULL AND Office='" . $office . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received2c"),
                 DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='2.c' AND Status != 'Received' AND Trash IS NULL AND Office='" . $office . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted2c"),
 
+                DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.a' AND Trash IS NULL AND Office='" . $office . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received3a"),
+                DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.a' AND Status != 'Received' AND Trash IS NULL AND Office='" . $office . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted3a"),
+                
                 DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.c' AND Trash IS NULL AND Office='" . $office . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Received3c"),
                 DB::raw("(SELECT COUNT(t.id) FROM CRM_Tickets t LEFT JOIN CRM_TicketsRepository tr ON t.Ticket=tr.id WHERE tr.KPSCategory='3.c' AND Status != 'Received' AND Trash IS NULL AND Office='" . $office . "' AND (t.created_at BETWEEN '" . $from . "' AND '" . $to . "')) AS Acted3c"),
 

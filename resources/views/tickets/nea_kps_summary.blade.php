@@ -144,8 +144,8 @@
                     <tr>
                         <td>3.a</td>
                         <td>Reroute Service Drop</td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ $data->Received3a }}</td>
+                        <td>{{ $data->Acted3a }}</td>
                     </tr>
                     <tr>
                         <td>3.b</td>
