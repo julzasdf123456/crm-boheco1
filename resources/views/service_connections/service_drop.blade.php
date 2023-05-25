@@ -76,6 +76,7 @@
                         <th class="text-center">Consumer Name</th>
                         <th class="text-center">Barangay</th>
                         <th class="text-center">Town</th>
+                        <th class="text-center">Application Type</th>
                         <th class="text-center">Date Energized</th>
                         <th class="text-center">Service Drop Len.(mtrs)<br>(Based From Inspection)</th>
                         <th class="text-center">Crew Assigned</th>
@@ -92,6 +93,7 @@
                                 <td>{{ $item->ServiceAccountName }}</td>
                                 <td>{{ $item->Barangay }}</td>
                                 <td>{{ $item->Town }}</td>
+                                <td>{{ $item->ConnectionApplicationType }}</td>
                                 <td>{{ $item->DateTimeOfEnergization != null ? date('M d, Y h:m:s A', strtotime($item->DateTimeOfEnergization)) : '' }}</td>
                                 <td class="text-right text-danger"><strong>{{ $item->SDWLengthAsInstalled }}</strong></td>
                                 <td>{{ $item->StationName }}</td>

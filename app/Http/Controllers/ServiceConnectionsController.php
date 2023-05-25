@@ -3542,6 +3542,7 @@ class ServiceConnectionsController extends AppBaseController
                     'ServiceAccountName',
                     'CRM_Towns.Town',
                     'CRM_Barangays.Barangay',
+                    'ConnectionApplicationType',
                     'DateTimeOfEnergization',
                     'SDWLengthAsInstalled',
                     'StationName',
