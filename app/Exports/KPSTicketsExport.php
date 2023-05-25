@@ -129,11 +129,13 @@ class KPSTicketsExport implements WithColumnWidths, WithStyles, WithEvents {
                 
                 $event->sheet->setCellValue('A19', '3.a');
                 $event->sheet->setCellValue('B19', 'Reroute Service Drop');
+                $event->sheet->setCellValue('C19', $this->data->Received3a);
+                $event->sheet->setCellValue('D19', $this->data->Acted3a);
                 
-                // $event->sheet->setCellValue('A20', '3.b');
-                // $event->sheet->setCellValue('B20', 'Change/ Upgrade Service Drop');
-                // $event->sheet->setCellValue('C20', $this->data->Received3b);
-                // $event->sheet->setCellValue('D20', $this->data->Acted3b);
+                $event->sheet->setCellValue('A20', '3.b');
+                $event->sheet->setCellValue('B20', 'Change/ Upgrade Service Drop');
+                $event->sheet->setCellValue('C20', $this->data->Received3b);
+                $event->sheet->setCellValue('D20', $this->data->Acted3b);
                 
                 $event->sheet->setCellValue('A21', '3.c');
                 $event->sheet->setCellValue('B21', 'Others (e.g. Broken, Sagging, Sparking, etc.)');
