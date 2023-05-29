@@ -85,6 +85,7 @@
                                         'TATUNG' => 'TATUNG',
                                         'TECHEN' => 'TECHEN',
                                         'TOSHIBA' => 'TOSHIBA',
+                                        'VIRAGO' => 'VIRAGO',
                                         'WARBURTON' => 'WARBURTON',
                                     ], $ticket->CurrentMeterBrand, ['class' => 'form-control form-control-sm']) !!}
                                 </div>
@@ -128,6 +129,7 @@
                                         'TATUNG' => 'TATUNG',
                                         'TECHEN' => 'TECHEN',
                                         'TOSHIBA' => 'TOSHIBA',
+                                        'VIRAGO' => 'VIRAGO',
                                         'WARBURTON' => 'WARBURTON',
                                     ], $ticket->NewMeterBrand, ['class' => 'form-control form-control-sm']) !!}
                                 </div>

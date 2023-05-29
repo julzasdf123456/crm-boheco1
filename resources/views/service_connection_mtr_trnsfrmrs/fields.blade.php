@@ -49,6 +49,7 @@
                                 'TATUNG' => 'TATUNG',
                                 'TECHEN' => 'TECHEN',
                                 'TOSHIBA' => 'TOSHIBA',
+                                'VIRAGO' => 'VIRAGO',
                                 'WARBURTON' => 'WARBURTON',
                             ], null, ['class' => 'form-control']) !!}
                         </div>
