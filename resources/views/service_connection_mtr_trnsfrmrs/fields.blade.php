@@ -41,6 +41,7 @@
                                 'LANDIS' => 'LANDIS',
                                 'LANDIS FOCUS' => 'LANDIS FOCUS',
                                 'MITSUBISHI' => 'MITSUBISHI',
+                                'OEIC' => 'OEIC',
                                 'ORIENTAL' => 'ORIENTAL',
                                 'SAFARI' => 'SAFARI',
                                 'SANGAMO' => 'SANGOMO',
