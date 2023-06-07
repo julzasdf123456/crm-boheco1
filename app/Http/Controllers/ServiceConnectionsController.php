@@ -3305,7 +3305,7 @@ class ServiceConnectionsController extends AppBaseController
                     DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Status IN ('Energized', 'Closed')) AS ExecutedThisMonth"),
                     DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
                         WHERE s.Town=CRM_Towns.id AND i.DateOfVerification IS NOT NULL AND (TRY_CAST(i.DateOfVerification AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status='Approved') AS TotalInspections"),
-                    DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (TRY_CAST(DateTimeOfEnergization AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Status IN ('Energized', 'Closed')) AS TotalEnergizations"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (TRY_CAST(DateTimeOfEnergization AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No')) AS TotalEnergizations"),
                 )
                 ->orderBy('Town')
                 ->get();
