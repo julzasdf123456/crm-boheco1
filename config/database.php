@@ -104,6 +104,19 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'sqlsrvaccounting' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_ACCOUNTING'),
+            'port' => env('DB_PORT_ACCOUNTING'),
+            'database' => env('DB_DATABASE_ACCOUNTING'),
+            'username' => env('DB_USERNAME_ACCOUNTING'),
+            'password' => env('DB_PASSWORD_ACCOUNTING'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+        ],
+
         'sqlsrvagma' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),

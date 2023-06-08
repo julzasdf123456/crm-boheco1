@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateServiceConnectionMatPaymentsRequest;
 use App\Repositories\ServiceConnectionMatPaymentsRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use App\Models\CRMQueue;
+use App\Models\CRMDetails;
 use Flash;
 use Response;
 

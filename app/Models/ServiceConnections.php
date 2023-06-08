@@ -350,4 +350,20 @@ class ServiceConnections extends Model
 
         return $returnValue;
     }
+
+    public static function getInstallationFeeCode($amount) {
+        if ($amount > 20000) {
+            return '23100000000';
+        } else {
+            return '43040500000';
+        }
+    }
+
+    public static function getInstallationFeeDescription($amount) {
+        if ($amount > 20000) {
+            return 'Cons. Adv. for Construction';
+        } else {
+            return 'Other Electric Revenue';
+        }
+    }
 }

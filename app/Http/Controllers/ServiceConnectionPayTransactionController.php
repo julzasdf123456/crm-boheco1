@@ -17,6 +17,8 @@ use App\Models\BillDeposits;
 use App\Models\ServiceConnectionTotalPayments;
 use App\Models\ServiceConnectionTimeframes;
 use App\Models\SMSNotifications;
+use App\Models\CRMQueue;
+use App\Models\CRMDetails;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Flash;
@@ -71,7 +73,17 @@ class ServiceConnectionPayTransactionController extends AppBaseController
 
         $serviceConnectionPayTransaction = $this->serviceConnectionPayTransactionRepository->create($input);
 
-        Flash::success('Service Connection Pay Transaction saved successfully.');
+        // Flash::success('Service Connection Pay Transaction saved successfully.');
+        $particular = ServiceConnectionPayParticulars::find($input['Particular']);
+        if ($particular != null) {
+            $queueDetails = new CRMDetails;
+            $queueDetails->id = IDGenerator::generateID();
+            $queueDetails->ReferenceNo = $input['ServiceConnectionId'] . "-S";
+            $queueDetails->Particular = $particular->Particular;
+            $queueDetails->GLCode = $particular->AccountNumber;
+            $queueDetails->Total = $input['Amount'];
+            $queueDetails->save();
+        }
 
         // return redirect(route('serviceConnectionPayTransactions.index'));
         return redirect()->action([ServiceConnectionsController::class, 'show'], [$request['ServiceConnectionId']]);
@@ -161,14 +173,23 @@ class ServiceConnectionPayTransactionController extends AppBaseController
             // return redirect(route('serviceConnectionPayTransactions.index'));
         }
 
+        // DELETE CRM QUEUE
+        $particular = ServiceConnectionPayParticulars::find($serviceConnectionPayTransaction->Particular);
+        if ($particular != null) {
+            $queueDetails = CRMDetails::where('ReferenceNo', $serviceConnectionPayTransaction->ServiceConnectionId . "-S")
+                ->where('Particular', $particular->Particular)
+                ->first();
+            if ($queueDetails != null) {
+                $queueDetails->delete();
+            }
+        }
+
         $this->serviceConnectionPayTransactionRepository->delete($id);
 
         // Flash::success('Service Connection Pay Transaction deleted successfully.');
 
         // return redirect(route('serviceConnectionPayTransactions.index'));
-        return json_encode([
-            'result' => 'ok',
-        ]);
+        return response()->json('ok', 200);
     }
 
     public function createStepFour($scId) {
@@ -198,7 +219,7 @@ class ServiceConnectionPayTransactionController extends AppBaseController
             ->where('CRM_ServiceConnections.id', $scId)
             ->first();
 
-        $particulars = ServiceConnectionPayParticulars::all();
+        $particulars = ServiceConnectionPayParticulars::whereNotIn('Particular', ['Installation Fee', 'Installation Fee EVAT', 'Labor Cost and Contingencies'])->get();
 
         $particularPayments = DB::table('CRM_ServiceConnectionParticularPaymentsTransactions')
                     ->leftJoin('CRM_ServiceConnectionPaymentParticulars', 'CRM_ServiceConnectionParticularPaymentsTransactions.Particular', '=', 'CRM_ServiceConnectionPaymentParticulars.id')
@@ -315,7 +336,18 @@ class ServiceConnectionPayTransactionController extends AppBaseController
         $timeFrame->Notes = 'Payment updated with and amount of ' . number_format($request['Total'], 2);
         $timeFrame->save();
 
-        $serviceConnection = ServiceConnections::find($scId);
+        $serviceConnection = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->select(
+                'CRM_ServiceConnections.*',
+                'CRM_Towns.Town',
+                'CRM_Barangays.Barangay'
+            )
+            ->where('CRM_ServiceConnections.id', $scId)
+            ->first();
+        
+        ServiceConnections::find($scId);
 
         if ($serviceConnection != null) {
             // SEND SMS
@@ -332,6 +364,245 @@ class ServiceConnectionPayTransactionController extends AppBaseController
                 }
                 
             }  
+
+            /**
+             * DELETE QUEUES FIRST
+             */
+            $qId = $scId . "-S";
+            
+            $queue = CRMQueue::find($qId);
+            if ($queue != null) {
+                $queue->delete();
+            }
+
+            $queueDetails = CRMDetails::where('Particular', 'Electrician Share')->where('ReferenceNo', $qId)->first();
+            if ($queueDetails != null) {
+                $queueDetails->delete();
+            }
+
+            $queueDetails = CRMDetails::where('Particular', 'BOHECO I Share')->where('ReferenceNo', $qId)->first();
+            if ($queueDetails != null) {
+                $queueDetails->delete();
+            }
+
+            $queueDetails = CRMDetails::where('Particular', 'Bill Deposit')->where('ReferenceNo', $qId)->first();
+            if ($queueDetails != null) {
+                $queueDetails->delete();
+            }
+
+            $queueDetails = CRMDetails::where('Particular', 'Energy Deposit')->where('ReferenceNo', $qId)->first();
+            if ($queueDetails != null) {
+                $queueDetails->delete();
+            }
+
+            $queueDetails = CRMDetails::where('Particular', 'Prepayments - Others 2307')->where('ReferenceNo', $qId)->first();
+            if ($queueDetails != null) {
+                $queueDetails->delete();
+            }
+
+            $queueDetails = CRMDetails::where('Particular', 'EVAT 2306')->where('ReferenceNo', $qId)->first();
+            if ($queueDetails != null) {
+                $queueDetails->delete();
+            }
+
+            $queueDetails = CRMDetails::where('Particular', 'EVAT')->where('ReferenceNo', $qId)->first();
+            if ($queueDetails != null) {
+                $queueDetails->delete();
+            }
+
+            /**
+             * CRM QUEUE
+             */
+            $queue = new CRMQueue;
+            $queue->id = $qId;
+            $queue->ConsumerName = $serviceConnection->ServiceAccountName;
+            $queue->ConsumerAddress = ServiceConnections::getAddress($serviceConnection);
+            $queue->TransactionPurpose = 'Service Connection Fees';
+            $queue->SourceId = $scId;
+            $queue->SubTotal = $request['SubTotal'];
+            $queue->VAT = $request['TotalVat'];
+            $queue->Total = $request['Total'];
+            $queue->save();
+            
+            /**
+             * CRM QUEUE DETAILS
+             */
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() + "1";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'Electrician Share';
+            $queuDetails->GLCode = '12910201000';
+            $queuDetails->Total = $request['LaborCharge'];
+            $queuDetails->save();
+
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() + "2";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'BOHECO I Share';
+            $queuDetails->GLCode = '44040100000';
+            $queuDetails->Total = $request['BOHECOShare'];
+            $queuDetails->save();
+
+            // BILL & ENERGY DEPOSIT
+            if (ServiceConnections::isResidentials($serviceConnection->AccountType)) {
+                // BILL DEPOSIT
+                $queuDetails = new CRMDetails;
+                $queuDetails->id = IDGenerator::generateID() + "3";
+                $queuDetails->ReferenceNo = $qId;
+                $queuDetails->Particular = 'Bill Deposit';
+                $queuDetails->GLCode = '21720110002';
+                $queuDetails->Total = $request['BillDeposit'];
+                $queuDetails->save();
+            } else {
+                // ENERGY DEPOSIT
+                $queuDetails = new CRMDetails;
+                $queuDetails->id = IDGenerator::generateID() + "4";
+                $queuDetails->ReferenceNo = $qId;
+                $queuDetails->Particular = 'Energy Deposit';
+                $queuDetails->GLCode = '21720110001';
+                $queuDetails->Total = $request['BillDeposit'];
+                $queuDetails->save();
+            }
+
+            // 2307 2%
+            if ($request['Form2307TwoPercent'] != null && floatval($request['Form2307TwoPercent']) > 0) {
+                $queuDetails = new CRMDetails;
+                $queuDetails->id = IDGenerator::generateID() + "3";
+                $queuDetails->ReferenceNo = $qId;
+                $queuDetails->Particular = 'Prepayments - Others 2307';
+                $queuDetails->GLCode = '12910111002';
+                $queuDetails->Total = '-' . $request['Form2307TwoPercent'];
+                $queuDetails->save();
+            }
+
+            // 2307 5%
+            if ($request['Form2307FivePercent'] != null && floatval($request['Form2307FivePercent']) > 0) {
+                $queuDetails = new CRMDetails;
+                $queuDetails->id = IDGenerator::generateID() + "4";
+                $queuDetails->ReferenceNo = $qId;
+                $queuDetails->Particular = 'EVAT 2306';
+                $queuDetails->GLCode = '22420414002';
+                $queuDetails->Total = '-' . $request['Form2307FivePercent'];
+                $queuDetails->save();
+            }
+
+            // TOTAL VAT
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() + "5";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'EVAT';
+            $queuDetails->GLCode = '22420414001';
+            $queuDetails->Total = round(floatval($request['TotalVat']), 2);
+            $queuDetails->save();
+        }
+
+        return response()->json('ok', 200);
+    }
+
+    public function saveInstallationFee(Request $request) {
+        $scId = $request['ServiceConnectionId'];
+        $installationFee = $request['InstallationFee'];
+        $laborCost = $request['LaborCost'];
+        $evat = $request['Evat'];
+
+        $serviceConnection = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->select(
+                'CRM_ServiceConnections.*',
+                'CRM_Towns.Town',
+                'CRM_Barangays.Barangay'
+            )
+            ->where('CRM_ServiceConnections.id', $scId)
+            ->first();
+
+        $installationFee = floatval($installationFee);
+
+        $id = $scId . "-I";
+
+        // DELETE FIRST
+        $queueDetails = CRMDetails::where('GLCode', '23100000000')->where('ReferenceNo', $id)->first();
+        if ($queueDetails != null) {
+            $queueDetails->delete();
+        }
+
+        $queueDetails = CRMDetails::where('GLCode', '43040500000')->where('ReferenceNo', $id)->first();
+        if ($queueDetails != null) {
+            $queueDetails->delete();
+        }
+
+        $queueDetails = CRMDetails::where('GLCode', '51250400000')->where('ReferenceNo', $id)->first();
+        if ($queueDetails != null) {
+            $queueDetails->delete();
+        }
+
+        /**
+         * ADD TO CRM QUEUES FIRST
+         */
+
+        $queue = CRMQueue::where('id', $id)->first();
+        if ($queue != null) {
+            $subTotal = floatval($queue->SubTotal);
+            $vat = floatval($queue->VAT);
+            $total = floatval($queue->Total);
+
+            $subTotal = $subTotal + $installationFee + floatval($laborCost);
+            $vat = $vat + floatval($evat);
+            $total = $total + $installationFee + floatval($laborCost) + floatval($evat);
+
+            $queue->SubTotal = $subTotal;
+            $queue->VAT = $vat;
+            $queue->Total = $total;
+            $queue->save();
+        } else {
+            $subTotal = $installationFee + floatval($laborCost);
+            $total = $subTotal + $evat;
+
+            $queue = new CRMQueue;
+            $queue->id = $id;
+            $queue->ConsumerName = $serviceConnection->ServiceAccountName;
+            $queue->ConsumerAddress = ServiceConnections::getAddress($serviceConnection);
+            $queue->TransactionPurpose = 'Installation Fees';
+            $queue->SourceId = $scId;
+            $queue->SubTotal = $subTotal;
+            $queue->VAT = $evat;
+            $queue->Total = $total;
+            $queue->save();
+        }
+
+        // INSTALLATION FEE
+        $queuDetails = new CRMDetails;
+        $queuDetails->id = IDGenerator::generateID() + "1";
+        $queuDetails->ReferenceNo = $id;
+        $queuDetails->Particular = ServiceConnections::getInstallationFeeDescription($installationFee);
+        $queuDetails->GLCode = ServiceConnections::getInstallationFeeCode($installationFee);
+        $queuDetails->Total = $installationFee;
+        $queuDetails->save();
+
+        // INSTALLATION FEE
+        $queuDetails = new CRMDetails;
+        $queuDetails->id = IDGenerator::generateID() + "2";
+        $queuDetails->ReferenceNo = $id;
+        $queuDetails->Particular = 'Overhead Line Expenses';
+        $queuDetails->GLCode = '51250400000';
+        $queuDetails->Total = $laborCost;
+        $queuDetails->save();
+
+        // VAT
+        $queueDetails = CRMDetails::where('GLCode', '22420414001')->where('ReferenceNo', $id)->first();
+        if ($queueDetails != null) {
+            $vat = floatval($queueDetails->Total);
+            $totalVat = $vat + floatval($evat);
+            $queueDetails->Total = round($totalVat, 2);
+            $queueDetails->save();
+        } else {
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() + "2";
+            $queuDetails->ReferenceNo = $id;
+            $queuDetails->Particular = 'EVAT';
+            $queuDetails->GLCode = '22420414001';
+            $queuDetails->Total = $evat;
+            $queuDetails->save();
         }
 
         return response()->json('ok', 200);

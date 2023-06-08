@@ -47,6 +47,8 @@ use Illuminate\Support\Facades\Auth;
                                         <i class="fas fa-comments-dollar"></i>
                                     </a>  
 
+                                    {{-- INSTALLATION FEE - PLANNING --}}
+                                    <button class="btn btn-tool" style="color: #ff7b00;" title="Update Installation Fee (BoM Figure)" data-toggle="modal" data-target="#modal-installation-fee"><i class="fas fa-coins"></i></button>
                                     @if (!ServiceConnections::isResidentials($serviceConnections->AccountTypeRaw))
                                         <a href="{{ route('serviceConnections.print-quotation-form', [$serviceConnections->id]) }}" class="btn btn-tool" style="color: #ff7b00;" title="Print Quotation">
                                             <i class="fas fa-file-contract"></i>
@@ -225,6 +227,8 @@ use Illuminate\Support\Facades\Auth;
         </div>
     </div>
 @endsection
+
+@include('service_connections.modal_update_installation_fee')
 
 @push('page_scripts')
     <script>

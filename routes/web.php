@@ -189,6 +189,7 @@ Route::get('/service_connection_pay_tansactions/create_step_four/{scId}', [App\H
 Route::get('/service_connection_pay_tansactions/save-wiring-labor', [App\Http\Controllers\ServiceConnectionPayTransactionController::class, 'saveWiringLabor'])->name('serviceConnectionPayTransactions.save-wiring-labor');
 Route::get('/service_connection_pay_tansactions/save-bill-deposits', [App\Http\Controllers\ServiceConnectionPayTransactionController::class, 'saveBillDeposits'])->name('serviceConnectionPayTransactions.save-bill-deposits');
 Route::get('/service_connection_pay_tansactions/save-service-connection-transaction', [App\Http\Controllers\ServiceConnectionPayTransactionController::class, 'saveServiceConnectionTransaction'])->name('serviceConnectionPayTransactions.save-service-connection-transaction');
+Route::get('/service_connection_pay_tansactions/save-installation-fee', [App\Http\Controllers\ServiceConnectionPayTransactionController::class, 'saveInstallationFee'])->name('serviceConnectionPayTransactions.save-installation-fee');
 Route::resource('serviceConnectionPayTransactions', App\Http\Controllers\ServiceConnectionPayTransactionController::class);
 
 
@@ -770,3 +771,9 @@ Route::resource('paidBills', App\Http\Controllers\PaidBillsController::class);
 
 
 Route::resource('sMSNotifications', App\Http\Controllers\SMSNotificationsController::class);
+
+
+Route::resource('cRMDetails', App\Http\Controllers\CRMDetailsController::class);
+
+
+Route::resource('cRMQueues', App\Http\Controllers\CRMQueueController::class);
