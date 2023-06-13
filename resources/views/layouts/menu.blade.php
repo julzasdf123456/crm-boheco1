@@ -691,6 +691,12 @@ use Illuminate\Support\Facades\Auth;
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{ route('serviceConnections.new-energized-rewiring') }}"
+                   class="nav-link {{ Request::is('serviceConnections.new-energized-rewiring*') ? 'active' : '' }}">                   
+                   <i class="fas fa-user-alt-slash nav-icon text-primary"></i><p>New Rewiring</p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ route('tickets.change-meter-unconfirmed') }}"
                    class="nav-link {{ Request::is('tickets.change-meter-unconfirmed*') ? 'active' : '' }}">                   
                    <i class="fas fa-circle nav-icon text-primary"></i><p>New Change Meters</p>

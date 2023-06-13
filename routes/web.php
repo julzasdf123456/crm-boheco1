@@ -162,6 +162,7 @@ Route::get('/service_connections/convert-to-eca', [ServiceConnectionsController:
 Route::get('/service_connections/remove-material-payment', [ServiceConnectionsController::class, 'removeMaterialPayment'])->name('serviceConnections.remove-material-payment');
 Route::get('/service_connections/print-quotation-form/{id}', [ServiceConnectionsController::class, 'printQuotationForm'])->name('serviceConnections.print-quotation-form');
 Route::get('/service_connections/service-drop', [ServiceConnectionsController::class, 'serviceDrop'])->name('serviceConnections.service-drop');
+Route::get('/service_connections/new-energized-rewiring', [ServiceConnectionsController::class, 'newEnergizedRewiring'])->name('serviceConnections.new-energized-rewiring');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 

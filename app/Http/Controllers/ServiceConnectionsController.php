@@ -3558,4 +3558,76 @@ class ServiceConnectionsController extends AppBaseController
             'data' => $data,
         ]);
     }
+
+    public function newEnergizedRewiring(Request $request) {
+        $from = $request['From'];
+        $to = $request['To'];
+        $office = isset($request['Office']) ? $request['Office'] : 'All';
+
+        if ($office == 'All') {
+            $serviceConnections = DB::table('CRM_ServiceConnections')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+                ->leftJoin('CRM_ServiceConnectionMeterAndTransformer', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId')
+                ->select('CRM_ServiceConnections.id as id',
+                                'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                                'CRM_ServiceConnections.Status as Status',
+                                'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                                'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                                'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                                'CRM_ServiceConnections.AccountCount as AccountCount',  
+                                'CRM_ServiceConnections.ConnectionApplicationType',  
+                                'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                                'CRM_ServiceConnectionAccountTypes.Alias',
+                                'CRM_ServiceConnections.AccountNumber',  
+                                'CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber',
+                                'CRM_ServiceConnectionMeterAndTransformer.MeterBrand',
+                                'CRM_ServiceConnections.Sitio as Sitio', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_Barangays.Barangay as Barangay')
+                ->where(function ($query) {
+                                    $query->where('CRM_ServiceConnections.Trash', 'No')
+                                        ->orWhereNull('CRM_ServiceConnections.Trash');
+                                })  
+                ->whereIn('Status', ['Energized', 'Approved For Change Name'])
+                ->whereRaw("(CRM_ServiceConnections.DateTimeOfEnergization BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_ServiceConnections.AccountType NOT IN " . ServiceConnections::getBapaAccountCodes() . " AND ConnectionApplicationType IN ('Rewiring')")
+                ->orderBy('CRM_ServiceConnections.ServiceAccountName')
+                ->get();
+        } else {
+            $serviceConnections = DB::table('CRM_ServiceConnections')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+                ->leftJoin('CRM_ServiceConnectionMeterAndTransformer', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId')
+                ->select('CRM_ServiceConnections.id as id',
+                                'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                                'CRM_ServiceConnections.Status as Status',
+                                'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                                'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                                'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                                'CRM_ServiceConnections.AccountCount as AccountCount',  
+                                'CRM_ServiceConnections.ConnectionApplicationType',  
+                                'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                                'CRM_ServiceConnectionAccountTypes.Alias',
+                                'CRM_ServiceConnections.AccountNumber',  
+                                'CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber',
+                                'CRM_ServiceConnectionMeterAndTransformer.MeterBrand',
+                                'CRM_ServiceConnections.Sitio as Sitio', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_Barangays.Barangay as Barangay')
+                ->where(function ($query) {
+                                    $query->where('CRM_ServiceConnections.Trash', 'No')
+                                        ->orWhereNull('CRM_ServiceConnections.Trash');
+                                })  
+                ->whereIn('Status', ['Energized', 'Approved For Change Name'])
+                ->whereRaw("CRM_ServiceConnections.Office='" . $office . "' AND (CRM_ServiceConnections.DateTimeOfEnergization BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_ServiceConnections.AccountType NOT IN " . ServiceConnections::getBapaAccountCodes() . " AND ConnectionApplicationType IN ('Rewiring')")
+                ->orderBy('CRM_ServiceConnections.ServiceAccountName')
+                ->get();
+        }        
+
+        return view('/service_connections/new_energized_rewiring', [
+            'serviceConnections' => $serviceConnections
+        ]);
+    }
 }
