@@ -33,6 +33,8 @@ use App\Exports\MeterReplacementsExport;
 use App\Exports\MeterTransferExport;
 use App\Exports\ServiceConductorTransferExport;
 use Illuminate\Support\Facades\Auth;
+use App\Models\CRMQueue;
+use App\Models\CRMDetails;
 use Flash;
 use Response;
 
@@ -165,6 +167,53 @@ class TicketsController extends AppBaseController
         $ticketLog->Log = "Received";
         $ticketLog->UserId = Auth::id();
         $ticketLog->save();
+
+        // CREATE PAYMENT MODULE
+        if ($tickets->Ticket == Tickets::getReconnection()) {
+            $ticket = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
+                ->where('CRM_Tickets.id', $tickets->id)
+                ->select('CRM_Tickets.id',
+                    'CRM_Tickets.AccountNumber',
+                    'CRM_Tickets.ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'CRM_Tickets.Sitio',
+                    )
+                ->first();
+
+            $qId = IDGenerator::generateID();
+
+            $queue = new CRMQueue;
+            $queue->id = $qId;
+            $queue->ConsumerName = $ticket->ConsumerName;
+            $queue->ConsumerAddress = Tickets::getAddress($ticket);
+            $queue->TransactionPurpose = 'Reconnection';
+            $queue->SourceId = $ticket->id;
+            $queue->SubTotal = 50;
+            $queue->VAT = 6;
+            $queue->Total = 56;
+            $queue->save();
+
+            // RECONNECTION FEE
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'Reconnection Fee';
+            $queuDetails->GLCode = '43040500000';
+            $queuDetails->Total = 50;
+            $queuDetails->save();
+
+            // EVAT
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'EVAT';
+            $queuDetails->GLCode = '22420414001';
+            $queuDetails->Total = 6;
+            $queuDetails->save();
+        }
 
         // SEND SMS
         if ($tickets->ContactNumber != null) {

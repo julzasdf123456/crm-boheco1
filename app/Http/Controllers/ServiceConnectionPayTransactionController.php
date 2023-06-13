@@ -605,6 +605,10 @@ class ServiceConnectionPayTransactionController extends AppBaseController
             $queuDetails->save();
         }
 
+        // DELETE IF VALUE IS ZERO
+        $queuesZero = CRMDetails::whereRaw("Total=0")->get();
+        $queuesZero->delete();
+
         return response()->json('ok', 200);
     }
 }
