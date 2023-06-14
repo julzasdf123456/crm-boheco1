@@ -69,7 +69,7 @@
                                 {{ date('M d, Y', strtotime($item->DateTimeOfEnergization)) }}
                                 <br>
                                 @php
-                                    $past = new \DateTime($item->created_at);
+                                    $past = new \DateTime($item->DateTimeOfEnergization);
                                     $present = new \DateTime(date('Y-m-d H:i:s'));
                                     $days = $present->diff($past);
                                     if ($days->format('%a')==0) {
