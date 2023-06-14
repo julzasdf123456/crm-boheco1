@@ -65,7 +65,27 @@
                             <td>{{ ServiceConnections::getAddress($item) }}</td>
                             <td>{{ $item->AccountType }} ({{ $item->Alias }})</td>
                             <td>{{ $item->ConnectionApplicationType }}</td>
-                            <td>{{ date('M d, Y', strtotime($item->DateTimeOfEnergization)) }}</td>
+                            <td>
+                                {{ date('M d, Y', strtotime($item->DateTimeOfEnergization)) }}
+                                <br>
+                                @php
+                                    $past = new \DateTime($item->created_at);
+                                    $present = new \DateTime(date('Y-m-d H:i:s'));
+                                    $days = $present->diff($past);
+                                    if ($days->format('%a')==0) {
+                                        $color = '#2e7d32';
+                                    } elseif ($days->format('%a')==1) {
+                                        $color = '#ff6f00';
+                                    } elseif ($days->format('%a')==2) {
+                                        $color = '#e64a19';
+                                    } else {
+                                        $color = '#c62828';
+                                    }
+                                @endphp 
+                                <span class="badge" style="background-color: {{ $color }};">
+                                    {{ $days->format('%a days & %h hrs') }}
+                                </span>
+                            </td>
                             <td class="text-right" >
                                 @if ($item->ConnectionApplicationType == 'Relocation')
                                     {{-- <a href="{{ route('serviceAccounts.relocation-form', [$item->AccountNumber, $item->id]) }}" title="Proceed relocating {{ $item->ServiceAccountName }}" ><i class="fas fa-arrow-circle-right text-success"></i></a> --}}
