@@ -50,6 +50,7 @@
                     <th>Account Address</th>
                     <th>Account Type</th>
                     <th>Application</th>
+                    <th>Energized At</th>
                     <th width="8%"></th>
                 </thead>
                 <tbody>
@@ -64,6 +65,7 @@
                             <td>{{ ServiceConnections::getAddress($item) }}</td>
                             <td>{{ $item->AccountType }} ({{ $item->Alias }})</td>
                             <td>{{ $item->ConnectionApplicationType }}</td>
+                            <td>{{ date('M d, Y', strtotime($item->DateTimeOfEnergization)) }}</td>
                             <td class="text-right" >
                                 @if ($item->ConnectionApplicationType == 'Relocation')
                                     {{-- <a href="{{ route('serviceAccounts.relocation-form', [$item->AccountNumber, $item->id]) }}" title="Proceed relocating {{ $item->ServiceAccountName }}" ><i class="fas fa-arrow-circle-right text-success"></i></a> --}}
