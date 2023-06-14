@@ -82,7 +82,7 @@
                                         $color = '#c62828';
                                     }
                                 @endphp 
-                                <span class="badge" style="background-color: {{ $color }};">
+                                <span class="badge" style="background-color: {{ $color }}; color: white;">
                                     {{ $days->format('%a days & %h hrs') }}
                                 </span>
                             </td>
