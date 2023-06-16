@@ -204,7 +204,16 @@ class TicketsController extends AppBaseController
             $queuDetails->ReferenceNo = $qId;
             $queuDetails->Particular = 'Reconnection Fee';
             $queuDetails->GLCode = '43040500000';
-            $queuDetails->Total = 50;
+            $queuDetails->Total = 30;
+            $queuDetails->save();
+
+            // METER SEAL FEE
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'Meter Seal';
+            $queuDetails->GLCode = '43040500000';
+            $queuDetails->Total = 20;
             $queuDetails->save();
 
             // EVAT
