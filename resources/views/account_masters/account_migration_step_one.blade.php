@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Auth;
                     <input type="hidden" value="{{ $crew != null ? substr($crew->StationName, 0, 29) : null }}" name="InstalledBy">
                     <input type="hidden" value="READ" name="BillingStatus">
                     <input type="hidden" value="{{ AccountMaster::getInstallationType($serviceConnection->BuildingType) }}" name="InstallationType">
-                    <input type="hidden" value="M" name="GroupTag">
+                    {{-- <input type="hidden" value="M" name="GroupTag"> --}}
                     <input type="hidden" value="{{ $barangay != null ? $barangay->Barangay : '' }}" name="Barangay">
                     <input type="hidden" value="{{ $town != null ? $town->Town : '' }}" name="Municipal">
 

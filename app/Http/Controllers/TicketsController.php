@@ -2493,7 +2493,7 @@ class TicketsController extends AppBaseController
         $towns = Towns::orderBy('Town')->pluck('Town', 'id');
 
         // TICKETS MATRIX
-        $parentTickets = DB::table('CRM_TicketsRepository')->whereNull('ParentTicket')->whereIn('id', ['1668541254405', '1668541254392'])->orderBy('Name')->get();
+        $parentTickets = DB::table('CRM_TicketsRepository')->whereNull('ParentTicket')->whereIn('id', ['1686276274253', '1668541254392'])->orderBy('Name')->get();
 
         $crew = ServiceConnectionCrew::orderBy('StationName')->pluck('StationName', 'id');
 

@@ -52,6 +52,10 @@
                                 <td class="text-right">
                                     {!! Form::open(['route' => ['memberConsumers.destroy', $item->ConsumerId], 'method' => 'delete']) !!}
                                     <div class='btn-group'>
+                                        <a href="{{ route('memberConsumers.print-certificate', [$item->ConsumerId]) }}"
+                                        class='btn btn-warning btn-xs' title="Print Certificate">
+                                            <i class="fas fa-print"></i>
+                                        </a>
                                         <a href="{{ route('memberConsumers.show', [$item->ConsumerId]) }}"
                                         class='btn btn-default btn-xs'>
                                             <i class="far fa-eye"></i>
