@@ -25,6 +25,7 @@
     @media print {
         @page {
             orientation: portrait;
+            margin: 0;
         }
 
         header {
@@ -59,58 +60,19 @@
             text-align: left;
         }
 
-        .box {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  background-color: rgba(#000, 0.5);
-  width: 100%;
-  max-width: 600px;
-  padding: 5px;
-  border: 2px solid #b78846;
-  &:before, &:after {
-    content: "•";
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    font-size: 14px;
-    color: #b78846;
-    border: 2px solid #b78846;
-    line-height: 12px;
-    top: 5px;
-    text-align: center;
-  }
-  &:before {
-    left: 5px;
-  }
-  &:after {
-    right: 5px;
-  }
-  .box-inner {
-    position: relative;
-    border: 2px solid #b78846;
-    padding: 40px;
-    &:before, &:after {
-      content: "•";
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      font-size: 14px;
-      color: #b78846;
-      border: 2px solid #b78846;
-      line-height: 12px;
-      bottom: -2px;
-      text-align: center;
-    }
-    &:before {
-      left: -2px;
-    }
-    &:after {
-      right: -2px;
-    }
-  }
-}
+        .pms {
+          color: black;
+          background: rgb(243, 231, 57);
+          padding: 10px !important;
+          margin-top: 10px;
+          display: inline-block;
+          font-size: 2em;
+          font-weight: bold;
+          border-radius: 20px;;
+          border: 3px solid #343434;
+          -webkit-print-color-adjust: exact;
+        }
+
     }  
     .divider {
         width: 100%;
@@ -155,118 +117,74 @@
     .watermark {
         position: fixed;
         left: 15%;
-        width: 70%;
+        top: 60px;
+        width: 65%;
         opacity: 0.16;
         z-index: -99;
         color: white;
         user-select: none;
     }
-.box {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  background-color: rgba(#000, 0.5);
-  width: 100%;
-  max-width: 600px;
-  padding: 5px;
-  border: 2px solid #b78846;
-  &:before, &:after {
-    content: "•";
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    font-size: 14px;
-    color: #b78846;
-    border: 2px solid #b78846;
-    line-height: 12px;
-    top: 5px;
-    text-align: center;
-  }
-  &:before {
-    left: 5px;
-  }
-  &:after {
-    right: 5px;
-  }
-  .box-inner {
-    position: relative;
-    border: 2px solid #b78846;
-    padding: 40px;
-    &:before, &:after {
-      content: "•";
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      font-size: 14px;
-      color: #b78846;
-      border: 2px solid #b78846;
-      line-height: 12px;
-      bottom: -2px;
-      text-align: center;
+
+    .border {
+        position: fixed;
+        width: 100%;
+        z-index: 1;
+        color: white;
+        left: 0;
+        top: 0;
     }
-    &:before {
-      left: -2px;
+
+    .pms {
+      color: black;
+      background: rgb(243, 231, 57);
+      padding: 30px;
+      font-size: 2em;
+      -webkit-print-color-adjust: exact;
     }
-    &:after {
-      right: -2px;
-    }
-  }
-}
+
 </style>
 
-<div id="print-area box" class="content">
-    <div class="box-inner">
-        <img src="{{ URL::asset('imgs/company_logo.png'); }}" class="watermark"> 
-        <div style="text-align: center; display: inline;">
-            <img src="{{ URL::asset('imgs/company_logo.png'); }}" width="70px;" style="position: absolute; left: 0; top: 0;"> 
+<img src="{{ URL::asset('imgs/cert_border.png'); }}" class="border"> 
+<div id="print-area" class="content">
+  <img src="{{ URL::asset('imgs/company_logo.png'); }}" class="watermark"> 
+  <div style="text-align: center; display: inline;">
+      <img src="{{ URL::asset('imgs/company_logo.png'); }}" width="70px;" style="position: absolute; left: 150; top: 50;"> 
 
-            <p class="text-center" style="padding-bottom: 2px;"><strong>{{ strtoupper(env('APP_COMPANY')) }}</strong></p>
-            <p class="text-center" style="padding-bottom: 2px;"><strong>{{ strtoupper(env('APP_COMPANY_ABRV')) }}</strong></p>
-            <p class="text-center" style="padding-bottom: 2px;"><strong>{{ strtoupper(env('APP_ADDRESS')) }}</strong></p>
-            <br>
-            <br> 
-        </div>
+      <p class="text-center" style="padding-bottom: 2px; padding-top: 50px !important; font-size: 1.52em;"><strong>{{ strtoupper(env('APP_COMPANY')) }}</strong></p>
+      <p class="text-center" style="padding-bottom: 2px;"><strong>({{ strtoupper(env('APP_COMPANY_ABRV')) }})</strong></p>
+      <p class="text-center" style="padding-bottom: 2px;"><strong>{{ strtoupper(env('APP_ADDRESS')) }}</strong></p>
+      <br>
+  </div>
 
-        
-        <p class="text-center">Hereby Presents This</p>
+  <p style="font-family: Brush Script MT, Brush Script Std, cursive; margin-top: 10px; font-size: 5.2em;" class="text-center">Certificate of Attendance</p>
+  <br>
+  <p class="text-center">is awarded to</p>
+  <br>
+  <br>
 
-        <p style="position: absolute; right: 0; top: 80;"><strong>{{ $memberConsumer->ConsumerId }}</strong></p>
+  <p class="text-center" style="font-size: 2em;"><strong>{{ $memberConsumer != null ? strtoupper(MemberConsumers::serializeMemberNameFormal($memberConsumer)) : '-' }}</strong></p>
+  <p class="text-center" style="font-size: 1.3em; border-bottom: 1px solid #343434; margin-left: 10%; margin-right: 10%; padding-bottom: 10px;"><strong>{{ $memberConsumer != null ? strtoupper(MemberConsumers::getAddress($memberConsumer)) : '-' }}</strong></p>  
+  <br>
+  <p class="text-center">for having attended the</p>
+  <p class="text-center ">
+    <span class="pms">PRE-MEMBERSHIP SEMINAR</span>
+  </p>
+  <br>
+  <p class="text-center"> held at 
+    <strong style="border-bottom: 1px solid #343434; padding-bottom: 4px;">{{ strtoupper(env('APP_ADDRESS')) }}</strong> on 
+    <strong style="border-bottom: 1px solid #343434; padding-bottom: 4px;">{{ strtoupper(date('F, Y', strtotime($memberConsumer->DateApplied))) }}</strong></p>
+  <br>
+  <br><br><br>
+  <br>
+  <div class="half">
+      <p class="text-center" style="border-bottom: 1px solid #454545; padding-bottom: 3px; margin-right: 15%; margin-left: 15%;"><strong>{{ env('MEM_CERTIF_SECRETARY') }}</strong></p>
+      <p class="text-center">Member-Consumer Educ. <br>& Training Officer</p>
+  </div>
 
-        <p style="font-family: Brush Script MT, Brush Script Std, cursive; margin-top: 10px; font-size: 5.2em;" class="text-center">Certificate</p>
-        <br>
-        <p class="text-center">of membership with {{ env('APP_COMPANY') }}</p>
-        <br>
-        <br>
-
-        <p class="text-center" style="font-size: 2.8em;"><strong>{{ $memberConsumer != null ? strtoupper(MemberConsumers::serializeMemberNameFormal($memberConsumer)) : '-' }}</strong></p>
-        
-        <br>
-
-        <p class="text-center">of</p>
-
-        <br>
-        <p class="text-center" style="font-size: 1.5em;"><strong>{{ $memberConsumer != null ? strtoupper(MemberConsumers::getAddress($memberConsumer)) : '-' }}</strong></p>
-        <br>
-        <br>
-        <p class="text-center">IN WITNESS WHEREOF, the Cooperative has caused this certificate to be signed by <br> its President and Secretary and its corporate seal to be hereunto affixed this</p>
-        <br>
-        <p class="text-center"><strong>{{ date('d', strtotime($memberConsumer->DateApplied)) }}</strong> of <strong>{{ date('F, Y', strtotime($memberConsumer->DateApplied)) }}</strong>.</p>
-
-        <br>
-        <br>
-        <br><br><br>
-        <br>
-        <div class="half">
-            <p class="text-center" style="border-bottom: 1px solid #454545; padding-bottom: 3px; margin-right: 40px; margin-left: 40px;"><strong>{{ env('MEM_CERTIF_SECRETARY') }}</strong></p>
-            <p class="text-center">SECRETARY</p>
-        </div>
-
-        <div class="half">
-            <p class="text-center" style="border-bottom: 1px solid #454545; padding-bottom: 3px; margin-right: 40px; margin-left: 40px;"><strong>{{ env('MEM_CERTIF_PRESIDENT') }}</strong></p>
-            <p class="text-center">PRESIDENT</p>
-        </div>
-    </div>
+  <div class="half">
+      <p class="text-center" style="border-bottom: 1px solid #454545; padding-bottom: 3px; margin-right: 15%; margin-left: 15%;"><strong>{{ env('ISD_MANAGER') }}</strong></p>
+      <p class="text-center">Manager, ISD</p>
+  </div>
     
 </div>
 
