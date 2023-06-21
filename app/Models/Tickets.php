@@ -255,6 +255,6 @@ class Tickets extends Model
     }
 
     public static function getReconnectionParent() {
-        return '1668541254427';
+        return ['1668541254427'];
     }
 }
