@@ -2679,6 +2679,40 @@ class TicketsController extends AppBaseController
 
         Flash::success('Tickets saved successfully.');
 
+        // TRANSFERS
+        if (in_array($tickets->Ticket, Tickets::getTransfers())) {
+            $qId = IDGenerator::generateID();
+
+            $queue = new CRMQueue;
+            $queue->id = $qId;
+            $queue->ConsumerName = $ticket->ConsumerName;
+            $queue->ConsumerAddress = Tickets::getAddress($ticket);
+            $queue->TransactionPurpose = 'Transfer';
+            $queue->SourceId = $ticket->id;
+            $queue->SubTotal = 15;
+            $queue->VAT = 1.8;
+            $queue->Total = 16.8;
+            $queue->save();
+
+            // RECONNECTION FEE
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'Transfer Fee';
+            $queuDetails->GLCode = '43040500000';
+            $queuDetails->Total = 15;
+            $queuDetails->save();
+
+            // EVAT
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'EVAT';
+            $queuDetails->GLCode = '22420414001';
+            $queuDetails->Total = 1.8;
+            $queuDetails->save();
+        }
+
         // CREATE LOG
         $ticketLog = new TicketLogs;
         $ticketLog->id = IDGenerator::generateID();
