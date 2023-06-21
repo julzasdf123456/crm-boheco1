@@ -551,7 +551,7 @@ use Illuminate\Support\Facades\Auth;
                 </a>
             </li>
             @endcanany
-            @canany(['Super Admin', 'tickets create', 'tickets edit'])
+            @canany(['Super Admin', 'tickets create', 'tickets edit', 'billing re-bill'])
             <li class="nav-header">                
                 Reports
             </li>
