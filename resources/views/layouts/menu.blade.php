@@ -605,6 +605,13 @@ use Illuminate\Support\Facades\Auth;
             </li>
 
             <li class="nav-item">
+                <a href="{{ route('tickets.executed-reconnections') }}"
+                class="nav-link {{ Request::is('tickets.executed-reconnections*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>Executed Reconnections</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a href="{{ route('tickets.meter-transfers') }}"
                 class="nav-link {{ Request::is('tickets.meter-transfers*') ? 'active' : '' }}">
                     <i class="fas fa-circle nav-icon text-danger"></i><p>Meter Transfers</p>

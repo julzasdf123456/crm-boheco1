@@ -431,6 +431,7 @@ Route::get('/tickets/meter-transfer-inspections', [App\Http\Controllers\TicketsC
 Route::post('/tickets/update-status-and-crew', [App\Http\Controllers\TicketsController::class, 'updateStatusAndCrew'])->name('tickets.update-status-and-crew');
 Route::get('/tickets/update-transfer-inspection-data', [App\Http\Controllers\TicketsController::class, 'updateTransferInspectionData'])->name('tickets.update-transfer-inspection-data');
 Route::get('/tickets/print-ticket-go-back/{id}', [App\Http\Controllers\TicketsController::class, 'printTicketGoBack'])->name('tickets.print-ticket-go-back');
+Route::get('/tickets/executed-reconnections', [App\Http\Controllers\TicketsController::class, 'executedReconnections'])->name('tickets.executed-reconnections');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 

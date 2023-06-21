@@ -253,4 +253,8 @@ class Tickets extends Model
     public static function getPreTransferInpsection() {
         return '1678839448841';
     }
+
+    public static function getReconnectionParent() {
+        return '1668541254427';
+    }
 }
