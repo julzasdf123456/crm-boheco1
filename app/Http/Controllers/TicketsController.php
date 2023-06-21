@@ -169,7 +169,7 @@ class TicketsController extends AppBaseController
         $ticketLog->save();
 
         // CREATE PAYMENT MODULE
-        
+        // RECONNECTIONS        
         if ($tickets->Ticket == Tickets::getReconnection() | $tickets->Ticket == '1686701994992') {
             // RECONNECTION DELINQUENCY OR POWER RESTORATION
             $ticket = DB::table('CRM_Tickets')
@@ -268,6 +268,72 @@ class TicketsController extends AppBaseController
             $queuDetails->Particular = 'EVAT';
             $queuDetails->GLCode = '22420414001';
             $queuDetails->Total = 3.6;
+            $queuDetails->save();
+        } elseif ($tickets->Ticket == '1668541254416') {
+            // CLEARING
+            $qId = IDGenerator::generateID();
+
+            $queue = new CRMQueue;
+            $queue->id = $qId;
+            $queue->ConsumerName = $ticket->ConsumerName;
+            $queue->ConsumerAddress = Tickets::getAddress($ticket);
+            $queue->TransactionPurpose = 'Line Clearing';
+            $queue->SourceId = $ticket->id;
+            $queue->SubTotal = 30;
+            $queue->VAT = 3.6;
+            $queue->Total = 33.6;
+            $queue->save();
+
+            // SERVICE FEE
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'Service Fee';
+            $queuDetails->GLCode = '43040500000';
+            $queuDetails->Total = 30;
+            $queuDetails->save();
+
+            // EVAT
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'EVAT';
+            $queuDetails->GLCode = '22420414001';
+            $queuDetails->Total = 3.6;
+            $queuDetails->save();
+        }
+
+        // TRANSFERS
+        if (in_array($tickets->Ticket, Tickets::getTransfers())) {
+            $qId = IDGenerator::generateID();
+
+            $queue = new CRMQueue;
+            $queue->id = $qId;
+            $queue->ConsumerName = $ticket->ConsumerName;
+            $queue->ConsumerAddress = Tickets::getAddress($ticket);
+            $queue->TransactionPurpose = 'Transfer';
+            $queue->SourceId = $ticket->id;
+            $queue->SubTotal = 15;
+            $queue->VAT = 1.8;
+            $queue->Total = 16.8;
+            $queue->save();
+
+            // RECONNECTION FEE
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'Transfer Fee';
+            $queuDetails->GLCode = '43040500000';
+            $queuDetails->Total = 15;
+            $queuDetails->save();
+
+            // EVAT
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'EVAT';
+            $queuDetails->GLCode = '22420414001';
+            $queuDetails->Total = 1.8;
             $queuDetails->save();
         }
 

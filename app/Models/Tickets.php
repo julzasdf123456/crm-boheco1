@@ -261,4 +261,8 @@ class Tickets extends Model
     public static function getReconnectionParentNotArray() {
         return '1668541254427';
     }
+
+    public static function getTransfers() {
+        return ['1668541254393', '1668541254394', '1668541254395', '1668541254396', '1668541254397', '1668541254406', '1668541254407'];
+    }
 }
