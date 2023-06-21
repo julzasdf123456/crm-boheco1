@@ -9,6 +9,7 @@ use App\Models\TicketLogs;
 use App\Models\IDGenerator;
 use App\Models\ServiceConnectionCrew;
 use App\Models\ServiceAccounts;
+use App\Models\AccountMaster;
 use App\Models\DisconnectionHistory;
 use Illuminate\Support\Facades\DB;
 use App\Models\BillingMeters;
@@ -103,6 +104,20 @@ class TicketsController extends Controller {
             $tickets->PercentError = $request['PercentError'];
             $tickets->LinemanCrewExecuted = $request['LinemanCrewExecuted'];
             $tickets->save();
+
+            if($request['Status'] == 'Executed') {
+                // UPDATE IF RECONNECTION
+                $ticketParent = DB::table('CRM_TicketsRepository')
+                    ->where('id', $tickets->Ticket)
+                    ->first();
+                if ($ticketParent != null && $ticketParent->ParentTicket==Tickets::getReconnectionParentNotArray()) {
+                    $account = AccountMaster::find($tickets->AccountNumber);
+                    if ($account != null) {
+                        $account->AccountStatus = 'ACTIVE';
+                        $account->save();
+                    }
+                }
+            } 
 
             // CREATE LOG
             $ticketLog = new TicketLogs;
