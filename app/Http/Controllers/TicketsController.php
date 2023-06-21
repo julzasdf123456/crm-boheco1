@@ -303,40 +303,6 @@ class TicketsController extends AppBaseController
             $queuDetails->save();
         }
 
-        // TRANSFERS
-        if (in_array($tickets->Ticket, Tickets::getTransfers())) {
-            $qId = IDGenerator::generateID();
-
-            $queue = new CRMQueue;
-            $queue->id = $qId;
-            $queue->ConsumerName = $ticket->ConsumerName;
-            $queue->ConsumerAddress = Tickets::getAddress($ticket);
-            $queue->TransactionPurpose = 'Transfer';
-            $queue->SourceId = $ticket->id;
-            $queue->SubTotal = 15;
-            $queue->VAT = 1.8;
-            $queue->Total = 16.8;
-            $queue->save();
-
-            // RECONNECTION FEE
-            $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID();
-            $queuDetails->ReferenceNo = $qId;
-            $queuDetails->Particular = 'Transfer Fee';
-            $queuDetails->GLCode = '43040500000';
-            $queuDetails->Total = 15;
-            $queuDetails->save();
-
-            // EVAT
-            $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID();
-            $queuDetails->ReferenceNo = $qId;
-            $queuDetails->Particular = 'EVAT';
-            $queuDetails->GLCode = '22420414001';
-            $queuDetails->Total = 1.8;
-            $queuDetails->save();
-        }
-
         // SEND SMS
         if ($tickets->ContactNumber != null) {
             if (strlen($tickets->ContactNumber) > 10 && strlen($tickets->ContactNumber) < 13) {
@@ -2681,6 +2647,19 @@ class TicketsController extends AppBaseController
 
         // TRANSFERS
         if (in_array($tickets->Ticket, Tickets::getTransfers())) {
+            $ticket = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
+                ->where('CRM_Tickets.id', $tickets->id)
+                ->select('CRM_Tickets.id',
+                    'CRM_Tickets.AccountNumber',
+                    'CRM_Tickets.ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'CRM_Tickets.Sitio',
+                    )
+                ->first();
+
             $qId = IDGenerator::generateID();
 
             $queue = new CRMQueue;
@@ -2688,7 +2667,7 @@ class TicketsController extends AppBaseController
             $queue->ConsumerName = $ticket->ConsumerName;
             $queue->ConsumerAddress = Tickets::getAddress($ticket);
             $queue->TransactionPurpose = 'Transfer';
-            $queue->SourceId = $ticket->id;
+            $queue->SourceId = $tickets->id;
             $queue->SubTotal = 15;
             $queue->VAT = 1.8;
             $queue->Total = 16.8;
