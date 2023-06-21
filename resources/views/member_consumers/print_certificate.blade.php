@@ -172,7 +172,7 @@
   <br>
   <p class="text-center"> held at 
     <strong style="border-bottom: 1px solid #343434; padding-bottom: 4px;">{{ strtoupper(env('APP_ADDRESS')) }}</strong> on 
-    <strong style="border-bottom: 1px solid #343434; padding-bottom: 4px;">{{ strtoupper(date('F, Y', strtotime($memberConsumer->DateApplied))) }}</strong></p>
+    <strong style="border-bottom: 1px solid #343434; padding-bottom: 4px;">{{ strtoupper(date('F d, Y', strtotime($memberConsumer->DateApplied))) }}</strong></p>
   <br>
   <br><br><br>
   <br>
