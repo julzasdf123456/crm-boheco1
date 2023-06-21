@@ -19,7 +19,7 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="card shadow-none">
-            {!! Form::open(['route' => 'tickets.disco-reco-reports', 'method' => 'GET']) !!}
+            {!! Form::open(['route' => 'tickets.executed-reconnections', 'method' => 'GET']) !!}
             <div class="card-body">
                 <div class="row">
                     <div class="form-group col-lg-2">
