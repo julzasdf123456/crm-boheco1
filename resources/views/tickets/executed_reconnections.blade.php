@@ -62,7 +62,7 @@
                     <div class="form-group col-md-3">
                         <label for="Action">Action</label><br>
                         <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-check ico-tab-mini"></i>View</button>
-                        {{-- <button id="download" class="btn btn-sm btn-success"><i class="fas fa-download ico-tab-mini"></i>Download</button> --}}
+                        <button id="download" class="btn btn-sm btn-success"><i class="fas fa-download ico-tab-mini"></i>Download</button>
                     </div>
                 </div>
                 
@@ -125,7 +125,7 @@
             $('#download').on('click', function(e) {
                 e.preventDefault()
 
-                window.location.href = "{{ url('/tickets/download-disco-reco/') }}" + "/" + $('#From').val() + "/" + $('#To').val() + "/" + $('#Office').val()
+                window.location.href = "{{ url('/tickets/download-reconnections/') }}" + "/" + $('#From').val() + "/" + $('#To').val() + "/" + $('#Office').val()
             })
         })
     </script>

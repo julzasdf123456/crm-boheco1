@@ -4961,4 +4961,63 @@ class TicketsController extends AppBaseController
             'data' => $data,
         ]);
     }
+
+    public function downloadReconnections($from, $to, $office) {
+        if ($office == 'All') {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->whereIn('CRM_TicketsRepository.ParentTicket', Tickets::getReconnectionParent())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'CRM_TicketsRepository.Name',
+                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        } else {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->whereRaw("(Trash IS NULL OR Trash='No') AND (DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_Tickets.Office='" . $office . "'")
+                ->whereIn('CRM_TicketsRepository.ParentTicket', Tickets::getReconnectionParent())
+                ->select(
+                    'DateTimeLinemanExecuted',
+                    'CRM_Tickets.id',
+                    'AccountNumber',
+                    'ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'Sitio',
+                    'CurrentMeterBrand',
+                    'CurrentMeterNo',
+                    'CurrentMeterReading',
+                    'CRM_TicketsRepository.Name',
+                    DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                    'CRM_ServiceConnectionCrew.StationName'
+                )
+                ->orderBy('DateTimeLinemanExecuted')
+                ->get();
+        }
+
+        $export = new DiscoRecoExport($data, $from, $to);
+
+        return Excel::download($export, 'Executed Reconnections Report.xlsx');
+    }
+
 }
