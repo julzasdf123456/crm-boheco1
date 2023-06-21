@@ -984,6 +984,18 @@ class TicketsController extends AppBaseController
         $ticketLog->Log = $request['Status'];
         if($request['Status'] == 'Executed') {
             $ticketLog->LogDetails = "Lineman performed action at " . $request['DateTimeLinemanExecuted'];
+
+            // UPDATE IF RECONNECTION
+            $ticketParent = DB::table('CRM_TicketsRepository')
+                ->where('id', $ticket->Ticket)
+                ->first();
+            if ($ticketParent != null && $ticketParent->ParentTicket==Tickets::getReconnectionParentNotArray()) {
+                $account = AccountMaster::find($ticket->AccountNumber);
+                if ($account != null) {
+                    $account->AccountStatus = 'ACTIVE';
+                    $account->save();
+                }
+            }
         } else {
             $ticketLog->LogDetails = $request['Notes'];
         }            
@@ -5019,5 +5031,4 @@ class TicketsController extends AppBaseController
 
         return Excel::download($export, 'Executed Reconnections Report.xlsx');
     }
-
 }
