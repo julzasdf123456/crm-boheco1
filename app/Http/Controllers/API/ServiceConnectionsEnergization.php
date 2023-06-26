@@ -222,7 +222,7 @@ class ServiceConnectionsEnergization extends Controller {
                 'AccountNumber',
                 'ConsumerName',
                 'ConsumerAddress',
-                'Item1',
+                'Item1 AS Coordinates',
                 'ConsumerType',
                 'Pole',
                 'Route',
