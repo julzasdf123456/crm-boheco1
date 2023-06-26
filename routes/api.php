@@ -42,6 +42,7 @@ Route::post('create-timeframes', [ServiceConnectionsEnergization::class, 'create
 Route::get('update-downloaded-service-connection-status', [ServiceConnectionsEnergization::class, 'updateDownloadedServiceConnectionStatus']);
 Route::post('receive-mast-poles', [ServiceConnectionsEnergization::class, 'receiveMastPoles']);
 Route::post('notify-downloaded', [ServiceConnectionsEnergization::class, 'notifyDownloaded']);
+Route::get('get-account-master', [ServiceConnectionsEnergization::class, 'getAccountMaster']);
 
 Route::get('get-towns', [OtherData::class, 'getTowns']);
 Route::get('get-barangays', [OtherData::class, 'getBarangays']);

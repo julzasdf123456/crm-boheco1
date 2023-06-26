@@ -214,4 +214,24 @@ class ServiceConnectionsEnergization extends Controller {
 
         return response()->json('ok', 200);
     }
+
+    public function getAccountMaster(Request $request) {
+        $data = DB::connection('sqlsrvbilling')
+            ->table('AccountMaster')
+            ->select(
+                'AccountNumber',
+                'ConsumerName',
+                'ConsumerAddress',
+                'Item1',
+                'ConsumerType',
+                'Pole',
+                'Route',
+                'SequenceNumber', 
+                'AccountStatus',  
+                'MeterNumber', 
+            )
+            ->get();
+
+        return response()->json($data, 200);
+    }
 }
