@@ -51,6 +51,7 @@
                     <th>Account Type</th>
                     <th>Application</th>
                     <th>Energized At</th>
+                    <th>Updated At</th>
                     <th width="8%"></th>
                 </thead>
                 <tbody>
@@ -86,6 +87,7 @@
                                     {{ $days->format('%a days & %h hrs') }}
                                 </span>
                             </td>
+                            <td>{{ date('M d, Y', strtotime($item->updated_at)) }}</td>
                             <td class="text-right" >
                                 @if ($item->ConnectionApplicationType == 'Relocation')
                                     {{-- <a href="{{ route('serviceAccounts.relocation-form', [$item->AccountNumber, $item->id]) }}" title="Proceed relocating {{ $item->ServiceAccountName }}" ><i class="fas fa-arrow-circle-right text-success"></i></a> --}}

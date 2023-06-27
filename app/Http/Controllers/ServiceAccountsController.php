@@ -519,6 +519,7 @@ class ServiceAccountsController extends AppBaseController
                                 'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
                                 'CRM_ServiceConnectionAccountTypes.Alias',
                                 'CRM_ServiceConnections.AccountNumber',  
+                                'CRM_ServiceConnections.updated_at',  
                                 'CRM_ServiceConnections.Sitio as Sitio', 
                                 'CRM_Towns.Town as Town',
                                 'CRM_Barangays.Barangay as Barangay')
@@ -547,7 +548,8 @@ class ServiceAccountsController extends AppBaseController
                                 'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
                                 'CRM_ServiceConnectionAccountTypes.Alias',
                                 'CRM_ServiceConnections.AccountNumber',  
-                                'CRM_ServiceConnections.Sitio as Sitio', 
+                                'CRM_ServiceConnections.Sitio as Sitio',   
+                                'CRM_ServiceConnections.updated_at',
                                 'CRM_Towns.Town as Town',
                                 'CRM_Barangays.Barangay as Barangay')
                 ->where(function ($query) {
