@@ -337,4 +337,16 @@ class AccountMaster extends Model
             return 'fa-caret-down';
         }
     }
+
+    public static function getGroupTag($acctType) {
+        if ($acctType=='1627280880118') {
+            return 'M';
+        } elseif ($acctType=='1627281051251') {
+            return 'L';
+        } elseif ($acctType=='1659574401785') {
+            return 'S';
+        } else {
+            return null;
+        }
+    }
 }
