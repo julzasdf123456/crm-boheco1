@@ -268,14 +268,16 @@ class ElectriciansController extends AppBaseController
                 'ORDate' => $item->ORDate,
                 'ORNumber' => $item->ORNumber,
                 'ServiceAccountName' => $item->ServiceAccountName,
-                'Address' => ServiceConnections::getAddress($item),
-                'ElecName' => strtoupper($item->ElectricianName),
+                'Purok' => $item->Sitio,
+                'Barangay' => $item->Barangay,
+                'Town' => $item->Town,
                 'ES' => $item->Breakers,
                 'LO' => $item->Outlets,
                 'CO' => $item->Lights,
                 'BOHECO I Share' => is_numeric($item->BOHECOShare) ? number_format($item->BOHECOShare, 2) : $item->BOHECOShare,
                 'Labor' => is_numeric($item->LaborCharge) ? number_format($item->LaborCharge, 2) : $item->LaborCharge,
                 'Total' => number_format((is_numeric($item->LaborCharge) ? round($item->LaborCharge, 2) : 0) + (is_numeric($item->BOHECOShare) ? round($item->BOHECOShare, 2) : 0), 2),
+                'ElecName' => strtoupper($item->ElectricianName),
             ]);
             $i++;
         }
@@ -285,14 +287,16 @@ class ElectriciansController extends AppBaseController
             'OR Date',
             'OR Number',
             'Service Account Name',
-            'Address',
-            'Electrician',
+            'Purok',
+            'Barangay',
+            'Town',
             'ES',
             'LO',
             'CO',
             'BOHECO I Share',
             'Labor Charge',
             'Total',
+            'Electrician',
         ];
 
         $export = new DynamicExport($arr, $headers, null, 'Housewiring Labor Data for ' . date('F d, Y', strtotime($from)) . ' - ' . date('F d, Y', strtotime($to)));
