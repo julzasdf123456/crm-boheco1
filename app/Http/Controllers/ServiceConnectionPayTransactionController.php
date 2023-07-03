@@ -83,6 +83,10 @@ class ServiceConnectionPayTransactionController extends AppBaseController
             $queueDetails->GLCode = $particular->AccountNumber;
             $queueDetails->Total = $input['Amount'];
             $queueDetails->save();
+
+            // DELETE IF VALUE IS ZERO
+            $queuesZero = CRMDetails::whereRaw("Total=0")->get();
+            $queuesZero->delete();
         }
 
         // return redirect(route('serviceConnectionPayTransactions.index'));
@@ -495,6 +499,10 @@ class ServiceConnectionPayTransactionController extends AppBaseController
             $queuDetails->Total = round(floatval($request['TotalVat']), 2);
             $queuDetails->save();
         }
+
+        // DELETE IF VALUE IS ZERO
+        $queuesZero = CRMDetails::whereRaw("Total=0")->get();
+        $queuesZero->delete();
 
         return response()->json('ok', 200);
     }
