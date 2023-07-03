@@ -85,8 +85,8 @@ class ServiceConnectionPayTransactionController extends AppBaseController
             $queueDetails->save();
 
             // DELETE IF VALUE IS ZERO
-            $queuesZero = CRMDetails::whereRaw("Total=0")->get();
-            $queuesZero->delete();
+            $queuesZero = CRMDetails::whereRaw("Total=0")->delete();
+            // $queuesZero->delete();
         }
 
         // return redirect(route('serviceConnectionPayTransactions.index'));
@@ -501,8 +501,8 @@ class ServiceConnectionPayTransactionController extends AppBaseController
         }
 
         // DELETE IF VALUE IS ZERO
-        $queuesZero = CRMDetails::whereRaw("Total=0")->get();
-        $queuesZero->delete();
+        $queuesZero = CRMDetails::whereRaw("Total=0")->delete();
+        // $queuesZero->delete();
 
         return response()->json('ok', 200);
     }
@@ -614,8 +614,8 @@ class ServiceConnectionPayTransactionController extends AppBaseController
         }
 
         // DELETE IF VALUE IS ZERO
-        $queuesZero = CRMDetails::whereRaw("Total=0")->get();
-        $queuesZero->delete();
+        $queuesZero = CRMDetails::whereRaw("Total=0")->delete();
+        // $queuesZero->delete();
 
         return response()->json('ok', 200);
     }
