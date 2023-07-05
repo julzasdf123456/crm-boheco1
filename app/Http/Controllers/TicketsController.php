@@ -5290,8 +5290,8 @@ class TicketsController extends AppBaseController
                 'Address' => Tickets::getAddress($item),
                 'NatureOfComplaint' => $item->ParentTicket . '-' . $item->Ticket,
                 'DateReceived' => date('m/d/Y h:i A', strtotime($item->created_at)),
-                'ActionDesired' => '',
-                'ActionTaken' => '',
+                'ActionDesired' => Tickets::getERCActionDesired($item->Ticket),
+                'ActionTaken' => Tickets::getERCActionTaken($item->Ticket),
                 'DateActed' => date('m/d/Y h:i A', strtotime($item->DatetimeLinemanExecuted))
             ]);
             $i++;

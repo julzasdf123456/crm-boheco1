@@ -269,4 +269,32 @@ class Tickets extends Model
     public static function getQuarterlyERC() {
         return ['1672792458611', '1655791203676', '1655791108478', '1668541254388', '1655791242281', '1678345520947', '1668541254418', '1668541254419', '1672793174425'];
     }
+
+    public static function getERCActionDesired($complaint) {
+        if (in_array($complaint, ['Low Vertical Clearance', 'Low voltage due to line fault', 'Low voltage due to over-extended sdw/sec.line', 'Household', ''])) {
+            return 'Correction';
+        } elseif (in_array($complaint, ['Inspection (From Consumer)'])) {
+            return 'Inspection';
+        } elseif (in_array($complaint, ['Snapped', 'Hanging/ Tilted/ Detached', 'Loose Connection'])) {
+            return 'Repair';
+        } elseif (in_array($complaint, ['No Power'])) {
+            return 'Restoration';
+        } else {
+            return '';
+        }
+    }
+
+    public static function getERCActionTaken($complaint) {
+        if (in_array($complaint, ['Low Vertical Clearance', 'Low voltage due to line fault', 'Low voltage due to over-extended sdw/sec.line', 'Household', ''])) {
+            return 'Corrected';
+        } elseif (in_array($complaint, ['Inspection (From Consumer)'])) {
+            return 'Inspected';
+        } elseif (in_array($complaint, ['Snapped', 'Hanging/ Tilted/ Detached', 'Loose Connection'])) {
+            return 'Repaired';
+        } elseif (in_array($complaint, ['No Power'])) {
+            return 'Restorated';
+        } else {
+            return '';
+        }
+    }
 }
