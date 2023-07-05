@@ -433,6 +433,8 @@ Route::get('/tickets/update-transfer-inspection-data', [App\Http\Controllers\Tic
 Route::get('/tickets/print-ticket-go-back/{id}', [App\Http\Controllers\TicketsController::class, 'printTicketGoBack'])->name('tickets.print-ticket-go-back');
 Route::get('/tickets/executed-reconnections', [App\Http\Controllers\TicketsController::class, 'executedReconnections'])->name('tickets.executed-reconnections');
 Route::get('/tickets/download-reconnections/{from}/{to}/{office}', [App\Http\Controllers\TicketsController::class, 'downloadReconnections'])->name('tickets.download-reconnections');
+Route::get('/tickets/quarterly-report', [App\Http\Controllers\TicketsController::class, 'quarterlyReport'])->name('tickets.quarterly-report');
+Route::get('/tickets/download-quarterly-report/{town}/{q}/{year}', [App\Http\Controllers\TicketsController::class, 'downloadQuarterlyReport'])->name('tickets.download-quarterly-report');
 Route::resource('tickets', App\Http\Controllers\TicketsController::class);
 
 

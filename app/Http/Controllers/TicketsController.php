@@ -32,6 +32,7 @@ use App\Exports\DiscoRecoExport;
 use App\Exports\MeterReplacementsExport;
 use App\Exports\MeterTransferExport;
 use App\Exports\ServiceConductorTransferExport;
+use App\Exports\TicketsQuarterlyExport;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CRMQueue;
 use App\Models\CRMDetails;
@@ -5109,5 +5110,195 @@ class TicketsController extends AppBaseController
         $export = new DiscoRecoExport($data, $from, $to);
 
         return Excel::download($export, 'Executed Reconnections Report.xlsx');
+    }
+
+    public function quarterlyReport(Request $request) {
+        $town = isset($request['Town']) ? $request['Town'] : '';
+        $quarter = isset($request['Quarter']) ? $request['Quarter'] : '01';
+        $year = isset($request['Year']) ? $request['Year'] : '1970';
+
+        if ($quarter != null && $year != null) {
+            if ($quarter == '01') {
+                $from = $year . '-01-01';
+                $to = date('Y-m-d', strtotime('last day of March ' . $year));
+            } elseif ($quarter == '02') {
+                $from = $year . '-04-01';
+                $to = date('Y-m-d', strtotime('last day of June ' . $year));
+            } elseif ($quarter == '03') {
+                $from = $year . '-07-01';
+                $to = date('Y-m-d', strtotime('last day of September ' . $year));
+            } else {
+                $from = $year . '-10-01';
+                $to = date('Y-m-d', strtotime('last day of December ' . $year));
+            }  
+
+            if ($town == 'All') {
+                $data = DB::table('CRM_Tickets')
+                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')      
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')          
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "')")
+                    ->whereIn('CRM_Tickets.Ticket', Tickets::getQuarterlyERC())
+                    ->select(
+                        'CRM_Tickets.AccountNumber',
+                        'CRM_Tickets.ConsumerName',
+                        'CRM_TicketsRepository.Name as Ticket', 
+                        'CRM_Tickets.Status',  
+                        'CRM_Tickets.Sitio as Sitio', 
+                        'CRM_Tickets.created_at', 
+                        'CRM_Towns.Town as Town',
+                        'CRM_Tickets.created_at', 
+                        'CRM_Tickets.Office',  
+                        'CRM_Tickets.Reason',  
+                        'CRM_Tickets.ContactNumber', 
+                        'CRM_Tickets.CrewAssigned', 
+                        'DatetimeLinemanExecuted',
+                        'TaggedTicketId',
+                        DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                        'CRM_Tickets.Ticket as TicketID',   
+                        'CRM_Barangays.Barangay as Barangay'
+                    )
+                    ->orderBy('CRM_Tickets.created_at')
+                    ->get();
+            } else {
+                $data = DB::table('CRM_Tickets')
+                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')      
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')          
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_Tickets.Town='" . $town . "'")
+                    ->whereIn('CRM_Tickets.Ticket', Tickets::getQuarterlyERC())
+                    ->select(
+                        'CRM_Tickets.AccountNumber',
+                        'CRM_Tickets.ConsumerName',
+                        'CRM_TicketsRepository.Name as Ticket', 
+                        'CRM_Tickets.Status',  
+                        'CRM_Tickets.Sitio as Sitio', 
+                        'CRM_Tickets.created_at', 
+                        'CRM_Towns.Town as Town',
+                        'CRM_Tickets.created_at', 
+                        'CRM_Tickets.Office',  
+                        'CRM_Tickets.Reason',  
+                        'CRM_Tickets.ContactNumber', 
+                        'CRM_Tickets.CrewAssigned', 
+                        'DatetimeLinemanExecuted',
+                        'TaggedTicketId',
+                        DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                        'CRM_Tickets.Ticket as TicketID',   
+                        'CRM_Barangays.Barangay as Barangay'
+                    )
+                    ->orderBy('CRM_Tickets.created_at')
+                    ->get();
+            }
+        } else {
+            $data = [];
+        }
+
+        return view('/tickets/quarterly_report', [
+            'towns' => Towns::orderBy('Town')->get(),
+            'data' => $data,
+        ]);
+    }
+
+    public function downloadQuarterlyReport($town, $quarter, $year) {
+        if ($quarter != null && $year != null) {
+            if ($quarter == '01') {
+                $from = $year . '-01-01';
+                $to = date('Y-m-d', strtotime('last day of March ' . $year));
+                $q = "FIRST QUARTER - " . strtoupper(date('F d, Y', strtotime($from))) . ' to ' . strtoupper(date('F d, Y', strtotime($to)));
+            } elseif ($quarter == '02') {
+                $from = $year . '-04-01';
+                $to = date('Y-m-d', strtotime('last day of June ' . $year));
+                $q = "SECOND QUARTER - " . strtoupper(date('F d, Y', strtotime($from))) . ' to ' . strtoupper(date('F d, Y', strtotime($to)));
+            } elseif ($quarter == '03') {
+                $from = $year . '-07-01';
+                $to = date('Y-m-d', strtotime('last day of September ' . $year));
+                $q = "THIRD QUARTER - " . strtoupper(date('F d, Y', strtotime($from))) . ' to ' . strtoupper(date('F d, Y', strtotime($to)));
+            } else {
+                $from = $year . '-10-01';
+                $to = date('Y-m-d', strtotime('last day of December ' . $year));
+                $q = "FOURTH QUARTER - " . strtoupper(date('F d, Y', strtotime($from))) . ' to ' . strtoupper(date('F d, Y', strtotime($to)));
+            }  
+
+            if ($town == 'All') {
+                $data = DB::table('CRM_Tickets')
+                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')      
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')          
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "')")
+                    ->whereIn('CRM_Tickets.Ticket', Tickets::getQuarterlyERC())
+                    ->select(
+                        'CRM_Tickets.AccountNumber',
+                        'CRM_Tickets.ConsumerName',
+                        'CRM_TicketsRepository.Name as Ticket', 
+                        'CRM_Tickets.Status',  
+                        'CRM_Tickets.Sitio as Sitio', 
+                        'CRM_Tickets.created_at', 
+                        'CRM_Towns.Town as Town',
+                        'CRM_Tickets.created_at', 
+                        'CRM_Tickets.Office',  
+                        'CRM_Tickets.Reason',  
+                        'CRM_Tickets.ContactNumber', 
+                        'CRM_Tickets.CrewAssigned', 
+                        'DatetimeLinemanExecuted',
+                        'TaggedTicketId',
+                        DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                        'CRM_Tickets.Ticket as TicketID',   
+                        'CRM_Barangays.Barangay as Barangay'
+                    )
+                    ->orderBy('CRM_Tickets.created_at')
+                    ->get();
+            } else {
+                $data = DB::table('CRM_Tickets')
+                    ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                    ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')      
+                    ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')          
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_Tickets.Town='" . $town . "'")
+                    ->whereIn('CRM_Tickets.Ticket', Tickets::getQuarterlyERC())
+                    ->select(
+                        'CRM_Tickets.AccountNumber',
+                        'CRM_Tickets.ConsumerName',
+                        'CRM_TicketsRepository.Name as Ticket', 
+                        'CRM_Tickets.Status',  
+                        'CRM_Tickets.Sitio as Sitio', 
+                        'CRM_Tickets.created_at', 
+                        'CRM_Towns.Town as Town',
+                        'CRM_Tickets.created_at', 
+                        'CRM_Tickets.Office',  
+                        'CRM_Tickets.Reason',  
+                        'CRM_Tickets.ContactNumber', 
+                        'CRM_Tickets.CrewAssigned', 
+                        'DatetimeLinemanExecuted',
+                        'TaggedTicketId',
+                        DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                        'CRM_Tickets.Ticket as TicketID',   
+                        'CRM_Barangays.Barangay as Barangay'
+                    )
+                    ->orderBy('CRM_Tickets.created_at')
+                    ->get();
+            }
+        } else {
+            $data = [];
+        }
+
+        $tickets = [];
+        $i = 1;
+        foreach($data as $item) {
+            array_push($tickets, [
+                'Count' => $i,
+                'AccountNumber' => $item->AccountNumber,
+                'ConsumerName' => $item->ConsumerName,
+                'Address' => Tickets::getAddress($item),
+                'NatureOfComplaint' => $item->ParentTicket . '-' . $item->Ticket,
+                'DateReceived' => date('m/d/Y h:i A', strtotime($item->created_at)),
+                'ActionDesired' => '',
+                'ActionTaken' => '',
+                'DateActed' => date('m/d/Y h:i A', strtotime($item->DatetimeLinemanExecuted))
+            ]);
+            $i++;
+        }
+
+        $export = new TicketsQuarterlyExport($tickets, $q);
+
+        return Excel::download($export, $q . '.xlsx');
     }
 }

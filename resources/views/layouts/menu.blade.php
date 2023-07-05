@@ -556,6 +556,12 @@ use Illuminate\Support\Facades\Auth;
                 Reports
             </li>
             <li class="nav-item">
+                <a href="{{ route('tickets.quarterly-report') }}"
+                class="nav-link {{ Request::is('tickets.quarterly-report*') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-danger"></i><p>Quarterly Report</p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ route('tickets.ticket-summary-report') }}"
                 class="nav-link {{ Request::is('tickets.ticket-summary-report*') ? 'active' : '' }}">
                     <i class="fas fa-file nav-icon text-danger"></i><p>Ticket Summary</p>
