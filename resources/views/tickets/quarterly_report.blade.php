@@ -85,8 +85,8 @@
                                 <td>{{ Tickets::getAddress($item) }}</td>
                                 <td>{{ $item->ParentTicket }} - {{ $item->Ticket }}</td>
                                 <td>{{ date('m/d/Y h:i A', strtotime($item->created_at)) }}</td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ Tickets::getERCActionDesired($item->Ticket) }}</td>
+                                <td>{{ Tickets::getERCActionTaken($item->Ticket) }}</td>
                                 <td>{{ date('m/d/Y h:i A', strtotime($item->DatetimeLinemanExecuted)) }}</td>
                             </tr>
                             @php
