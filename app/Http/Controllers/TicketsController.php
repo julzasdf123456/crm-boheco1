@@ -5137,7 +5137,7 @@ class TicketsController extends AppBaseController
                     ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
                     ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')      
                     ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')          
-                    ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "')")
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND DatetimeLinemanExecuted IS NOT NULL")
                     ->whereIn('CRM_Tickets.Ticket', Tickets::getQuarterlyERC())
                     ->select(
                         'CRM_Tickets.AccountNumber',
@@ -5165,7 +5165,7 @@ class TicketsController extends AppBaseController
                     ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
                     ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')      
                     ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')          
-                    ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_Tickets.Town='" . $town . "'")
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_Tickets.Town='" . $town . "' AND DatetimeLinemanExecuted IS NOT NULL")
                     ->whereIn('CRM_Tickets.Ticket', Tickets::getQuarterlyERC())
                     ->select(
                         'CRM_Tickets.AccountNumber',
@@ -5224,7 +5224,7 @@ class TicketsController extends AppBaseController
                     ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
                     ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')      
                     ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')          
-                    ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "')")
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND DatetimeLinemanExecuted IS NOT NULL")
                     ->whereIn('CRM_Tickets.Ticket', Tickets::getQuarterlyERC())
                     ->select(
                         'CRM_Tickets.AccountNumber',
@@ -5252,7 +5252,7 @@ class TicketsController extends AppBaseController
                     ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
                     ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')      
                     ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')          
-                    ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_Tickets.Town='" . $town . "'")
+                    ->whereRaw("(Trash IS NULL OR Trash='No') AND (CRM_Tickets.created_at BETWEEN '" . $from . "' AND '" . $to . "') AND CRM_Tickets.Town='" . $town . "' AND DatetimeLinemanExecuted IS NOT NULL")
                     ->whereIn('CRM_Tickets.Ticket', Tickets::getQuarterlyERC())
                     ->select(
                         'CRM_Tickets.AccountNumber',
