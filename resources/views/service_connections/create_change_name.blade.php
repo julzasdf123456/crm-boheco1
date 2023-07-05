@@ -19,6 +19,8 @@
 
 <div class="row">
     <div class="col-lg-8 offset-lg-2 col-md-12">
+        @include('adminlte-templates::common.errors')
+
         {!! Form::open(['route' => 'serviceConnections.store-change-name']) !!}
         <div class="card">
             <div class="card-body">
@@ -27,6 +29,8 @@
                 <input type="hidden" name="id" value="{{ IDGenerator::generateID() }}">
 
                 <input type="hidden" name="Status" value="Approved">
+
+                <input type="hidden" name="LoadCategory" value="0">
 
                 <input type="hidden" name="Office" value="{{ env('APP_LOCATION') }}">
 
@@ -42,7 +46,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
                                 </div>
-                                {!! Form::text('AccountNumber', $account->id, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255, 'readonly' => 'true']) !!}
+                                {!! Form::text('AccountNumber', $account->AccountNumber, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255, 'readonly' => 'true']) !!}
                             </div>
                         </div>
                     </div> 
@@ -60,7 +64,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
                                 </div>
-                                {!! Form::text('ServiceAccountName', $account->ServiceAccountName, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255, 'readonly' => 'true']) !!}
+                                {!! Form::text('ServiceAccountName', $account->ConsumerName, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255, 'readonly' => 'true']) !!}
                             </div>
                         </div>
                     </div> 
@@ -78,7 +82,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
                                 </div>
-                                {!! Form::text('OrganizationAccountNumber', null, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000, 'placeholder' => 'Change To']) !!}
+                                {!! Form::text('OrganizationAccountNumber', null, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000, 'placeholder' => 'Change To', 'required' => 'true', 'autofocus' => 'true']) !!}
                             </div>
                         </div>
                     </div> 
@@ -96,7 +100,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                 </div>
-                                {!! Form::select('Town', $towns, $account != null ? $account->Town : '', ['class' => 'form-control']) !!}
+                                {!! Form::select('Town', $towns, '', ['class' => 'form-control']) !!}
                             </div>
                         </div>
                     </div>    
@@ -114,7 +118,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                 </div>
-                                {!! Form::select('Barangay', [], null, ['class' => 'form-control',]) !!}
+                                {!! Form::select('Barangay', [], null, ['class' => 'form-control', 'required' => 'true']) !!}
                             </div>
                         </div>
                     </div>    
@@ -132,7 +136,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                 </div>
-                                {!! Form::text('Sitio', $account != null ? $account->Purok : '', ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000, 'placeholder' => 'Sitio']) !!}
+                                {!! Form::text('Sitio', null, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000, 'placeholder' => 'Sitio']) !!}
                             </div>
                         </div>
                     </div> 
@@ -215,5 +219,5 @@
     
 </div>
 
-<p id="Def_Brgy" style="display: none;">{{ $account->Barangay }}</p>
+<p id="Def_Brgy" style="display: none;"></p>
 @endsection

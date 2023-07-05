@@ -39,6 +39,7 @@ use App\Models\SMSNotifications;
 use App\Models\BillDeposits;
 use App\Models\User;
 use App\Models\ServiceConnectionMatPayments;
+use App\Models\AccountMaster;
 use App\Exports\ServiceConnectionApplicationsReportExport;
 use App\Exports\ServiceConnectionEnergizationReportExport;
 use App\Exports\DynamicExport;
@@ -945,15 +946,19 @@ class ServiceConnectionsController extends AppBaseController
     public function assessChecklists($id) {
         $serviceConnections = $this->serviceConnectionsRepository->find($id);
 
-        if ($serviceConnections->AccountType==ServiceConnections::getResidentialId()) {
-            $checklist = ServiceConnectionChecklistsRep::where('Notes', 'RESIDENTIAL')->get();
+        if ($serviceConnections->ConnectionApplicationType == 'Change Name') {
+            $checklist = ServiceConnectionChecklistsRep::where('Notes', 'CHANGE NAME')->get();
         } else {
-            if (floatval($serviceConnections->LoadCategory) > 225) {
-                $checklist = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL ABOVE 5kVA')->get();
+            if ($serviceConnections->AccountType==ServiceConnections::getResidentialId()) {
+                $checklist = ServiceConnectionChecklistsRep::where('Notes', 'RESIDENTIAL')->get();
             } else {
-                $checklist = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL BELOW 5kVA')->get();
+                if (floatval($serviceConnections->LoadCategory) > 225) {
+                    $checklist = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL ABOVE 5kVA')->get();
+                } else {
+                    $checklist = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL BELOW 5kVA')->get();
+                }
             }
-        }
+        }        
         
         /**
          * ASSESS PERMISSIONS
@@ -2652,22 +2657,18 @@ class ServiceConnectionsController extends AppBaseController
 
     public function changeNameSearch(Request $request) {
         if ($request['params'] == null) {
-            $serviceAccounts = DB::table('Billing_ServiceAccounts')
-                        ->leftJoin('CRM_Towns', 'Billing_ServiceAccounts.Town', '=', 'CRM_Towns.id')
-                        ->leftJoin('CRM_Barangays', 'Billing_ServiceAccounts.Barangay', '=', 'CRM_Barangays.id')
-                        ->select('Billing_ServiceAccounts.ServiceAccountName', 'Billing_ServiceAccounts.id', 'Billing_ServiceAccounts.Purok', 'Billing_ServiceAccounts.OldAccountNo', 'CRM_Towns.Town', 'CRM_Barangays.Barangay', 'Billing_ServiceAccounts.AccountCount')
-                        ->orderBy('Billing_ServiceAccounts.ServiceAccountName')
-                        ->paginate(15);
+            $serviceAccounts = DB::connection('sqlsrvbilling')
+                ->table('AccountMaster')
+                ->select('*')
+                ->orderBy('ConsumerName')
+                ->paginate(40);
         } else {
-            $serviceAccounts = DB::table('Billing_ServiceAccounts')
-                        ->leftJoin('CRM_Towns', 'Billing_ServiceAccounts.Town', '=', 'CRM_Towns.id')
-                        ->leftJoin('CRM_Barangays', 'Billing_ServiceAccounts.Barangay', '=', 'CRM_Barangays.id')
-                        ->select('Billing_ServiceAccounts.ServiceAccountName', 'Billing_ServiceAccounts.id', 'Billing_ServiceAccounts.Purok', 'Billing_ServiceAccounts.OldAccountNo', 'CRM_Towns.Town', 'CRM_Barangays.Barangay', 'Billing_ServiceAccounts.AccountCount')
-                        ->where('Billing_ServiceAccounts.ServiceAccountName', 'LIKE', '%' . $request['params'] . '%')
-                        ->orWhere('Billing_ServiceAccounts.id', 'LIKE', '%' . $request['params'] . '%')
-                        ->orWhere('Billing_ServiceAccounts.OldAccountNo', 'LIKE', '%' . $request['params'] . '%')
-                        ->orderBy('Billing_ServiceAccounts.ServiceAccountName')
-                        ->paginate(15);
+            $serviceAccounts = DB::connection('sqlsrvbilling')
+                ->table('AccountMaster')
+                ->whereRaw("AccountNumber LIKE '%" . $request['params'] . "%' OR ConsumerName LIKE '%" . $request['params'] .  "%' OR MeterNumber LIKE '%" . $request['params'] . "%'")
+                ->select('*')
+                ->orderBy('ConsumerName')
+                ->paginate(40);
         }     
 
         return view('/service_connections/change_name_search', [
@@ -2676,7 +2677,7 @@ class ServiceConnectionsController extends AppBaseController
     }
 
     public function createChangeName($id) {
-        $account = ServiceAccounts::find($id);
+        $account = AccountMaster::find($id);
 
         $towns = Towns::orderBy('Town')->pluck('Town', 'id');
 
@@ -2694,6 +2695,8 @@ class ServiceConnectionsController extends AppBaseController
 
     public function storeChangeName(CreateServiceConnectionsRequest $request) {
         $input = $request->all();
+        $input['ServiceAccountName'] = strtoupper($input['ServiceAccountName']);
+        $input['Sitio'] = strtoupper($input['Sitio']);
 
         $serviceConnections = $this->serviceConnectionsRepository->create($input);
 
@@ -2705,31 +2708,18 @@ class ServiceConnectionsController extends AppBaseController
         $timeFrame->Status = 'Received';
         $timeFrame->save();
 
-        $timeFrame = new ServiceConnectionTimeframes;
-        $timeFrame->id = IDGenerator::generateIDandRandString();
-        $timeFrame->ServiceConnectionId = $input['id'];
-        $timeFrame->UserId = Auth::id();
-        $timeFrame->Status = 'Forwarded to Teller For Payment';
-        $timeFrame->save();
-
-        // CREATE PAYMENT TRANSACTIONS
-        $paymentParticulars = ServiceConnectionPayParticulars::all();
-        $subTotal = 0.0;
-        $vatTotal = 0.0;
-        $overAllTotal = 0.0;
-        $totalTransactions = new ServiceConnectionTotalPayments;
-        $totalTransactions->id = IDGenerator::generateIDandRandString();
-        $totalTransactions->ServiceConnectionId = $input['id'];
-        $totalTransactions->SubTotal = $subTotal;
-        $totalTransactions->TotalVat = $vatTotal;
-        $totalTransactions->Total = $overAllTotal;
-        $totalTransactions->save();
-        
+        // $timeFrame = new ServiceConnectionTimeframes;
+        // $timeFrame->id = IDGenerator::generateIDandRandString();
+        // $timeFrame->ServiceConnectionId = $input['id'];
+        // $timeFrame->UserId = Auth::id();
+        // $timeFrame->Status = 'Forwarded to Teller For Payment';
+        // $timeFrame->save();
 
         Flash::success('Service Connections saved successfully.');
 
         // return redirect(route('serviceConnectionInspections.create-step-two', [$input['id']]));
-        return redirect(route('serviceConnections.show', [$input['id']]));
+        // return redirect(route('serviceConnections.show', [$input['id']]));
+        return redirect(route('serviceConnections.assess-checklists', [$input['id']]));
     }
 
     public function approveForChangeName($id) {

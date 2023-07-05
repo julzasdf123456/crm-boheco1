@@ -143,7 +143,7 @@ use Illuminate\Support\Facades\Auth;
                         <i class="fas fa-plus nav-icon text-warning"></i>
                         <p>New Relocation</p>
                     </a>
-                </li>
+                </li>  --}}
 
                 <li class="nav-item">
                     <a href="{{ route('serviceConnections.change-name-search') }}"
@@ -151,7 +151,7 @@ use Illuminate\Support\Facades\Auth;
                         <i class="fas fa-plus nav-icon text-warning"></i>
                         <p>Change Name</p>
                     </a>
-                </li> --}}
+                </li>
             @endcanany
 
             @canany(['Super Admin', 'update metering data'])

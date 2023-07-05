@@ -7,7 +7,12 @@
 <!-- Notes Field -->
 <div class="form-group col-sm-4">
     {!! Form::label('Notes', 'Description/Notes') !!}
-    {!! Form::select('Notes', ['RESIDENTIAL' => 'RESIDENTIAL', 'NON-RESIDENTIAL BELOW 5kVA' => 'NON-RESIDENTIAL BELOW 5kVA', 'NON-RESIDENTIAL ABOVE 5kVA' => 'NON-RESIDENTIAL ABOVE 5kVA'], null, ['class' => 'form-control form-control-sm']) !!}
+    {!! Form::select('Notes', [
+            'RESIDENTIAL' => 'RESIDENTIAL', 
+            'NON-RESIDENTIAL BELOW 5kVA' => 'NON-RESIDENTIAL BELOW 5kVA', 
+            'NON-RESIDENTIAL ABOVE 5kVA' => 'NON-RESIDENTIAL ABOVE 5kVA',
+            'CHANGE NAME' => 'CHANGE NAME',
+        ], null, ['class' => 'form-control form-control-sm']) !!}
 </div>
 
 <div class="form-group col-sm-4">
