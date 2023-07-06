@@ -99,7 +99,7 @@
                <span class="card-title">Payment Module</span>
             </div>
             <div class="card-body">
-               <form action="{{ route('serviceConnections.store-change-name') }}" method="POST">
+               <form action="{{ route('serviceConnections.store-change-name-payment') }}" method="POST">
                <input type="hidden" name="ServiceConnectionId" value="{{ $serviceConnection->id }}">
                <input type="hidden" name="_token" value="{{ csrf_token() }}">
                <table class="table table-sm table-borderless table-hover">
