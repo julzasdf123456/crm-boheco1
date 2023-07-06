@@ -56,7 +56,7 @@
                 <div class="form-group col-sm-12">
                     <div class="row">
                         <div class="col-lg-3 col-md-5">
-                            {!! Form::label('ServiceAccountName', 'Service Account Name') !!}
+                            {!! Form::label('OrganizationAccountNumber', 'Service Account Name') !!}
                         </div>
 
                         <div class="col-lg-9 col-md-7">
@@ -64,7 +64,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
                                 </div>
-                                {!! Form::text('ServiceAccountName', $account->ConsumerName, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255, 'readonly' => 'true']) !!}
+                                {!! Form::text('OrganizationAccountNumber', $account->ConsumerName, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255, 'readonly' => 'true']) !!}
                             </div>
                         </div>
                     </div> 
@@ -74,7 +74,7 @@
                 <div class="form-group col-sm-12">
                     <div class="row">
                         <div class="col-lg-3 col-md-5">
-                            {!! Form::label('OrganizationAccountNumber', 'Change To') !!}
+                            {!! Form::label('ServiceAccountName', 'Change To') !!}
                         </div>
 
                         <div class="col-lg-9 col-md-7">
@@ -82,7 +82,25 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
                                 </div>
-                                {!! Form::text('OrganizationAccountNumber', null, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000, 'placeholder' => 'Change To', 'required' => 'true', 'autofocus' => 'true']) !!}
+                                {!! Form::text('ServiceAccountName', null, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000, 'placeholder' => 'Change To', 'required' => 'true', 'autofocus' => 'true']) !!}
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+
+                <!-- Relationship  to Existing Acct. Holder -->
+                <div class="form-group col-sm-12">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-5">
+                            {!! Form::label('ResidenceNumber', 'Relationship') !!}
+                        </div>
+
+                        <div class="col-lg-9 col-md-7">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
+                                </div>
+                                {!! Form::text('ResidenceNumber', null, ['class' => 'form-control','maxlength' => 250,'maxlength' => 250, 'placeholder' => 'Relationship to the Existing Account Holder', 'required' => 'true']) !!}
                             </div>
                         </div>
                     </div> 

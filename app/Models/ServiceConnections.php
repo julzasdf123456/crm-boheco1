@@ -294,11 +294,11 @@ class ServiceConnections extends Model
     }
 
     public static function getBgStatus($status) {
-        if ($status=='Energized' | $status=='Closed') {
+        if ($status=='Energized' | $status=='Closed' | $status=='Approved for Change Name') {
             return 'bg-success';
         } elseif ($status=='For Inspection') {
             return 'bg-warning';
-        } elseif ($status=='Approved' | $status=='Downloaded by Crew') {
+        } elseif ($status=='Approved' | $status=='Downloaded by Crew' | $status=='For Approval') {
             return 'bg-info';
         } elseif($status=='For Transformer and Pole Assigning' | $status=='Forwarded To Planning') {
             return 'bg-primary';
@@ -316,9 +316,9 @@ class ServiceConnections extends Model
             return 42.84;
         } elseif($status=='For Transformer and Pole Assigning') {
             return 57.12;
-        } elseif ($status=='Downloaded by Crew') {
+        } elseif ($status=='Downloaded by Crew' |  $status=='For Approval') {
             return 71.4;
-        } elseif($status=='Energized') {
+        } elseif($status=='Energized' | $status=='Approved for Change Name') {
             return 85.68;
         } elseif($status=='Closed') {
             return 100;

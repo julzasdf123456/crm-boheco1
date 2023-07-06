@@ -64,6 +64,13 @@ use Illuminate\Support\Facades\Auth;
                                     <i class="fas fa-clipboard-check"></i>
                                 </a>
                                 @endif
+
+                                {{-- CHANGE NAME --}}
+                                @if ($serviceConnections->ConnectionApplicationType == 'Change Name')
+                                    <a href="{{ route('serviceConnections.print-change-name', [$serviceConnections->id]) }}" class="btn btn-tool text-info" title="Print change name certificate">
+                                        <i class="fas fa-file-invoice"></i>
+                                    </a>  
+                                @endif
                                 <a class="btn btn-tool text-info" href="{{ route('serviceConnections.assess-checklists', [$serviceConnections->id]) }}" title="Update requirements"><i class="fas fa-check-circle"></i></a>
                                 <a href="{{ route('serviceConnections.move-to-trash', [$serviceConnections->id]) }}" class="btn btn-tool text-danger" title="Move to trash">
                                     <i class="fas fa-trash"></i>

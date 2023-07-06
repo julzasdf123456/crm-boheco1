@@ -2706,6 +2706,7 @@ class ServiceConnectionsController extends AppBaseController
         $input['ServiceAccountName'] = strtoupper($input['ServiceAccountName']);
         $input['Sitio'] = strtoupper($input['Sitio']);
         $input['OrganizationAccountNumber'] = strtoupper($input['OrganizationAccountNumber']);
+        $input['ResidenceNumber'] = strtoupper($input['ResidenceNumber']);
 
         $serviceConnections = $this->serviceConnectionsRepository->create($input);
 
@@ -3260,14 +3261,25 @@ class ServiceConnectionsController extends AppBaseController
         ServiceConnections::where('id', $id)
             ->update(['Status' => $status]);
 
-        // CREATE Timeframes
-        $timeFrame = new ServiceConnectionTimeframes;
-        $timeFrame->id = IDGenerator::generateID();
-        $timeFrame->ServiceConnectionId = $id;
-        $timeFrame->UserId = Auth::id();
-        $timeFrame->Status = $status;
-        $timeFrame->Notes = 'Status updated manually';
-        $timeFrame->save();
+        if ($status == 'Approved for Change Name') {
+            // CREATE Timeframes
+            $timeFrame = new ServiceConnectionTimeframes;
+            $timeFrame->id = IDGenerator::generateID();
+            $timeFrame->ServiceConnectionId = $id;
+            $timeFrame->UserId = Auth::id();
+            $timeFrame->Status = $status;
+            $timeFrame->Notes = 'Change name application Approved and is forwarded to billing.';
+            $timeFrame->save();
+        } else {
+            // CREATE Timeframes
+            $timeFrame = new ServiceConnectionTimeframes;
+            $timeFrame->id = IDGenerator::generateID();
+            $timeFrame->ServiceConnectionId = $id;
+            $timeFrame->UserId = Auth::id();
+            $timeFrame->Status = $status;
+            $timeFrame->Notes = 'Status updated manually';
+            $timeFrame->save();
+        }        
 
         return response()->json('ok', 200);
     }
@@ -3793,5 +3805,169 @@ class ServiceConnectionsController extends AppBaseController
         }
 
         return redirect(route('serviceConnections.show', [$scId]));
+    }
+
+    public function changeNameForApproval(Request $request) {
+        $data = DB::table('CRM_ServiceConnections')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->select('CRM_ServiceConnections.id',
+                                'CRM_ServiceConnections.ServiceAccountName',
+                                'CRM_ServiceConnections.Status',
+                                'CRM_ServiceConnections.DateOfApplication', 
+                                'CRM_ServiceConnections.ContactNumber', 
+                                'CRM_ServiceConnections.ConnectionApplicationType',
+                                'CRM_ServiceConnections.OrganizationAccountNumber',
+                                'CRM_ServiceConnections.ResidenceNumber',
+                                'CRM_ServiceConnections.AccountNumber',
+                                'CRM_ServiceConnections.Notes',
+                                'CRM_ServiceConnections.Office',
+                                'CRM_ServiceConnections.Sitio', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_ServiceConnections.ORNumber',
+                                'CRM_Barangays.Barangay as Barangay',
+                                )
+                ->whereRaw("ConnectionApplicationType IN ('Change Name') AND Status='For Approval'")
+                ->where(function ($query) {
+                                    $query->where('CRM_ServiceConnections.Trash', 'No')
+                                        ->orWhereNull('CRM_ServiceConnections.Trash');
+                                })
+                ->orderByDesc('ServiceAccountName')
+                ->get();
+
+        return view('/service_connections/change_name_for_approvals', [
+            'data' => $data,
+        ]);
+    }
+
+    public function approvedChangeNames(Request $request) {
+        $office = isset($request['Office']) | $request['Office']==null ? 'All' : $request['Office'];
+
+        if ($office == 'All') {
+            $data = DB::table('CRM_ServiceConnections')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->select('CRM_ServiceConnections.id',
+                                'CRM_ServiceConnections.ServiceAccountName',
+                                'CRM_ServiceConnections.Status',
+                                'CRM_ServiceConnections.DateOfApplication', 
+                                'CRM_ServiceConnections.ContactNumber', 
+                                'CRM_ServiceConnections.ConnectionApplicationType',
+                                'CRM_ServiceConnections.OrganizationAccountNumber',
+                                'CRM_ServiceConnections.ResidenceNumber',
+                                'CRM_ServiceConnections.AccountNumber',
+                                'CRM_ServiceConnections.Notes',
+                                'CRM_ServiceConnections.Office',
+                                'CRM_ServiceConnections.Sitio', 
+                                'CRM_ServiceConnections.updated_at', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_ServiceConnections.ORNumber',
+                                'CRM_Barangays.Barangay as Barangay',
+                                )
+                ->whereRaw("ConnectionApplicationType IN ('Change Name') AND Status='Approved for Change Name'")
+                ->whereRaw("(CRM_ServiceConnections.Trash IS NULL OR CRM_ServiceConnections.Trash='No')")
+                ->orderByDesc('ServiceAccountName')
+                ->get();
+        } else {
+            $data = DB::table('CRM_ServiceConnections')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->select('CRM_ServiceConnections.id',
+                                'CRM_ServiceConnections.ServiceAccountName',
+                                'CRM_ServiceConnections.Status',
+                                'CRM_ServiceConnections.DateOfApplication', 
+                                'CRM_ServiceConnections.ContactNumber', 
+                                'CRM_ServiceConnections.ConnectionApplicationType',
+                                'CRM_ServiceConnections.OrganizationAccountNumber',
+                                'CRM_ServiceConnections.ResidenceNumber',
+                                'CRM_ServiceConnections.AccountNumber',
+                                'CRM_ServiceConnections.Notes',
+                                'CRM_ServiceConnections.Office',
+                                'CRM_ServiceConnections.Sitio', 
+                                'CRM_ServiceConnections.updated_at', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_ServiceConnections.ORNumber',
+                                'CRM_Barangays.Barangay as Barangay',
+                                )
+                ->whereRaw("ConnectionApplicationType IN ('Change Name') AND Status='Approved for Change Name' AND Office='" . $office . "'")
+                ->whereRaw("(CRM_ServiceConnections.Trash IS NULL OR CRM_ServiceConnections.Trash='No')")
+                ->orderByDesc('ServiceAccountName')
+                ->get();
+        }
+
+        return view('service_connections/approved_change_names', [
+            'data' => $data,
+        ]);
+    }
+
+    public function changeAccountName(Request $request) {
+        $scId = $request['ServiceConnectionId'];
+
+        $serviceConnection = ServiceConnections::find($scId);
+
+        if ($serviceConnection != null && $serviceConnection->AccountNumber != null) {
+            $account = AccountMaster::where('AccountNumber', $serviceConnection->AccountNumber)->first();
+
+            $account->ConsumerName = $serviceConnection->ServiceAccountName;
+            $account->save();
+
+            $serviceConnection->Status = 'Closed';
+            $serviceConnection->save();
+
+            // CREATE Timeframes
+            $timeFrame = new ServiceConnectionTimeframes;
+            $timeFrame->id = IDGenerator::generateID();
+            $timeFrame->ServiceConnectionId = $scId;
+            $timeFrame->UserId = Auth::id();
+            $timeFrame->Status = 'Account Name Changed!';
+            $timeFrame->save();
+        }
+
+        return response()->json('ok', 200);
+    }
+
+    public function printChangeName($id) {
+        $serviceConnection = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+            ->select('CRM_ServiceConnections.id as id',
+                        'CRM_ServiceConnections.AccountCount as AccountCount', 
+                        'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                        'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                        'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                        'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.AccountOrganization as AccountOrganization', 
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.ConnectionApplicationType as ConnectionApplicationType',
+                        'CRM_ServiceConnections.AccountNumber',
+                        'CRM_ServiceConnections.OrganizationAccountNumber',
+                        'CRM_ServiceConnections.MemberConsumerId as MemberConsumerId',
+                        'CRM_ServiceConnections.ResidenceNumber',
+                        'CRM_ServiceConnections.Status as Status',  
+                        'CRM_ServiceConnections.Notes as Notes', 
+                        'CRM_ServiceConnections.Sitio', 
+                        'CRM_ServiceConnections.LongSpan', 
+                        'CRM_ServiceConnections.AccountType AS AccountTypeRaw', 
+                        'CRM_ServiceConnections.ORNumber as ORNumber', 
+                        'CRM_ServiceConnections.ORDate', 
+                        'CRM_ServiceConnections.DateTimeOfEnergization as DateTimeOfEnergization', 
+                        'CRM_ServiceConnections.DateTimeLinemenArrived as DateTimeLinemenArrived', 
+                        'CRM_Towns.Town as Town',
+                        'CRM_Barangays.Barangay as Barangay',
+                        'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                        'CRM_ServiceConnections.ElectricianId',
+                        'CRM_ServiceConnections.ElectricianName',
+                        'CRM_ServiceConnections.ElectricianAddress',
+                        'CRM_ServiceConnections.ElectricianContactNo',
+                        'CRM_ServiceConnections.ElectricianAcredited',
+                        'CRM_ServiceConnections.LinemanCrewExecuted',)
+        ->where('CRM_ServiceConnections.id', $id)
+        ->first(); 
+
+        return view('/service_connections/print_change_name', [
+            'serviceConnection' => $serviceConnection
+        ]);
     }
 }

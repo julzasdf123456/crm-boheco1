@@ -181,7 +181,7 @@ use Illuminate\Support\Facades\Auth;
             <li class="nav-item">
                 <a href="#" class="nav-link">
                     <p>
-                        Monitoring
+                        Monitoring & Approvals
                         <i class="fas fa-angle-left right"></i>
                     </p>
                 </a>
@@ -197,6 +197,14 @@ use Illuminate\Support\Facades\Auth;
                         <a href="{{ route('serviceConnections.crew-assigning') }}"
                         class="nav-link {{ Request::is('serviceConnections.crew-assigning*') ? 'active' : '' }}">
                         <i class="fas fa-hard-hat nav-icon text-warning"></i><p>Crew Assigning</p>
+                        </a>
+                    </li>
+                    @endcanany
+                    @canany(['Super Admin', 'sc update energization'])
+                    <li class="nav-item">
+                        <a href="{{ route('serviceConnections.change-name-for-approval') }}"
+                        class="nav-link {{ Request::is('serviceConnections.change-name-for-approval*') ? 'active' : '' }}">
+                        <i class="fas fa-circle nav-icon text-warning"></i><p>Change Name Approvals</p>
                         </a>
                     </li>
                     @endcanany
@@ -719,6 +727,12 @@ use Illuminate\Support\Facades\Auth;
                 <a href="{{ route('accountMasters.new-bapa-energized') }}"
                    class="nav-link {{ Request::is('accountMasters.new-bapa-energized*') ? 'active' : '' }}">                   
                    <i class="fas fa-circle nav-icon text-primary"></i><p>New Energized BAPA</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('serviceConnections.approved-change-names') }}"
+                   class="nav-link {{ Request::is('serviceConnections.approved-change-names*') ? 'active' : '' }}">                   
+                   <i class="fas fa-circle nav-icon text-primary"></i><p>New Change of Names</p>
                 </a>
             </li>
 

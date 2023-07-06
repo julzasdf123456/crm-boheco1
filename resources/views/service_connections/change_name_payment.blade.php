@@ -33,11 +33,11 @@
                 <table class="table table-hover table-borderless table-sm">
                     <tr>
                         <td class="text-muted">Old Account Name</td>
-                        <td><i class="fas fa-user-circle ico-tab"></i>{{ $serviceConnection->ServiceAccountName }}</td>
+                        <td class="text-danger"><i class="fas fa-user-circle ico-tab"></i>{{ $serviceConnection->OrganizationAccountNumber }}</td>
                     </tr>
                     <tr>
                         <td class="text-muted">New Account Name</td>
-                        <td><i class="fas fa-user-circle ico-tab"></i>{{ $serviceConnection->OrganizationAccountNumber }}</td>
+                        <td class="text-info"><i class="fas fa-user-circle ico-tab"></i><strong>{{ $serviceConnection->ServiceAccountName }}</strong></td>
                     </tr>
                     <tr>
                         <td class="text-muted">Existing Account Number</td>
@@ -111,7 +111,7 @@
                         </div>
                      </td>
                      <td>
-                        <input onkeyup="computeTotal()" class="form-control text-right" type="number" step="any" id="BillDeposit" name="BillDeposit" value="{{ round($ave, 3) }}">
+                        <input onkeyup="computeTotal()" class="form-control text-right" type="number" step="any" id="BillDeposit" name="BillDeposit" value="{{ round($ave, 2) }}">
                      </td>
                   </tr>
                   <tr>
@@ -199,7 +199,7 @@
 
          var total = bd + membership + evat
 
-         $('#Total').val(Number(total).toLocaleString(2))
+         $('#Total').val(Math.round((total + Number.EPSILON) * 100) / 100)
       }
    </script>
 @endpush

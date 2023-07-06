@@ -239,7 +239,7 @@ class ServiceConnectionChecklistsController extends AppBaseController
             $inspection = ServiceConnectionInspections::where('ServiceConnectionId', $id)->first();
 
             if ($serviceConnection->ConnectionApplicationType == 'Change Name') {                
-                $serviceConnection->Status = 'Approved';
+                $serviceConnection->Status = 'For Approval';
                 $serviceConnection->save();
                 return redirect(route('serviceConnections.change-name-payment', [$id]));
             } else {

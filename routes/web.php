@@ -165,6 +165,10 @@ Route::get('/service_connections/service-drop', [ServiceConnectionsController::c
 Route::get('/service_connections/new-energized-rewiring', [ServiceConnectionsController::class, 'newEnergizedRewiring'])->name('serviceConnections.new-energized-rewiring');
 Route::get('/service_connections/change-name-payment/{id}', [ServiceConnectionsController::class, 'changeNamePayment'])->name('serviceConnections.change-name-payment');
 Route::post('/service_connections/store-change-name-payment', [ServiceConnectionsController::class, 'storeChangeNamePayment'])->name('serviceConnections.store-change-name-payment');
+Route::get('/service_connections/change-name-for-approval', [ServiceConnectionsController::class, 'changeNameForApproval'])->name('serviceConnections.change-name-for-approval');
+Route::get('/service_connections/approved-change-names', [ServiceConnectionsController::class, 'approvedChangeNames'])->name('serviceConnections.approved-change-names');
+Route::get('/service_connections/change-account-name', [ServiceConnectionsController::class, 'changeAccountName'])->name('serviceConnections.change-account-name');
+Route::get('/service_connections/print-change-name/{id}', [ServiceConnectionsController::class, 'printChangeName'])->name('serviceConnections.print-change-name');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 
