@@ -267,7 +267,8 @@ class Tickets extends Model
     }
 
     public static function getQuarterlyERC() {
-        return ['1672792458611', '1655791203676', '1655791108478', '1668541254388', '1655791242281', '1678345520947', '1668541254418', '1668541254419', '1672793174425', '1672792821113', '1672792835791'];
+        return ['1672792458611', '1655791203676', '1655791108478', '1668541254388', '1655791242281', '1678345520947', 
+            '1668541254418', '1668541254419', '1672793174425', '1672792821113', '1672792835791', '1672792739544'];
     }
 
     public static function getERCActionDesired($complaint) {
@@ -277,7 +278,7 @@ class Tickets extends Model
             return 'Inspection';
         } elseif (in_array($complaint, ['Snapped', 'Hanging/ Tilted/ Detached', 'Loose Connection'])) {
             return 'Repair';
-        } elseif (in_array($complaint, ['No Power', 'Household', 'Transformer Section/Main Line'])) {
+        } elseif (in_array($complaint, ['No Power', 'Household', 'Transformer Section/Main Line', 'Power Restoration'])) {
             return 'Restoration';
         } else {
             return '';
@@ -291,7 +292,7 @@ class Tickets extends Model
             return 'Inspected';
         } elseif (in_array($complaint, ['Snapped', 'Hanging/ Tilted/ Detached', 'Loose Connection'])) {
             return 'Repaired';
-        } elseif (in_array($complaint, ['No Power', 'Household', 'Transformer Section/Main Line'])) {
+        } elseif (in_array($complaint, ['No Power', 'Household', 'Transformer Section/Main Line', 'Power Restoration'])) {
             return 'Restorated';
         } else {
             return '';

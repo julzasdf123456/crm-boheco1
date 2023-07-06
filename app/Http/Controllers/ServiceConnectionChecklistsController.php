@@ -175,15 +175,19 @@ class ServiceConnectionChecklistsController extends AppBaseController
 
         $serviceConnection = ServiceConnections::find($id);
 
-        if ($serviceConnection->AccountType==ServiceConnections::getResidentialId()) {
-            $checklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'RESIDENTIAL')->where('Minimum', 'Yes')->get();
+        if ($serviceConnection->ConnectionApplicationType == 'Change Name') {
+            $checklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'CHANGE NAME')->get();
         } else {
-            if (floatval($serviceConnection->LoadCategory) > 225) {
-                $checklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL ABOVE 5kVA')->where('Minimum', 'Yes')->get();
+            if ($serviceConnection->AccountType==ServiceConnections::getResidentialId()) {
+                $checklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'RESIDENTIAL')->where('Minimum', 'Yes')->get();
             } else {
-                $checklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL BELOW 5kVA')->where('Minimum', 'Yes')->get();
+                if (floatval($serviceConnection->LoadCategory) > 225) {
+                    $checklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL ABOVE 5kVA')->where('Minimum', 'Yes')->get();
+                } else {
+                    $checklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL BELOW 5kVA')->where('Minimum', 'Yes')->get();
+                }
             }
-        }
+        }        
 
         $minArr = [];
         foreach ($checklistsRep as $item) {

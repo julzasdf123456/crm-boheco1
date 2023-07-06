@@ -418,15 +418,19 @@ class ServiceConnectionsController extends AppBaseController
             return redirect(route('serviceConnections.index'));
         }
 
-        if ($serviceConnections->AccountTypeRaw==ServiceConnections::getResidentialId()) {
-            $serviceConnectionChecklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'RESIDENTIAL')->get();
+        if ($serviceConnections->ConnectionApplicationType == 'Change Name') {
+            $serviceConnectionChecklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'CHANGE NAME')->get();
         } else {
-            if (floatval($serviceConnections->LoadCategory) > 225) {
-                $serviceConnectionChecklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL ABOVE 5kVA')->get();
+            if ($serviceConnections->AccountTypeRaw==ServiceConnections::getResidentialId()) {
+                $serviceConnectionChecklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'RESIDENTIAL')->get();
             } else {
-                $serviceConnectionChecklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL BELOW 5kVA')->get();
+                if (floatval($serviceConnections->LoadCategory) > 225) {
+                    $serviceConnectionChecklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL ABOVE 5kVA')->get();
+                } else {
+                    $serviceConnectionChecklistsRep = ServiceConnectionChecklistsRep::where('Notes', 'NON-RESIDENTIAL BELOW 5kVA')->get();
+                }
             }
-        }
+        }        
         
         $serviceConnectionChecklists = ServiceConnectionChecklists::where('ServiceConnectionId', $id)->pluck('ChecklistId')->all();
 
