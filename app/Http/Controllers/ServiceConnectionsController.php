@@ -40,6 +40,8 @@ use App\Models\BillDeposits;
 use App\Models\User;
 use App\Models\ServiceConnectionMatPayments;
 use App\Models\AccountMaster;
+use App\Models\CRMQueue;
+use App\Models\CRMDetails;
 use App\Exports\ServiceConnectionApplicationsReportExport;
 use App\Exports\ServiceConnectionEnergizationReportExport;
 use App\Exports\DynamicExport;
@@ -298,7 +300,6 @@ class ServiceConnectionsController extends AppBaseController
                 ->orWhereNull('CRM_ServiceConnections.Trash');
         })
         ->first(); 
-
         
         $serviceConnectionInspections = ServiceConnectionInspections::where('ServiceConnectionId', $id)
                                 ->orderByDesc('created_at')
@@ -2704,6 +2705,7 @@ class ServiceConnectionsController extends AppBaseController
         $input = $request->all();
         $input['ServiceAccountName'] = strtoupper($input['ServiceAccountName']);
         $input['Sitio'] = strtoupper($input['Sitio']);
+        $input['OrganizationAccountNumber'] = strtoupper($input['OrganizationAccountNumber']);
 
         $serviceConnections = $this->serviceConnectionsRepository->create($input);
 
@@ -3626,5 +3628,170 @@ class ServiceConnectionsController extends AppBaseController
         return view('/service_connections/new_energized_rewiring', [
             'serviceConnections' => $serviceConnections
         ]);
+    }
+
+    public function changeNamePayment($scId) {
+        $serviceConnection = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+            ->select('CRM_ServiceConnections.id as id',
+                        'CRM_ServiceConnections.AccountCount as AccountCount', 
+                        'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                        'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                        'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                        'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.AccountOrganization as AccountOrganization', 
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.ConnectionApplicationType as ConnectionApplicationType',
+                        'CRM_ServiceConnections.AccountNumber',
+                        'CRM_ServiceConnections.OrganizationAccountNumber',
+                        'CRM_ServiceConnections.MemberConsumerId as MemberConsumerId',
+                        'CRM_ServiceConnections.Status as Status',  
+                        'CRM_ServiceConnections.Notes as Notes', 
+                        'CRM_ServiceConnections.Sitio', 
+                        'CRM_ServiceConnections.LongSpan', 
+                        'CRM_ServiceConnections.AccountType AS AccountTypeRaw', 
+                        'CRM_ServiceConnections.ORNumber as ORNumber', 
+                        'CRM_ServiceConnections.ORDate', 
+                        'CRM_ServiceConnections.DateTimeOfEnergization as DateTimeOfEnergization', 
+                        'CRM_ServiceConnections.DateTimeLinemenArrived as DateTimeLinemenArrived', 
+                        'CRM_Towns.Town as Town',
+                        'CRM_Barangays.Barangay as Barangay',
+                        'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                        'CRM_ServiceConnections.ElectricianId',
+                        'CRM_ServiceConnections.ElectricianName',
+                        'CRM_ServiceConnections.ElectricianAddress',
+                        'CRM_ServiceConnections.ElectricianContactNo',
+                        'CRM_ServiceConnections.ElectricianAcredited',
+                        'CRM_ServiceConnections.LinemanCrewExecuted',)
+        ->where('CRM_ServiceConnections.id', $scId)
+        ->first(); 
+
+        $bills = DB::connection('sqlsrvbilling')
+            ->table('Bills')
+            ->whereRaw("AccountNumber='" . $serviceConnection->AccountNumber . "'")
+            ->select('*')
+            ->orderByDesc('ServicePeriodEnd')
+            ->get();
+
+        return view('/service_connections/change_name_payment', [
+            'serviceConnection' => $serviceConnection,
+            'bills' => $bills,
+        ]);
+    }
+
+    public function storeChangeNamePayment(Request $request) {
+        $scId = $request['ServiceConnectionId'];
+        $billDeposit = $request['BillDeposit'];
+        $membershipFee = $request['MembershipFee'];
+        $evat = $request['EVAT'];
+        $total = $request['Total'];
+
+        $serviceConnection = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+            ->select('CRM_ServiceConnections.id as id',
+                        'CRM_ServiceConnections.AccountCount as AccountCount', 
+                        'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                        'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                        'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                        'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.AccountOrganization as AccountOrganization', 
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.ConnectionApplicationType as ConnectionApplicationType',
+                        'CRM_ServiceConnections.AccountNumber',
+                        'CRM_ServiceConnections.OrganizationAccountNumber',
+                        'CRM_ServiceConnections.MemberConsumerId as MemberConsumerId',
+                        'CRM_ServiceConnections.Status as Status',  
+                        'CRM_ServiceConnections.Notes as Notes', 
+                        'CRM_ServiceConnections.Sitio', 
+                        'CRM_ServiceConnections.LongSpan', 
+                        'CRM_ServiceConnections.AccountType AS AccountTypeRaw', 
+                        'CRM_ServiceConnections.ORNumber as ORNumber', 
+                        'CRM_ServiceConnections.ORDate', 
+                        'CRM_ServiceConnections.DateTimeOfEnergization as DateTimeOfEnergization', 
+                        'CRM_ServiceConnections.DateTimeLinemenArrived as DateTimeLinemenArrived', 
+                        'CRM_Towns.Town as Town',
+                        'CRM_Barangays.Barangay as Barangay',
+                        'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                        'CRM_ServiceConnections.ElectricianId',
+                        'CRM_ServiceConnections.ElectricianName',
+                        'CRM_ServiceConnections.ElectricianAddress',
+                        'CRM_ServiceConnections.ElectricianContactNo',
+                        'CRM_ServiceConnections.ElectricianAcredited',
+                        'CRM_ServiceConnections.LinemanCrewExecuted',)
+            ->where('CRM_ServiceConnections.id', $scId)
+            ->first(); 
+
+        $payments = new ServiceConnectionTotalPayments;
+        $payments->id = IDGenerator::generateIDandRandString();
+        $payments->ServiceConnectionId = $scId;
+        $payments->TotalVat = $evat;
+        $payments->Total = $total;
+        $payments->BillDeposit = $billDeposit;
+        $payments->save();
+
+        // DELETE QUEUE FIRST
+        $queue = CRMQueue::where('SourceId', $scId)
+            ->where('TransactionPurpose', 'Change Name')
+            ->delete();
+
+        // ADD TO QUEUE
+        $id = IDGenerator::generateID();
+        $queue = new CRMQueue;
+        $queue->id = $id;
+        $queue->ConsumerName = $serviceConnection->ServiceAccountName;
+        $queue->ConsumerAddress = ServiceConnections::getAddress($serviceConnection);
+        $queue->TransactionPurpose = 'Change Name';
+        $queue->SourceId = $scId;
+        // $queue->SubTotal = $subTotal;
+        $queue->VAT = $evat;
+        $queue->Total = $total;
+        $queue->save();
+
+        // ADD QUEUE DETAILS
+        if (floatval($billDeposit) > 0) {
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() + "1";
+            $queuDetails->ReferenceNo = $id;
+            $queuDetails->Particular = 'Bill Deposit';
+            $queuDetails->GLCode = '21720110002';
+            $queuDetails->Total = $billDeposit;
+            $queuDetails->save();
+        }
+
+        if (floatval($evat) > 0) {
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() + "2";
+            $queuDetails->ReferenceNo = $id;
+            $queuDetails->Particular = 'EVAT';
+            $queuDetails->GLCode = '22420414001';
+            $queuDetails->Total = $evat;
+            $queuDetails->save();
+        }
+
+        if (floatval($membershipFee) > 0) {
+            $particularPayments = new ServiceConnectionPayTransaction;
+            $particularPayments->id = IDGenerator::generateIDandRandString();
+            $particularPayments->ServiceConnectionId = $scId;
+            $particularPayments->Particular = '1686374484551';
+            $particularPayments->Amount = $membershipFee;
+            $particularPayments->Total = $membershipFee;
+            $particularPayments->save();
+
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() + "3";
+            $queuDetails->ReferenceNo = $id;
+            $queuDetails->Particular = 'Membership Fee';
+            $queuDetails->GLCode = '31030100000';
+            $queuDetails->Total = $membershipFee;
+            $queuDetails->save();
+        }
+
+        return redirect(route('serviceConnections.show', [$scId]));
     }
 }

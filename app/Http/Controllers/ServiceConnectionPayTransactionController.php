@@ -547,7 +547,6 @@ class ServiceConnectionPayTransactionController extends AppBaseController
         /**
          * ADD TO CRM QUEUES FIRST
          */
-
         $queue = CRMQueue::where('id', $id)->first();
         if ($queue != null) {
             $subTotal = floatval($queue->SubTotal);

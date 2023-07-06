@@ -163,6 +163,8 @@ Route::get('/service_connections/remove-material-payment', [ServiceConnectionsCo
 Route::get('/service_connections/print-quotation-form/{id}', [ServiceConnectionsController::class, 'printQuotationForm'])->name('serviceConnections.print-quotation-form');
 Route::get('/service_connections/service-drop', [ServiceConnectionsController::class, 'serviceDrop'])->name('serviceConnections.service-drop');
 Route::get('/service_connections/new-energized-rewiring', [ServiceConnectionsController::class, 'newEnergizedRewiring'])->name('serviceConnections.new-energized-rewiring');
+Route::get('/service_connections/change-name-payment/{id}', [ServiceConnectionsController::class, 'changeNamePayment'])->name('serviceConnections.change-name-payment');
+Route::post('/service_connections/store-change-name', [ServiceConnectionsController::class, 'storeChangeNamePayment'])->name('serviceConnections.store-change-name');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 
