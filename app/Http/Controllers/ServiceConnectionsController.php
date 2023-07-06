@@ -964,7 +964,10 @@ class ServiceConnectionsController extends AppBaseController
          * ASSESS PERMISSIONS
          */
         if(Auth::user()->hasAnyPermission(['create membership', 'sc create', 'Super Admin'])) {
-            return view('/service_connections/assess_checklists', ['serviceConnections' => $serviceConnections, 'checklist' => $checklist]);
+            return view('/service_connections/assess_checklists', [
+                'serviceConnections' => $serviceConnections, 
+                'checklist' => $checklist
+            ]);
         } else {
             return abort(403, "You're not authorized to create/update a service connection application.");
         }        

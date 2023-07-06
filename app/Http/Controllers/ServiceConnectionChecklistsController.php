@@ -234,11 +234,15 @@ class ServiceConnectionChecklistsController extends AppBaseController
             // CHECK IF ALREADY HAS VERIFICATION DATA
             $inspection = ServiceConnectionInspections::where('ServiceConnectionId', $id)->first();
 
-            if ($inspection != null) {
+            if ($serviceConnection->ConnectionApplicationType == 'Change Name') {
                 return redirect(route('serviceConnections.show', [$id]));
             } else {
-                return redirect(route('serviceConnectionInspections.create-step-two', [$id]));
-            }            
+                if ($inspection != null) {
+                    return redirect(route('serviceConnections.show', [$id]));
+                } else {
+                    return redirect(route('serviceConnectionInspections.create-step-two', [$id]));
+                } 
+            }       
         } else {
             // IF REQUIREMENTS AIN'T COMPLETE
             
