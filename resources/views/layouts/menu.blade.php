@@ -1019,38 +1019,23 @@ use Illuminate\Support\Facades\Auth;
 @endcanany
 
 {{-- DISCONNECTION --}}
-{{-- @canany(['Super Admin', 'billing re-bill', 'teller approve'])
-    <li class="nav-item has-treeview">
-        <a href="#" class="nav-link">
-            <i class="fas fa-users-slash nav-icon text-primary"></i>
-            <p>
-                Disconnection
-                <i class="fas fa-angle-left right"></i>
-            </p>
+@canany(['Super Admin', 'disco monitor'])
+    <li class="nav-header">DISCONNECTION</li>
+    
+    <li class="nav-item">
+        <a href="{{ route('discoNoticeHistories.index') }}"
+           class="nav-link {{ Request::is('discoNoticeHistories.index*') ? 'active' : '' }}">
+            <i class="fas fa-chart-line nav-icon text-primary"></i><p>Dashboard</p>
         </a>
-        <ul class="nav nav-treeview">
-            <li class="nav-item">
-                <a href="{{ route('discoNoticeHistories.index') }}"
-                   class="nav-link {{ Request::is('discoNoticeHistories.index*') ? 'active' : '' }}">
-                    <i class="fas fa-chart-line nav-icon text-primary"></i><p>Dashboard</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('discoNoticeHistories.generate-nod') }}"
-                   class="nav-link {{ Request::is('discoNoticeHistories.generate-nod*') ? 'active' : '' }}">
-                    <i class="fas fa-file nav-icon text-primary"></i><p>Generate NoD</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('disconnectionHistories.generate-turn-off-list') }}"
-                   class="nav-link {{ Request::is('disconnectionHistories.generate-turn-off-list*') ? 'active' : '' }}">
-                    <i class="fas fa-ban nav-icon text-primary"></i><p>Turn-Off List 
-                    </p>
-                </a>
-            </li>
-        </ul>
     </li>
-@endcanany --}}
+
+    <li class="nav-item">
+        <a href="{{ route('disconnectionSchedules.index') }}"
+           class="nav-link {{ Request::is('disconnectionSchedules.index*') ? 'active' : '' }}">
+            <i class="fas fa-calendar nav-icon text-primary"></i><p>Schedules</p>
+        </a>
+    </li>
+@endcanany
 
 <!-- TELLERING MENU -->
 @canany(['Super Admin', 'teller create'])
@@ -1352,3 +1337,5 @@ use Illuminate\Support\Facades\Auth;
         </ul>
     </li>
 @endcan
+
+
