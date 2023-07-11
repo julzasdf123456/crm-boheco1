@@ -87,9 +87,9 @@ Route::get('download-hv-accounts', [ReadAndBillAPI::class, 'downloadHvAccounts']
 
 // DISCONNECTION
 Route::get('get-disconnection-list', [DisconnectionAPI::class, 'getDisconnectionList']);
-Route::get('get-disconnection-list-by-meter-reader', [DisconnectionAPI::class, 'getDisconnectionListByMeterReader']);
-Route::get('get-disconnection-list-by-route', [DisconnectionAPI::class, 'getDisconnectionListByRoute']);
+Route::get('get-disconnection-list-schedule', [DisconnectionAPI::class, 'getDisconnectionListSchedule']);
 Route::post('receive-disconnection-uploads', [DisconnectionAPI::class, 'receiveDisconnectionUploads']);
+Route::get('update-downloaded-sched', [DisconnectionAPI::class, 'updateDownloadedSched']);
 
 
 // SMS NOTIFICATIONS

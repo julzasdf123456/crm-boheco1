@@ -67,7 +67,12 @@ class DisconnectionData extends Model
         'Others',
         'PaidAmount',
         'ORNumber',
-        'ORDate'
+        'ORDate',
+        'ConsumerName',
+        'ConsumerAddress',
+        'MeterNumber',
+        'PoleNumber',
+        'DisconnectionDate',
     ];
 
     /**
@@ -81,7 +86,7 @@ class DisconnectionData extends Model
         'DisconnectorName' => 'string',
         'UserId' => 'string',
         'AccountNumber' => 'string',
-        'ServicePeriodEnd' => 'date',
+        'ServicePeriodEnd' => 'string',
         'AccountCoordinates' => 'string',
         'Latitude' => 'string',
         'Longitude' => 'string',
@@ -93,7 +98,12 @@ class DisconnectionData extends Model
         'Others' => 'decimal:2',
         'PaidAmount' => 'decimal:2',
         'ORNumber' => 'string',
-        'ORDate' => 'date'
+        'ORDate' => 'string',
+        'ConsumerName' => 'string',
+        'ConsumerAddress' => 'string',
+        'MeterNumber' => 'string',
+        'PoleNumber' => 'string',
+        'DisconnectionDate' => 'string',
     ];
 
     /**
@@ -120,7 +130,12 @@ class DisconnectionData extends Model
         'ORNumber' => 'nullable|string|max:50',
         'ORDate' => 'nullable',
         'created_at' => 'nullable',
-        'updated_at' => 'nullable'
+        'updated_at' => 'nullable',
+        'ConsumerName' => 'nullable|string',
+        'ConsumerAddress' => 'nullable|string',
+        'MeterNumber' => 'nullable|string',
+        'PoleNumber' => 'nullable|string',
+        'DisconnectionDate' => 'nullable|string',
     ];
 
     

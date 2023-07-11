@@ -55,7 +55,7 @@ class DisconnectionSchedules extends Model
         'Status',
         'DatetimeDownloaded',
         'PhoneModel',
-        'UserId'
+        'UserId',
     ];
 
     /**
