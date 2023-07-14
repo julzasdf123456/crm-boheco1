@@ -155,7 +155,7 @@
     .float-right {
         position: absolute;
         top: 0;
-        right: 0;
+        right: 10;
     }
 
 </style>
@@ -169,7 +169,7 @@
 
     @if ($tickets->GeoLocation != null && strlen($tickets->GeoLocation) > 0)
         <span class="float-right">
-            {!! QrCode::size(55)->generate('https://www.google.com/maps/?q=' . $tickets->GeoLocation) !!}
+            {!! QrCode::size(56)->generate('https://www.google.com/maps/?q=' . $tickets->GeoLocation) !!}
             <br>
             <span style="font-size: .6em;">Scan for Map</span>
         </span>
