@@ -214,7 +214,7 @@
                 <td>POLE NO.</td>
                 <th>{{ $tickets->PoleNumber }}
                     @if ($tickets->GeoLocation != null && strlen($tickets->GeoLocation) > 0)
-                        <span style="font-size: .8em;">(GPS: {{ $tickets->GeoLocation }})</span>
+                        <span style="font-size: .6em;">(GPS: {{ $tickets->GeoLocation }})</span>
                     @endif
                 </th>
                 <td>OR NUMBER</td>
