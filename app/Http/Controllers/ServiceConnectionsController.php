@@ -98,7 +98,7 @@ class ServiceConnectionsController extends AppBaseController
                                         ->orWhereNull('CRM_ServiceConnections.Trash');
                                 })
                 ->orderByDesc('CRM_ServiceConnections.created_at')
-                ->paginate(16);
+                ->paginate(50);
         } else {
             $data = DB::table('CRM_ServiceConnections')
                 ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
@@ -128,7 +128,7 @@ class ServiceConnectionsController extends AppBaseController
                 ->orWhere('CRM_ServiceConnections.Id', 'LIKE', '%' . $request['params'] . '%')
                 ->orWhere('CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber', 'LIKE', '%' . $request['params'] . '%')
                 ->orderBy('CRM_ServiceConnections.ServiceAccountName')
-                ->paginate(16);
+                ->paginate(50);
         }
 
         return view('/service_connections/search_applications', [
