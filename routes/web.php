@@ -798,6 +798,8 @@ Route::get("/disconnection_schedules/get-stats", [DisconnectionSchedulesControll
 Route::get("/disconnection_schedules/view-disconnection-consumers/{id}/{day}/{period}", [DisconnectionSchedulesController::class, 'viewDisconnectionConsumers'])->name("disconnectionSchedules.view-disconnection-consumers");
 Route::get("/disconnection_schedules/get-schedules-data", [DisconnectionSchedulesController::class, 'getSchedulesData'])->name("disconnectionSchedules.get-schedules-data");
 Route::get("/disconnection_schedules/get-accounts-from-schedule", [DisconnectionSchedulesController::class, 'getAccountsFromSchedule'])->name("disconnectionSchedules.get-accounts-from-schedule");
+Route::get("/disconnection_schedules/monitor", [DisconnectionSchedulesController::class, 'monitor'])->name("disconnectionSchedules.monitor");
+Route::get("/disconnection_schedules/monitor-view/{id}", [DisconnectionSchedulesController::class, 'monitorView'])->name("disconnectionSchedules.monitor-view");
 Route::resource('disconnectionSchedules', DisconnectionSchedulesController::class);
 
 

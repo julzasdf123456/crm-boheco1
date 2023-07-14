@@ -1256,7 +1256,7 @@ class ServiceConnectionsController extends AppBaseController
 
         $checklists = DB::table('CRM_ServiceConnectionChecklist')
             ->leftJoin('CRM_ServiceConnectionChecklistRepository', 'CRM_ServiceConnectionChecklist.ChecklistId', '=', 'CRM_ServiceConnectionChecklistRepository.id')
-            ->where('ServiceConnectionId', $serviceConnections->id)
+            ->where('ServiceConnectionId', $id)
             ->select('CRM_ServiceConnectionChecklistRepository.Checklist')
             ->get();
 

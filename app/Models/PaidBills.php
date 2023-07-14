@@ -50,17 +50,17 @@ class PaidBills extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
+    public $timestamps = false;
 
     protected $dates = ['deleted_at'];
 
     public $connection = "sqlsrvbilling";
 
-    protected $primaryKey = 'id';
+    protected $primaryKey = ['AccountNumber', 'ServicePeriodEnd'];
 
     public $incrementing = false;
 
     public $fillable = [
-        'id',
         'AccountNumber',
         'BillNumber',
         'ServicePeriodEnd',

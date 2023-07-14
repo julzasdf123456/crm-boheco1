@@ -73,6 +73,8 @@ class DisconnectionData extends Model
         'MeterNumber',
         'PoleNumber',
         'DisconnectionDate',
+        'PaymentNotes',
+        'LastReading',
     ];
 
     /**
@@ -104,6 +106,8 @@ class DisconnectionData extends Model
         'MeterNumber' => 'string',
         'PoleNumber' => 'string',
         'DisconnectionDate' => 'string',
+        'PaymentNotes' => 'string',
+        'LastReading' => 'string',
     ];
 
     /**
@@ -136,6 +140,8 @@ class DisconnectionData extends Model
         'MeterNumber' => 'nullable|string',
         'PoleNumber' => 'nullable|string',
         'DisconnectionDate' => 'nullable|string',
+        'PaymentNotes' => 'nullable|string',
+        'LastReading' => 'nullable|string',
     ];
 
     
