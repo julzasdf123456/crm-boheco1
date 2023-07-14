@@ -152,6 +152,12 @@
         border: 1px solid #878787;
     }
 
+    .float-right {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
 </style>
 <!-- AdminLTE -->
 {{-- <link rel="stylesheet" href="https://adminlte.io/themes/v3/dist/css/adminlte.min.css"/> --}}
@@ -160,6 +166,14 @@
     <p class="center-text"><strong>{{ env('APP_COMPANY') }}</strong></p>
     <p class="center-text">{{ env('APP_ADDRESS') }}</p>
     <p class="center-text" style="margin-top: 8px !important; font-size: 1em;"><strong>TICKET WORK ORDER</strong></p>
+
+    @if ($tickets->GeoLocation != null && strlen($tickets->GeoLocation) > 0)
+        <span class="float-right">
+            {!! QrCode::size(55)->generate('https://www.google.com/maps/?q=' . $tickets->GeoLocation) !!}
+            <br>
+            <span style="font-size: .6em;">Scan for Map</span>
+        </span>
+    @endif    
 
     <div class="row">
         @php
@@ -198,7 +212,11 @@
             </tr>
             <tr>
                 <td>POLE NO.</td>
-                <th>{{ $tickets->PoleNumber }}</th>
+                <th>{{ $tickets->PoleNumber }}
+                    @if ($tickets->GeoLocation != null && strlen($tickets->GeoLocation) > 0)
+                        <span style="font-size: .8em;">(GPS: {{ $tickets->GeoLocation }})</span>
+                    @endif
+                </th>
                 <td>OR NUMBER</td>
                 <th>{{ $tickets->ORNumber }}</th>
             </tr>
