@@ -86,7 +86,7 @@
                 <tbody>
                     @foreach ($data as $item)
                         <tr id="{{ $item->id }}">
-                            <td><a href="{{ route('tickets.show', [$item->id]) }}">{{ $item->id }}</a></td>
+                            <td><a href="{{ route('tickets.show', [$item->id]) }}">{{ $item->AccountNumber }}</a></td>
                             <td>{{ $item->ConsumerName }}</td>
                             <td>{{ Tickets::getAddress($item) }}</td>
                             <td class="text-danger">{{ $item->CurrentMeterNo }}</td>
