@@ -36,6 +36,7 @@ use App\Exports\TicketsQuarterlyExport;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CRMQueue;
 use App\Models\CRMDetails;
+use App\Models\ChangeMeter;
 use Flash;
 use Response;
 
@@ -3826,6 +3827,8 @@ class TicketsController extends AppBaseController
 
     public function changeMeterUnconfirmed(Request $request) {
         $office = $request['Office'];
+        $from = $request['From'];
+        $to = $request['To'];
 
         if ($office == 'All') {
             $data = DB::table('CRM_Tickets')
@@ -3835,6 +3838,7 @@ class TicketsController extends AppBaseController
                 ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
                 ->whereRaw("Status='Executed' AND CRM_Tickets.Ticket IN ('1668541254390', '1672792232225') AND ChangeMeterConfirmed IS NULL")
                 ->whereRaw("CRM_Tickets.created_at > '2023-02-28'")
+                ->whereRaw("(CRM_Tickets.DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "')")
                 ->select('CRM_Tickets.id',
                     'CRM_Tickets.AccountNumber',
                     'CRM_Tickets.ConsumerName',
@@ -3871,6 +3875,7 @@ class TicketsController extends AppBaseController
                 ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
                 ->whereRaw("Status='Executed' AND CRM_Tickets.Ticket IN ('1668541254390', '1672792232225') AND CRM_Tickets.Office='" . $office . "' AND ChangeMeterConfirmed IS NULL")
                 ->whereRaw("CRM_Tickets.created_at > '2023-02-28'")
+                ->whereRaw("(CRM_Tickets.DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "')")
                 ->select('CRM_Tickets.id',
                     'CRM_Tickets.AccountNumber',
                     'CRM_Tickets.ConsumerName',
@@ -3924,13 +3929,91 @@ class TicketsController extends AppBaseController
         }  
     }
 
+    public function confirmChangeMeter(Request $request) {
+        $id = $request['Id'];
+        $meterNumber = $request['MeterNumber'];
+        $kwhStart = $request['KwhStart'];
+        $multiplier = $request['Multiplier'];
+
+        $ticket = Tickets::find($id);
+
+        if ($ticket != null) {
+            // UPDATE ACCOUNT
+            $account = AccountMaster::where('AccountNumber', $ticket->AccountNumber)->first();
+            if ($account != null) {
+                $account->MeterNumber = $meterNumber;
+                $account->save();
+            }
+
+            // ADD NEW METER
+            $meter = new Meters;
+            $meter->MeterNumber = $meterNumber;
+            $meter->MeterDigits = '5';
+            $meter->Multiplier = $multiplier;
+            $meter->ChargingMode = 'ENERGY';
+            $meter->Make = $ticket->NewMeterBrand;
+            $meter->MeterStatus = 'ACTIVE';
+            $meter->InitialReading = $kwhStart;
+            $meter->save();
+
+            // INSERT CHANGE METER
+            $changeMeter = new ChangeMeter;
+            $changeMeter->AccountNumber = $ticket->AccountNumber;
+            $changeMeter->ChangeDate = $ticket->DateTimeLinemanExecuted;
+            $changeMeter->OldMeter = $ticket->CurrentMeterNo;
+            $changeMeter->NewMeter = $meterNumber;
+            $changeMeter->PullOutReading = $ticket->CurrentMeterReading;
+            $changeMeter->save();
+
+            // UPDATE TICKET
+            $ticket->ChangeMeterConfirmed = 'Yes';
+            $ticket->save();
+
+            // CREATE LOG
+            $ticketLog = new TicketLogs;
+            $ticketLog->id = IDGenerator::generateID();
+            $ticketLog->TicketId = $id;
+            $ticketLog->Log = "Change Meter Confirmed";
+            $ticketLog->LogDetails = "Meter details moved to billing database by billing personel.";
+            $ticketLog->UserId = Auth::id();
+            $ticketLog->save();
+        }
+    }
+
+    public function getTicketAjax(Request $request) {
+        $id = $request['Id'];
+
+        $ticket = Tickets::find($id);
+
+        $meter = Meters::where('MeterNumber', $ticket->NewMeterNo)->first();
+
+        $ticket->MeterNumberExists = $meter != null ? true : false;
+
+        return response()->json($ticket, 200);
+    }
+
     public function markAsChangeMeterDone(Request $request) {
         $id = $request['id'];
 
         Tickets::where('id', $id)
             ->update(['ChangeMeterConfirmed' => 'Yes']);
 
+        // CREATE LOG
+        $ticketLog = new TicketLogs;
+        $ticketLog->id = IDGenerator::generateID();
+        $ticketLog->TicketId = $id;
+        $ticketLog->Log = "Change Meter Confirmed";
+        $ticketLog->LogDetails = "Meter details moved to billing database by billing personel.";
+        $ticketLog->UserId = Auth::id();
+        $ticketLog->save();
+
         return response()->json('ok', 200);
+    }
+
+    public function getMeterDetails(Request $request) {
+        $meter = Meters::where('MeterNumber', $request['MeterNumber'])->first();
+
+        return response()->json($meter, 200);
     }
 
     public function pendingChangeMeters(Request $request) {

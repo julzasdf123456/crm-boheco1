@@ -38,7 +38,6 @@ use Illuminate\Support\Facades\Auth;
 
 @endsection
 
-
 @push('page_scripts')
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css" rel="stylesheet">

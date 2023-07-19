@@ -443,6 +443,9 @@ Route::get('/tickets/executed-reconnections', [TicketsController::class, 'execut
 Route::get('/tickets/download-reconnections/{from}/{to}/{office}', [TicketsController::class, 'downloadReconnections'])->name('tickets.download-reconnections');
 Route::get('/tickets/quarterly-report', [TicketsController::class, 'quarterlyReport'])->name('tickets.quarterly-report');
 Route::get('/tickets/download-quarterly-report/{town}/{q}/{year}', [TicketsController::class, 'downloadQuarterlyReport'])->name('tickets.download-quarterly-report');
+Route::get('/tickets/confirm-change-meter', [TicketsController::class, 'confirmChangeMeter'])->name('tickets.confirm-change-meter');
+Route::get('/tickets/get-ticket-ajax', [TicketsController::class, 'getTicketAjax'])->name('tickets.get-ticket-ajax');
+Route::get('/tickets/get-meter-details', [TicketsController::class, 'getMeterDetails'])->name('tickets.get-meter-details');
 Route::resource('tickets', TicketsController::class);
 
 
@@ -800,6 +803,7 @@ Route::get("/disconnection_schedules/get-schedules-data", [DisconnectionSchedule
 Route::get("/disconnection_schedules/get-accounts-from-schedule", [DisconnectionSchedulesController::class, 'getAccountsFromSchedule'])->name("disconnectionSchedules.get-accounts-from-schedule");
 Route::get("/disconnection_schedules/monitor", [DisconnectionSchedulesController::class, 'monitor'])->name("disconnectionSchedules.monitor");
 Route::get("/disconnection_schedules/monitor-view/{id}", [DisconnectionSchedulesController::class, 'monitorView'])->name("disconnectionSchedules.monitor-view");
+Route::get("/disconnection_schedules/disconnection-map-data", [DisconnectionSchedulesController::class, 'disconnectionMapData'])->name("disconnectionSchedules.disconnection-map-data");
 Route::resource('disconnectionSchedules', DisconnectionSchedulesController::class);
 
 
@@ -807,3 +811,6 @@ Route::resource('disconnectionDatas', App\Http\Controllers\DisconnectionDataCont
 
 
 Route::resource('disconnectionRoutes', App\Http\Controllers\DisconnectionRoutesController::class);
+
+
+Route::resource('changeMeters', App\Http\Controllers\ChangeMeterController::class);

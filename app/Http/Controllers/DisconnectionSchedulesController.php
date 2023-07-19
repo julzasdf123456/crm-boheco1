@@ -8,6 +8,7 @@ use App\Repositories\DisconnectionSchedulesRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use App\Models\DisconnectionSchedules;
+use App\Models\DisconnectionData;
 use App\Models\DisconnectionRoutes;
 use App\Models\UnbundledRates;
 use App\Models\User;
@@ -479,7 +480,28 @@ class DisconnectionSchedulesController extends AppBaseController
             ->orderBy('Route')
             ->get();
 
-        $i = 1;
+        if ($disconnectionSchedules->Status == 'Downloaded') {
+            $data = DB::connection("sqlsrvbilling")
+                    ->table('DisconnectionData')
+                    ->leftJoin('AccountMaster', 'DisconnectionData.AccountNumber', '=', 'AccountMaster.AccountNumber')
+                    ->whereRaw("DisconnectionData.ScheduleId='" . $id . "'")
+                    ->select(
+                        'DisconnectionData.AccountNumber',
+                        'DisconnectionData.ServicePeriodEnd',
+                        'AccountMaster.ConsumerName',
+                        'AccountMaster.ConsumerAddress',
+                        'AccountMaster.MeterNumber',
+                        'DisconnectionData.NetAmount',
+                        'AccountMaster.AccountStatus',
+                        'AccountMaster.ConsumerType',
+                        "DisconnectionData.Status",
+                        "DisconnectionData.PaidAmount as AmountPaid",
+                        "DisconnectionData.DisconnectionDate",
+                    )
+                    ->orderByDesc('DisconnectionData.Status')
+                    ->get();
+        } else {
+            $i = 1;
         $query = "";
         foreach($routes as $item) {
             if ($item->SequenceFrom == null | $item->SequenceTo == null) {
@@ -520,6 +542,14 @@ class DisconnectionSchedulesController extends AppBaseController
                     )
                     ->orderBy('Bills.AccountNumber')
                     ->get();
+                    
+            $data = $data->toArray();
+            usort($data, function($a, $b) {
+                return strcmp($b->Status, $a->Status);
+            });
+        }
+
+        
 
         $totalCollection = DB::connection("sqlsrvbilling")
             ->table('DisconnectionData')
@@ -539,11 +569,6 @@ class DisconnectionSchedulesController extends AppBaseController
             )
             ->first();
 
-        $data = $data->toArray();
-        usort($data, function($a, $b) {
-            return strcmp($b->Status, $a->Status);
-        });
-
         return view('/disconnection_schedules/monitor_view', [
             'disconnectionSchedules' => $disconnectionSchedules,
             'routes' => $routes,
@@ -551,5 +576,13 @@ class DisconnectionSchedulesController extends AppBaseController
             'totalCollection' => $totalCollection,
             'poll' => $poll
         ]);
+    }
+
+    public function disconnectionMapData(Request $request) {
+        $id = $request['ScheduleId'];
+
+        $data = DisconnectionData::where("ScheduleId", $id)->get();
+
+        return response()->json($data, 200);
     }
 }

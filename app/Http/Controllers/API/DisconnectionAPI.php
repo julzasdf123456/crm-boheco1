@@ -203,6 +203,21 @@ class DisconnectionAPI extends Controller {
                 'PoleNumber' => $item->PoleNumber,
                 'Surcharge' => Bills::getSurcharge($item),
             ]);
+
+            $discoData = new DisconnectionData;
+            $discoData->id = $item->id;
+            $discoData->ScheduleId = $item->ScheduleId;
+            $discoData->DisconnectorName = $item->DisconnectorName;
+            $discoData->UserId = $item->UserId;
+            $discoData->AccountNumber = $item->AccountNumber;
+            $discoData->ServicePeriodEnd = $item->ServicePeriodEnd;
+            $discoData->AccountCoordinates = $item->AccountCoordinates;
+            $discoData->ConsumerName = $item->ConsumerName;
+            $discoData->ConsumerAddress = $item->ConsumerAddress;
+            $discoData->MeterNumber = $item->MeterNumber;
+            $discoData->NetAmount = $item->NetAmount;
+            $discoData->PoleNumber = $item->PoleNumber;
+            $discoData->save();
         }
 
         return response()->json($finalData, 200);
@@ -228,29 +243,45 @@ class DisconnectionAPI extends Controller {
         // UPDATE ACCOUNT
         $account = AccountMaster::where('AccountNumber', $request['AccountNumber'])->first();
 
-        $discoData = new DisconnectionData;
-        $discoData->id = $request['id'];
-        $discoData->ScheduleId = $request['ScheduleId'];
-        $discoData->DisconnectorName = $request['DisconnectorName'];
-        $discoData->UserId = $request['UserId'];
-        $discoData->AccountNumber = $request['AccountNumber'];
-        $discoData->ServicePeriodEnd = $request['ServicePeriodEnd'];
-        $discoData->AccountCoordinates = $request['AccountCoordinates'];
-        $discoData->Latitude = $request['Latitude'];
-        $discoData->Longitude = $request['Longitude'];
-        $discoData->Notes = $request['Notes'];
-        $discoData->NetAmount = $request['NetAmount'];
-        $discoData->Surcharge = $request['Surcharge'];
-        $discoData->ServiceFee = $request['ServiceFee'];
-        $discoData->Others = $request['Others'];
-        $discoData->Status = $request['Status'];
-        $discoData->PaidAmount = $request['PaidAmount'];
-        $discoData->ConsumerName = $request['ConsumerName'];
-        $discoData->ConsumerAddress = $request['ConsumerAddress'];
-        $discoData->MeterNumber = $request['MeterNumber'];
-        $discoData->PoleNumber = $request['PoleNumber'];
-        $discoData->DisconnectionDate = $request['DisconnectionDate'];
-        $discoData->LastReading = $request['LastReading'];
+        $discoData = DisconnectionData::find($request['id']);
+
+        if ($discoData != null) {            
+            $discoData->Latitude = $request['Latitude'];
+            $discoData->Longitude = $request['Longitude'];
+            $discoData->Notes = $request['Notes'];
+            $discoData->NetAmount = $request['NetAmount'];
+            $discoData->Surcharge = $request['Surcharge'];
+            $discoData->ServiceFee = $request['ServiceFee'];
+            $discoData->Others = $request['Others'];
+            $discoData->Status = $request['Status'];
+            $discoData->PaidAmount = $request['PaidAmount'];
+            $discoData->DisconnectionDate = $request['DisconnectionDate'];
+            $discoData->LastReading = $request['LastReading'];
+        } else {
+            $discoData = new DisconnectionData;
+            $discoData->id = $request['id'];
+            $discoData->ScheduleId = $request['ScheduleId'];
+            $discoData->DisconnectorName = $request['DisconnectorName'];
+            $discoData->UserId = $request['UserId'];
+            $discoData->AccountNumber = $request['AccountNumber'];
+            $discoData->ServicePeriodEnd = $request['ServicePeriodEnd'];
+            $discoData->AccountCoordinates = $request['AccountCoordinates'];
+            $discoData->Latitude = $request['Latitude'];
+            $discoData->Longitude = $request['Longitude'];
+            $discoData->Notes = $request['Notes'];
+            $discoData->NetAmount = $request['NetAmount'];
+            $discoData->Surcharge = $request['Surcharge'];
+            $discoData->ServiceFee = $request['ServiceFee'];
+            $discoData->Others = $request['Others'];
+            $discoData->Status = $request['Status'];
+            $discoData->PaidAmount = $request['PaidAmount'];
+            $discoData->ConsumerName = $request['ConsumerName'];
+            $discoData->ConsumerAddress = $request['ConsumerAddress'];
+            $discoData->MeterNumber = $request['MeterNumber'];
+            $discoData->PoleNumber = $request['PoleNumber'];
+            $discoData->DisconnectionDate = $request['DisconnectionDate'];
+            $discoData->LastReading = $request['LastReading'];
+        }        
 
         if ($account != null) {
             if ($request['Status'] == 'Disconnected') {
