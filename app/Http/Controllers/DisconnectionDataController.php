@@ -7,6 +7,11 @@ use App\Http\Requests\UpdateDisconnectionDataRequest;
 use App\Repositories\DisconnectionDataRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use App\Models\DisconnectionSchedules;
+use App\Models\DisconnectionData;
+use App\Models\PaidBills;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Flash;
 use Response;
 
@@ -153,5 +158,46 @@ class DisconnectionDataController extends AppBaseController
         Flash::success('Disconnection Data deleted successfully.');
 
         return redirect(route('disconnectionDatas.index'));
+    }
+
+    public function discoTellerModule(Request $request) {
+        return view('/disconnection_datas/disco_teller_module', [
+
+        ]);
+    }
+
+    public function discoTellerModuleView($disconnectorName, $disconnectionDate) {
+        $disconnectorName = urldecode($disconnectorName);
+        $disconnectionDate = date('Y-m-d', strtotime($disconnectionDate));
+
+        $data = DB::connection("sqlsrvbilling")
+            ->table("DisconnectionData")
+            ->leftJoin("PaidBills", function($join) {
+                $join->on("DisconnectionData.AccountNumber", "=", "PaidBills.AccountNumber")
+                    ->on("DisconnectionData.ServicePeriodEnd", "=", "PaidBills.ServicePeriodEnd");
+            })
+            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND DisconnectorName='" . $disconnectorName . "' AND PaidAmount > 0 AND DisconnectionData.ORNumber IS NULL")
+            ->select(
+                "DisconnectionData.*",
+                "PaidBills.Teller"
+            )
+            ->orderBy("DisconnectionData.ConsumerName")
+            ->get();
+
+        $groupedData = DB::connection("sqlsrvbilling")
+            ->table("DisconnectionData")
+            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND DisconnectorName='" . $disconnectorName . "' AND PaidAmount > 0 AND DisconnectionData.ORNumber IS NULL")
+            ->select(
+                "AccountNumber"
+            )
+            ->groupBy("DisconnectionData.AccountNumber")
+            ->get();
+
+        return view('/disconnection_datas/disco_teller_module_view', [
+            'name' => $disconnectorName,
+            'date' => $disconnectionDate,
+            'data' => $data,
+            'groupedData' => $groupedData,
+        ]);
     }
 }

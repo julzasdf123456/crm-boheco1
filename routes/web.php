@@ -10,6 +10,7 @@ use App\Http\Controllers\MemberConsumersController;
 use App\Http\Controllers\DisconnectionSchedulesController;
 use App\Http\Controllers\TicketsController;
 use App\Http\Controllers\ServiceAccountsController;
+use App\Http\Controllers\DisconnectionDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -804,10 +805,13 @@ Route::get("/disconnection_schedules/get-accounts-from-schedule", [Disconnection
 Route::get("/disconnection_schedules/monitor", [DisconnectionSchedulesController::class, 'monitor'])->name("disconnectionSchedules.monitor");
 Route::get("/disconnection_schedules/monitor-view/{id}", [DisconnectionSchedulesController::class, 'monitorView'])->name("disconnectionSchedules.monitor-view");
 Route::get("/disconnection_schedules/disconnection-map-data", [DisconnectionSchedulesController::class, 'disconnectionMapData'])->name("disconnectionSchedules.disconnection-map-data");
+Route::get("/disconnection_schedules/get-schedules-collection-calendar-data", [DisconnectionSchedulesController::class, 'getSchedulesCollectionCalendarData'])->name("disconnectionSchedules.get-schedules-collection-calendar-data");
 Route::resource('disconnectionSchedules', DisconnectionSchedulesController::class);
 
 
-Route::resource('disconnectionDatas', App\Http\Controllers\DisconnectionDataController::class);
+Route::get("/disconnection_datas/disco-teller-module", [DisconnectionDataController::class, 'discoTellerModule'])->name("disconnectionDatas.disco-teller-module");
+Route::get("/disconnection_datas/disco-teller-module-view/{name}/{date}", [DisconnectionDataController::class, 'discoTellerModuleView'])->name("disconnectionDatas.disco-teller-module-view");
+Route::resource('disconnectionDatas', DisconnectionDataController::class);
 
 
 Route::resource('disconnectionRoutes', App\Http\Controllers\DisconnectionRoutesController::class);

@@ -585,4 +585,24 @@ class DisconnectionSchedulesController extends AppBaseController
 
         return response()->json($data, 200);
     }
+
+    public function getSchedulesCollectionCalendarData(Request $request) {
+        // $month = $request['Month'];
+        // $from = date('Y-m-d', strtotime('first day of ' . $month));
+        // $to = date('Y-m-d', strtotime('last day of ' . $month));
+
+        // $schedules = DisconnectionSchedules::whereRaw("Day BETWEEN '" . $from . "' AND '" . $to . "'")->get();
+        $schedules = DB::connection("sqlsrvbilling")
+            ->table("DisconnectionData")
+            ->whereRaw("PaidAmount > 0 AND ORNumber IS NULL")
+            ->select(
+                "DisconnectorName",
+                DB::raw("TRY_CAST(DisconnectionDate AS DATE) AS DisconnectionDate")
+            )
+            ->groupBy("DisconnectorName")
+            ->groupByRaw("TRY_CAST(DisconnectionDate AS DATE)")
+            ->get();
+
+        return response()->json($schedules, 200);
+    }
 }
