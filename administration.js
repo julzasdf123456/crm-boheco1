@@ -56,6 +56,11 @@ app.get("/get-active-server-stats", function (request, result) {
     })
 });
 
+app.get("/check", function (request, result) {
+    // get all messages from database
+    result.end("OK");
+});
+
 // start the server
 http.listen(3000, function () {
    console.log("Server started");
