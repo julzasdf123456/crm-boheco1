@@ -46,6 +46,7 @@ var traceyConfig = {
 
 app.get("/get-active-server-stats", function (request, result) {
     // get all messages from database
+    console.log(decodeURIComponent(request.query.ServerId))
     sql.connect(traceyConfig).then(() => {
         return sql.query`SELECT TOP 1 * FROM ServerStats WHERE ServerId=${ decodeURIComponent(request.query.ServerId) } AND created_at BETWEEN ${ decodeURIComponent(request.query.From) } AND ${ decodeURIComponent(request.query.To) } ORDER BY created_at DESC`
     }).then(res => {
