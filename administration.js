@@ -36,7 +36,7 @@ var dbConfig = {
 var traceyConfig = {
     user:  "sa",
     password: "BIR159!@#po",
-    server: "juliolopez",
+    server: "{{ env('TRACEY_IP') }}",
     database: "Tracey", 
     "options": {
         "encrypt": false,
