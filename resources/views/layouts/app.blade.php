@@ -459,6 +459,8 @@
 {{-- INPUT MASK --}}
 <script src="{{ URL::asset('js/inputmask.min.js'); }}"></script>
 
+<script src="{{ URL::asset('js/knob.min.js'); }}"></script>
+
 {{-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script> --}}
 {{--  --}}
 
@@ -471,6 +473,8 @@
     $("input[data-bootstrap-switch]").each(function(){
         $(this).bootstrapSwitch('state', $(this).prop('checked'));
     });
+
+    $('.knob').knob()
 
         /** add active class and stay opened when selected */
     var url = window.location;

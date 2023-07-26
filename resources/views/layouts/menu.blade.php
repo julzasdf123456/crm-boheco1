@@ -1317,11 +1317,17 @@ use Illuminate\Support\Facades\Auth;
 <!-- ADMIN MENU -->
 @can('Super Admin')
     <li class="nav-header">ADMINISTRATIVE</li>
+    <li class="nav-item">
+        <a href="{{ route('administrative.server-monitor') }}"
+           class="nav-link {{ Request::is('administrative.server-monitor*') ? 'active' : '' }}">
+            <i class="fas fa-server nav-icon"></i><p>Server Monitor</p>
+        </a>
+    </li>
     <li class="nav-item has-treeview">
         <a href="#" class="nav-link">
             <i class="fas fa-shield-alt nav-icon"></i>
             <p>
-                Administrator
+                Authentication
                 <i class="fas fa-angle-left right"></i>
             </p>
         </a>
@@ -1350,3 +1356,5 @@ use Illuminate\Support\Facades\Auth;
         </ul>
     </li>
 @endcan
+
+

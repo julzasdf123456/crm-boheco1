@@ -130,6 +130,19 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'sqlsrvtracey' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_TRACEY'),
+            'port' => env('DB_PORT_TRACEY'),
+            'database' => env('DB_DATABASE_TRACEY'),
+            'username' => env('DB_USERNAME_TRACEY'),
+            'password' => env('DB_PASSWORD_TRACEY'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+        ],
+
     ],
 
     /*

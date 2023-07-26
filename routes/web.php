@@ -11,6 +11,7 @@ use App\Http\Controllers\DisconnectionSchedulesController;
 use App\Http\Controllers\TicketsController;
 use App\Http\Controllers\ServiceAccountsController;
 use App\Http\Controllers\DisconnectionDataController;
+use App\Http\Controllers\AdministrativeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -818,3 +819,14 @@ Route::resource('disconnectionRoutes', App\Http\Controllers\DisconnectionRoutesC
 
 
 Route::resource('changeMeters', App\Http\Controllers\ChangeMeterController::class);
+
+Route::get("/administrative/server-monitor", [AdministrativeController::class, 'serverMonitor'])->name("administrative.server-monitor");
+
+
+Route::resource('servers', App\Http\Controllers\ServersController::class);
+
+
+Route::resource('serverStats', App\Http\Controllers\ServerStatsController::class);
+
+
+Route::resource('serverLogs', App\Http\Controllers\ServerLogsController::class);
