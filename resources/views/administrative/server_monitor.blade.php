@@ -50,7 +50,7 @@
                               <input id="storage-{{ $item->id }}" class="knob" data-readonly="true" value="0" data-width="60" data-height="60" data-fgColor="#7fb402">
                            </p>
                            <p style="color: #7fb402; margin: 0px; padding: 0px;" class="text-center">STORAGE</p>
-                           <p id="storagetext-{{ $item->id }}" style="color: #cc397e; margin: 0px; padding: 0px; font-size: 1.2em;" class="text-center">...</p>
+                           <p id="storagetext-{{ $item->id }}" style="color: #7fb402; margin: 0px; padding: 0px; font-size: 1.2em;" class="text-center">...</p>
                         </div>
                      </div>
                   </div>
