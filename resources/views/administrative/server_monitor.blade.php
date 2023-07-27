@@ -4,8 +4,11 @@
 <section class="content-header">
    <div class="container-fluid">
       <div class="row mb-2">
-            <div class="col-sm-12">
+            <div class="col-sm-6">
                <p><strong style="font-size: 1.5em; margin-right: 20px;"><i class="fas fa-server ico-tab"></i>Tracey</strong><span class='text-muted'>An integrated AI tool for monitoring servers.</span></p>
+            </div>
+            <div class="col-sm-6">
+               <a href="{{ route('servers.create') }}" class="btn btn-primary float-right">Add Server</a>
             </div>
       </div>
    </div>
