@@ -1,3 +1,7 @@
+@php
+    use App\Models\IDGenerator;
+@endphp
+
 @extends('layouts.app')
 
 @section('content')
@@ -18,6 +22,8 @@
         <div class="card">
 
             {!! Form::open(['route' => 'servers.store']) !!}
+
+            <input type="hidden" name="id" value="{{ IDGenerator::generateID() }}">
 
             <div class="card-body">
 
