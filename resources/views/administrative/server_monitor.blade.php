@@ -79,7 +79,7 @@
                               $('#storage-{{ $item->id }}').val(0).change()
                               $('#storagetext-{{ $item->id }}').text("UNREACHABLE").change()
                            } else {
-                              $('#icon-indic-{{ $item->id }}').addClass('text-success')
+                              $('#icon-indic-{{ $item->id }}').removeClass('text-white').addClass('text-success')
                               $('#card-{{ $item->id }}').removeClass('bg-danger')
                               $('#cpu-{{ $item->id }}').val(res[0]['CpuPercentage']).change()
                               $('#cputext-{{ $item->id }}').text(res[0]['CpuPercentage'] + " %").change()
