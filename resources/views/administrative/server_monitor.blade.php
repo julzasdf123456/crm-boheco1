@@ -17,9 +17,9 @@
       <div class="row">
          @foreach ($servers as $item)
             <div class="col-lg-4 col-md-6">
-               <div class="card">
+               <div class="card" id="card-{{ $item->id }}">
                   <div class="card-header">
-                     <span class="card-title"><i class="fas fa-server ico-tab"></i>{{ $item->ServerName }} <span class="text-muted"> ({{ $item->ServerIp }})</span></span>
+                     <span class="card-title"><i class="fas fa-server ico-tab" id="icon-indic-{{ $item->id }}"></i>{{ $item->ServerName }} <span class="text-muted"> ({{ $item->ServerIp }})</span></span>
                   </div>
                   <div class="card-body">
                      <div class="row">
@@ -68,6 +68,8 @@
                            res = JSON.parse(res)
                            // console.log(res[0]['CpuPercentage'])
                            if (jQuery.isEmptyObject(res)) {
+                              $('#icon-indic-{{ $item->id }}').addClass('text-white')
+                              $('#card-{{ $item->id }}').addClass('bg-danger')
                               $('#cpu-{{ $item->id }}').val(0).change()
                               $('#cputext-{{ $item->id }}').text("UNREACHABLE").change()
 
@@ -77,6 +79,8 @@
                               $('#storage-{{ $item->id }}').val(0).change()
                               $('#storagetext-{{ $item->id }}').text("UNREACHABLE").change()
                            } else {
+                              $('#icon-indic-{{ $item->id }}').addClass('text-success')
+                              $('#card-{{ $item->id }}').removeClass('bg-danger')
                               $('#cpu-{{ $item->id }}').val(res[0]['CpuPercentage']).change()
                               $('#cputext-{{ $item->id }}').text(res[0]['CpuPercentage'] + " %").change()
 
