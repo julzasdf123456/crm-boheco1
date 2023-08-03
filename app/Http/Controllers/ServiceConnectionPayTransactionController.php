@@ -223,7 +223,11 @@ class ServiceConnectionPayTransactionController extends AppBaseController
             ->where('CRM_ServiceConnections.id', $scId)
             ->first();
 
-        $particulars = ServiceConnectionPayParticulars::whereNotIn('Particular', ['Installation Fee', 'Installation Fee EVAT', 'Labor Cost and Contingencies'])->get();
+        if (Auth::user()->hasAnyRole(['Administrator'])) {
+            $particulars = ServiceConnectionPayParticulars::orderBy('Particular')->get();
+        } else {
+            $particulars = ServiceConnectionPayParticulars::whereNotIn('Particular', ['Installation Fee', 'Installation Fee EVAT', 'Labor Cost and Contingencies'])->get();
+        }     
 
         $particularPayments = DB::table('CRM_ServiceConnectionParticularPaymentsTransactions')
                     ->leftJoin('CRM_ServiceConnectionPaymentParticulars', 'CRM_ServiceConnectionParticularPaymentsTransactions.Particular', '=', 'CRM_ServiceConnectionPaymentParticulars.id')
