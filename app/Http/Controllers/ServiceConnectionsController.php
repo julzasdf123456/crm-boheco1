@@ -1165,8 +1165,8 @@ class ServiceConnectionsController extends AppBaseController
                                         'CRM_ServiceConnections.Status', 
                                         'CRM_Barangays.Barangay as Barangay')
                         ->whereNotNull('CRM_ServiceConnections.ORNumber')
-                        ->whereRaw("CRM_ServiceConnections.Status IN ('Approved', 'Not Energized', 'Downloaded By Crew') AND (Trash IS NULL OR Trash='No')")
-                        ->whereIn('CRM_ServiceConnections.id', DB::table('CRM_ServiceConnectionMeterAndTransformer')->pluck('ServiceConnectionId'))
+                        ->whereRaw("CRM_ServiceConnections.Status IN ('Approved', 'Not Energized', 'Downloaded By Crew') AND (Trash IS NULL OR Trash='No') 
+                                    AND CRM_ServiceConnections.id IN (SELECT ServiceConnectionId FROM CRM_ServiceConnectionMeterAndTransformer)")
                         ->orderBy('CRM_ServiceConnections.ServiceAccountName')
                         ->get();
 
