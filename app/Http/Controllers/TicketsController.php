@@ -5384,4 +5384,75 @@ class TicketsController extends AppBaseController
 
         return Excel::download($export, $q . '.xlsx');
     }
+
+    public function notExecuted(Request $request) {        
+        $from = $request['From'];
+        $to = $request['To'];
+        $area = $request['Office'];
+
+        if ($area == 'All') {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select('CRM_Tickets.id as id',
+                                'CRM_Tickets.AccountNumber',
+                                'CRM_Tickets.ConsumerName',
+                                'CRM_TicketsRepository.Name as Ticket', 
+                                'CRM_Tickets.Status',  
+                                'CRM_Tickets.Sitio as Sitio', 
+                                'CRM_Tickets.created_at', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_Tickets.Office',  
+                                'CRM_Tickets.Reason',  
+                                'CRM_Tickets.ContactNumber',  
+                                'CRM_Tickets.Assessment',  
+                                'CRM_Tickets.Ticket as TicketID', 
+                                DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                                'CRM_Tickets.DateTimeLinemanExecuted',    
+                                'CRM_Barangays.Barangay as Barangay')
+                ->where(function ($query) {
+                                    $query->where('CRM_Tickets.Trash', 'No')
+                                        ->orWhereNull('CRM_Tickets.Trash');
+                                })
+                ->whereBetween('CRM_Tickets.created_at', [$from, $to])   
+                ->whereRaw("Status NOT IN ('Executed', 'Acted')")         
+                ->orderBy('CRM_Tickets.created_at')
+                ->get();
+        } else {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')                
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->select('CRM_Tickets.id as id',
+                                'CRM_Tickets.AccountNumber',
+                                'CRM_Tickets.ConsumerName',
+                                'CRM_TicketsRepository.Name as Ticket', 
+                                'CRM_Tickets.Status',  
+                                'CRM_Tickets.Sitio as Sitio', 
+                                'CRM_Tickets.created_at', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_Tickets.Office',  
+                                'CRM_Tickets.Reason',  
+                                'CRM_Tickets.ContactNumber',  
+                                'CRM_Tickets.Assessment',  
+                                'CRM_Tickets.Ticket as TicketID', 
+                                DB::raw("(SELECT TOP 1 tr.Name FROM CRM_TicketsRepository tr WHERE tr.id=CRM_TicketsRepository.ParentTicket) AS ParentTicket"), 
+                                'CRM_Tickets.DateTimeLinemanExecuted',    
+                                'CRM_Barangays.Barangay as Barangay')
+                ->where(function ($query) {
+                                    $query->where('CRM_Tickets.Trash', 'No')
+                                        ->orWhereNull('CRM_Tickets.Trash');
+                                })
+                ->whereBetween('CRM_Tickets.created_at', [$from, $to])  
+                ->whereRaw("Status NOT IN ('Executed', 'Acted')")        
+                ->where('CRM_Tickets.Office', $area)         
+                ->orderBy('CRM_Tickets.created_at')
+                ->get();
+        }
+
+        return view('/tickets/not_executed', [
+            'data' => $data,
+        ]);
+    }
 }

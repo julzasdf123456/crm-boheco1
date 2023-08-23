@@ -639,6 +639,13 @@ use Illuminate\Support\Facades\Auth;
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a href="{{ route('tickets.not-executed') }}"
+                class="nav-link {{ Request::is('tickets.not-executed*') ? 'active' : '' }}">
+                    <i class="fas fa-exclamation-circle nav-icon text-danger"></i><p>Unexecuted Tickets</p>
+                </a>
+            </li>
+
             <li class="nav-header">                
                 Settings and Others 
             </li>
