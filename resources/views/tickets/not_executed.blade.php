@@ -73,6 +73,7 @@
         <div class="col-lg-12">
             <table class="table table-hover table-sm table-bordered">
                 <thead>
+                     <th></th>
                     <th>Ticket No</th>
                     <th>Account No.</th>
                     <th>Consumer Name</th>
@@ -82,8 +83,12 @@
                     <th>Date Complained</th>
                 </thead>
                 <tbody>
+                  @php
+                      $i = 1;
+                  @endphp
                   @foreach ($data as $item)
                      <tr>
+                        <td>{{ $i }}</td>
                         <td><a href="{{ route('tickets.show', [$item->id]) }}">{{ $item->id }}</a></td>
                         <td>{{ $item->AccountNumber }}</td>
                         <td>{{ $item->ConsumerName }}</td>
@@ -92,6 +97,9 @@
                         <td>{{ $item->Status }}</td>
                         <td>{{ date('M d, Y h:i A', strtotime($item->created_at)) }}</td>
                      </tr>
+                     @php
+                        $i++;
+                     @endphp
                   @endforeach
                 </tbody>
             </table>
