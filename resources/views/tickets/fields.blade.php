@@ -99,7 +99,7 @@
         <div class="col-lg-3 col-md-5">
             <div class="form-group">
                 {!! Form::label('ContactNumber', 'Contact Number:') !!}
-                {!! Form::number('ContactNumber', $serviceAccount != null ? ($serviceAccount->ContactNumber != null ? $serviceAccount->ContactNumber : 0) : 0, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100, 'placeholder' => 'Contact Number']) !!}
+                {!! Form::number('ContactNumber', $tickets != null ? ($tickets->ContactNumber != null ? $tickets->ContactNumber : 0) : 0, ['class' => 'form-control form-control-sm','maxlength' => 100,'maxlength' => 100, 'placeholder' => 'Contact Number']) !!}
             </div>
         </div>
 
