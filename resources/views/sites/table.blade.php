@@ -45,10 +45,10 @@
                                     alert('Working!');
                                 },
                                 400: function (response) {
-                                    alert('Not working!');
+                                    alert('400 - Not working!');
                                 },
                                 0: function (response) {
-                                    alert('Not working!');
+                                    alert('0 - Not working!');
                                 }              
                             }
                         })
