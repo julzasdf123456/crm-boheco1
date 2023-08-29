@@ -117,6 +117,8 @@ class Bills extends Model
 
     public $incrementing = false;
 
+    public $timestamps = false;
+
     public $fillable = [
         'ServicePeriodEnd',
         'AccountNumber',

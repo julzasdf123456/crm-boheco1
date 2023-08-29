@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\CRMQueue;
 use App\Models\CRMDetails;
 use App\Models\ChangeMeter;
+use App\Models\TempReadings;
 use Flash;
 use Response;
 
@@ -3964,6 +3965,16 @@ class TicketsController extends AppBaseController
             $changeMeter->NewMeter = $meterNumber;
             $changeMeter->PullOutReading = $ticket->CurrentMeterReading;
             $changeMeter->save();
+
+            // UPDATE LATEST READING DATA
+            $reading = TempReadings::where("AccountNumber", $ticket->AccountNumber)
+                ->orderByDesc('ServicePeriodEnd')
+                ->first();
+
+            if ($reading != null) {
+                TempReadings::where("AccountNumber", $ticket->AccountNumber)
+                    ->update(['MeterNumber' => $meterNumber]);
+            }
 
             // UPDATE TICKET
             $ticket->ChangeMeterConfirmed = 'Yes';
