@@ -1330,6 +1330,12 @@ use Illuminate\Support\Facades\Auth;
             <i class="fas fa-server nav-icon"></i><p>Server Monitor</p>
         </a>
     </li>
+    <li class="nav-item">
+        <a href="{{ route('sites.index') }}"
+           class="nav-link {{ Request::is('sites*') ? 'active' : '' }}">
+           <i class="fas fa-globe nav-icon"></i><p>Site Monitor</p>
+        </a>
+    </li>
     <li class="nav-item has-treeview">
         <a href="#" class="nav-link">
             <i class="fas fa-shield-alt nav-icon"></i>
@@ -1363,6 +1369,7 @@ use Illuminate\Support\Facades\Auth;
         </ul>
     </li>
 @endcan
+
 
 
 

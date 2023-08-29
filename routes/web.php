@@ -834,3 +834,6 @@ Route::resource('serverLogs', App\Http\Controllers\ServerLogsController::class);
 
 
 Route::resource('tempReadings', App\Http\Controllers\TempReadingsController::class);
+
+
+Route::resource('sites', App\Http\Controllers\SitesController::class);
