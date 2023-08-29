@@ -28,9 +28,9 @@ Auth::routes();
 
 Route::get('/', function () {
     return redirect()->route('login');
-});
+})->middleware('cors');
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('cors');
 Route::get('/home/get-unassigned-meters', [HomeController::class, 'fetchUnassignedMeters'])->name('home.get-unassigned-meters');
 Route::get('/home/get-new-service-connections', [HomeController::class, 'fetchNewServiceConnections'])->name('home.get-new-service-connections');
 Route::get('/home/get-approved-service-connections', [HomeController::class, 'fetchApprovedServiceConnections'])->name('home.get-approved-service-connections');
@@ -836,4 +836,4 @@ Route::resource('serverLogs', App\Http\Controllers\ServerLogsController::class);
 Route::resource('tempReadings', App\Http\Controllers\TempReadingsController::class);
 
 
-Route::resource('sites', App\Http\Controllers\SitesController::class);
+Route::resource('sites', App\Http\Controllers\SitesController::class)->middleware('cors');

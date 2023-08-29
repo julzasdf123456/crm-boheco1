@@ -36,9 +36,22 @@
 
                 @push('page_scripts')
                     <script>
-                        $.get("{{ $item->URL }}", function( data ) {
-                            alert( "Data Loaded: " + data );
-                        });
+                        $.ajax({
+                            url: "{{ $item->URL }}",
+                            type: "HEAD",
+                            timeout:1000,
+                            statusCode: {
+                                200: function (response) {
+                                    alert('Working!');
+                                },
+                                400: function (response) {
+                                    alert('Not working!');
+                                },
+                                0: function (response) {
+                                    alert('Not working!');
+                                }              
+                            }
+                        })
                     </script>
                 @endpush
             </tr>
@@ -46,3 +59,9 @@
         </tbody>
     </table>
 </div>
+
+@push('page_scripts')
+    <script>
+        
+    </script>
+@endpush
