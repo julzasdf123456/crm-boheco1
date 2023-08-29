@@ -38,7 +38,7 @@
                     <script>
                         $.ajax({
                             url: "{{ $item->URL }}",
-                            type: "HEAD",
+                            type: "GET",
                             timeout:1000,
                             statusCode: {
                                 200: function (response) {
