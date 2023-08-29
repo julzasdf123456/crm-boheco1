@@ -3973,7 +3973,7 @@ class TicketsController extends AppBaseController
 
             if ($reading != null) {
                 TempReadings::where("AccountNumber", $ticket->AccountNumber)
-                    ->update(['MeterNumber' => $meterNumber]);
+                    ->update(['MeterNumber' => $meterNumber, 'PreviousReading' => 0]);
             }
 
             // UPDATE TICKET
