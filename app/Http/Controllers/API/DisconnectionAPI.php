@@ -56,6 +56,12 @@ class DisconnectionAPI extends Controller {
             $i++;
         }
 
+        if (strlen($query) > 0) {
+            $query = " AND (" . $query . ")";
+        } else {
+            $query = "";
+        }
+
         $data = DB::connection("sqlsrvbilling")
                     ->table('Bills')
                     ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
@@ -63,7 +69,7 @@ class DisconnectionAPI extends Controller {
                         $join->on('Bills.AccountNumber', '=', 'BillsExtension.AccountNumber')
                             ->on('Bills.ServicePeriodEnd', '=', 'BillsExtension.ServicePeriodEnd');
                     })
-                    ->whereRaw("Bills.ServicePeriodEnd<='" . $schedule->ServicePeriodEnd . "' AND (" . $query . ") AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
+                    ->whereRaw("Bills.ServicePeriodEnd<='" . $schedule->ServicePeriodEnd . "' " . $query . " AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
                         AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd)")
                     ->select(
                         DB::raw("NEWID() AS id"),

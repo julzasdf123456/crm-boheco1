@@ -83,12 +83,20 @@
                   <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Amount Collected</p>
                   <h2 class="text-primary text-center">{{ number_format($totalCollectionNoServiceFee, 2) }}</h2>
                   <p style="margin: 0; padding: 0;" class="text-muted text-center"><i>Without Service Fee</i></p>
+
+                  <div class="divider"></div>
+                  <p style="margin: 0; padding: 0;" class="text-muted text-center">No. of Accounts Paid</p>
+                  <h2 class="text-primary text-center">{{ count($groupedData) }}</h2>
                </div>
 
                <div class="col-lg-3" style="border-right: 1px solid #9a9a9a;">
                   <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Amount Collected</p>
                   <h2 class="text-success text-center">{{ number_format($totalCollectionNoServiceFee + (33.6 * count($groupedData)), 2) }}</h2>
                   <p style="margin: 0; padding: 0;" class="text-muted text-center"><i>With Service Fee</i></p>
+
+                  <div class="divider"></div>
+                  <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Service Fee</p>
+                  <h2 class="text-primary text-center">{{ number_format(count($groupedData) * 33.6, 2) }}</h2>
                </div>
 
                <div class="col-lg-3">
@@ -113,21 +121,6 @@
 
                   <button class="btn btn-success float-right"><i class="fas fa-check-circle ico-tab"></i>SAVE</button>
                </div>
-
-               {{-- <div class="col-lg-3">
-                  <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Disconnected</p>
-                  <h2 class="text-danger text-center">{{ $poll != null && is_numeric($poll->Disconnected) ? number_format($poll->Disconnected) : '0' }}</h2>
-               </div>
-
-               <div class="col-lg-3">
-                  <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Paid</p>
-                  <h2 class="text-success text-center">{{ $poll != null && is_numeric($poll->Paid) ? number_format($poll->Paid) : '0' }}</h2>
-               </div>
-
-               <div class="col-lg-3">
-                  <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Promised</p>
-                  <h2 class="text-warning text-center">{{ $poll != null && is_numeric($poll->Promised) ? number_format($poll->Promised) : '0' }}</h2>
-               </div> --}}
             </div>
          </div>
       </div>

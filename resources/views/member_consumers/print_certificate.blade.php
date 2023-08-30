@@ -182,7 +182,7 @@
   </div>
 
   <div class="half">
-      <p class="text-center" style="border-bottom: 1px solid #454545; padding-bottom: 3px; margin-right: 15%; margin-left: 15%;"><strong>{{ env('ISD_MANAGER') }}</strong></p>
+      <p class="text-center" style="border-bottom: 1px solid #454545; padding-bottom: 3px; margin-right: 15%; margin-left: 15%;"><strong> </strong></p>
       <p class="text-center">Manager, ISD</p>
   </div>
     
