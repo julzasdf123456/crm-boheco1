@@ -1370,6 +1370,29 @@ use Illuminate\Support\Facades\Auth;
     </li>
 @endcan
 
+<!-- SHORTCUTS -->
+@can('Super Admin')
+    <li class="nav-header">SHORTCUTS</li>
+    <li class="nav-item">
+        <a href="http://192.168.10.200:8000" target="_blank"
+           class="nav-link">
+            <i class="fas fa-globe nav-icon"></i><p>Assist</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="http://192.168.10.16/bill-mailer/" target="_blank"
+           class="nav-link">
+            <i class="fas fa-envelope nav-icon"></i><p>Bill Mailer</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="http://192.168.10.16/blaster-brain/index.php" target="_blank"
+           class="nav-link">
+            <i class="fas fa-sms nav-icon"></i><p>Text Blaster</p>
+        </a>
+    </li>
+@endcan
+
 
 
 
