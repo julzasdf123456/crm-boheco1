@@ -435,71 +435,78 @@ class DisconnectionSchedulesController extends AppBaseController
 
         $schedule = DisconnectionSchedules::find($id);
 
-        $i = 1;
-        $query = "";
-        foreach($routes as $item) {
-            $townCode = substr($item->Route, 0, 2);
-
-            if ($item->SequenceFrom == null | $item->SequenceTo == null) {
-                if ($i < count($routes)) {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "') OR ";
-                } else {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "') ";
-                }                
-            } else {
-                $acctFrom = $townCode . $item->Route . sprintf("%04d", $item->SequenceFrom);
-                $acctTo = $townCode . $item->Route . sprintf("%04d", $item->SequenceTo);
-
-                if ($i < count($routes)) {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.AccountNumber BETWEEN '" . $acctFrom . "' AND '" . $acctTo . "') ) OR ";
-                } else {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.AccountNumber BETWEEN '" . $acctFrom . "' AND '" . $acctTo . "') ) ";
-                }
-            } 
-            $i++;
-        }
-
-        if (strlen($query) > 0) {
-            $query = " AND (" . $query . ")";
+        // DELETE SCHED IF THERE ARE NO MORE ROUTES
+        if (count($routes) == 0) {
+            $output = "";
         } else {
+            $i = 1;
             $query = "";
+            foreach($routes as $item) {
+                $townCode = substr($item->Route, 0, 2);
+
+                if ($item->SequenceFrom == null | $item->SequenceTo == null) {
+                    if ($i < count($routes)) {
+                        $query .= " (AccountMaster.Route='" . $item->Route . "') OR ";
+                    } else {
+                        $query .= " (AccountMaster.Route='" . $item->Route . "') ";
+                    }                
+                } else {
+                    $acctFrom = $townCode . $item->Route . sprintf("%04d", $item->SequenceFrom);
+                    $acctTo = $townCode . $item->Route . sprintf("%04d", $item->SequenceTo);
+
+                    if ($i < count($routes)) {
+                        $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.AccountNumber BETWEEN '" . $acctFrom . "' AND '" . $acctTo . "') ) OR ";
+                    } else {
+                        $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.AccountNumber BETWEEN '" . $acctFrom . "' AND '" . $acctTo . "') ) ";
+                    }
+                } 
+                $i++;
+            }
+
+            if (strlen($query) > 0) {
+                $query = " AND (" . $query . ")";
+            } else {
+                $query = "";
+            }
+
+            $data = DB::connection("sqlsrvbilling")
+                        ->table('Bills')
+                        ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
+                        ->whereRaw("ServicePeriodEnd<='" . $schedule->ServicePeriodEnd . "' " . $query . " AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
+                            AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd)")
+                        ->select(
+                            'Bills.AccountNumber',
+                            'ServicePeriodEnd',
+                            'PowerKWH',
+                            'ConsumerName',
+                            'ConsumerAddress',
+                            'AccountMaster.MeterNumber',
+                            'NetAmount',
+                            'AccountMaster.AccountStatus',
+                            'AccountMaster.ConsumerType'
+                        )
+                        ->orderBy('Bills.AccountNumber')
+                        ->get();
+
+            $output = "";
+            $x=1;
+            foreach($data as $itemx) {
+                $output .= "<tr>
+                                <td>" . $x . "</td>
+                                <td>" . $itemx->AccountNumber . "</td>
+                                <td>" . $itemx->ConsumerName . "</td>
+                                <td>" . $itemx->ConsumerAddress . "</td>
+                                <td>" . $itemx->MeterNumber . "</td>
+                                <td>" . $itemx->ConsumerType . "</td>
+                                <td>" . $itemx->AccountStatus . "</td>
+                                <td>" . date('F Y', strtotime($itemx->ServicePeriodEnd)) . "</td>
+                                <td class='text-right text-danger'><strong>" . number_format($itemx->NetAmount, 2) . "</strong></td>
+                            </tr>";
+                $x++;
+            }
         }
 
-        $data = DB::connection("sqlsrvbilling")
-                    ->table('Bills')
-                    ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
-                    ->whereRaw("ServicePeriodEnd<='" . $schedule->ServicePeriodEnd . "' " . $query . " AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
-                        AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd)")
-                    ->select(
-                        'Bills.AccountNumber',
-                        'ServicePeriodEnd',
-                        'PowerKWH',
-                        'ConsumerName',
-                        'ConsumerAddress',
-                        'AccountMaster.MeterNumber',
-                        'NetAmount',
-                        'AccountMaster.AccountStatus',
-                        'AccountMaster.ConsumerType'
-                    )
-                    ->orderBy('Bills.AccountNumber')
-                    ->get();
-
-        $output = "";
-        $x=1;
-        foreach($data as $itemx) {
-            $output .= "<tr>
-                            <td>" . $x . "</td>
-                            <td>" . $itemx->AccountNumber . "</td>
-                            <td>" . $itemx->ConsumerName . "</td>
-                            <td>" . $itemx->ConsumerAddress . "</td>
-                            <td>" . $itemx->MeterNumber . "</td>
-                            <td>" . $itemx->ConsumerType . "</td>
-                            <td>" . $itemx->AccountStatus . "</td>
-                            <td>" . date('F Y', strtotime($itemx->ServicePeriodEnd)) . "</td>
-                            <td class='text-right text-danger'><strong>" . number_format($itemx->NetAmount, 2) . "</strong></td>
-                        </tr>";
-            $x++;
-        }
+        
 
         return response()->json($output, 200);
     }
