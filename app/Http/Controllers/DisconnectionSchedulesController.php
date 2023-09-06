@@ -308,10 +308,16 @@ class DisconnectionSchedulesController extends AppBaseController
             $i++;            
         }
 
+        if (strlen($query) > 0) {
+            $query = " AND (" . $query . ")";
+        } else {
+            $query = "";
+        }
+
         $data = DB::connection("sqlsrvbilling")
                     ->table('Bills')
                     ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
-                    ->whereRaw("ServicePeriodEnd<='" . $period . "' AND (" . $query . ") AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
+                    ->whereRaw("ServicePeriodEnd<='" . $period . "' " . $query . " AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
                         AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd)")
                     ->select(
                         DB::raw("(COUNT(Bills.AccountNumber)) AS TotalCount"),
