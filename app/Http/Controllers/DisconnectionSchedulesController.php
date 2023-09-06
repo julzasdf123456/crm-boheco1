@@ -313,8 +313,8 @@ class DisconnectionSchedulesController extends AppBaseController
                         $query .= " (AccountMaster.Route='" . $item->Route . "') ";
                     }                
                 } else {
-                    $acctFrom = $townCode . $item->Route . $item->SequenceFrom;
-                    $acctTo = $townCode . $item->Route . $item->SequenceTo;
+                    $acctFrom = $townCode . $item->Route . sprintf("%04d", $item->SequenceFrom);
+                    $acctTo = $townCode . $item->Route . sprintf("%04d", $item->SequenceTo);
 
                     if ($i < count($routes)) {
                         $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.AccountNumber BETWEEN '" . $acctFrom . "' AND '" . $acctTo . "') ) OR ";
