@@ -137,8 +137,6 @@
             var day = $('#Day').val()
             var period = $('#Period').val()
 
-            $('#loader-' + id).removeClass('gone')
-
             if (jQuery.isEmptyObject(day)) {
                 Toast.fire({
                     icon : 'warning',
@@ -154,6 +152,7 @@
                     if (jQuery.isEmptyObject(to)) {
                         to = from
                     }
+                    $('#loader-' + id).removeClass('gone')
 
                     $.ajax({
                         url : "{{ route('disconnectionSchedules.set-schedule') }}",
