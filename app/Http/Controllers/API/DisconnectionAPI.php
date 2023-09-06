@@ -215,20 +215,20 @@ class DisconnectionAPI extends Controller {
                 'Surcharge' => Bills::getSurcharge($item),
             ]);
 
-            $discoData = new DisconnectionData;
-            $discoData->id = $item->id;
-            $discoData->ScheduleId = $item->ScheduleId;
-            $discoData->DisconnectorName = $item->DisconnectorName;
-            $discoData->UserId = $item->UserId;
-            $discoData->AccountNumber = $item->AccountNumber;
-            $discoData->ServicePeriodEnd = $item->ServicePeriodEnd;
-            $discoData->AccountCoordinates = $item->AccountCoordinates;
-            $discoData->ConsumerName = $item->ConsumerName;
-            $discoData->ConsumerAddress = $item->ConsumerAddress;
-            $discoData->MeterNumber = $item->MeterNumber;
-            $discoData->NetAmount = $item->NetAmount;
-            $discoData->PoleNumber = $item->PoleNumber;
-            $discoData->save();
+            // $discoData = new DisconnectionData;
+            // $discoData->id = $item->id;
+            // $discoData->ScheduleId = $item->ScheduleId;
+            // $discoData->DisconnectorName = $item->DisconnectorName;
+            // $discoData->UserId = $item->UserId;
+            // $discoData->AccountNumber = $item->AccountNumber;
+            // $discoData->ServicePeriodEnd = $item->ServicePeriodEnd;
+            // $discoData->AccountCoordinates = $item->AccountCoordinates;
+            // $discoData->ConsumerName = $item->ConsumerName;
+            // $discoData->ConsumerAddress = $item->ConsumerAddress;
+            // $discoData->MeterNumber = $item->MeterNumber;
+            // $discoData->NetAmount = $item->NetAmount;
+            // $discoData->PoleNumber = $item->PoleNumber;
+            // $discoData->save();
         }
 
         return response()->json($finalData, 200);

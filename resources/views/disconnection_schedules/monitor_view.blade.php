@@ -241,57 +241,6 @@
                 }
             })
         }
-
-      //   function loadNeighbors(acctNo) {
-      //       $.ajax({
-      //           url : "{{ route('accountMasters.get-neighboring-by-account') }}",
-      //           type : 'GET',
-      //           data : {
-      //               AccountNumber : acctNo,
-      //           },
-      //           success : function(res) {
-      //               if (!jQuery.isEmptyObject(res)) {
-      //                   $.each(res, function(index, element) {
-      //                       if (!jQuery.isEmptyObject(res[index]['Item1'])) {
-      //                           var loc = res[index]['Item1'].split(',')
-      //                           if (loc.length == 2) {
-      //                               var lat = loc[0]
-      //                               var long = loc[1]
-
-      //                               const el = document.createElement('div');
-      //                               el.className = 'marker';
-      //                               el.id = "neighbors";
-      //                               el.title = res[index]['AccountNumber'] + " | " + res[index]['ConsumerName']
-      //                               el.innerHTML += '<button id="update" class="btn btn-sm" style="margin-left: -10px;" style="margin-left: 10px;"> <span><i class="fas fa-map-marker-alt text-primary" style="font-size: 2.2em;"></i></span> </button>'
-      //                               el.style.backgroundColor = `transparent`;                       
-      //                               el.style.width = `15px`;
-      //                               el.style.height = `15px`;
-      //                               el.style.borderRadius = '50%';
-      //                               el.style.backgroundSize = '100%';
-
-      //                               el.addEventListener('click', () => {
-      //                                   Swal.fire({
-      //                                       title : res[index]['ConsumerName'],
-      //                                       text : res[index]['AccountNumber'] + " | Sequence: " + res[index]['SequenceNumber'] + " | Pole No: " + res[index]['Pole'],
-      //                                   })
-      //                               });
-
-      //                               new mapboxgl.Marker(el)
-      //                                       .setLngLat([parseFloat(long), parseFloat(lat)])
-      //                                       .addTo(map);
-      //                           }
-      //                       }
-      //                   })
-      //               }
-      //           },
-      //           error : function(err) {
-      //               Swal.fire({
-      //                   icon : 'error',
-      //                   text : 'Error getting neighbors'
-      //               })
-      //           }
-      //       })
-      //   }
         
     </script>
 @endpush

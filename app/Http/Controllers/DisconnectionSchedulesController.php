@@ -283,16 +283,21 @@ class DisconnectionSchedulesController extends AppBaseController
 
         $schedId = $userid . "-" . $day . $period;
 
+        $schedule = DisconnectionSchedules::find($schedId);
+
         $routes = DisconnectionRoutes::whereRaw("ScheduleId='" . $schedId . "'")
             ->orderBy('Route')
             ->get();
 
         // DELETE SCHED IF THERE ARE NO MORE ROUTES
         if (count($routes) == 0) {
-            $schedule = DisconnectionSchedules::find($schedId);
             if ($schedule != null) {
                 $schedule->delete();
             }
+
+            // DELETE DISCO DATA
+            DisconnectionData::where('ScheduleId', $schedId)
+                ->delete();
 
             $dataSet = [
                 'TotalCount' => 0,
@@ -303,6 +308,11 @@ class DisconnectionSchedulesController extends AppBaseController
             $totalAmount = 0;
             $i=1;
             $query = "";
+
+            // DELETE DISCO DATA
+            DisconnectionData::where('ScheduleId', $schedId)
+                ->delete();
+
             foreach($routes as $item) {
                 $townCode = substr($item->Route, 0, 2);
 
@@ -341,6 +351,47 @@ class DisconnectionSchedulesController extends AppBaseController
                             DB::raw("(SUM(NetAmount)) AS TotalAmount"),
                         )
                         ->first();
+
+            $dataMerge = DB::connection("sqlsrvbilling")
+                    ->table('Bills')
+                    ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
+                    ->whereRaw("ServicePeriodEnd<='" . $period . "' " . $query . " AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
+                            AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd)")
+                    ->select(
+                        DB::raw("NEWID() AS id"),
+                        DB::raw("'" . $schedId .  "' AS ScheduleId"),
+                        DB::raw("'" . $schedule->DisconnectorName .  "' AS DisconnectorName"),
+                        DB::raw("'" . $schedule->DisconnectorId .  "' AS UserId"),
+                        'Bills.AccountNumber',
+                        'Bills.ServicePeriodEnd',
+                        'AccountMaster.Item1 AS AccountCoordinates',
+                        'ConsumerName',
+                        'ConsumerAddress',
+                        'AccountMaster.MeterNumber',
+                        'NetAmount',
+                        'AccountMaster.Pole AS PoleNumber',
+                        'Bills.NetAmount',
+                    )
+                    ->orderBy('Bills.AccountNumber')
+                    ->get();
+
+            // SAVE DISCO DATA
+            foreach ($dataMerge as $item) {        
+                $discoData = new DisconnectionData;
+                $discoData->id = $item->id;
+                $discoData->ScheduleId = $item->ScheduleId;
+                $discoData->DisconnectorName = $item->DisconnectorName;
+                $discoData->UserId = $item->UserId;
+                $discoData->AccountNumber = $item->AccountNumber;
+                $discoData->ServicePeriodEnd = $item->ServicePeriodEnd;
+                $discoData->AccountCoordinates = $item->AccountCoordinates;
+                $discoData->ConsumerName = $item->ConsumerName;
+                $discoData->ConsumerAddress = $item->ConsumerAddress;
+                $discoData->MeterNumber = $item->MeterNumber;
+                $discoData->NetAmount = $item->NetAmount;
+                $discoData->PoleNumber = $item->PoleNumber;
+                $discoData->save();
+            }
 
             $dataSet = [
                 'TotalCount' => $data->TotalCount,
