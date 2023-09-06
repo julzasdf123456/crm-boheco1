@@ -475,7 +475,7 @@ class DisconnectionSchedulesController extends AppBaseController
                         'AccountMaster.AccountStatus',
                         'AccountMaster.ConsumerType'
                     )
-                    ->orderBy('Bills.AccountNumber')
+                    ->orderBy('AccountMaster.AccountNumber')
                     ->get();
 
         return view('/disconnection_schedules/view_disconnection_consumers', [
