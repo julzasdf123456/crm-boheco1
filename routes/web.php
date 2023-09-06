@@ -808,6 +808,7 @@ Route::get("/disconnection_schedules/monitor", [DisconnectionSchedulesController
 Route::get("/disconnection_schedules/monitor-view/{id}", [DisconnectionSchedulesController::class, 'monitorView'])->name("disconnectionSchedules.monitor-view");
 Route::get("/disconnection_schedules/disconnection-map-data", [DisconnectionSchedulesController::class, 'disconnectionMapData'])->name("disconnectionSchedules.disconnection-map-data");
 Route::get("/disconnection_schedules/get-schedules-collection-calendar-data", [DisconnectionSchedulesController::class, 'getSchedulesCollectionCalendarData'])->name("disconnectionSchedules.get-schedules-collection-calendar-data");
+Route::get("/disconnection_schedules/add-payment-notes", [DisconnectionSchedulesController::class, 'addPaymentNotes'])->name("disconnectionSchedules.add-payment-notes");
 Route::resource('disconnectionSchedules', DisconnectionSchedulesController::class);
 
 

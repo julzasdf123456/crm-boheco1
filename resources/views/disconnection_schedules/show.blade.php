@@ -61,7 +61,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <p class="text-muted text-center" style="padding: 0 !important; margin: 0 !important;">Total Consumers</p>
+                                        <p class="text-muted text-center" style="padding: 0 !important; margin: 0 !important;">Total Bills</p>
                                         <h4 class="text-primary text-center" id="totalConsumerStats"></h4>
                                     </div>
                                     <div class="col-lg-6">

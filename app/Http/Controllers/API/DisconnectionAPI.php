@@ -68,26 +68,32 @@ class DisconnectionAPI extends Controller {
         }
 
         $data = DB::connection("sqlsrvbilling")
-                    ->table('Bills')
+                    ->table('DisconnectionData')
+                    ->leftJoin('Bills', function($join) {
+                        $join->on('Bills.AccountNumber', '=', 'DisconnectionData.AccountNumber')
+                            ->on('Bills.ServicePeriodEnd', '=', 'DisconnectionData.ServicePeriodEnd');
+                    })
                     ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
                     ->leftJoin('BillsExtension', function($join) {
                         $join->on('Bills.AccountNumber', '=', 'BillsExtension.AccountNumber')
                             ->on('Bills.ServicePeriodEnd', '=', 'BillsExtension.ServicePeriodEnd');
                     })
-                    ->whereRaw("Bills.ServicePeriodEnd<='" . $schedule->ServicePeriodEnd . "' " . $query . " AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
+                    ->whereRaw("DisconnectionData.ScheduleId='" . $id . "'
                         AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd)")
                     ->select(
-                        DB::raw("NEWID() AS id"),
+                        DB::raw("DisconnectionData.id AS id"),
                         DB::raw("'" . $id .  "' AS ScheduleId"),
                         DB::raw("'" . $schedule->DisconnectorName .  "' AS DisconnectorName"),
                         DB::raw("'" . $schedule->DisconnectorId .  "' AS UserId"),
                         'Bills.AccountNumber',
                         'Bills.ServicePeriodEnd',
                         'AccountMaster.Item1 AS AccountCoordinates',
-                        'ConsumerName',
-                        'ConsumerAddress',
+                        'DisconnectionData.ConsumerName',
+                        'DisconnectionData.ConsumerAddress',
                         'AccountMaster.MeterNumber',
-                        'NetAmount',
+                        'DisconnectionData.NetAmount',
+                        'DisconnectionData.PaymentNotes',
+                        'DisconnectionData.Notes',
                         'AccountMaster.Pole AS PoleNumber',
 
                         'Bills.DAA_GRAM',
@@ -212,23 +218,10 @@ class DisconnectionAPI extends Controller {
                 'MeterNumber' => $item->MeterNumber,
                 'NetAmount' => $item->NetAmount,
                 'PoleNumber' => $item->PoleNumber,
+                'PaymentNotes' => $item->PaymentNotes,
+                'Notes' => $item->Notes,
                 'Surcharge' => Bills::getSurcharge($item),
             ]);
-
-            // $discoData = new DisconnectionData;
-            // $discoData->id = $item->id;
-            // $discoData->ScheduleId = $item->ScheduleId;
-            // $discoData->DisconnectorName = $item->DisconnectorName;
-            // $discoData->UserId = $item->UserId;
-            // $discoData->AccountNumber = $item->AccountNumber;
-            // $discoData->ServicePeriodEnd = $item->ServicePeriodEnd;
-            // $discoData->AccountCoordinates = $item->AccountCoordinates;
-            // $discoData->ConsumerName = $item->ConsumerName;
-            // $discoData->ConsumerAddress = $item->ConsumerAddress;
-            // $discoData->MeterNumber = $item->MeterNumber;
-            // $discoData->NetAmount = $item->NetAmount;
-            // $discoData->PoleNumber = $item->PoleNumber;
-            // $discoData->save();
         }
 
         return response()->json($finalData, 200);
