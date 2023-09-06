@@ -468,7 +468,6 @@ class DisconnectionSchedulesController extends AppBaseController
                     ->select(
                         'AccountMaster.AccountNumber',
                         'ServicePeriodEnd',
-                        'PowerKWH',
                         'ConsumerName',
                         'ConsumerAddress',
                         'AccountMaster.MeterNumber',
