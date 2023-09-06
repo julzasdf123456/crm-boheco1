@@ -293,50 +293,57 @@ class DisconnectionSchedulesController extends AppBaseController
             if ($schedule != null) {
                 $schedule->delete();
             }
-        }
 
-        $totalCount = 0;
-        $totalAmount = 0;
-        $i=1;
-        $query = "";
-        foreach($routes as $item) {
-            if ($item->SequenceFrom == null | $item->SequenceTo == null) {
-                if ($i < count($routes)) {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "') OR ";
-                } else {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "') ";
-                }                
-            } else {
-                if ($i < count($routes)) {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.SequenceNumber BETWEEN '" . $item->SequenceFrom . "' AND '" . $item->SequenceTo . "') ) OR ";
-                } else {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.SequenceNumber BETWEEN '" . $item->SequenceFrom . "' AND '" . $item->SequenceTo . "') ) ";
-                }
-            } 
-            $i++;            
-        }
-
-        if (strlen($query) > 0) {
-            $query = " AND (" . $query . ")";
+            $dataSet = [
+                'TotalCount' => 0,
+                'TotalAmount' => 0,
+            ];
         } else {
+            $totalCount = 0;
+            $totalAmount = 0;
+            $i=1;
             $query = "";
+            foreach($routes as $item) {
+                if ($item->SequenceFrom == null | $item->SequenceTo == null) {
+                    if ($i < count($routes)) {
+                        $query .= " (AccountMaster.Route='" . $item->Route . "') OR ";
+                    } else {
+                        $query .= " (AccountMaster.Route='" . $item->Route . "') ";
+                    }                
+                } else {
+                    if ($i < count($routes)) {
+                        $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.SequenceNumber BETWEEN '" . $item->SequenceFrom . "' AND '" . $item->SequenceTo . "') ) OR ";
+                    } else {
+                        $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.SequenceNumber BETWEEN '" . $item->SequenceFrom . "' AND '" . $item->SequenceTo . "') ) ";
+                    }
+                } 
+                $i++;            
+            }
+
+            if (strlen($query) > 0) {
+                $query = " AND (" . $query . ")";
+            } else {
+                $query = "";
+            }
+
+            $data = DB::connection("sqlsrvbilling")
+                        ->table('Bills')
+                        ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
+                        ->whereRaw("ServicePeriodEnd<='" . $period . "' " . $query . " AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
+                            AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd)")
+                        ->select(
+                            DB::raw("(COUNT(Bills.AccountNumber)) AS TotalCount"),
+                            DB::raw("(SUM(NetAmount)) AS TotalAmount"),
+                        )
+                        ->first();
+
+            $dataSet = [
+                'TotalCount' => $data->TotalCount,
+                'TotalAmount' => $data->TotalAmount,
+            ];
         }
 
-        $data = DB::connection("sqlsrvbilling")
-                    ->table('Bills')
-                    ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
-                    ->whereRaw("ServicePeriodEnd<='" . $period . "' " . $query . " AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
-                        AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd)")
-                    ->select(
-                        DB::raw("(COUNT(Bills.AccountNumber)) AS TotalCount"),
-                        DB::raw("(SUM(NetAmount)) AS TotalAmount"),
-                    )
-                    ->first();
-
-        $dataSet = [
-            'TotalCount' => $data->TotalCount,
-            'TotalAmount' => $data->TotalAmount,
-        ];
+        
 
         return response()->json($dataSet, 200);
     }
