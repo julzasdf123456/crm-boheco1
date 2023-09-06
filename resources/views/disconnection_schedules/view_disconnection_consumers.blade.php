@@ -69,7 +69,7 @@
                               <td>{{ $item->ConsumerType }}</td>
                               <td>{{ $item->AccountStatus }}</td>
                               <td class="text-right text-danger"><strong>{{ number_format($item->TotalAmountDue, 2) }}</strong></td>
-                              <td class="text-right text-danger"><strong>{{ number_format($item->NoOfMonths, 2) }}</strong></td>
+                              <td class="text-right text-danger"><strong>{{ round($item->NoOfMonths, 2) }}</strong></td>
                               <td id="comment-{{ $item->AccountNumber }}">{{ $item->PaymentNotes }}</td>
                               <td id="remarks-{{ $item->AccountNumber }}">{{ $item->Notes }}</td>
                               <td>
