@@ -287,6 +287,14 @@ class DisconnectionSchedulesController extends AppBaseController
             ->orderBy('Route')
             ->get();
 
+        // DELETE SCHED IF THERE ARE NO MORE ROUTES
+        if (count($routes) == 0) {
+            $schedule = DisconnectionSchedules::find($schedId);
+            if ($schedule != null) {
+                $schedule->delete();
+            }
+        }
+
         $totalCount = 0;
         $totalAmount = 0;
         $i=1;
