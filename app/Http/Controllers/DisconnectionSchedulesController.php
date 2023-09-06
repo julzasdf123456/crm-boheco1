@@ -348,8 +348,6 @@ class DisconnectionSchedulesController extends AppBaseController
             ];
         }
 
-        
-
         return response()->json($dataSet, 200);
     }
 
@@ -364,6 +362,8 @@ class DisconnectionSchedulesController extends AppBaseController
 
         $data = [];
         foreach($routes as $item) {
+            $townCode = substr($item->Route, 0, 2);
+
             if ($item->SequenceFrom == null | $item->SequenceTo == null) {
                 $count = DB::connection("sqlsrvbilling")
                     ->table('Bills')
@@ -384,11 +384,14 @@ class DisconnectionSchedulesController extends AppBaseController
                     ->orderBy('Bills.AccountNumber')
                     ->get();
             } else {
+                $acctFrom = $townCode . $item->Route . sprintf("%04d", $item->SequenceFrom);
+                $acctTo = $townCode . $item->Route . sprintf("%04d", $item->SequenceTo);
+
                 $count = DB::connection("sqlsrvbilling")
                     ->table('Bills')
                     ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
                     ->whereRaw("ServicePeriodEnd<='" . $period . "' AND AccountMaster.Route='" . $item->Route . "'  AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
-                        AND (AccountMaster.SequenceNumber BETWEEN '" . $item->SequenceFrom . "' AND '" . $item->SequenceTo . "') 
+                        AND (AccountMaster.AccountNumber BETWEEN '" . $acctFrom . "' AND '" . $acctTo . "') 
                         AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd)")
                     ->select(
                         'Bills.AccountNumber',
