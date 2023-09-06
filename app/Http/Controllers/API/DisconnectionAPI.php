@@ -40,6 +40,8 @@ class DisconnectionAPI extends Controller {
         $i=1;
         $query = "";
         foreach($routes as $item) {
+            $townCode = substr($item->Route, 0, 2);
+
             if ($item->SequenceFrom == null | $item->SequenceTo == null) {
                 if ($i < count($routes)) {
                     $query .= " (AccountMaster.Route='" . $item->Route . "') OR ";
@@ -47,10 +49,13 @@ class DisconnectionAPI extends Controller {
                     $query .= " (AccountMaster.Route='" . $item->Route . "') ";
                 }                
             } else {
+                $acctFrom = $townCode . $item->Route . sprintf("%04d", $item->SequenceFrom);
+                $acctTo = $townCode . $item->Route . sprintf("%04d", $item->SequenceTo);
+
                 if ($i < count($routes)) {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.SequenceNumber BETWEEN '" . $item->SequenceFrom . "' AND '" . $item->SequenceTo . "') ) OR ";
+                    $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.AccountNumber BETWEEN '" . $acctFrom . "' AND '" . $acctTo . "') ) OR ";
                 } else {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.SequenceNumber BETWEEN '" . $item->SequenceFrom . "' AND '" . $item->SequenceTo . "') ) ";
+                    $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.AccountNumber BETWEEN '" . $acctFrom . "' AND '" . $acctTo . "') ) ";
                 }
             } 
             $i++;
