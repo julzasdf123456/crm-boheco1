@@ -441,7 +441,8 @@ class DisconnectionSchedulesController extends AppBaseController
                         'AccountMaster.AccountStatus',
                         'AccountMaster.ConsumerType',
                         'AccountMaster.Pole',
-                        DB::raw("SUM(NetAmount) AS TotalAmountDue")
+                        DB::raw("SUM(NetAmount) AS TotalAmountDue"),
+                        DB::raw("COUNT(NetAmount) AS NoOfMonths")
                     )
                     ->whereRaw("ScheduleId='" . $schedId . "'")
                     ->groupBy(
