@@ -675,7 +675,7 @@ class DisconnectionSchedulesController extends AppBaseController
             ->select(
                 DB::raw("(SELECT COUNT(id) FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND Status='Disconnected') AS Disconnected"),
                 DB::raw("(SELECT COUNT(id) FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND Status='Paid') AS Paid"),
-                DB::raw("(SELECT COUNT(id) FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND Status='Promised') AS Promised"),
+                DB::raw("(SELECT COUNT(id) FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND Status NOT IN ('Disconnected', 'Paid')) AS Promised"),
             )
             ->first();
 

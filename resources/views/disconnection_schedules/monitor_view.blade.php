@@ -41,7 +41,7 @@
                </div>
 
                <div class="col-lg-3">
-                  <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Promised</p>
+                  <p style="margin: 0; padding: 0;" class="text-muted text-center">Uncollected</p>
                   <h2 class="text-warning text-center">{{ $poll != null && is_numeric($poll->Promised) ? number_format($poll->Promised) : '0' }}</h2>
                </div>
             </div>
