@@ -59,7 +59,7 @@
 
                         obj['title'] = res[index]['DisconnectorName']
 
-                        if (res[index]['Status'] == 'Downloaded') {
+                        if (!jQuery.isEmptyObject(res[index]['ORNumber'])) {
                            obj['backgroundColor'] = '#fc6203';
                            obj['borderColor'] = '#fc6203';
                         } else {

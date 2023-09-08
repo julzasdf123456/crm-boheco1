@@ -705,13 +705,14 @@ class DisconnectionSchedulesController extends AppBaseController
         // $schedules = DisconnectionSchedules::whereRaw("Day BETWEEN '" . $from . "' AND '" . $to . "'")->get();
         $schedules = DB::connection("sqlsrvbilling")
             ->table("DisconnectionData")
-            ->whereRaw("PaidAmount > 0 AND ORNumber IS NULL")
+            // ->whereRaw("PaidAmount > 0 AND ORNumber IS NULL")
             ->select(
                 "DisconnectorName",
-                DB::raw("TRY_CAST(DisconnectionDate AS DATE) AS DisconnectionDate")
+                DB::raw("TRY_CAST(DisconnectionDate AS DATE) AS DisconnectionDate"),
+                'ORNumber'
             )
             ->groupBy("DisconnectorName")
-            ->groupByRaw("TRY_CAST(DisconnectionDate AS DATE)")
+            ->groupByRaw("TRY_CAST(DisconnectionDate AS DATE), ORNumber")
             ->get();
 
         return response()->json($schedules, 200);

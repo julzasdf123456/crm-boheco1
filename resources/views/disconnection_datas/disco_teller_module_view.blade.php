@@ -58,10 +58,11 @@
                         <td><i class="fas {{ $icon }} ico-tab-mini"></i>
                            {{ $item->AccountNumber }}
                            @if ($item->PORNumber != null)
-                               @php
-                                   $unPosted++;
-                               @endphp
-                               <span class="badge bg-success">POSTED</span>                               
+                               <span class="badge bg-success">POSTED</span>             
+                           @else    
+                              @php
+                                 $unPosted += 1;
+                              @endphp              
                            @endif
                         </td>
                         <td>{{ $item->ConsumerName }}</td>
@@ -110,7 +111,7 @@
                   <p style="margin: 0; padding: 0;" class="text-muted text-center"><i>Service Fee VAT: </i><strong>{{ number_format(count($groupedData) * 3.6, 2) }}</strong></p>
                </div>
 
-               @if ($unPosted <= 0)
+               @if ($unPosted > 0)
                   <div class="col-lg-3" style="border-left: 1px solid #9a9a9a;">
                      <label for="ORNumber">Input OR Number:</label>
                      <input type="number" id="ORNumber" placeholder="OR Number" class="form-control">
