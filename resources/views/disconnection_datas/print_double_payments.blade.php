@@ -128,6 +128,7 @@
         <thead>
             <th class="text-left">Account No</th>
             <th class="text-left">Name</th>
+            <th class="text-left">Address</th>
             <th class="text-left">Billing Month</th>
             <th class="text-left">Payment Date</th>
             <th class="text-right">Teller</th>
@@ -143,6 +144,7 @@
                 <tr>
                     <td class="text-left">{{ $item->AccountNumber }}</td>
                     <td class="text-left">{{ $item->ConsumerName }}</td>
+                    <td class="text-left">{{ $item->ConsumerAddress }}</td>
                     <td class="text-left">{{ date('M Y', strtotime($item->ServicePeriodEnd)) }}</td>
                     <td class="text-left">{{ date('M d, Y', strtotime($item->DatePaid)) }}</td>
                     <td class="text-left">{{ $item->Teller }}</td>
