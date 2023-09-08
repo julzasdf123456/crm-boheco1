@@ -176,17 +176,19 @@ class DisconnectionDataController extends AppBaseController
                 $join->on("DisconnectionData.AccountNumber", "=", "PaidBills.AccountNumber")
                     ->on("DisconnectionData.ServicePeriodEnd", "=", "PaidBills.ServicePeriodEnd");
             })
-            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND DisconnectorName='" . $disconnectorName . "' AND PaidAmount > 0 AND DisconnectionData.ORNumber IS NULL")
+            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND DisconnectorName='" . $disconnectorName . "' AND PaidAmount > 0")
             ->select(
                 "DisconnectionData.*",
-                "PaidBills.Teller"
+                "PaidBills.Teller",
+                'PaidBills.ORNumber AS PORNumber',
+                'PaidBills.ORDate AS PORDate',
             )
             ->orderBy("DisconnectionData.ConsumerName")
             ->get();
 
         $groupedData = DB::connection("sqlsrvbilling")
             ->table("DisconnectionData")
-            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND DisconnectorName='" . $disconnectorName . "' AND PaidAmount > 0 AND DisconnectionData.ORNumber IS NULL")
+            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND DisconnectorName='" . $disconnectorName . "' AND PaidAmount > 0")
             ->select(
                 "AccountNumber"
             )
@@ -199,5 +201,22 @@ class DisconnectionDataController extends AppBaseController
             'data' => $data,
             'groupedData' => $groupedData,
         ]);
+    }
+
+    public function postPayments(Request $request) {
+        $disconnectorName = $request['DisconnectorName'];
+        $disconnectionDate = $request['DisconnectionDate'];
+        $orNumber = $request['ORNumber'];
+        $orDate = $request['ORDate'];
+
+        PaidBills::where('Teller', $disconnectorName)
+            ->whereRaw("TRY_CAST(PostingDate AS DATE)='" . $disconnectionDate . "' AND ORNumber IS NULL")
+            ->update(['ORNumber' => $orNumber, 'ORDate' => $orDate]);
+
+        DisconnectionData::where('DisconnectorName', $disconnectorName)
+            ->whereRaw("TRY_CAST(DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND ORNumber IS NULL")
+            ->update(['ORNumber' => $orNumber, 'ORDate' => $orDate]);
+
+        return response()->json('ok', 200);
     }
 }

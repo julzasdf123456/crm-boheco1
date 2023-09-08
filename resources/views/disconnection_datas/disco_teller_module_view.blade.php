@@ -41,6 +41,7 @@
                      $icon = "";
                      $bg = "";
                      $totalCollectionNoServiceFee = 0;
+                     $unPosted = 0;
                   @endphp
                   @foreach ($data as $item)
                      @if ($item->Status == null)
@@ -54,7 +55,15 @@
                      @endif
                      <tr>
                         <td>{{ $i }}</td>
-                        <td><i class="fas {{ $icon }} ico-tab-mini"></i>{{ $item->AccountNumber }}</td>
+                        <td><i class="fas {{ $icon }} ico-tab-mini"></i>
+                           {{ $item->AccountNumber }}
+                           @if ($item->PORNumber != null)
+                               @php
+                                   $unPosted++;
+                               @endphp
+                               <span class="badge bg-success">POSTED</span>                               
+                           @endif
+                        </td>
                         <td>{{ $item->ConsumerName }}</td>
                         <td>{{ $item->ConsumerAddress }}</td>
                         <td>{{ date('M Y', strtotime($item->ServicePeriodEnd)) }}</td>
@@ -89,7 +98,7 @@
                   <h2 class="text-primary text-center">{{ count($groupedData) }}</h2>
                </div>
 
-               <div class="col-lg-3" style="border-right: 1px solid #9a9a9a;">
+               <div class="col-lg-3">
                   <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Amount Collected</p>
                   <h2 class="text-success text-center">{{ number_format($totalCollectionNoServiceFee + (33.6 * count($groupedData)), 2) }}</h2>
                   <p style="margin: 0; padding: 0;" class="text-muted text-center"><i>With Service Fee</i></p>
@@ -97,30 +106,34 @@
                   <div class="divider"></div>
                   <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Service Fee</p>
                   <h2 class="text-primary text-center">{{ number_format(count($groupedData) * 33.6, 2) }}</h2>
+                  <p style="margin: 0; padding: 0;" class="text-muted text-center"><i>Service Fee: </i><strong>{{ number_format(count($groupedData) * 30, 2) }}</strong></p>
+                  <p style="margin: 0; padding: 0;" class="text-muted text-center"><i>Service Fee VAT: </i><strong>{{ number_format(count($groupedData) * 3.6, 2) }}</strong></p>
                </div>
 
-               <div class="col-lg-3">
-                  <label for="ORNumber">Input OR Number:</label>
-                  <input type="number" placeholder="OR Number" class="form-control">
-               </div>
+               @if ($unPosted <= 0)
+                  <div class="col-lg-3" style="border-left: 1px solid #9a9a9a;">
+                     <label for="ORNumber">Input OR Number:</label>
+                     <input type="number" id="ORNumber" placeholder="OR Number" class="form-control">
+                  </div>
 
-               <div class="col-lg-3">
-                  <label for="ORDate">Input OR Date:</label>
-                  <input type="text" id="ORDate" placeholder="OR Date" class="form-control">
-                  @push('page_scripts')
-                     <script type="text/javascript">
-                        $('#ORDate').datetimepicker({
-                              format: 'YYYY-MM-DD',
-                              useCurrent: true,
-                              sideBySide: true
-                        })
-                     </script>
-                  @endpush
+                  <div class="col-lg-3">
+                     <label for="ORDate">Input OR Date:</label>
+                     <input type="text" id="ORDate" placeholder="OR Date" class="form-control">
+                     @push('page_scripts')
+                        <script type="text/javascript">
+                           $('#ORDate').datetimepicker({
+                                 format: 'YYYY-MM-DD',
+                                 useCurrent: true,
+                                 sideBySide: true
+                           })
+                        </script>
+                     @endpush
 
-                  <br>
+                     <br>
 
-                  <button class="btn btn-success float-right"><i class="fas fa-check-circle ico-tab"></i>SAVE</button>
-               </div>
+                     <button class="btn btn-success float-right" id="post-btn"><i class="fas fa-check-circle ico-tab"></i>SAVE & POST</button>
+                  </div>
+               @endif               
             </div>
          </div>
       </div>
@@ -131,6 +144,54 @@
 
 @push('page_scripts')
     <script>
-        
+        $(document).ready(function() {
+            $('#post-btn').on('click', function() {
+               var orNumber = $('#ORNumber').val()
+               var orDate = $('#ORDate').val()
+
+               if (jQuery.isEmptyObject(orNumber) | jQuery.isEmptyObject(orDate)) {
+                  Toast.fire({
+                     icon : 'warning',
+                     text : 'Please input OR Number and OR Date'
+                  })
+               } else {
+                  Swal.fire({
+                     title: 'Posting Confirmation',
+                     text : 'By posting these payments, you have verified that the details you inputted are correct.',
+                     showDenyButton: true,
+                     confirmButtonText: 'POST',
+                     denyButtonText: `CANCEL`,
+                  }).then((result) => {
+                     /* Read more about isConfirmed, isDenied below */
+                     if (result.isConfirmed) {
+                        $('#post-btn').prop('disabled', true)
+                        $.ajax({
+                           url : "{{ route('disconnectionDatas.post-payments') }}",
+                           type : "GET",
+                           data : {
+                              DisconnectorName : "{{ $name }}",
+                              DisconnectionDate : "{{ $date }}",
+                              ORNumber : orNumber,
+                              ORDate : orDate
+                           },
+                           success : function(res) {
+                              Toast.fire({
+                                 icon : 'success',
+                                 text : 'Payment Posted!'
+                              })
+                              location.reload()
+                           },
+                           error : function(err) {
+                              Swal.fire({
+                                 icon : 'error',
+                                 text : 'Error posting payments!'
+                              })
+                           }
+                        })
+                     } 
+                  })
+               }
+            })
+        })
     </script>
 @endpush
