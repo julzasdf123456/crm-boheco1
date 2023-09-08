@@ -19,6 +19,11 @@
 
             {!! Form::model($users, ['route' => ['users.update', $users->id], 'method' => 'patch']) !!}
 
+            
+            <input type="hidden" name="email" value="{{ $users->email }}">
+
+            <input type="hidden" name="password" value="{{ $users->password }}">
+
             <div class="card-body">
                 <div class="row">
                     @include('users.fields')
