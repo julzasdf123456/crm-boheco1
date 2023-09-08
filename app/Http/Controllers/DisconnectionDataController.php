@@ -188,7 +188,7 @@ class DisconnectionDataController extends AppBaseController
 
         $groupedData = DB::connection("sqlsrvbilling")
             ->table("DisconnectionData")
-            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND DisconnectionData.Teller='" . $disconnectorName . "' AND PaidAmount > 0")
+            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND DisconnectionData.DisconnectorName='" . $disconnectorName . "' AND PaidAmount > 0")
             ->select(
                 "AccountNumber"
             )
