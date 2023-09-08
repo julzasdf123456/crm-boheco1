@@ -63,7 +63,7 @@
                         <td><i class="fas {{ $icon }} ico-tab-mini"></i>
                            {{ $item->AccountNumber }}
                            @if ($item->PORNumber != null)
-                               <span class="badge bg-success">POSTED</span>             
+                               <span class="badge bg-success" style="cursor: pointer;" onclick="showOR(`{{ $item->PORNumber }}`)">POSTED</span>             
                            @else    
                               @php
                                  $unPosted += 1;
@@ -201,5 +201,13 @@
                }
             })
         })
+
+        function showOR(or) {
+            Toast.fire({
+               icon : 'info',
+               text : or,
+               title : 'OR Number'
+            })
+        }
     </script>
 @endpush
