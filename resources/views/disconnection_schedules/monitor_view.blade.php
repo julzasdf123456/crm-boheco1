@@ -59,20 +59,20 @@
             </div>
          </div>
          <div class="card-body table-responsive p-0">
-            <table class="table table-hover table-bordered table-sm">
+            <table class="table table-hover table-bordered table-sm" id="accomplished-table">
                <thead>
-                  <th>#</th>
-                  <th>Account Number</th>
-                  <th>Consumer Name</th>
-                  <th>Consumer Address</th>
-                  <th>Billing Month</th>
-                  <th>Account<br>Type</th>
-                  <th>Account<br>Status</th>
-                  <th>Amount Due</th>
-                  <th>Disconnection<br>Assessment</th>
-                  <th>Remarks</th>
-                  <th>Amount Paid</th>
-                  <th>Date<br>Acted</th>
+                  <th># <i class="fas fa-sort float-right text-muted"></i></th>
+                  <th>Account Number <i class="fas fa-sort float-right text-muted"></i></th>
+                  <th>Consumer Name <i class="fas fa-sort float-right text-muted"></i></th>
+                  <th>Consumer Address <i class="fas fa-sort float-right text-muted"></i></th>
+                  <th>Billing Month <i class="fas fa-sort float-right text-muted"></i></th>
+                  <th>Account<br>Type <i class="fas fa-sort float-right text-muted"></i></th>
+                  <th>Account<br>Status <i class="fas fa-sort float-right text-muted"></i></th>
+                  <th>Amount Due <i class="fas fa-sort float-right text-muted"></i></th>
+                  <th>Disconnection<br>Assessment <i class="fas fa-sort float-right text-muted"></i></th>
+                  <th>Remarks <i class="fas fa-sort float-right text-muted"></i></th>
+                  <th>Amount Paid <i class="fas fa-sort float-right text-muted"></i></th>
+                  <th>Date<br>Acted <i class="fas fa-sort float-right text-muted"></i></th>
             </thead>
             <tbody>
                   @php
@@ -151,6 +151,16 @@
             $('#clear').on('click', function() {
                 $('div[id^="disco"]').remove()
             })
+
+            $('#accomplished-table').DataTable({
+               "paging": false,
+               "lengthChange": true,
+               "searching": false,
+               "ordering": true,
+               "info": false,
+               "autoWidth": true,
+               "responsive": false,
+            });
         })
 
         /**

@@ -49,6 +49,10 @@
     {{-- SWEETALERT2 --}}
     <link rel="stylesheet" href="{{ URL::asset('css/sweetalert2.min.css'); }}">
 
+    {{-- <link rel="stylesheet" href="{{ URL::asset('css/datatables.bootstrap4.min.css'); }}"> --}}
+    {{-- <link rel="stylesheet" href="{{ URL::asset('css/datatables.bootstrap4.buttons.min.css'); }}"> --}}
+    <link rel="stylesheet" href="{{ URL::asset('css/responsive.bootstrap4.min.css'); }}">
+
     <style>
         :root {
             --form-control-color: #1565c0;
@@ -460,6 +464,10 @@
 <script src="{{ URL::asset('js/inputmask.min.js'); }}"></script>
 
 <script src="{{ URL::asset('js/knob.min.js'); }}"></script>
+
+<script src="{{ URL::asset('js/datatables.min.js'); }}"></script>
+
+<script src="{{ URL::asset('js/datatables.buttons4.min.js'); }}"></script>
 
 {{-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script> --}}
 {{--  --}}
