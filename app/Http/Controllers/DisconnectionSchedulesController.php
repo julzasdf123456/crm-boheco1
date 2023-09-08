@@ -606,6 +606,7 @@ class DisconnectionSchedulesController extends AppBaseController
                         'AccountMaster.AccountStatus',
                         'AccountMaster.ConsumerType',
                         "DisconnectionData.Status",
+                        "DisconnectionData.Notes",
                         "DisconnectionData.PaidAmount as AmountPaid",
                         "DisconnectionData.DisconnectionDate",
                     )
@@ -659,8 +660,6 @@ class DisconnectionSchedulesController extends AppBaseController
                 return strcmp($b->Status, $a->Status);
             });
         }
-
-        
 
         $totalCollection = DB::connection("sqlsrvbilling")
             ->table('DisconnectionData')

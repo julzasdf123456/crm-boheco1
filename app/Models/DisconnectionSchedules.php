@@ -99,5 +99,17 @@ class DisconnectionSchedules extends Model
         'updated_at' => 'nullable'
     ];
 
-    
+    public static function bgStatus($status) {
+        if ($status == 'Disconnected') {
+            return 'bg-danger';
+        } elseif ($status == 'Promised') {
+            return 'bg-warning';
+        } elseif ($status == 'Paid') {
+            return 'bg-success';
+        } elseif ($status == 'Bereavement/Funeral Wake' | $status == 'In The Hospital') {
+            return 'bg-primary';
+        } else {
+            return 'bg-info';
+        }
+    }
 }

@@ -1,3 +1,7 @@
+@php
+    use App\Models\DisconnectionSchedules;
+@endphp
+
 @extends('layouts.app')
 
 @section('content')
@@ -50,6 +54,9 @@
       <div class="card shadow-none" style="height: 70vh;">
          <div class="card-header">
             <span class="card-title"><i class="fas fa-list ico-tab"></i>Accomplishment Data</span>
+            <div class="card-tools">
+               <a class="btn btn-info btn-xs" href="{{ route('disconnectionSchedules.view-disconnection-consumers', [$disconnectionSchedules->DisconnectorId, $disconnectionSchedules->Day, $disconnectionSchedules->ServicePeriodEnd]) }}"><i class="fas fa-pen ico-tab-mini"></i>Modify Comments</a>
+            </div>
          </div>
          <div class="card-body table-responsive p-0">
             <table class="table table-hover table-bordered table-sm">
@@ -60,9 +67,10 @@
                   <th>Consumer Address</th>
                   <th>Billing Month</th>
                   <th>Account<br>Type</th>
-                  <th>Account Status</th>
+                  <th>Account<br>Status</th>
                   <th>Amount Due</th>
                   <th>Disconnection<br>Assessment</th>
+                  <th>Remarks</th>
                   <th>Amount Paid</th>
                   <th>Date<br>Acted</th>
             </thead>
@@ -91,7 +99,8 @@
                         <td>{{ $item->ConsumerType }}</td>
                         <td>{{ $item->AccountStatus }}</td>
                         <td class="text-right text-danger"><strong>{{ is_numeric($item->NetAmount) ? number_format($item->NetAmount, 2) : 0 }}</strong></td>
-                        <td class="text-center"><span class="badge {{ $item->Status=='Promised' ? 'bg-warning' : ($item->Status=='Paid' ? 'bg-success' : 'bg-danger') }}">{{ $item->Status }}</span></td>
+                        <td class="text-center"><span class="badge {{ DisconnectionSchedules::bgStatus($item->Status) }}">{{ $item->Status }}</span></td>
+                        <td>{{ $item->Notes }}</td>
                         <td class="text-right text-primary"><strong>{{ is_numeric($item->AmountPaid) ? number_format($item->AmountPaid, 2) : 0 }}</strong></td>
                         <td>{{ $item->DisconnectionDate != null ? date('M d, Y h:i A', strtotime($item->DisconnectionDate)) : '' }}</td>
                      </tr>
