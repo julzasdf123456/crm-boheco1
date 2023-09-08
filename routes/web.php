@@ -815,6 +815,7 @@ Route::resource('disconnectionSchedules', DisconnectionSchedulesController::clas
 Route::get("/disconnection_datas/disco-teller-module", [DisconnectionDataController::class, 'discoTellerModule'])->name("disconnectionDatas.disco-teller-module");
 Route::get("/disconnection_datas/disco-teller-module-view/{name}/{date}", [DisconnectionDataController::class, 'discoTellerModuleView'])->name("disconnectionDatas.disco-teller-module-view");
 Route::get("/disconnection_datas/post-payments", [DisconnectionDataController::class, 'postPayments'])->name("disconnectionDatas.post-payments");
+Route::get("/disconnection_datas/print-double-payments/{name}/{date}", [DisconnectionDataController::class, 'printDoublePayments'])->name("disconnectionDatas.print-double-payments");
 Route::resource('disconnectionDatas', DisconnectionDataController::class);
 
 

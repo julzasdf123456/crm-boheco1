@@ -20,7 +20,12 @@
    <div class="col-lg-12">
       <div class="card shadow-none" style="height: 60vh;">
          <div class="card-header">
-            <span class="card-title"><i class="fas fa-dollar-sign ico-tab"></i>Collection Data</span>
+            <span class="card-title">
+               <i class="fas fa-dollar-sign ico-tab"></i>Collection Data
+               @if (count($doublePayments) > 0)
+                  <button class="btn btn-sm btn-danger" style="margin-left: 10px;" data-toggle="modal" data-target="#modal-double-payments"><i class="fas fa-exclamation-circle ico-tab-mini"></i>Double Payments ({{ count($doublePayments) }})</button>
+               @endif
+            </span>
          </div>
          <div class="card-body table-responsive p-0">
             <table class="table table-hover table-bordered table-sm">
@@ -142,6 +147,8 @@
 
 </div>
 @endsection
+
+@include('disconnection_datas.modal_double_payments')
 
 @push('page_scripts')
     <script>

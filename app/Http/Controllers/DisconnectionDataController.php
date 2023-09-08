@@ -188,15 +188,27 @@ class DisconnectionDataController extends AppBaseController
 
         $groupedData = DB::connection("sqlsrvbilling")
             ->table("DisconnectionData")
-            ->leftJoin("PaidBills", function($join) {
-                $join->on("DisconnectionData.AccountNumber", "=", "PaidBills.AccountNumber")
-                    ->on("DisconnectionData.ServicePeriodEnd", "=", "PaidBills.ServicePeriodEnd");
-            })
-            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND PaidBills.Teller='" . $disconnectorName . "' AND PaidAmount > 0")
+            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND DisconnectionData.DisconnectorName='" . $disconnectorName . "' AND PaidAmount > 0")
             ->select(
                 "DisconnectionData.AccountNumber"
             )
             ->groupBy("DisconnectionData.AccountNumber")
+            ->get();
+
+        $doublePayments = DB::connection("sqlsrvbilling")
+            ->table("DisconnectionData")
+            ->leftJoin("PaidBills", function($join) {
+                $join->on("DisconnectionData.AccountNumber", "=", "PaidBills.AccountNumber")
+                    ->on("DisconnectionData.ServicePeriodEnd", "=", "PaidBills.ServicePeriodEnd");
+            })
+            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND DisconnectionData.DisconnectorName='" . $disconnectorName . "' AND PaidAmount > 0 AND PaymentNotes='DOUBLE PAYMENT'")
+            ->select(
+                "DisconnectionData.*",
+                "PaidBills.Teller",
+                "PaidBills.NetAmount AS AmountPaid",
+                "PaidBills.PostingDate AS DatePaid",
+            )
+            ->orderBy("DisconnectionData.ConsumerName")
             ->get();
 
         return view('/disconnection_datas/disco_teller_module_view', [
@@ -204,6 +216,7 @@ class DisconnectionDataController extends AppBaseController
             'date' => $disconnectionDate,
             'data' => $data,
             'groupedData' => $groupedData,
+            'doublePayments' => $doublePayments,
         ]);
     }
 
@@ -222,5 +235,32 @@ class DisconnectionDataController extends AppBaseController
             ->update(['ORNumber' => $orNumber, 'ORDate' => $orDate]);
 
         return response()->json('ok', 200);
+    }
+
+    public function printDoublePayments($disconnectorName, $disconnectionDate) {
+        $disconnectorName = urldecode($disconnectorName);
+        $disconnectionDate = date('Y-m-d', strtotime($disconnectionDate));
+
+        $doublePayments = DB::connection("sqlsrvbilling")
+            ->table("DisconnectionData")
+            ->leftJoin("PaidBills", function($join) {
+                $join->on("DisconnectionData.AccountNumber", "=", "PaidBills.AccountNumber")
+                    ->on("DisconnectionData.ServicePeriodEnd", "=", "PaidBills.ServicePeriodEnd");
+            })
+            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND DisconnectionData.DisconnectorName='" . $disconnectorName . "' AND PaidAmount > 0 AND PaymentNotes='DOUBLE PAYMENT'")
+            ->select(
+                "DisconnectionData.*",
+                "PaidBills.Teller",
+                "PaidBills.NetAmount AS AmountPaid",
+                "PaidBills.PostingDate AS DatePaid",
+            )
+            ->orderBy("DisconnectionData.ConsumerName")
+            ->get();
+
+        return view('/disconnection_datas/print_double_payments', [
+            'name' => $disconnectorName,
+            'date' => $disconnectionDate,
+            'doublePayments' => $doublePayments,
+        ]);
     }
 }
