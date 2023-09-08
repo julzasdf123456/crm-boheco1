@@ -194,7 +194,7 @@ class DisconnectionDataController extends AppBaseController
             })
             ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND PaidBills.Teller='" . $disconnectorName . "' AND PaidAmount > 0")
             ->select(
-                "AccountNumber"
+                "DisconnectionData.AccountNumber"
             )
             ->groupBy("DisconnectionData.AccountNumber")
             ->get();
