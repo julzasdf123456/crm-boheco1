@@ -188,7 +188,11 @@ class DisconnectionDataController extends AppBaseController
 
         $groupedData = DB::connection("sqlsrvbilling")
             ->table("DisconnectionData")
-            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND DisconnectionData.DisconnectorName='" . $disconnectorName . "' AND PaidAmount > 0 AND PaymentNotes NOT IN ('DOUBLE PAYMENT')")
+            ->leftJoin("PaidBills", function($join) {
+                $join->on("DisconnectionData.AccountNumber", "=", "PaidBills.AccountNumber")
+                    ->on("DisconnectionData.ServicePeriodEnd", "=", "PaidBills.ServicePeriodEnd");
+            })
+            ->whereRaw("TRY_CAST(DisconnectionData.DisconnectionDate AS DATE)='" . $disconnectionDate . "' AND PaidBills.Teller='" . $disconnectorName . "' AND PaidAmount > 0")
             ->select(
                 "AccountNumber"
             )
