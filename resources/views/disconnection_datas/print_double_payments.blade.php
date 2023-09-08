@@ -157,7 +157,7 @@
                 @endphp
             @endforeach
             <tr>
-                <td colspan="7" class="text-left"><strong>Total</strong></td>
+                <td colspan="8" class="text-left"><strong>Total</strong></td>
                 <td class="text-right"><strong>{{ number_format($total, 2) }}</strong></td>
             </tr>
         </tbody>
