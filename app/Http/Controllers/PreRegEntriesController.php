@@ -35,12 +35,13 @@ class PreRegEntriesController extends AppBaseController
         if ($request['params'] == null) {
             $data = DB::connection('sqlsrvagma')
                         ->table('Entries')
+                        ->whereRaw("Year='2023'")
                         ->select('*')
                         ->paginate(20);
         } else {
             $data = DB::connection('sqlsrvagma')
                         ->table('Entries')
-                        ->whereRaw("Name LIKE '%" . $request['params'] . "%' OR AccountNumber LIKE '" . $request['params'] . "%'")
+                        ->whereRaw("(Name LIKE '%" . $request['params'] . "%' OR AccountNumber LIKE '" . $request['params'] . "%') AND Year='2023'")
                         ->select('*')
                         ->paginate(20);
         }

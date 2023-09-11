@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h4>AGMA 2022 Pre-Registration Entries</h4>
+                    <h4>AGMA 2023 Pre-Registration Entries</h4>
                 </div>
             </div>
         </div>
