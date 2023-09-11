@@ -154,6 +154,7 @@ class DisconnectionData extends Model
     }
 
     public static function getDisconnectorNames() {
-        return "'Wilmer Oronan','Archie Basco','Elias Danghil','Romelito Astacaan'";
+        return "'ARCHIE','ASTACA-AN','Boligao','danghil','concha','LARA','Limocon','Orig','salubre','villacorta','yu','ylaya',
+        'Wilmer Oronan','Archie Basco','Elias Danghil','Romelito Astacaan'";
     }
 }

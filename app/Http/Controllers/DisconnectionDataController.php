@@ -263,6 +263,7 @@ class DisconnectionDataController extends AppBaseController
 
     public function getMonthlyCollectionGraph(Request $request) {   
         $year = $request['Year'];
+        $prevYear = intval($year) - 1;
 
         $data = DB::connection('sqlsrvbilling')
             ->table('PaidBills')
@@ -279,6 +280,18 @@ class DisconnectionDataController extends AppBaseController
                 DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-10-01' AND '" . date('Y-m-d', strtotime("first day of November " . $year)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS October"),
                 DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-11-01' AND '" . date('Y-m-d', strtotime("first day of December " . $year)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS November"),
                 DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-12-01' AND '" . date('Y-m-d', strtotime("first day of January " . (intval($year) + 1))) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS December"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $prevYear . "-01-01' AND '" . date('Y-m-d', strtotime("first day of February " . $prevYear)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS JanuaryPrev"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $prevYear . "-02-01' AND '" . date('Y-m-d', strtotime("first day of March " . $prevYear)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS FebruaryPrev"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $prevYear . "-03-01' AND '" . date('Y-m-d', strtotime("first day of April " . $prevYear)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS MarchPrev"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $prevYear . "-04-01' AND '" . date('Y-m-d', strtotime("first day of May " . $prevYear)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS AprilPrev"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $prevYear . "-05-01' AND '" . date('Y-m-d', strtotime("first day of June " . $prevYear)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS MayPrev"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $prevYear . "-06-01' AND '" . date('Y-m-d', strtotime("first day of July " . $prevYear)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS JunePrev"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $prevYear . "-07-01' AND '" . date('Y-m-d', strtotime("first day of August " . $prevYear)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS JulyPrev"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $prevYear . "-08-01' AND '" . date('Y-m-d', strtotime("first day of September " . $prevYear)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS AugustPrev"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $prevYear . "-09-01' AND '" . date('Y-m-d', strtotime("first day of October " . $prevYear)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS SeptemberPrev"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $prevYear . "-10-01' AND '" . date('Y-m-d', strtotime("first day of November " . $prevYear)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS OctoberPrev"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $prevYear . "-11-01' AND '" . date('Y-m-d', strtotime("first day of December " . $prevYear)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS NovemberPrev"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $prevYear . "-12-01' AND '" . date('Y-m-d', strtotime("first day of January " . (intval($prevYear) + 1))) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS DecemberPrev"),
             )
             ->first();
 

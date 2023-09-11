@@ -2,12 +2,20 @@
     <div class="col-lg-6">
         <div class="card shadow-none" style="height: 420px;">
             <div class="card-header border-0">
-                <span class="card-title">Monthly Collection Trend</span>
+                <span class="card-title">Annual Collection Trend</span>
             </div>
-            <div class="card-body">
-                <div id="monthly-graph-holder">
-                    <canvas id="monthly-collection" style="height: 330px;"></canvas>
-                </div>                
+            <div class="card-body p-4">
+                <div class="position-relative mb-4" id="monthly-graph-holder">
+                    <canvas id="monthly-collection" style="height: 280px;"></canvas>
+                </div>  
+                <div class="d-flex flex-row justify-content-end">
+                    <span class="mr-2">
+                        <i class="fas fa-square text-primary"></i> This Year
+                    </span>
+                    <span>
+                        <i class="fas fa-square text-gray"></i> Last Year
+                    </span>
+                </div>         
             </div>
         </div>
     </div>
@@ -16,12 +24,12 @@
 @push('page_scripts')
     <script>
         $(document).ready(function() {
-            graphMonthly('2023')
-        })
+            graphAnnual('2023')
+        })  
 
-        function graphMonthly(year) {
+        function graphAnnual(year) {
             $('#monthly-collection').remove()
-            $('#monthly-graph-holder').append('<canvas id="monthly-collection" style="height: 330px;"></canvas>')
+            $('#monthly-graph-holder').append('<canvas id="monthly-collection" style="height: 280px;"></canvas>')
 
             var monthlyChartCanvas = $('#monthly-collection').get(0).getContext('2d')
             
@@ -53,7 +61,7 @@
 
                         var datum = []
 
-                        var plotPoints = [
+                        var plotPointsPresent = [
                             jQuery.isEmptyObject(res['January']) ? 0 : Math.round((parseFloat(res['January']) + Number.EPSILON) * 100) / 100,
                             jQuery.isEmptyObject(res['February']) ? 0 : Math.round((parseFloat(res['February']) + Number.EPSILON) * 100) / 100,
                             jQuery.isEmptyObject(res['March']) ? 0 : Math.round((parseFloat(res['March']) + Number.EPSILON) * 100) / 100,
@@ -68,20 +76,47 @@
                             jQuery.isEmptyObject(res['December']) ? 0 : Math.round((parseFloat(res['December']) + Number.EPSILON) * 100) / 100,
                         ]
 
-                        
+                        var plotPointsPrevious = [
+                            jQuery.isEmptyObject(res['JanuaryPrev']) ? 0 : Math.round((parseFloat(res['JanuaryPrev']) + Number.EPSILON) * 100) / 100,
+                            jQuery.isEmptyObject(res['FebruaryPrev']) ? 0 : Math.round((parseFloat(res['FebruaryPrev']) + Number.EPSILON) * 100) / 100,
+                            jQuery.isEmptyObject(res['MarchPrev']) ? 0 : Math.round((parseFloat(res['MarchPrev']) + Number.EPSILON) * 100) / 100,
+                            jQuery.isEmptyObject(res['AprilPrev']) ? 0 : Math.round((parseFloat(res['AprilPrev']) + Number.EPSILON) * 100) / 100,
+                            jQuery.isEmptyObject(res['MayPrev']) ? 0 : Math.round((parseFloat(res['MayPrev']) + Number.EPSILON) * 100) / 100,
+                            jQuery.isEmptyObject(res['JunePrev']) ? 0 : Math.round((parseFloat(res['JunePrev']) + Number.EPSILON) * 100) / 100,
+                            jQuery.isEmptyObject(res['JulyPrev']) ? 0 : Math.round((parseFloat(res['JulyPrev']) + Number.EPSILON) * 100) / 100,
+                            jQuery.isEmptyObject(res['AugustPrev']) ? 0 : Math.round((parseFloat(res['AugustPrev']) + Number.EPSILON) * 100) / 100,
+                            jQuery.isEmptyObject(res['SeptemberPrev']) ? 0 : Math.round((parseFloat(res['SeptemberPrev']) + Number.EPSILON) * 100) / 100,
+                            jQuery.isEmptyObject(res['OctoberPrev']) ? 0 : Math.round((parseFloat(res['OctoberPrev']) + Number.EPSILON) * 100) / 100,
+                            jQuery.isEmptyObject(res['NovemberPrev']) ? 0 : Math.round((parseFloat(res['NovemberPrev']) + Number.EPSILON) * 100) / 100,
+                            jQuery.isEmptyObject(res['DecemberPrev']) ? 0 : Math.round((parseFloat(res['DecemberPrev']) + Number.EPSILON) * 100) / 100,
+                        ]
 
-                        var clump = {}
-                        clump['label'] = 'Year ' + year
-                        clump['backgroundColor'] = "#0398fc00"
-                        clump['borderColor'] = "#0398fc"
-                        clump['pointRadius'] = 4
-                        clump['pointColor'] = "#0398fc"
-                        clump['pointStrokeColor'] = 'rgba(60,141,188,1)'
-                        clump['pointHighlightFill'] = '#fff'
-                        clump['pointHighlightStroke'] = 'rgba(60,141,188,1)'
-                        clump['data'] = plotPoints
+                        // PRESENT YEAR
+                        var presentYear = {}
+                        presentYear['label'] = year
+                        presentYear['backgroundColor'] = "#0398fc00"
+                        presentYear['borderColor'] = "#0398fc"
+                        presentYear['pointRadius'] = 4
+                        presentYear['pointColor'] = "#0398fc"
+                        presentYear['pointStrokeColor'] = 'rgba(60,141,188,1)'
+                        presentYear['pointHighlightFill'] = '#fff'
+                        presentYear['pointHighlightStroke'] = 'rgba(60,141,188,1)'
+                        presentYear['data'] = plotPointsPresent
 
-                        datum.push(clump)
+                        // PREVIOUS YEAR
+                        var previousYear = {}
+                        previousYear['label'] = year
+                        previousYear['backgroundColor'] = "#c9c7c700"
+                        previousYear['borderColor'] = "#c9c7c7"
+                        previousYear['pointRadius'] = 4
+                        previousYear['pointColor'] = "#c9c7c7"
+                        previousYear['pointStrokeColor'] = 'rgba(60,141,188,1)'
+                        previousYear['pointHighlightFill'] = '#fff'
+                        previousYear['pointHighlightStroke'] = 'rgba(60,141,188,1)'
+                        previousYear['data'] = plotPointsPrevious
+
+                        datum.push(presentYear)
+                        datum.push(previousYear)
 
                         // console.log(datum)
 
@@ -94,7 +129,7 @@
                             maintainAspectRatio: false,
                             responsive: true,
                             legend: {
-                                display: true
+                                display: false
                             },
                             scales: {
                                 xAxes: [{
