@@ -35,10 +35,7 @@ class DisconnectionDataController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $disconnectionDatas = $this->disconnectionDataRepository->all();
-
-        return view('disconnection_datas.index')
-            ->with('disconnectionDatas', $disconnectionDatas);
+        return view('disconnection_datas.index');
     }
 
     /**
@@ -262,5 +259,29 @@ class DisconnectionDataController extends AppBaseController
             'date' => $disconnectionDate,
             'doublePayments' => $doublePayments,
         ]);
+    }
+
+    public function getMonthlyCollectionGraph(Request $request) {   
+        $year = $request['Year'];
+
+        $data = DB::connection('sqlsrvbilling')
+            ->table('PaidBills')
+            ->select(
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-01-01' AND '" . date('Y-m-d', strtotime("first day of February " . $year)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS January"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-02-01' AND '" . date('Y-m-d', strtotime("first day of March " . $year)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS February"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-03-01' AND '" . date('Y-m-d', strtotime("first day of April " . $year)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS March"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-04-01' AND '" . date('Y-m-d', strtotime("first day of May " . $year)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS April"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-05-01' AND '" . date('Y-m-d', strtotime("first day of June " . $year)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS May"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-06-01' AND '" . date('Y-m-d', strtotime("first day of July " . $year)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS June"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-07-01' AND '" . date('Y-m-d', strtotime("first day of August " . $year)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS July"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-08-01' AND '" . date('Y-m-d', strtotime("first day of September " . $year)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS August"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-09-01' AND '" . date('Y-m-d', strtotime("first day of October " . $year)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS September"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-10-01' AND '" . date('Y-m-d', strtotime("first day of November " . $year)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS October"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-11-01' AND '" . date('Y-m-d', strtotime("first day of December " . $year)) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS November"),
+                DB::raw("(SELECT SUM(NetAmount) FROM PaidBills WHERE (PostingDate BETWEEN '" . $year . "-12-01' AND '" . date('Y-m-d', strtotime("first day of January " . (intval($year) + 1))) . "') AND Teller IN (" . DisconnectionData::getDisconnectorNames() . ")) AS December"),
+            )
+            ->first();
+
+        return response()->json($data, 200);
     }
 }

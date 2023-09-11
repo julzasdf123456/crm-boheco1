@@ -1030,12 +1030,14 @@ use Illuminate\Support\Facades\Auth;
     <li class="nav-header">DISCONNECTION</li>
     
     <li class="nav-item">
-        <a href="{{ route('discoNoticeHistories.index') }}"
-           class="nav-link {{ Request::is('discoNoticeHistories.index*') ? 'active' : '' }}">
+        <a href="{{ route('disconnectionDatas.index') }}"
+           class="nav-link {{ Request::is('disconnectionDatas.index*') ? 'active' : '' }}">
             <i class="fas fa-chart-line nav-icon text-primary"></i><p>Dashboard</p>
         </a>
     </li>
+@endcanany
 
+@canany(['Super Admin', 'disco create schedule'])
     <li class="nav-item">
         <a href="{{ route('disconnectionSchedules.index') }}"
            class="nav-link {{ Request::is('disconnectionSchedules.index*') ? 'active' : '' }}">

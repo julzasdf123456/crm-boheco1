@@ -144,5 +144,16 @@ class DisconnectionData extends Model
         'LastReading' => 'nullable|string',
     ];
 
-    
+    public static function getDisconnectorNamesArray() {
+        return [
+            'Wilmer Oronan',
+            'Archie Basco',
+            'Elias Danghil',
+            'Romelito Astacaan',
+        ];
+    }
+
+    public static function getDisconnectorNames() {
+        return "'Wilmer Oronan','Archie Basco','Elias Danghil','Romelito Astacaan'";
+    }
 }
