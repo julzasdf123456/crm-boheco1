@@ -71,7 +71,7 @@
                         
 
                         var clump = {}
-                        clump['label'] = 'Disconnection Collection for Year ' + year
+                        clump['label'] = 'Year ' + year
                         clump['backgroundColor'] = "#0398fc00"
                         clump['borderColor'] = "#0398fc"
                         clump['pointRadius'] = 4
