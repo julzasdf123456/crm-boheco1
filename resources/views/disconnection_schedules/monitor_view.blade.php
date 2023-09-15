@@ -25,11 +25,35 @@
       <div class="card shadow-none">
          <div class="card-body">
             <div class="row">
-               <div class="col-lg-3">
+               <div class="col-lg-2">
                   <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Amount Collected</p>
                   <h2 class="text-primary text-center">{{ $totalCollection != null && is_numeric($totalCollection->PaidAmount) ? number_format($totalCollection->PaidAmount, 2) : '0' }}</h2>
+
+                  <div class="divider"></div>
+
+                  <p style="margin: 0; padding: 0;" class="text-muted text-center">Collection Count</p>
+                  <h2 class="text-primary text-center">{{ $totalCollection != null ? $totalCollection->PaidCount : '0' }}</h2>
                </div>
 
+               <div class="col-lg-10">
+                  <table class="table table-bordered">
+                     <tr>
+                        @foreach ($poll as $item)
+                           @if ($item->Status != null)
+                              <td class="text-center text-muted">{{ $item->Status }}</td>
+                           @endif                           
+                        @endforeach
+                     </tr>
+                     <tr>
+                        @foreach ($poll as $item)
+                           @if ($item->Status != null)
+                              <td class="text-center text-success"><h2>{{ $item->TotalCount }}</h2></td>
+                           @endif                           
+                        @endforeach
+                     </tr>
+                  </table>
+               </div>
+{{-- 
                <div class="col-lg-3">
                   <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Disconnected</p>
                   <h2 class="text-danger text-center">{{ $poll != null && is_numeric($poll->Disconnected) ? number_format($poll->Disconnected) : '0' }}</h2>
@@ -43,7 +67,7 @@
                <div class="col-lg-3">
                   <p style="margin: 0; padding: 0;" class="text-muted text-center">Uncollected</p>
                   <h2 class="text-warning text-center">{{ $poll != null && is_numeric($poll->Promised) ? number_format($poll->Promised) : '0' }}</h2>
-               </div>
+               </div> --}}
             </div>
          </div>
       </div>

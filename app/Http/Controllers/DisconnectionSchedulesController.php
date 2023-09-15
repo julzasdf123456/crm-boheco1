@@ -310,8 +310,8 @@ class DisconnectionSchedulesController extends AppBaseController
             $query = "";
 
             // DELETE DISCO DATA
-            DisconnectionData::where('ScheduleId', $schedId)
-                ->delete();
+            // DisconnectionData::where('ScheduleId', $schedId)
+            //     ->delete();
 
             foreach($routes as $item) {
                 $townCode = substr($item->Route, 0, 2);
@@ -356,7 +356,7 @@ class DisconnectionSchedulesController extends AppBaseController
                     ->table('Bills')
                     ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
                     ->whereRaw("ServicePeriodEnd<='" . $period . "' " . $query . " AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
-                            AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd)")
+                            AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd) ")
                     ->select(
                         DB::raw("NEWID() AS id"),
                         DB::raw("'" . $schedId .  "' AS ScheduleId"),
@@ -376,21 +376,31 @@ class DisconnectionSchedulesController extends AppBaseController
                     ->get();
 
             // SAVE DISCO DATA
-            foreach ($dataMerge as $item) {        
-                $discoData = new DisconnectionData;
-                $discoData->id = IDGenerator::generateID() . '-' . $item->id;
-                $discoData->ScheduleId = $item->ScheduleId;
-                $discoData->DisconnectorName = $item->DisconnectorName;
-                $discoData->UserId = $item->UserId;
-                $discoData->AccountNumber = $item->AccountNumber;
-                $discoData->ServicePeriodEnd = $item->ServicePeriodEnd;
-                $discoData->AccountCoordinates = $item->AccountCoordinates;
-                $discoData->ConsumerName = $item->ConsumerName;
-                $discoData->ConsumerAddress = $item->ConsumerAddress;
-                $discoData->MeterNumber = $item->MeterNumber;
-                $discoData->NetAmount = $item->NetAmount;
-                $discoData->PoleNumber = $item->PoleNumber;
-                $discoData->save();
+            foreach ($dataMerge as $item) {
+                $discoData = DisconnectionData::where('AccountNumber', $item->AccountNumber)
+                    ->where('ServicePeriodEnd', $item->ServicePeriodEnd)
+                    ->where('DisconnectorName', $item->DisconnectorName)
+                    ->where('ScheduleId', $item->ScheduleId)
+                    ->first();
+
+                if ($discoData != null) {
+
+                } else {
+                    $discoData = new DisconnectionData;
+                    $discoData->id = IDGenerator::generateID() . '-' . $item->id;
+                    $discoData->ScheduleId = $item->ScheduleId;
+                    $discoData->DisconnectorName = $item->DisconnectorName;
+                    $discoData->UserId = $item->UserId;
+                    $discoData->AccountNumber = $item->AccountNumber;
+                    $discoData->ServicePeriodEnd = $item->ServicePeriodEnd;
+                    $discoData->AccountCoordinates = $item->AccountCoordinates;
+                    $discoData->ConsumerName = $item->ConsumerName;
+                    $discoData->ConsumerAddress = $item->ConsumerAddress;
+                    $discoData->MeterNumber = $item->MeterNumber;
+                    $discoData->NetAmount = $item->NetAmount;
+                    $discoData->PoleNumber = $item->PoleNumber;
+                    $discoData->save();
+                }
             }
 
             $dataSet = [
@@ -665,7 +675,8 @@ class DisconnectionSchedulesController extends AppBaseController
             ->table('DisconnectionData')
             ->whereRaw("ScheduleId='" . $disconnectionSchedules->id . "'")
             ->select(
-                DB::raw("SUM(PaidAmount) AS PaidAmount")
+                DB::raw("SUM(PaidAmount) AS PaidAmount"),                
+                DB::raw("COUNT(PaidAmount) AS PaidCount")
             )
             ->first();
 
@@ -673,11 +684,12 @@ class DisconnectionSchedulesController extends AppBaseController
             ->table('DisconnectionData')
             ->whereRaw("ScheduleId='" . $disconnectionSchedules->id . "'")
             ->select(
-                DB::raw("(SELECT COUNT(id) FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND Status='Disconnected') AS Disconnected"),
-                DB::raw("(SELECT COUNT(id) FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND Status='Paid') AS Paid"),
-                DB::raw("(SELECT COUNT(id) FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND Status NOT IN ('Disconnected', 'Paid')) AS Promised"),
+                'Status',
+                DB::raw("COUNT(Status) AS TotalCount")
             )
-            ->first();
+            ->groupBy('Status')
+            ->orderBy('Status')
+            ->get();
 
         return view('/disconnection_schedules/monitor_view', [
             'disconnectionSchedules' => $disconnectionSchedules,

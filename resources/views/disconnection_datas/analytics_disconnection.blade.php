@@ -150,7 +150,8 @@
                                                 value+='k'
                                             }
                                             return '$'+value
-                                        }}, ticksStyle)
+                                        }}, ticksStyle
+                                    )
                                 }]
                             }
                         }
