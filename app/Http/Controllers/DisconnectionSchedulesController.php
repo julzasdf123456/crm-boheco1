@@ -244,11 +244,15 @@ class DisconnectionSchedulesController extends AppBaseController
                     )
                     ->first();
             } else {
+                $townCode = substr($item->Route, 0, 2);
+                $acctFrom = $townCode . $item->Route . sprintf("%04d", $item->SequenceFrom);
+                $acctTo = $townCode . $item->Route . sprintf("%04d", $item->SequenceTo);
+
                 $count = DB::connection("sqlsrvbilling")
                     ->table('Bills')
                     ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
                     ->whereRaw("ServicePeriodEnd<='" . $schedule->ServicePeriodEnd . "' AND AccountMaster.Route='" . $item->Route . "'  AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
-                        AND (AccountMaster.SequenceNumber BETWEEN '" . $item->SequenceFrom . "' AND '" . $item->SequenceTo . "') 
+                        AND (AccountMaster.AccountNumber BETWEEN '" . $acctFrom . "' AND '" . $acctTo . "') 
                         AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd)")
                     ->select(
                         DB::raw("COUNT(Bills.AccountNumber) AS Count")
