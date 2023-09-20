@@ -658,6 +658,7 @@ class DisconnectionSchedulesController extends AppBaseController
                         'Bills.NetAmount',
                         'AccountMaster.AccountStatus',
                         'AccountMaster.ConsumerType',
+                        DB::raw("'' AS Notes"),
                         DB::raw("(SELECT TOP 1 Status FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd) AS Status"),
                         DB::raw("(SELECT TOP 1 PaidAmount FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd) AS AmountPaid"),
                         DB::raw("(SELECT TOP 1 DisconnectionDate FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd) AS DisconnectionDate"),
