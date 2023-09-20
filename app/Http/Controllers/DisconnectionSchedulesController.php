@@ -317,11 +317,14 @@ class DisconnectionSchedulesController extends AppBaseController
             foreach($routes as $item) {
                 $townCode = substr($item->Route, 0, 2);
 
-                if ($item->SequenceFrom == null | $item->SequenceTo == null) {
+                if ($item->SequenceFrom == null | $item->SequenceTo == null) {                    
+                    $acctFrom = $townCode . $item->Route . '0000';
+                    $acctTo = $townCode . $item->Route . '9999';
+
                     if ($i < count($routes)) {
-                        $query .= " (AccountMaster.Route='" . $item->Route . "') OR ";
+                        $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.AccountNumber BETWEEN '" . $acctFrom . "' AND '" . $acctTo . "') ) OR ";
                     } else {
-                        $query .= " (AccountMaster.Route='" . $item->Route . "') ";
+                        $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.AccountNumber BETWEEN '" . $acctFrom . "' AND '" . $acctTo . "') ) ";
                     }                
                 } else {
                     $acctFrom = $townCode . $item->Route . sprintf("%04d", $item->SequenceFrom);
