@@ -5529,8 +5529,10 @@ class TicketsController extends AppBaseController
                 ->get();
         }
 
-        return view('/tickets/not_executed', [
+        return view('/tickets/print_not_executed', [
             'data' => $data,
+            'from' => $from,
+            'to' => $to,
         ]);
     }
 }
