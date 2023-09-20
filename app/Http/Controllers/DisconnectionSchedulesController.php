@@ -284,6 +284,7 @@ class DisconnectionSchedulesController extends AppBaseController
         $userid = $request['UserId'];
         $day = $request['Day'];
         $period = $request['Period'];
+        $refreshData = $request['RefreshData'] != null ? $request['RefreshData'] : 'false';
 
         $schedId = $userid . "-" . $day . $period;
 
@@ -312,10 +313,6 @@ class DisconnectionSchedulesController extends AppBaseController
             $totalAmount = 0;
             $i=1;
             $query = "";
-
-            // DELETE DISCO DATA
-            // DisconnectionData::where('ScheduleId', $schedId)
-            //     ->delete();
 
             foreach($routes as $item) {
                 $townCode = substr($item->Route, 0, 2);
@@ -356,54 +353,59 @@ class DisconnectionSchedulesController extends AppBaseController
                         )
                         ->first();
 
-            $dataMerge = DB::connection("sqlsrvbilling")
-                    ->table('Bills')
-                    ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
-                    ->whereRaw("ServicePeriodEnd<='" . $period . "' " . $query . " AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
-                            AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd) ")
-                    ->select(
-                        DB::raw("NEWID() AS id"),
-                        DB::raw("'" . $schedId .  "' AS ScheduleId"),
-                        DB::raw("'" . $schedule->DisconnectorName .  "' AS DisconnectorName"),
-                        DB::raw("'" . $schedule->DisconnectorId .  "' AS UserId"),
-                        'Bills.AccountNumber',
-                        'Bills.ServicePeriodEnd',
-                        'AccountMaster.Item1 AS AccountCoordinates',
-                        'ConsumerName',
-                        'ConsumerAddress',
-                        'AccountMaster.MeterNumber',
-                        'NetAmount',
-                        'AccountMaster.Pole AS PoleNumber',
-                        'Bills.NetAmount',
-                    )
-                    ->orderBy('Bills.AccountNumber')
-                    ->get();
+            if ($refreshData == 'true') {               
+                DisconnectionData::where('ScheduleId', $schedId)
+                ->delete();
 
-            // SAVE DISCO DATA
-            foreach ($dataMerge as $item) {
-                $discoData = DisconnectionData::where('AccountNumber', $item->AccountNumber)
-                    ->where('ServicePeriodEnd', $item->ServicePeriodEnd)
-                    // ->where('DisconnectorName', $item->DisconnectorName)
-                    ->where('ScheduleId', $item->ScheduleId)
-                    ->first();
+                $dataMerge = DB::connection("sqlsrvbilling")
+                        ->table('Bills')
+                        ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
+                        ->whereRaw("ServicePeriodEnd<='" . $period . "' " . $query . " AND GETDATE() > DueDate AND AccountStatus IN ('ACTIVE') 
+                                AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd) ")
+                        ->select(
+                            DB::raw("NEWID() AS id"),
+                            DB::raw("'" . $schedId .  "' AS ScheduleId"),
+                            DB::raw("'" . $schedule->DisconnectorName .  "' AS DisconnectorName"),
+                            DB::raw("'" . $schedule->DisconnectorId .  "' AS UserId"),
+                            'Bills.AccountNumber',
+                            'Bills.ServicePeriodEnd',
+                            'AccountMaster.Item1 AS AccountCoordinates',
+                            'ConsumerName',
+                            'ConsumerAddress',
+                            'AccountMaster.MeterNumber',
+                            'NetAmount',
+                            'AccountMaster.Pole AS PoleNumber',
+                            'Bills.NetAmount',
+                        )
+                        ->orderBy('Bills.AccountNumber')
+                        ->get();
 
-                if ($discoData != null) {
+                // SAVE DISCO DATA
+                foreach ($dataMerge as $item) {
+                    $discoData = DisconnectionData::where('AccountNumber', $item->AccountNumber)
+                        ->where('ServicePeriodEnd', $item->ServicePeriodEnd)
+                        ->where('DisconnectorName', $item->DisconnectorName)
+                        ->where('ScheduleId', $item->ScheduleId)
+                        ->first();
 
-                } else {
-                    $discoData = new DisconnectionData;
-                    $discoData->id = IDGenerator::generateID() . '-' . $item->id;
-                    $discoData->ScheduleId = $item->ScheduleId;
-                    $discoData->DisconnectorName = $item->DisconnectorName;
-                    $discoData->UserId = $item->UserId;
-                    $discoData->AccountNumber = $item->AccountNumber;
-                    $discoData->ServicePeriodEnd = $item->ServicePeriodEnd;
-                    $discoData->AccountCoordinates = $item->AccountCoordinates;
-                    $discoData->ConsumerName = $item->ConsumerName;
-                    $discoData->ConsumerAddress = $item->ConsumerAddress;
-                    $discoData->MeterNumber = $item->MeterNumber;
-                    $discoData->NetAmount = $item->NetAmount;
-                    $discoData->PoleNumber = $item->PoleNumber;
-                    $discoData->save();
+                    if ($discoData != null) {
+
+                    } else {
+                        $discoData = new DisconnectionData;
+                        $discoData->id = IDGenerator::generateID() . '-' . $item->id;
+                        $discoData->ScheduleId = $item->ScheduleId;
+                        $discoData->DisconnectorName = $item->DisconnectorName;
+                        $discoData->UserId = $item->UserId;
+                        $discoData->AccountNumber = $item->AccountNumber;
+                        $discoData->ServicePeriodEnd = $item->ServicePeriodEnd;
+                        $discoData->AccountCoordinates = $item->AccountCoordinates;
+                        $discoData->ConsumerName = $item->ConsumerName;
+                        $discoData->ConsumerAddress = $item->ConsumerAddress;
+                        $discoData->MeterNumber = $item->MeterNumber;
+                        $discoData->NetAmount = $item->NetAmount;
+                        $discoData->PoleNumber = $item->PoleNumber;
+                        $discoData->save();
+                    }
                 }
             }
 
@@ -557,16 +559,22 @@ class DisconnectionSchedulesController extends AppBaseController
                     ->leftJoin('AccountMaster', 'DisconnectionData.AccountNumber', '=', 'AccountMaster.AccountNumber')
                     ->select(
                         'AccountMaster.AccountNumber',
-                        'ServicePeriodEnd',
                         'DisconnectionData.ConsumerName',
                         'DisconnectionData.ConsumerAddress',
                         'AccountMaster.MeterNumber',
-                        'NetAmount',
                         'AccountMaster.AccountStatus',
-                        'AccountMaster.ConsumerType'
+                        'AccountMaster.ConsumerType',
+                        DB::raw("SUM(NetAmount) AS NetAmount"),
+                        DB::raw("COUNT(AccountMaster.AccountNumber) AS Count"),
                     )
                     ->whereRaw("ScheduleId='" . $id . "'")
                     ->orderBy('AccountMaster.AccountNumber')
+                    ->groupBy('AccountMaster.AccountNumber',
+                        'DisconnectionData.ConsumerName',
+                        'DisconnectionData.ConsumerAddress',
+                        'AccountMaster.MeterNumber',
+                        'AccountMaster.AccountStatus',
+                        'AccountMaster.ConsumerType')
                     ->get();
 
             $output = "";
@@ -580,7 +588,7 @@ class DisconnectionSchedulesController extends AppBaseController
                                 <td>" . $itemx->MeterNumber . "</td>
                                 <td>" . $itemx->ConsumerType . "</td>
                                 <td>" . $itemx->AccountStatus . "</td>
-                                <td>" . date('F Y', strtotime($itemx->ServicePeriodEnd)) . "</td>
+                                <td class='text-right text-danger'><strong>" . $itemx->Count . "</strong></td>
                                 <td class='text-right text-danger'><strong>" . number_format($itemx->NetAmount, 2) . "</strong></td>
                             </tr>";
                 $x++;

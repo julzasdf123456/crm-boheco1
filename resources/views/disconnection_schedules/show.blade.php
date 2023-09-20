@@ -97,7 +97,7 @@
                         <th>Meter Number</th>
                         <th>Account Type</th>
                         <th>Account Status</th>
-                        <th>Billing Month</th>
+                        <th>Billing Months</th>
                         <th>Amount Due</th>
                     </thead>
                     <tbody>
@@ -114,7 +114,7 @@
     <script>
         $(document).ready(function() {
             getRoutes("{{ $disconnectionSchedules->DisconnectorId }}", "{{ $disconnectionSchedules->Day }}{{ $disconnectionSchedules->ServicePeriodEnd }}")
-            getStats("{{ $disconnectionSchedules->DisconnectorId }}", "{{ $disconnectionSchedules->Day }}", "{{ $disconnectionSchedules->ServicePeriodEnd }}")
+            getStats("{{ $disconnectionSchedules->DisconnectorId }}", "{{ $disconnectionSchedules->Day }}", "{{ $disconnectionSchedules->ServicePeriodEnd }}", 'false')
         })
 
         function setSchedule(id) {
@@ -153,7 +153,7 @@
                         },
                         success : function(res) {
                             getRoutes(id, day + "" + period)
-                            getStats(id, day, period)
+                            getStats(id, day, period, 'true')
                         },
                         error : function(err) {
                             Toast.fire({
@@ -201,7 +201,7 @@
                 },
                 success : function(res) {
                     $('#' + id).remove()
-                    getStats(res["DisconnectorId"], res["Day"], res["ServicePeriodEnd"])
+                    getStats(res["DisconnectorId"], res["Day"], res["ServicePeriodEnd"], 'true')
                     getAccounts(res["DisconnectorId"], res["Day"]+""+res["ServicePeriodEnd"])
                     Toast.fire({
                         icon : 'success',
@@ -230,7 +230,7 @@
                 success : function(res) {
                     $('#loader').removeClass('gone')
                     getRoutes(res["DisconnectorId"], res["Day"] + "" + res["ServicePeriodEnd"])
-                    getStats(res["DisconnectorId"], res["Day"], res["ServicePeriodEnd"])
+                    getStats(res["DisconnectorId"], res["Day"], res["ServicePeriodEnd"], 'true')
 
                     Toast.fire({
                         icon : 'success',
@@ -246,7 +246,7 @@
             })
         }
 
-        function getStats(id, day, period) {
+        function getStats(id, day, period, refreshData) {
             $('#loaderStats').removeClass('gone')
             $('#viewConsumers').addClass('gone')
             $.ajax({
@@ -256,6 +256,7 @@
                     Day : day,
                     UserId : id,
                     Period : period,
+                    RefreshData : refreshData,
                 },
                 success : function(res) {
                     $('#totalConsumerStats').text(res['TotalCount'])

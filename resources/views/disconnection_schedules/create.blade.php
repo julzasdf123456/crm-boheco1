@@ -166,7 +166,7 @@
                         },
                         success : function(res) {
                             getRoutes(id, day + "" + period)
-                            getStats(id, day, period)
+                            getStats(id, day, period, 'true')
                         },
                         error : function(err) {
                             Toast.fire({
@@ -213,7 +213,7 @@
                 },
                 success : function(res) {
                     $('#' + id).remove()
-                    getStats(res["DisconnectorId"], res["Day"], res["ServicePeriodEnd"])
+                    getStats(res["DisconnectorId"], res["Day"], res["ServicePeriodEnd"], 'true')
                     Toast.fire({
                         icon : 'success',
                         text : 'Route removed from schedule!'
@@ -241,7 +241,7 @@
                 success : function(res) {
                     $('#loader-' + res["DisconnectorId"]).removeClass('gone')
                     getRoutes(res["DisconnectorId"], res["Day"] + "" + res["ServicePeriodEnd"])
-                    getStats(res["DisconnectorId"], res["Day"], res["ServicePeriodEnd"])
+                    getStats(res["DisconnectorId"], res["Day"], res["ServicePeriodEnd"], 'true')
 
                     Toast.fire({
                         icon : 'success',
@@ -257,7 +257,7 @@
             })
         }
 
-        function getStats(id, day, period) {
+        function getStats(id, day, period, refreshData) {
             $('#loaderStats-' + id).removeClass('gone')
             $('#viewConsumers-' + id).addClass('gone')
             $.ajax({
@@ -267,6 +267,7 @@
                     Day : day,
                     UserId : id,
                     Period : period,
+                    RefreshData : refreshData,
                 },
                 success : function(res) {
                     $('#totalConsumerStats-' + id).text(res['TotalCount'])
