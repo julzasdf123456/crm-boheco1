@@ -383,7 +383,7 @@ class DisconnectionSchedulesController extends AppBaseController
             foreach ($dataMerge as $item) {
                 $discoData = DisconnectionData::where('AccountNumber', $item->AccountNumber)
                     ->where('ServicePeriodEnd', $item->ServicePeriodEnd)
-                    ->where('DisconnectorName', $item->DisconnectorName)
+                    // ->where('DisconnectorName', $item->DisconnectorName)
                     ->where('ScheduleId', $item->ScheduleId)
                     ->first();
 
