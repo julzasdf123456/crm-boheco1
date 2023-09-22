@@ -56,8 +56,9 @@
                     <label for="Office">Area</label>
                     <select id="Office" name="Office" class="form-control form-control-sm">
                         <option value="All">All</option>
-                        <option value="MAIN OFFICE">Main Office</option>
-                        <option value="SUB-OFFICE">Sub Office</option>
+                        @foreach ($crews as $item)                            
+                            <option value="{{ $item->id }}" {{ isset($_GET['Office']) && $_GET['Office']==$item->id ? 'selected' : '' }}>{{ $item->StationName }}</option>
+                        @endforeach
                     </select>
                 </div>
 

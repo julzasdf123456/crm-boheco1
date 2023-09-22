@@ -5457,13 +5457,14 @@ class TicketsController extends AppBaseController
                                 })
                 ->whereBetween('CRM_Tickets.created_at', [$from, $to])  
                 ->whereRaw("Status NOT IN ('Executed', 'Acted')")        
-                ->where('CRM_Tickets.Office', $area)         
+                ->where('CRM_Tickets.CrewAssigned', $area)         
                 ->orderBy('CRM_Tickets.created_at')
                 ->get();
         }
 
         return view('/tickets/not_executed', [
             'data' => $data,
+            'crews' => ServiceConnectionCrew::orderBy('StationName')->get(),    
         ]);
     }
 
@@ -5524,7 +5525,7 @@ class TicketsController extends AppBaseController
                                 })
                 ->whereBetween('CRM_Tickets.created_at', [$from, $to])  
                 ->whereRaw("Status NOT IN ('Executed', 'Acted')")        
-                ->where('CRM_Tickets.Office', $area)         
+                ->where('CRM_Tickets.CrewAssigned', $area)         
                 ->orderBy('CRM_Tickets.created_at')
                 ->get();
         }
@@ -5533,7 +5534,7 @@ class TicketsController extends AppBaseController
             'data' => $data,
             'from' => $from,
             'to' => $to,
-            'area' => $area
+            'area' => $area=='All' ? 'All' : ServiceConnectionCrew::find($area)->StationName,
         ]);
     }
 }

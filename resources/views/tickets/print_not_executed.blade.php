@@ -123,7 +123,7 @@
     <p class="text-center">{{ strtoupper(env('APP_ADDRESS')) }}</p>
     <br>
     <p class="text-center"><strong>UNEXECUTED TICKETS FROM {{ strtoupper(date('F d, Y', strtotime($from))) }} TO {{ strtoupper(date('F d, Y', strtotime($to))) }}</strong></p>
-    <p class="text-center"><strong>TOWN/AREA: {{ strtoupper($area) }}</strong></p>
+    <p class="text-center"><strong>CREW: {{ strtoupper($area) }}</strong></p>
     <br>    
     <table style="width: 100%;">
         <thead>
