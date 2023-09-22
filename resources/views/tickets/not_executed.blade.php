@@ -65,6 +65,7 @@
                 <div class="form-group col-lg-3">
                     <label style="opacity: 0; width: 100%;">Action</label>
                     <button class="btn btn-primary btn-sm" id="filterBtn" title="Filter"><i class="fas fa-check"></i> Filter</button>
+                    <button class="btn btn-warning btn-sm" id="printBtn" title="Filter"><i class="fas fa-print"></i> Print</button>
                 </div>
             </div>
         </div>
@@ -111,7 +112,10 @@
 @push('page_scripts')
     <script>
         $(document).ready(function() {
-            
+            $('#printBtn').on('click', function(e) {
+                e.preventDefault()
+                location.href = "{{ url('/tickets/print-not-executed') }}/" + $('#From').val() + "/" + $('#To').val() + "/" + $('#Office').val()
+            })            
         })    
     </script>    
 @endpush

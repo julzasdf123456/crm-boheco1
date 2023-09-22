@@ -449,6 +449,7 @@ Route::get('/tickets/confirm-change-meter', [TicketsController::class, 'confirmC
 Route::get('/tickets/get-ticket-ajax', [TicketsController::class, 'getTicketAjax'])->name('tickets.get-ticket-ajax');
 Route::get('/tickets/get-meter-details', [TicketsController::class, 'getMeterDetails'])->name('tickets.get-meter-details');
 Route::get('/tickets/not-executed', [TicketsController::class, 'notExecuted'])->name('tickets.not-executed');
+Route::get('/tickets/print-not-executed/{from}/{to}/{area}', [TicketsController::class, 'printNotExecuted'])->name('tickets.print-not-executed');
 Route::resource('tickets', TicketsController::class);
 
 

@@ -5533,6 +5533,7 @@ class TicketsController extends AppBaseController
             'data' => $data,
             'from' => $from,
             'to' => $to,
+            'area' => $area
         ]);
     }
 }

@@ -1,5 +1,6 @@
 @php
     use Illuminate\Support\Facades\Auth;
+    use App\Models\Tickets;
 @endphp
 <style>
     @font-face {
@@ -126,36 +127,26 @@
     <br>    
     <table style="width: 100%;">
         <thead>
-            <th class="text-left">Account No</th>
-            <th class="text-left">Name</th>
-            <th class="text-left">Billing Month</th>
-            <th class="text-left">Payment Date</th>
-            <th class="text-right">Amount</th>
-            <th class="text-right">Surcharge</th>
-            <th class="text-right">Total Amount</th>
+            <th>Ticket No</th>
+            <th>Account No.</th>
+            <th>Consumer Name</th>
+            <th>Address</th>
+            <th>Complaint/Request</th>
+            <th>Status</th>
+            <th>Date Complained</th>
         </thead>
         <tbody>
-            @php
-                $total = 0;
-            @endphp
             @foreach ($data as $item)
                 <tr>
-                    <td class="text-left">{{ $item['AccountNumber'] }}</td>
-                    <td class="text-left">{{ $item['ConsumerName'] }}</td>
-                    <td class="text-left">{{ date('F Y', strtotime($item['ServicePeriodEnd'])) }}</td>
-                    <td class="text-left">{{ date('M d, Y', strtotime($item['created_at'])) }}</td>
-                    <td class="text-right">{{ number_format($item['Amount'], 2) }}</td>
-                    <td class="text-right">{{ number_format($item['Surcharge'], 2) }}</td>
-                    <td class="text-right">{{ number_format($item['TotalAmount'], 2) }}</td>
+                    <td>{{ $item->id }}</td>
+                    <td>{{ $item->AccountNumber }}</td>
+                    <td>{{ $item->ConsumerName }}</td>
+                    <td>{{ Tickets::getAddress($item) }}</td>
+                    <td>{{ $item->ParentTicket }} - {{ $item->Ticket }}</td>
+                    <td>{{ $item->Status }}</td>
+                    <td>{{ date('M d, Y h:i A', strtotime($item->created_at)) }}</td>
                 </tr>
-                @php
-                    $total += floatval($item['TotalAmount']);
-                @endphp
             @endforeach
-            <tr>
-                <td colspan="6" class="text-left"><strong>Total</strong></td>
-                <td class="text-right"><strong>{{ number_format($total, 2) }}</strong></td>
-            </tr>
         </tbody>
     </table>
 
