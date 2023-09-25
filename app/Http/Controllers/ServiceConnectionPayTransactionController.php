@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use App\Models\ServiceConnectionMatPayables;
 use App\Models\ServiceConnectionPayParticulars;
+use App\Models\ServiceConnectionPayTransaction;
 use App\Models\ServiceConnectionMatPayments;
 use App\Models\ServiceConnections;
 use App\Models\Electricians;
