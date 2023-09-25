@@ -528,6 +528,19 @@ class ServiceConnectionPayTransactionController extends AppBaseController
             ->where('CRM_ServiceConnections.id', $scId)
             ->first();
 
+
+        // SAVE TO PAYTRANSACTIONS
+        if ($installationFee != null) {
+            $inst = new ServiceConnectionPayTransaction;
+            $inst->id = IDGenerator::generateID();
+            $inst->ServiceConnectionId = $scId;
+            $inst->Particular = ServiceConnections::getInstallationFeeId();
+            $inst->Amount = round(floatval($installationFee) + ($laborCost != null ? floatval($laborCost) : 0), 2);
+            $inst->Vat = $evat;
+            $inst->Total = round(floatval($installationFee) + ($laborCost != null ? floatval($laborCost) : 0) + floatval($evat), 2);
+            $inst->save();
+        }
+        
         $installationFee = floatval($installationFee);
 
         $id = $scId . "-I";

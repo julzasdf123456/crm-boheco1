@@ -366,4 +366,16 @@ class ServiceConnections extends Model
             return 'Other Electric Revenue';
         }
     }
+
+    public static function getInstallationFeeId() {
+        return '1683188551113';
+    }
+
+    public static function getLaborCostId() {
+        return '1686267658287';
+    }
+
+    public static function getInstallationFeeVatId() {
+        return '1686267638521';
+    }
 }
