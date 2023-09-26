@@ -203,6 +203,8 @@
          </table>
       </div>
 
+      <div class="col-md-12" style="height: 15px;"></div>
+
       {{-- OTHER CHARGES --}}
       <div class="col-md-12">
         <span>B. OTHER CHARGES (To be paid after distribution line construction is completed)</span>
