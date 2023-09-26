@@ -49,7 +49,7 @@ use Illuminate\Support\Facades\Auth;
 
                                     {{-- INSTALLATION FEE - PLANNING --}}
                                     <button class="btn btn-tool" style="color: #ff7b00;" title="Update Installation Fee (BoM Figure)" data-toggle="modal" data-target="#modal-installation-fee"><i class="fas fa-coins"></i></button>
-                                    @if (!ServiceConnections::isResidentials($serviceConnections->AccountTypeRaw))
+                                    @if ($serviceConnections->LoadCategory >= .25)
                                         <a href="{{ route('serviceConnections.print-quotation-form', [$serviceConnections->id]) }}" class="btn btn-tool" style="color: #ff7b00;" title="Print Quotation with Embedded Installation Fee">
                                             <i class="fas fa-file-contract"></i>
                                         </a> 
