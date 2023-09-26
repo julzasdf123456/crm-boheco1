@@ -170,7 +170,56 @@
          <p class="no-line-spacing left-text">FOR: <strong style="margin-left: 50px;">{{ $serviceConnections->ServiceAccountName }}</strong></p>
          <p class="no-line-spacing left-text">ADDRESS : <strong style="margin-left: 5px;">{{ ServiceConnections::getAddress($serviceConnections) }}</strong></p>
       </div>
+      {{-- INSTALLATION FEE --}}
+      <div class="col-md-12">
+        <span>A. DISTRIBUTION LINE (To be paid after the right-of-way documents are completed)</span>
+         <table style="width: 100%; margin-top: 2px;">
+            <tr>
+               <th class="border">ITEM</th>
+               <th class="border">DESCRIPTION</th>
+               <th class="border">AMOUNT</th>
+               <th class="border">12%<br>EVAT</th>
+               <th class="border">TOTAL<br>AMOUNT</th>
+            </tr>
+            @php
+                $others = 0;
+                $othersVat = 0;
+                $othersTotal = 0;
+                $remittanceTotal = $remittance + $vat;
 
+                $i = 1;
+            @endphp
+            @foreach ($particularPayments as $item)
+                @if ($item->Particular=='Installation Fee')
+                    <tr>
+                        <td class="border-side center-text">{{ ServiceConnections::numberToRomanRepresentation($i) }}</td>
+                        <td class="border-side">{{ strtoupper($item->Particular) }}</td>
+                        <td class="border-side right-text">{{ number_format($item->Amount, 2) }}</td>
+                        <td class="border-side right-text">{{ number_format(floatval($item->Amount) * .12, 2) }}</td>
+                        <td class="border-side right-text">{{ number_format(floatval($item->Amount) + (floatval($item->Amount) * .12), 2) }}</td>
+                    </tr>
+                    @php
+                        $i++;
+                        $others += floatval($item->Amount);
+                        $othersVat += floatval($item->Amount) * .12;
+                        $othersTotal += floatval($item->Amount) + (floatval($item->Amount) * .12);
+                    @endphp
+                @else
+                    
+                @endif                
+            @endforeach
+
+            <tr>
+               <th class="border"></th>
+               <th class="border center-text">TOTAL</th>
+               <th class="border right-text">{{ number_format($others + $remittance + $deposit, 2) }}</th>
+               <th class="border right-text">{{ number_format($othersVat + $vat + $depositVat, 2) }}</th>
+               <th class="border right-text">{{ number_format($othersTotal + $remittanceTotal + $depositTotal, 2) }}</th>
+            </tr>
+         </table>
+      </div>
+
+      {{-- OTHER CHARGES --}}
       <div class="col-md-12">
         <span>B. OTHER CHARGES (To be paid after distribution line construction is completed)</span>
          <table style="width: 100%; margin-top: 2px;">
