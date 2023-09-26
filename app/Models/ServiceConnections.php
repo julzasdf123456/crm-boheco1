@@ -378,4 +378,8 @@ class ServiceConnections extends Model
     public static function getInstallationFeeVatId() {
         return '1686267638521';
     }
+
+    public static function getPaymentParticularsExcemptions() {
+        return ['1686267638521', '1686267658287', '1683188551113'];
+    }
 }
