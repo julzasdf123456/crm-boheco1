@@ -54,7 +54,7 @@ use Illuminate\Support\Facades\Auth;
                                             <i class="fas fa-file-contract"></i>
                                         </a> 
 
-                                        <a href="{{ route('serviceConnections.serviceConnections.print-quotation-form-separate-installation-fee', [$serviceConnections->id]) }}" class="btn btn-tool" style="color: #ff1e00;" title="Print Quotation with Separate Installation Fee">
+                                        <a href="{{ route('serviceConnections.print-quotation-form-separate-installation-fee', [$serviceConnections->id]) }}" class="btn btn-tool" style="color: #ff1e00;" title="Print Quotation with Separate Installation Fee">
                                             <i class="fas fa-file-contract"></i>
                                         </a>
                                     @endif
