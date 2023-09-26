@@ -182,11 +182,6 @@
                <th class="border">TOTAL<br>AMOUNT</th>
             </tr>
             @php
-                $others = 0;
-                $othersVat = 0;
-                $othersTotal = 0;
-                $remittanceTotal = $remittance + $vat;
-
                 $i = 1;
             @endphp
             @foreach ($particularPayments as $item)
@@ -200,22 +195,11 @@
                     </tr>
                     @php
                         $i++;
-                        $others += floatval($item->Amount);
-                        $othersVat += floatval($item->Amount) * .12;
-                        $othersTotal += floatval($item->Amount) + (floatval($item->Amount) * .12);
                     @endphp
                 @else
                     
                 @endif                
             @endforeach
-
-            <tr>
-               <th class="border"></th>
-               <th class="border center-text">TOTAL</th>
-               <th class="border right-text">{{ number_format($others + $remittance + $deposit, 2) }}</th>
-               <th class="border right-text">{{ number_format($othersVat + $vat + $depositVat, 2) }}</th>
-               <th class="border right-text">{{ number_format($othersTotal + $remittanceTotal + $depositTotal, 2) }}</th>
-            </tr>
          </table>
       </div>
 
