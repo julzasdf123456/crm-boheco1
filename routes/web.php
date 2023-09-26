@@ -174,6 +174,7 @@ Route::get('/service_connections/change-name-for-approval', [ServiceConnectionsC
 Route::get('/service_connections/approved-change-names', [ServiceConnectionsController::class, 'approvedChangeNames'])->name('serviceConnections.approved-change-names');
 Route::get('/service_connections/change-account-name', [ServiceConnectionsController::class, 'changeAccountName'])->name('serviceConnections.change-account-name');
 Route::get('/service_connections/print-change-name/{id}', [ServiceConnectionsController::class, 'printChangeName'])->name('serviceConnections.print-change-name');
+Route::get('/service_connections/print-quotation-form-separate-installation-fee/{id}', [ServiceConnectionsController::class, 'printQuotationFormSeparateInstallationFee'])->name('serviceConnections.print-quotation-form-separate-installation-fee');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 

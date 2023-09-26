@@ -50,9 +50,13 @@ use Illuminate\Support\Facades\Auth;
                                     {{-- INSTALLATION FEE - PLANNING --}}
                                     <button class="btn btn-tool" style="color: #ff7b00;" title="Update Installation Fee (BoM Figure)" data-toggle="modal" data-target="#modal-installation-fee"><i class="fas fa-coins"></i></button>
                                     @if (!ServiceConnections::isResidentials($serviceConnections->AccountTypeRaw))
-                                        <a href="{{ route('serviceConnections.print-quotation-form', [$serviceConnections->id]) }}" class="btn btn-tool" style="color: #ff7b00;" title="Print Quotation">
+                                        <a href="{{ route('serviceConnections.print-quotation-form', [$serviceConnections->id]) }}" class="btn btn-tool" style="color: #ff7b00;" title="Print Quotation with Embedded Installation Fee">
                                             <i class="fas fa-file-contract"></i>
                                         </a> 
+
+                                        <a href="{{ route('serviceConnections.serviceConnections.print-quotation-form-separate-installation-fee', [$serviceConnections->id]) }}" class="btn btn-tool" style="color: #ff1e00;" title="Print Quotation with Separate Installation Fee">
+                                            <i class="fas fa-file-contract"></i>
+                                        </a>
                                     @endif
                                 @else
                                     <a href="{{ route('serviceConnectionPayTransactions.create-step-four', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Update service connection payment">
