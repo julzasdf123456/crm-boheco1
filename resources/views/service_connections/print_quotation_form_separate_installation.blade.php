@@ -172,6 +172,7 @@
       </div>
 
       <div class="col-md-12">
+        <span>B. OTHER CHARGES (To be paid after distribution line construction is completed)</span>
          <table style="width: 100%; margin-top: 2px;">
             <tr>
                <th class="border">ITEM</th>
