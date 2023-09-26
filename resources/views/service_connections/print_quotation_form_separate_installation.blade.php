@@ -173,7 +173,7 @@
       {{-- INSTALLATION FEE --}}
       <div class="col-md-12">
         <span>A. DISTRIBUTION LINE (To be paid after the right-of-way documents are completed)</span>
-         <table style="width: 100%; margin-top: 2px;">
+         <table style="width: 100%; margin-top: 2px; margin-bottom: 15px;">
             <tr>
                <th class="border">ITEM</th>
                <th class="border">DESCRIPTION</th>
@@ -187,11 +187,11 @@
             @foreach ($particularPayments as $item)
                 @if ($item->Particular=='Installation Fee')
                     <tr>
-                        <td class="border-side center-text">{{ ServiceConnections::numberToRomanRepresentation($i) }}</td>
-                        <td class="border-side">{{ strtoupper($item->Particular) }}</td>
-                        <td class="border-side right-text">{{ number_format($item->Amount, 2) }}</td>
-                        <td class="border-side right-text">{{ number_format(floatval($item->Amount) * .12, 2) }}</td>
-                        <td class="border-side right-text">{{ number_format(floatval($item->Amount) + (floatval($item->Amount) * .12), 2) }}</td>
+                        <td class="border center-text">{{ ServiceConnections::numberToRomanRepresentation($i) }}</td>
+                        <td class="border">{{ strtoupper($item->Particular) }}</td>
+                        <td class="border right-text">{{ number_format($item->Amount, 2) }}</td>
+                        <td class="border right-text">{{ number_format(floatval($item->Amount) * .12, 2) }}</td>
+                        <td class="border right-text">{{ number_format(floatval($item->Amount) + (floatval($item->Amount) * .12), 2) }}</td>
                     </tr>
                     @php
                         $i++;
@@ -201,8 +201,6 @@
                 @endif                
             @endforeach
          </table>
-         <br>
-         <br>
       </div>
 
       {{-- OTHER CHARGES --}}
