@@ -4043,7 +4043,7 @@ class ServiceConnectionsController extends AppBaseController
                     ->where('CRM_ServiceConnectionParticularPaymentsTransactions.ServiceConnectionId', $id)
                     ->get();
 
-        return view('/service_connections/print_quotation_form_separate_installation_fee', [
+        return view('/service_connections/print_quotation_form_separate_installation', [
             'serviceConnections' => $serviceConnections,
             'laborWiringCharges' => $laborWiringCharges,
             'billDeposit' => $billDeposit,

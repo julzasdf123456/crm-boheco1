@@ -211,19 +211,23 @@
                 $i = 3;
             @endphp
             @foreach ($particularPayments as $item)
-               <tr>
-                  <td class="border-side center-text">{{ ServiceConnections::numberToRomanRepresentation($i) }}</td>
-                  <td class="border-side">{{ strtoupper($item->Particular) }}</td>
-                  <td class="border-side right-text">{{ number_format($item->Amount, 2) }}</td>
-                  <td class="border-side right-text">{{ number_format(floatval($item->Amount) * .12, 2) }}</td>
-                  <td class="border-side right-text">{{ number_format(floatval($item->Amount) + (floatval($item->Amount) * .12), 2) }}</td>
-               </tr>
-               @php
-                  $i++;
-                  $others += floatval($item->Amount);
-                  $othersVat += floatval($item->Amount) * .12;
-                  $othersTotal += floatval($item->Amount) + (floatval($item->Amount) * .12);
-               @endphp
+                @if ($item->Particular=='Installation Fee')
+                    
+                @else
+                    <tr>
+                        <td class="border-side center-text">{{ ServiceConnections::numberToRomanRepresentation($i) }}</td>
+                        <td class="border-side">{{ strtoupper($item->Particular) }}</td>
+                        <td class="border-side right-text">{{ number_format($item->Amount, 2) }}</td>
+                        <td class="border-side right-text">{{ number_format(floatval($item->Amount) * .12, 2) }}</td>
+                        <td class="border-side right-text">{{ number_format(floatval($item->Amount) + (floatval($item->Amount) * .12), 2) }}</td>
+                    </tr>
+                    @php
+                        $i++;
+                        $others += floatval($item->Amount);
+                        $othersVat += floatval($item->Amount) * .12;
+                        $othersTotal += floatval($item->Amount) + (floatval($item->Amount) * .12);
+                    @endphp
+                @endif                
             @endforeach
 
             <tr>
