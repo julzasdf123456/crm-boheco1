@@ -1318,7 +1318,7 @@ use Illuminate\Support\Facades\Auth;
     <li class="nav-item">
         <a href="{{ route('preRegEntries.index') }}"
         class="nav-link {{ Request::is('preRegEntries*') ? 'active' : '' }}">
-        <i class="fas fa-check-circle     nav-icon"></i><p>AMGA 2022 Pre-Reg</p>
+        <i class="fas fa-check-circle     nav-icon"></i><p>AMGA 2023 Pre-Reg</p>
         </a>
     </li>
 @endcanany
