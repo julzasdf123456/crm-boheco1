@@ -46,8 +46,14 @@ class PreRegEntriesController extends AppBaseController
                         ->paginate(20);
         }
 
+        $total = DB::connection('sqlsrvagma')
+            ->table('Entries')
+            ->select(DB::raw("COUNT(id) AS Count"))
+            ->first();
+
         return view('pre_reg_entries.index', [
             'data' => $data,
+            'total' => $total,
         ]);
     }
 
