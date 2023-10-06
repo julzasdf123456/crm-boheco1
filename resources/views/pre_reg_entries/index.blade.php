@@ -38,7 +38,7 @@
     
             <div class="clearfix"></div>
 
-            <h4>{{ $total }} Entries</h4>
+            <h4>{{ $total->Count }} Entries</h4>
     
             @include('pre_reg_entries.table')
         </div>
