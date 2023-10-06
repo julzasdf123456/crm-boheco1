@@ -37,6 +37,8 @@
             @include('flash::message')
     
             <div class="clearfix"></div>
+
+            <h4>{{ count($data) }} Entries</h4>
     
             @include('pre_reg_entries.table')
         </div>
