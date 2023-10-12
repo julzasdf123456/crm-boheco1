@@ -51,6 +51,16 @@
                               <input type="number" step="any" class="form-control form-control-sm" id="multiplier" value="1">
                            </td>
                         </tr>
+                        <tr>
+                           <td>Additional Kwh
+
+                              <span title="Additional kWH = LAST READING - PULLOUT READING"><i class="text-info fas fa-question-circle"></i></span>
+                           </td>
+                           <td class="text-danger">
+                              <input type="number" class="form-control form-control-sm" id="additionalKwh">
+                           </td>
+                           <td class="text-primary"></td>
+                        </tr>
                      </tbody>
                   </table>
                </div>
@@ -115,6 +125,7 @@
                      MeterNumber : $('#new-ticket-serial').val(),
                      KwhStart : jQuery.isEmptyObject($('#new-ticket-reading').val()) ? 0 : $('#new-ticket-reading').val(),
                      Multiplier : jQuery.isEmptyObject($('#multiplier').val()) ? 0 : $('#multiplier').val(),
+                     AdditionalKwh : jQuery.isEmptyObject($('#additionalKwh').val()) ? 0 : $('#additionalKwh').val(),
                   },
                   success : function(res) {
                      $('#' + $('#ticket-id').text()).remove()
@@ -169,8 +180,17 @@
                   $('#save').attr('disabled', false)
                   $('#meter-warning').addClass('gone')
                }
+
+               if (!jQuery.isEmptyObject(res['LastReading']) && !jQuery.isEmptyObject(res['CurrentMeterReading']) ) {
+                  var lastReading = parseFloat(res['LastReading'])
+                  var pullOutReading = parseFloat(res['CurrentMeterReading'])
+
+                  var addKwh = pullOutReading - lastReading
+                  $('#additionalKwh').val(addKwh)
+               }
             },
             error : function(err) {
+               console.log(err)
                $('#loader').addClass('gone')
                Toast.fire({
                   icon : 'error',

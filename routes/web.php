@@ -843,3 +843,6 @@ Route::resource('tempReadings', App\Http\Controllers\TempReadingsController::cla
 
 
 Route::resource('sites', App\Http\Controllers\SitesController::class)->middleware('cors');
+
+
+Route::resource('additionalConsumptions', App\Http\Controllers\AdditionalConsumptionsController::class);

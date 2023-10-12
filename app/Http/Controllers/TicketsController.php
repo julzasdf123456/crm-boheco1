@@ -25,6 +25,7 @@ use App\Models\AccountMaster;
 use App\Models\User;
 use App\Models\Meters;
 use App\Models\SMSNotifications;
+use App\Models\AdditionalConsumptions;
 use App\Exports\TicketSummaryReportDownloadExport;
 use App\Exports\KPSTicketsExport;
 use App\Exports\DynamicExport;
@@ -3935,6 +3936,7 @@ class TicketsController extends AppBaseController
         $meterNumber = $request['MeterNumber'];
         $kwhStart = $request['KwhStart'];
         $multiplier = $request['Multiplier'];
+        $addtionalKwh = $request['AdditionalKwh'];
 
         $ticket = Tickets::find($id);
 
@@ -3976,6 +3978,23 @@ class TicketsController extends AppBaseController
                     ->update(['MeterNumber' => $meterNumber, 'PreviousReading' => 0]);
             }
 
+            // ADD ADDITIONAL KWH 
+            $lastRate = DB::connection('sqlsrvbilling')
+                ->table('UnbundledRates')
+                ->select('ServicePeriodEnd')
+                ->orderByDesc('ServicePeriodEnd')
+                ->first();
+
+            if ($lastRate != null) {
+                $newBillingMonth = $lastRate->ServicePeriodEnd != null ? date('Y-m-01', strtotime($lastRate->ServicePeriodEnd . ' +1 month')) : date('Y-m-01', strtotime('today +1 month'));
+                
+                $addCon = new AdditionalConsumptions;
+                $addCon->ServicePeriodEnd = $newBillingMonth;
+                $addCon->AccountNumber = $ticket->AccountNumber;
+                $addCon->AdditionalKWH = $addtionalKwh;
+                $addCon->save();
+            }
+
             // UPDATE TICKET
             $ticket->ChangeMeterConfirmed = 'Yes';
             $ticket->save();
@@ -3998,7 +4017,16 @@ class TicketsController extends AppBaseController
 
         $meter = Meters::where('MeterNumber', $ticket->NewMeterNo)->first();
 
+        // get last reading
+        $reading = DB::connection('sqlsrvbilling')
+            ->table('Readings')
+            ->whereRaw("AccountNumber='" . $ticket->AccountNumber . "'")
+            ->select('PowerReadings')
+            ->orderByDesc('ServicePeriodEnd')
+            ->first();
+
         $ticket->MeterNumberExists = $meter != null ? true : false;
+        $ticket->LastReading = $reading != null ? $reading->PowerReadings : '0';
 
         return response()->json($ticket, 200);
     }
