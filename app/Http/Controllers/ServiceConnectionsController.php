@@ -3270,6 +3270,15 @@ class ServiceConnectionsController extends AppBaseController
             $timeFrame->Status = $status;
             $timeFrame->Notes = 'Change name application Approved and is forwarded to billing.';
             $timeFrame->save();
+        } elseif ($status == 'Closed') {
+            // CREATE Timeframes
+            $timeFrame = new ServiceConnectionTimeframes;
+            $timeFrame->id = IDGenerator::generateID();
+            $timeFrame->ServiceConnectionId = $id;
+            $timeFrame->UserId = Auth::id();
+            $timeFrame->Status = $status;
+            $timeFrame->Notes = 'Status updated manually';
+            $timeFrame->save();
         } else {
             // CREATE Timeframes
             $timeFrame = new ServiceConnectionTimeframes;
@@ -3279,7 +3288,7 @@ class ServiceConnectionsController extends AppBaseController
             $timeFrame->Status = $status;
             $timeFrame->Notes = 'Status updated manually';
             $timeFrame->save();
-        }        
+        } 
 
         return response()->json('ok', 200);
     }

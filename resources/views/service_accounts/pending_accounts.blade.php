@@ -59,7 +59,7 @@
                         $i = 1;
                     @endphp
                     @foreach ($serviceConnections as $item)
-                        <tr>
+                        <tr id="row-{{ $item->id }}">
                             <th>{{ $i }}</th>
                             <td><a href="{{ route('serviceConnections.show', [$item->id]) }}" target="_blank">{{ $item->id }}</a></td>
                             <td>{{ $item->ServiceAccountName }} ({{ $item->AccountCount }})<i class="fas fa-check-circle text-primary" style="font-size: .75em;"></i></td>
@@ -89,6 +89,7 @@
                             </td>
                             <td>{{ date('M d, Y', strtotime($item->updated_at)) }}</td>
                             <td class="text-right" >
+                                <button onclick="closeApplication(`{{ $item->id }}`)" class="btn btn-link text-danger" title="Mark as done"><i class="fas fa-check-circle ico-tab-mini"></i></button>
                                 @if ($item->ConnectionApplicationType == 'Relocation')
                                     {{-- <a href="{{ route('serviceAccounts.relocation-form', [$item->AccountNumber, $item->id]) }}" title="Proceed relocating {{ $item->ServiceAccountName }}" ><i class="fas fa-arrow-circle-right text-success"></i></a> --}}
                                 @elseif ($item->ConnectionApplicationType == 'Change Name')
@@ -118,5 +119,39 @@
                 window.location.href = "{{ url('/account_masters/print-sdir') }}" + "/" + $('#Office').val()
             })
         })
+
+        function closeApplication(id) {
+            Swal.fire({
+                title: 'Confirm close?',
+                text : 'Do you want to remove this item from the list? NOTE: This cannot be undone.',
+                showCancelButton: true,
+                confirmButtonText: 'Save',
+                denyButtonText: `Don't save`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url : "{{ route('serviceConnections.update-status') }}",
+                        type : 'GET',
+                        data : {
+                            id : id,
+                            Status : 'Closed'
+                        },
+                        success : function(res) {
+                            Toast.fire({
+                                icon : 'success',
+                                text : 'Application closed manually!'
+                            })
+                            $('#row-' + id).remove()
+                        },
+                        error : function(err) {
+                            Swal.fire({
+                                icon : 'error',
+                                text : 'Error removing application!'
+                            })
+                        }
+                    })
+                }
+            })
+        }
     </script>
 @endpush
