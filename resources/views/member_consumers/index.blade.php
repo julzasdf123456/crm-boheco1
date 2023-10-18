@@ -60,7 +60,7 @@
                                         class='btn btn-default btn-xs'>
                                             <i class="far fa-eye"></i>
                                         </a>
-                                        @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers'])) 
+                                        @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'CWD'])) 
                                             <a href="{{ route('memberConsumers.edit', [$item->ConsumerId]) }}"
                                             class='btn btn-default btn-xs'>
                                                 <i class="far fa-edit"></i>
