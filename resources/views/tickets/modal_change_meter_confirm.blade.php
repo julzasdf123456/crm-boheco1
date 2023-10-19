@@ -238,7 +238,10 @@
                      var pullOutReading = parseFloat(res['CurrentMeterReading'])
 
                      var addKwh = pullOutReading - lastReading
-                     $('#additionalKwh').val(addKwh)
+                     if (addKwh < 0) {
+                        addKwh = 0
+                     }
+                     $('#additionalKwh').val(Math.round((addKwh + Number.EPSILON) * 1) / 1)
                   }
                } else {
                   // USE FORMULA FOR NO PULLOUT READING                  
