@@ -95,7 +95,12 @@
                             <td class="text-primary"><strong>{{ $item->NewMeterReading }}</strong> kWh</td>
                             <td>{{ date('M d, Y', strtotime($item->DateTimeLinemanExecuted)) }}</td>
                             <td>
-                                <button id="btn-{{ $item->id }}" class="btn btn-primary btn-xs" onclick="confirm('{{ $item->id }}')" ticket_id="{{ $item->id }}">Change</button>
+                                @if ($item->AccountNumber != null)
+                                    <button id="btn-{{ $item->id }}" class="btn btn-primary btn-xs" onclick="confirm('{{ $item->id }}')" ticket_id="{{ $item->id }}">Change</button>
+                                @else
+                                    <span class="badge bg-danger">No Acct. Number</span>
+                                @endif
+                                
                                 <button id="btnremove-{{ $item->id }}" style="margin-left: 5px;" class="btn btn-link btn-xs float-right" onclick="remove('{{ $item->id }}')" ticket_id="{{ $item->id }}"><i class="fas fa-trash text-danger"></i></button>
                             </td>
                         </tr>

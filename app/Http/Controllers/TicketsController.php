@@ -4021,12 +4021,13 @@ class TicketsController extends AppBaseController
         $reading = DB::connection('sqlsrvbilling')
             ->table('Readings')
             ->whereRaw("AccountNumber='" . $ticket->AccountNumber . "'")
-            ->select('PowerReadings')
+            ->select('PowerReadings', 'ReadingDate')
             ->orderByDesc('ServicePeriodEnd')
             ->first();
 
         $ticket->MeterNumberExists = $meter != null ? true : false;
         $ticket->LastReading = $reading != null ? $reading->PowerReadings : '0';
+        $ticket->LastReadingDate = $reading != null ? $reading->ReadingDate : null;
 
         return response()->json($ticket, 200);
     }

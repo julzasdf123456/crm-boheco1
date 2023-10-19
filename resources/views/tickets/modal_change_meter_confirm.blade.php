@@ -39,7 +39,9 @@
                         </tr>
                         <tr>
                            <td>Reading</td>
-                           <td class="text-danger" id="old-ticket-reading"></td>
+                           <td class="text-danger">
+                              <input type="number" step="any" class="form-control form-control-sm" id="old-ticket-reading">
+                           </td>
                            <td class="text-primary">
                               <input type="number" step="any" class="form-control form-control-sm" id="new-ticket-reading">
                            </td>
@@ -55,6 +57,8 @@
                            <td>Additional Kwh
 
                               <span title="Additional kWH = LAST READING - PULLOUT READING"><i class="text-info fas fa-question-circle"></i></span>
+
+                              <button class="btn btn-xs btn-danger float-right gone" id="force-compute">Force Compute</button>
                            </td>
                            <td class="text-danger">
                               <input type="number" class="form-control form-control-sm" id="additionalKwh">
@@ -63,6 +67,37 @@
                         </tr>
                      </tbody>
                   </table>
+               </div>
+
+               <div class="card" id="computation">
+                  <div class="card-body">
+                     <div class="divider"></div>
+                     <p class="text-muted"><i>Computation for No Pull-out Reading</i></p>
+                     <div class="row">
+                        <div class="col-lg-12">
+                           <p class="no-pads"><strong>No. of Days</strong> = Pullout Date - Last Reading Date</p>
+                           <p class="no-pads"><strong>No. of Days</strong> = <span class="text-danger"><strong id="comp-pullout-date"></strong></span> - <span class="text-primary"><strong id="comp-last-reading-date"></strong></span></p>
+                           <p class="no-pads"><strong>No. of Days</strong> = <span class="text-success"><strong id="comp-days"></strong></span></p>
+
+                           <div class="divider"></div>
+                        </div>
+
+                        <div class="col-lg-12">
+                           <p class="no-pads"><strong>θ Ave. Kwh/Month</strong> = (New Meter Reading ÷ No. of Days) x 30 days</p>
+                           <p class="no-pads"><strong>θ</strong> = (<span class="text-danger"><input type="number" id="comp-new-meter-reading" class="form-control form-control-sm" style="width: 120px; display: inline;" placeholder="Input New Met. Reading"></span> ÷ <span class="text-primary"><strong id="comp-days-theta"></strong></span>) x 30</p>
+                           <p class="no-pads"><strong>θ</strong> = <span class="text-success"><strong id="comp-ave-kwh"></strong></span></p>
+
+                           <div class="divider"></div>
+                        </div>
+
+                        <div class="col-lg-12">
+                           <p class="no-pads"><strong>Additionl Kwh</strong> = New Meter Reading - θ</p>
+                           <p class="no-pads"><strong>Additionl Kwh</strong> = <span class="text-danger"><strong id="comp-new-meter-reading-ave"></strong></span> - <span class="text-danger"><strong id="comp-theta"></strong></span></p>
+                           <p class="no-pads"><strong>Additionl Kwh</strong> = <span class="text-success"><strong id="comp-additional-kwh"></strong></span></p>
+
+                        </div>
+                     </div>
+                  </div>
                </div>
            </div>
            <div class="modal-footer">
@@ -79,6 +114,15 @@
          $('#modal-change-meter-confirm').on('shown.bs.modal', function (e) {
             getData($('#ticket-id').text())
          })
+
+         $('#modal-change-meter-confirm').on('hidden.bs.modal', function (e) {
+            $('#additionalKwh').val("")
+            $('#multiplier').val("")
+            $('#new-ticket-reading').val("")
+            $('#old-ticket-reading').val("")
+            $('#force-compute').addClass('gone')
+            $('#computation').addClass('gone')
+         });
 
          $('#new-ticket-serial').keyup(function() {
             $('#loader').removeClass('gone')
@@ -152,6 +196,10 @@
                })
             }            
          })
+
+         $('#force-compute').on('click', function() {
+            $('#computation').removeClass('gone')
+         })
       })
 
       function getData(id) {
@@ -165,12 +213,13 @@
                $('#loader').addClass('gone')
                $('#old-ticket-brand').text(res['CurrentMeterBrand'])
                $('#old-ticket-serial').text(res['CurrentMeterNo'])
-               $('#old-ticket-reading').text(res['CurrentMeterReading'] + " kWh")
+               $('#old-ticket-reading').val(res['CurrentMeterReading'])
                
                $('#new-ticket-brand').text(res['NewMeterBrand'])
                $('#new-ticket-serial').val(res['NewMeterNo'])
                $('#new-ticket-reading').val(res['NewMeterReading'])
 
+               // WARNS IF METER NUMBE ALREADY EXSTS
                if (res['MeterNumberExists'] == true) {
                   exists = true
                   $('#save').attr('disabled', true)
@@ -181,12 +230,52 @@
                   $('#meter-warning').addClass('gone')
                }
 
-               if (!jQuery.isEmptyObject(res['LastReading']) && !jQuery.isEmptyObject(res['CurrentMeterReading']) ) {
-                  var lastReading = parseFloat(res['LastReading'])
-                  var pullOutReading = parseFloat(res['CurrentMeterReading'])
+               if (isNumeric(res['CurrentMeterReading'])) {
+                  // FETCH LAST READING IF THERE IS A PULLOUT READING
+                  if (!jQuery.isEmptyObject(res['LastReading']) && !jQuery.isEmptyObject(res['CurrentMeterReading']) ) {
+                     var lastReading = parseFloat(res['LastReading'])
+                     var pullOutReading = parseFloat(res['CurrentMeterReading'])
 
-                  var addKwh = pullOutReading - lastReading
-                  $('#additionalKwh').val(addKwh)
+                     var addKwh = pullOutReading - lastReading
+                     $('#additionalKwh').val(addKwh)
+                  }
+               } else {
+                  // USE FORMULA FOR NO PULLOUT READING                  
+                  $('#force-compute').removeClass('gone')
+
+                  // GET NO OF DAYS
+                  $('#comp-pullout-date').text(moment(res['DateTimeLinemanExecuted']).format('MMM DD, YYYY'))
+                  $('#comp-last-reading-date').text(moment(res['LastReadingDate']).format('MMM DD, YYYY'))
+                  var start = moment(res['DateTimeLinemanExecuted'], "YYYY-MM-DD")
+                  var end = moment(res['LastReadingDate'], "YYYY-MM-DD")
+                  var days = moment.duration(start.diff(end)).asDays()
+                  $('#comp-days').text(days)
+
+                  // GET AVERAGE KWH PER MONTH
+                  var averagePerMonth = 0
+                  $('#comp-days-theta').text(days)
+                  $('#comp-new-meter-reading').on('change', function() {
+                     averagePerMonth = (parseInt(this.value) / days) * 30
+                     var theta = Math.round((averagePerMonth + Number.EPSILON) * 1) / 1
+                     $('#comp-ave-kwh').text(theta)
+
+                     // GET ADDITIONAL KWH
+                     var addKwh = parseInt(this.value) - theta
+                     $('#comp-theta').text(theta)
+                     $('#comp-new-meter-reading-ave').text(this.value)
+                     $('#comp-additional-kwh').text(addKwh)
+                  })
+                  $('#comp-new-meter-reading').on('keyup', function() {
+                     averagePerMonth = (parseInt(this.value) / days) * 30
+                     var theta = Math.round((averagePerMonth + Number.EPSILON) * 1) / 1
+                     $('#comp-ave-kwh').text(theta)
+
+                     // GET ADDITIONAL KWH
+                     var addKwh = parseInt(this.value) - theta
+                     $('#comp-theta').text(theta)
+                     $('#comp-new-meter-reading-ave').text(this.value)
+                     $('#comp-additional-kwh').text(addKwh)
+                  })
                }
             },
             error : function(err) {
@@ -198,6 +287,12 @@
                })
             }
          })
+      }
+
+      function isNumeric(str) {
+         if (typeof str != "string") return false // we only process strings!  
+         return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+               !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
       }
    </script>    
 @endpush
