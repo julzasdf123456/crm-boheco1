@@ -348,12 +348,12 @@
     </div>
 
     <!-- Main Footer -->
-    <footer class="main-footer">
+    {{-- <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
             <b>Version</b> 3.7.1
         </div>
         {{ env('APP_COMPANY') }} | CRM &copy; @php echo date('Y') @endphp - <strong class="badge badge-primary">All Rights Reserved</strong>
-    </footer>
+    </footer> --}}
 </div>
 
 {{-- MODAL FOR SEARCHING OF CONSUMERS --}}
