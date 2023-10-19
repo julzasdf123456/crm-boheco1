@@ -71,8 +71,8 @@
 
                <div class="card gone" id="computation">
                   <div class="card-body">
-                     <div class="divider"></div>
                      <p class="text-muted"><i>Computation for No Pull-out Reading</i></p>
+                     <div class="divider"></div>
                      <div class="row">
                         <div class="col-lg-12">
                            <p class="no-pads"><strong>No. of Days</strong> = Pullout Date - Last Reading Date</p>
