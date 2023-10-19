@@ -75,7 +75,7 @@
         <div class="col-lg-12">
             <table class="table table-hover table-resposive table-sm table-bordered" id="results-table">
                 <thead>
-                    <th>Ticket ID</th>
+                    <th>Account No.</th>
                     <th>Consumer Name</th>
                     <th>Address</th>
                     <th>Old Meter No.</th>
