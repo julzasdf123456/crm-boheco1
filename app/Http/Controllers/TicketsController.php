@@ -4096,6 +4096,91 @@ class TicketsController extends AppBaseController
         ]);
     }
 
+    public function printChangeMeters($from, $to, $office) {
+        if ($office == 'All') {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("Status='Executed' AND CRM_Tickets.Ticket IN ('1668541254390', '1672792232225') AND ChangeMeterConfirmed IS NULL")
+                ->whereRaw("CRM_Tickets.created_at > '2023-02-28'")
+                ->whereRaw("(CRM_Tickets.DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->select('CRM_Tickets.id',
+                    'CRM_Tickets.AccountNumber',
+                    'CRM_Tickets.ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'CRM_Tickets.Sitio',
+                    'CRM_TicketsRepository.ParentTicket',
+                    'CRM_TicketsRepository.Name as Ticket',
+                    'CRM_TicketsRepository.Type as TicketType',
+                    'CRM_Tickets.CurrentMeterNo',
+                    'CRM_Tickets.CurrentMeterReading',
+                    'CRM_Tickets.NewMeterNo',
+                    'CRM_Tickets.NewMeterReading',
+                    'CRM_Tickets.GeoLocation',
+                    'CRM_Tickets.Neighbor1',
+                    'CRM_Tickets.Neighbor2',
+                    'CRM_Tickets.Notes',
+                    'CRM_Tickets.Status',
+                    'CRM_Tickets.DateTimeDownloaded',
+                    'CRM_Tickets.DateTimeLinemanArrived',
+                    'CRM_Tickets.DateTimeLinemanExecuted',
+                    'CRM_Tickets.UserId',
+                    'CRM_Tickets.Office',  
+                    'CRM_ServiceConnectionCrew.StationName',
+                    'CRM_Tickets.created_at',
+                    'CRM_Tickets.updated_at',
+                )
+                ->get();
+        } else {
+            $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("Status='Executed' AND CRM_Tickets.Ticket IN ('1668541254390', '1672792232225') AND CRM_Tickets.Office='" . $office . "' AND ChangeMeterConfirmed IS NULL")
+                ->whereRaw("CRM_Tickets.created_at > '2023-02-28'")
+                ->whereRaw("(CRM_Tickets.DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->select('CRM_Tickets.id',
+                    'CRM_Tickets.AccountNumber',
+                    'CRM_Tickets.ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'CRM_Tickets.Sitio',
+                    'CRM_TicketsRepository.ParentTicket',
+                    'CRM_TicketsRepository.Name as Ticket',
+                    'CRM_TicketsRepository.Type as TicketType',
+                    'CRM_Tickets.CurrentMeterNo',
+                    'CRM_Tickets.CurrentMeterReading',
+                    'CRM_Tickets.NewMeterNo',
+                    'CRM_Tickets.NewMeterReading',
+                    'CRM_Tickets.GeoLocation',
+                    'CRM_Tickets.Neighbor1',
+                    'CRM_Tickets.Neighbor2',
+                    'CRM_Tickets.Notes',
+                    'CRM_Tickets.Status',
+                    'CRM_Tickets.DateTimeDownloaded',
+                    'CRM_Tickets.DateTimeLinemanArrived',
+                    'CRM_Tickets.DateTimeLinemanExecuted',
+                    'CRM_Tickets.UserId',
+                    'CRM_Tickets.Office',  
+                    'CRM_ServiceConnectionCrew.StationName',
+                    'CRM_Tickets.created_at',
+                    'CRM_Tickets.updated_at',
+                )
+                ->get();
+        }
+
+        return view('/tickets/print_change_meters', [
+            'data' => $data,
+            'from' => $from,
+            'to' => $to,
+            'office' => $office
+        ]);
+    }
+
     public function getMeterDetails(Request $request) {
         $meter = Meters::where('MeterNumber', $request['MeterNumber'])->first();
 

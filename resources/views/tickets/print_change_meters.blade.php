@@ -122,7 +122,7 @@
     <p class="text-center">{{ strtoupper(env('APP_COMPANY')) }}</p>
     <p class="text-center">{{ strtoupper(env('APP_ADDRESS')) }}</p>
     <br>
-    <p class="text-center"><strong>UPDATED CHANGE METERS FROM {{ strtoupper(date('F d, Y', strtotime($from))) }} TO {{ strtoupper(date('F d, Y', strtotime($to))) }}</strong></p>
+    <p class="text-center"><strong>CHANGE METERS FROM {{ strtoupper(date('F d, Y', strtotime($from))) }} TO {{ strtoupper(date('F d, Y', strtotime($to))) }}</strong></p>
     <br>    
     <table style="width: 100%;">
         <thead>
@@ -134,7 +134,7 @@
             <th>Pull Out Reading</th>
             <th>New Meter No.</th>
             <th>New Reading</th>
-            <th>Date Updated</th>
+            <th>Date Executed</th>
         </thead>
         <tbody>
             @foreach ($data as $item)
@@ -147,19 +147,11 @@
                     <td><strong>{{ $item->CurrentMeterReading }}</strong> kWh</td>
                     <td>{{ $item->NewMeterNo }}</td>
                     <td><strong>{{ $item->NewMeterReading }}</strong> kWh</td>
-                    <td>{{ date('M d, Y h:i A', strtotime($item->updated_at)) }}</td>
+                    <td>{{ date('M d, Y h:i A', strtotime($item->DateTimeLinemanExecuted)) }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-
-    <br>
-    <br>
-    <br>
-    <p>Prepared By:</p>
-    <br>
-    <br>
-    <p><strong>{{ strtoupper(Auth::user()->name) }}</strong></p>
 </div>
 <script type="text/javascript">
     window.print();
