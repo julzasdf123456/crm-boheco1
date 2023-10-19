@@ -117,7 +117,7 @@
 
          $('#modal-change-meter-confirm').on('hidden.bs.modal', function (e) {
             $('#additionalKwh').val("")
-            $('#multiplier').val("")
+            $('#multiplier').val("1")
             $('#new-ticket-reading').val("")
             $('#old-ticket-reading').val("")
             $('#force-compute').addClass('gone')
@@ -169,7 +169,7 @@
                      Id : $('#ticket-id').text(),
                      MeterNumber : $('#new-ticket-serial').val(),
                      KwhStart : jQuery.isEmptyObject($('#new-ticket-reading').val()) ? 0 : $('#new-ticket-reading').val(),
-                     Multiplier : jQuery.isEmptyObject($('#multiplier').val()) ? 0 : $('#multiplier').val(),
+                     Multiplier : jQuery.isEmptyObject($('#multiplier').val()) ? 1 : $('#multiplier').val(),
                      AdditionalKwh : jQuery.isEmptyObject($('#additionalKwh').val()) ? 0 : $('#additionalKwh').val(),
                   },
                   success : function(res) {
