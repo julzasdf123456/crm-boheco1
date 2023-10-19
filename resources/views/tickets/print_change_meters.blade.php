@@ -126,7 +126,6 @@
     <br>    
     <table style="width: 100%;">
         <thead>
-            <th>Ticket No</th>
             <th>Account No.</th>
             <th>Consumer Name</th>
             <th>Address</th>
@@ -139,7 +138,6 @@
         <tbody>
             @foreach ($data as $item)
                 <tr>
-                    <td>{{ $item->id }}</td>
                     <td>{{ $item->AccountNumber }}</td>
                     <td>{{ $item->ConsumerName }}</td>
                     <td>{{ Tickets::getAddress($item) }}</td>
