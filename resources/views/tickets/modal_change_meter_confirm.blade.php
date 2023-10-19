@@ -69,7 +69,7 @@
                   </table>
                </div>
 
-               <div class="card" id="computation">
+               <div class="card gone" id="computation">
                   <div class="card-body">
                      <div class="divider"></div>
                      <p class="text-muted"><i>Computation for No Pull-out Reading</i></p>
@@ -264,6 +264,7 @@
                      $('#comp-theta').text(theta)
                      $('#comp-new-meter-reading-ave').text(this.value)
                      $('#comp-additional-kwh').text(addKwh)
+                     $('#additionalKwh').val(addKwh)
                   })
                   $('#comp-new-meter-reading').on('keyup', function() {
                      averagePerMonth = (parseInt(this.value) / days) * 30
@@ -275,6 +276,7 @@
                      $('#comp-theta').text(theta)
                      $('#comp-new-meter-reading-ave').text(this.value)
                      $('#comp-additional-kwh').text(addKwh)
+                     $('#additionalKwh').val(addKwh)
                   })
                }
             },
