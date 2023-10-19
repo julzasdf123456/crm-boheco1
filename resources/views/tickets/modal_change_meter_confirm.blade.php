@@ -91,8 +91,8 @@
                         </div>
 
                         <div class="col-lg-12">
-                           <p class="no-pads"><strong>Additionl Kwh</strong> = New Meter Reading - θ</p>
-                           <p class="no-pads"><strong>Additionl Kwh</strong> = <span class="text-danger"><strong id="comp-new-meter-reading-ave"></strong></span> - <span class="text-danger"><strong id="comp-theta"></strong></span></p>
+                           <p class="no-pads"><strong>Additionl Kwh</strong> = θ - New Meter Reading</p>
+                           <p class="no-pads"><strong>Additionl Kwh</strong> = <span class="text-danger"><strong id="comp-theta"></strong></span> - <span class="text-danger"><strong id="comp-new-meter-reading-ave"></strong></span></p>
                            <p class="no-pads"><strong>Additionl Kwh</strong> = <span class="text-success"><strong id="comp-additional-kwh"></strong></span></p>
 
                         </div>
@@ -261,7 +261,7 @@
                      $('#comp-ave-kwh').text(theta)
 
                      // GET ADDITIONAL KWH
-                     var addKwh = parseInt(this.value) - theta
+                     var addKwh = theta - parseInt(this.value)
                      $('#comp-theta').text(theta)
                      $('#comp-new-meter-reading-ave').text(this.value)
                      $('#comp-additional-kwh').text(addKwh)
@@ -273,7 +273,7 @@
                      $('#comp-ave-kwh').text(theta)
 
                      // GET ADDITIONAL KWH
-                     var addKwh = parseInt(this.value) - theta
+                     var addKwh = theta - parseInt(this.value)
                      $('#comp-theta').text(theta)
                      $('#comp-new-meter-reading-ave').text(this.value)
                      $('#comp-additional-kwh').text(addKwh)
