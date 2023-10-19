@@ -94,6 +94,10 @@ class Tickets extends Model
         'TaggedTicketId',
         'Assessment',
         'Recommendation',
+        'AreaOffice',
+        'Item1', // CHANGE METER - BILLING USER THAT CONFIRMED THAT CHANGE METER
+        'Item2',
+        'Item3',
     ];
 
     /**
@@ -144,6 +148,10 @@ class Tickets extends Model
         'TaggedTicketId' => 'string',
         'Assessment' => 'string',
         'Recommendation' => 'string',
+        'AreaOffice' => 'string',
+        'Item1' => 'string',
+        'Item2' => 'string',
+        'Item3' => 'string',
     ];
 
     /**
@@ -196,6 +204,10 @@ class Tickets extends Model
         'TaggedTicketId' => 'nullable|string',
         'Assessment' => 'nullable|string',
         'Recommendation' => 'nullable|string',
+        'AreaOffice' => 'nullable|string',
+        'Item1' => 'nullable|string',
+        'Item2' => 'nullable|string',
+        'Item3' => 'nullable|string',
     ];
 
     public static function getAddress($ticket) {

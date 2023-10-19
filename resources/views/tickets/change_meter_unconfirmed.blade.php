@@ -62,6 +62,7 @@
                             <label for="">Action</label>
                             <br>
                             <button type="submit" class="btn btn-primary btn-sm" id="filterBtn" title="Filter"><i class="fas fa-check"></i> Filter</button>
+                            <button class="btn btn-warning btn-sm" id="print" title="Print Accomplished Change Meters"><i class="fas fa-print"></i> Print Finished</button>
                         </div>
                     </div>
                 </div>
@@ -117,7 +118,10 @@
 @push('page_scripts')
     <script>
         $(document).ready(function() {
-            
+            $('#print').on('click', function(e) {
+                e.preventDefault()
+                window.location.href = "{{ url('/tickets/print-change-meter-accomplished') }}/" + $('#From').val() + "/" + $('#To').val()
+            })
         })    
 
         function confirm(id) {

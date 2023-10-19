@@ -3997,6 +3997,7 @@ class TicketsController extends AppBaseController
 
             // UPDATE TICKET
             $ticket->ChangeMeterConfirmed = 'Yes';
+            $ticket->Item1 = Auth::id();
             $ticket->save();
 
             // CREATE LOG
@@ -4036,7 +4037,7 @@ class TicketsController extends AppBaseController
         $id = $request['id'];
 
         Tickets::where('id', $id)
-            ->update(['ChangeMeterConfirmed' => 'Yes']);
+            ->update(['ChangeMeterConfirmed' => 'Yes', 'Item1' => Auth::id()]);
 
         // CREATE LOG
         $ticketLog = new TicketLogs;
@@ -4048,6 +4049,51 @@ class TicketsController extends AppBaseController
         $ticketLog->save();
 
         return response()->json('ok', 200);
+    }
+
+    public function printChangeMeterAccomplished($from, $to) {
+        $data = DB::table('CRM_Tickets')
+                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
+                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_TicketsRepository', 'CRM_Tickets.Ticket', '=', 'CRM_TicketsRepository.id')
+                ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_Tickets.CrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                ->whereRaw("ChangeMeterConfirmed='Yes' AND Item1='" . Auth::id() . "'")
+                ->whereRaw("CRM_Tickets.created_at > '2023-02-28'")
+                ->whereRaw("(CRM_Tickets.DateTimeLinemanExecuted BETWEEN '" . $from . "' AND '" . $to . "')")
+                ->select('CRM_Tickets.id',
+                    'CRM_Tickets.AccountNumber',
+                    'CRM_Tickets.ConsumerName',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'CRM_Tickets.Sitio',
+                    'CRM_TicketsRepository.ParentTicket',
+                    'CRM_TicketsRepository.Name as Ticket',
+                    'CRM_TicketsRepository.Type as TicketType',
+                    'CRM_Tickets.CurrentMeterNo',
+                    'CRM_Tickets.CurrentMeterReading',
+                    'CRM_Tickets.NewMeterNo',
+                    'CRM_Tickets.NewMeterReading',
+                    'CRM_Tickets.GeoLocation',
+                    'CRM_Tickets.Neighbor1',
+                    'CRM_Tickets.Neighbor2',
+                    'CRM_Tickets.Notes',
+                    'CRM_Tickets.Status',
+                    'CRM_Tickets.DateTimeDownloaded',
+                    'CRM_Tickets.DateTimeLinemanArrived',
+                    'CRM_Tickets.DateTimeLinemanExecuted',
+                    'CRM_Tickets.UserId',
+                    'CRM_Tickets.Office',  
+                    'CRM_ServiceConnectionCrew.StationName',
+                    'CRM_Tickets.created_at',
+                    'CRM_Tickets.updated_at',
+                )
+                ->get();
+
+        return view('/tickets/print_change_meter_accomplished', [
+            'data' => $data,
+            'from' => $from,
+            'to' => $to
+        ]);
     }
 
     public function getMeterDetails(Request $request) {

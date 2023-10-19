@@ -122,6 +122,7 @@
             $('#old-ticket-reading').val("")
             $('#force-compute').addClass('gone')
             $('#computation').addClass('gone')
+            $('#comp-new-meter-reading').val("")
          });
 
          $('#new-ticket-serial').keyup(function() {
