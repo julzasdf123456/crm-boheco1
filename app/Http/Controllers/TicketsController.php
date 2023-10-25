@@ -3966,7 +3966,7 @@ class TicketsController extends AppBaseController
             $changeMeter->ChangeDate = $ticket->DateTimeLinemanExecuted;
             $changeMeter->OldMeter = $ticket->CurrentMeterNo;
             $changeMeter->NewMeter = $meterNumber;
-            $changeMeter->PullOutReading = $ticket->CurrentMeterReading;
+            $changeMeter->PullOutReading = is_numeric($ticket->CurrentMeterReading) ? $ticket->CurrentMeterReading : 0;
             $changeMeter->save();
 
             // UPDATE LATEST READING DATA
@@ -4010,6 +4010,8 @@ class TicketsController extends AppBaseController
             $ticketLog->UserId = Auth::id();
             $ticketLog->save();
         }
+
+        return response()->json($ticket, 200);
     }
 
     public function getTicketAjax(Request $request) {

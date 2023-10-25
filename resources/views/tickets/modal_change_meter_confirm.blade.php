@@ -201,6 +201,7 @@
                         icon : 'error',
                         text : 'Error validating meter!'
                      })
+                     console.log(err)
                   }
                })
             }            
