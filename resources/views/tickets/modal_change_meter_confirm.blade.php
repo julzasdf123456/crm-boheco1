@@ -162,10 +162,10 @@
          })
 
          $('#save').on('click', function() {
-            if (jQuery.isEmptyObject($('#new-ticket-serial').val())) {
+            if (jQuery.isEmptyObject($('#new-ticket-serial').val()) | jQuery.isEmptyObject($('#period-to-charge').val())) {
                Swal.fire({
                   icon : 'warning',
-                  text : 'Please input meter number!'
+                  text : 'Please input Meter Number and Service Period!'
                })
             } else {
                $.ajax({
@@ -177,6 +177,7 @@
                      KwhStart : jQuery.isEmptyObject($('#new-ticket-reading').val()) ? 0 : $('#new-ticket-reading').val(),
                      Multiplier : jQuery.isEmptyObject($('#multiplier').val()) ? 1 : $('#multiplier').val(),
                      AdditionalKwh : jQuery.isEmptyObject($('#additionalKwh').val()) ? 0 : $('#additionalKwh').val(),
+                     ServicePeriodEnd : $('#period-to-charge').val()
                   },
                   success : function(res) {
                      $('#' + $('#ticket-id').text()).remove()

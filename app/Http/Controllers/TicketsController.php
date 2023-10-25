@@ -3937,6 +3937,7 @@ class TicketsController extends AppBaseController
         $kwhStart = $request['KwhStart'];
         $multiplier = $request['Multiplier'];
         $addtionalKwh = $request['AdditionalKwh'];
+        $period = $request['ServicePeriodEnd'];
 
         $ticket = Tickets::find($id);
 
@@ -3989,7 +3990,7 @@ class TicketsController extends AppBaseController
                 $newBillingMonth = $lastRate->ServicePeriodEnd != null ? date('Y-m-01', strtotime($lastRate->ServicePeriodEnd . ' +1 month')) : date('Y-m-01', strtotime('today +1 month'));
                 
                 $addCon = new AdditionalConsumptions;
-                $addCon->ServicePeriodEnd = $newBillingMonth;
+                $addCon->ServicePeriodEnd = $period;
                 $addCon->AccountNumber = $ticket->AccountNumber;
                 $addCon->AdditionalKWH = $addtionalKwh;
                 $addCon->save();
