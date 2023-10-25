@@ -48,7 +48,7 @@ use Illuminate\Support\Facades\Auth;
                                     </a>  
 
                                     {{-- INSTALLATION FEE - PLANNING --}}
-                                    <button class="btn btn-tool" style="color: #ff7b00;" title="Update Installation Fee (BoM Figure)" data-toggle="modal" data-target="#modal-installation-fee"><i class="fas fa-coins"></i></button>
+                                    <button onclick="showBomModal()" class="btn btn-tool" style="color: #ff7b00;" title="Update Installation Fee (BoM Figure)"><i class="fas fa-coins"></i></button>
                                     @if ($serviceConnections->LoadCategory >= .25)
                                         <a href="{{ route('serviceConnections.print-quotation-form', [$serviceConnections->id]) }}" class="btn btn-tool" style="color: #ff7b00;" title="Print Quotation with Embedded Installation Fee">
                                             <i class="fas fa-file-contract"></i>
@@ -279,6 +279,12 @@ use Illuminate\Support\Facades\Auth;
                     }
                 })
             })
+
+            
         });
+
+        function showBomModal() {
+            $('#modal-installation-fee').modal({backdrop: 'static', keyboard: false}, 'show')
+        }
     </script>
 @endpush

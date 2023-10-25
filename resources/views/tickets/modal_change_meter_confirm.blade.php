@@ -65,6 +65,12 @@
                            </td>
                            <td class="text-primary"></td>
                         </tr>
+                        <tr>
+                           <td colspan="2">Select Billing Month to Charge</td>
+                           <td>
+                              <input id="period-to-charge" type="text" class="form-control form-control-sm" placeholder="yyyy-mm-dd">
+                           </td>
+                        </tr>
                      </tbody>
                   </table>
                </div>
@@ -220,6 +226,8 @@
                $('#new-ticket-serial').val(res['NewMeterNo'])
                $('#new-ticket-reading').val(res['NewMeterReading'])
 
+               $('#period-to-charge').val(res['ServicePeriodEnd'])
+
                // WARNS IF METER NUMBE ALREADY EXSTS
                if (res['MeterNumberExists'] == true) {
                   exists = true
@@ -296,9 +304,9 @@
       }
 
       function isNumeric(str) {
-         if (typeof str != "string") return false // we only process strings!  
-         return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-               !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+         if (typeof str != "string") return false 
+         return !isNaN(str) && 
+               !isNaN(parseFloat(str)) 
       }
    </script>    
 @endpush

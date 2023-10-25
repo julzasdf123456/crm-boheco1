@@ -4026,9 +4026,16 @@ class TicketsController extends AppBaseController
             ->orderByDesc('ServicePeriodEnd')
             ->first();
 
+        $sysParams = DB::connection('sqlsrvbilling')
+            ->table('SystemParameter')
+            ->select('ServicePeriodEnd')
+            ->orderByDesc('ServicePeriodEnd')
+            ->first();
+
         $ticket->MeterNumberExists = $meter != null ? true : false;
         $ticket->LastReading = $reading != null ? $reading->PowerReadings : '0';
         $ticket->LastReadingDate = $reading != null ? $reading->ReadingDate : null;
+        $ticket->ServicePeriodEnd = date('Y-m-d', strtotime($sysParams->ServicePeriodEnd));
 
         return response()->json($ticket, 200);
     }
