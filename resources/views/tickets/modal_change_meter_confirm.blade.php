@@ -129,6 +129,7 @@
             $('#force-compute').addClass('gone')
             $('#computation').addClass('gone')
             $('#comp-new-meter-reading').val("")
+            $('#period-to-charge').val("")
          });
 
          $('#new-ticket-serial').keyup(function() {
