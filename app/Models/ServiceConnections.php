@@ -5,6 +5,10 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ServiceConnectionTotalPayments;
+use App\Models\ServiceConnectionTimeframes;
+use App\Models\CRMQueue;
+use App\Models\CRMDetails;
 
 /**
  * Class ServiceConnections
@@ -91,7 +95,8 @@ class ServiceConnections extends Model
         'ElectricianContactNo',
         'ElectricianAcredited',
         'DateTimeLinemanDownloaded',
-        'LinemanCrewExecuted'
+        'LinemanCrewExecuted',
+        'ExistingAccountNumber'
     ];
 
     /**
@@ -142,7 +147,8 @@ class ServiceConnections extends Model
         'ElectricianContactNo' => 'string',
         'ElectricianAcredited' => 'string',
         'DateTimeLinemanDownloaded' => 'string',
-        'LinemanCrewExecuted' => 'string'
+        'LinemanCrewExecuted' => 'string',
+        'ExistingAccountNumber' => 'string'
     ];
 
     /**
@@ -195,7 +201,8 @@ class ServiceConnections extends Model
         'ElectricianContactNo' => 'nullable|string',
         'ElectricianAcredited' => 'nullable|string',
         'DateTimeLinemanDownloaded' => 'nullable|string',
-        'LinemanCrewExecuted' => 'nullable|string'
+        'LinemanCrewExecuted' => 'nullable|string',
+        'ExistingAccountNumber' => 'nullable|string'
     ];
 
     public static function getAccountCount($consumerId) {
@@ -298,9 +305,11 @@ class ServiceConnections extends Model
             return 'bg-success';
         } elseif ($status=='For Inspection') {
             return 'bg-warning';
-        } elseif ($status=='Approved' | $status=='Downloaded by Crew' | $status=='For Approval') {
+        } elseif ($status=='Approved' || $status=='Downloaded by Crew' || $status=='For Approval') {
             return 'bg-info';
-        } elseif($status=='For Transformer and Pole Assigning' | $status=='Forwarded To Planning') {
+        } elseif($status=='For Transformer and Pole Assigning' || $status=='Forwarded to Planning') {
+            return 'bg-primary';
+        } elseif($status=='Forwarded to Accounting') {
             return 'bg-primary';
         } else {
             return 'bg-danger';
@@ -312,9 +321,9 @@ class ServiceConnections extends Model
             return 14.28;
         } elseif ($status=='Approved') {
             return 28.56;
-        } elseif($status=='Forwarded To Planning') {
+        } elseif($status=='Forwarded to Planning' || $status=='For Transformer and Pole Assigning') {
             return 42.84;
-        } elseif($status=='For Transformer and Pole Assigning') {
+        } elseif($status=='Forwarded to Accounting') {
             return 57.12;
         } elseif ($status=='Downloaded by Crew' |  $status=='For Approval') {
             return 71.4;
@@ -381,5 +390,14 @@ class ServiceConnections extends Model
 
     public static function getPaymentParticularsExcemptions() {
         return ['1686267638521', '1686267658287', '1683188551113'];
+    }
+
+    public static function savePowerLoadPaymentsToCashieringQueue($serviceConnection) {
+        $totalTransactions = ServiceConnectionTotalPayments::where('ServiceConnectionId', $serviceConnection->id)->first();
+
+        /**
+         * SAVE CRM QUEUE
+         */
+        $queueId = $serviceConnection->id . "-P"; // Power Loads
     }
 }

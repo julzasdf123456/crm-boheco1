@@ -77,13 +77,56 @@ You can also check out our other paid products on [CodeCanyon](https://codecanyo
 ### User - Special Authentication
 - In UsersController.authenticate(), update the permissions
 
+### Additional Roles
+- Finance
+
+### Additional Permissions
+- sc transformer ammortization
+
 ### Additional Columns
-- `CRM_ServiceConnectionMaterialPayments` 
-    1. BOHECOIShare (money)
+- `CRM_ServiceConnections` 
+    1. ExistingAccountNumber
+
 - `CRM_ServiceConnectionTotalPayments`
-    1. BOHECOShare (money)
-    2. Particulars (money)
-- `CRM_Tickets`
-    1. LinemanCrewExecuted (varchar, 225)
-- `CRM_ServiceConnections`
-    1. LinemanCrewExecuted (varchar, 225)
+    1.  MaterialCost
+    2.  LaborCost
+    3.  ContingencyCost
+    4.  MaterialsVAT
+    5.  TransformerCost
+    6.  TransformerVAT
+    7.  TransformerDownpaymentPercentage
+    8.  BillOfMaterialsTotal
+    9.  InstallationFeeCanBePaid
+    10.  InstallationFeeORNumber
+    11.  InstallationFeeORDate
+    12.  TransformerReceivablesTotal
+    13.  TransformerAmmortizationTerms
+    14.  TransformerAmmortizationStart
+    15.  TransformerORDate
+    16.  TransformerORNumber
+    17.  TransformerInterestPercentage
+    18.  WithholdingTwoPercent
+    19.  WithholdingFivePercent
+    20.  InstallationFeeDownPaymentPercentage
+    21.  InstallationFeeBalance
+    22.  InstallationFeeTerms
+    23.  InstallationFeeTermAmountPerMonth
+    24.  RemittanceForwarded
+    25.  InstallationForwarded
+    26.  TransformerForwarded
+    27.  TransformerTwoPercentWT
+    28.  TransformerFivePercentWT
+
+- `CRM_ServiceConnectionMeterAndTransformer`
+    1.  CoreLoss
+    2.  Item1
+    3.  Item2
+    4.  Item3
+    5.  Item4
+
+### New .env Config Variables
+- TRANSFORMER_INTEREST_PERCENTAGE (Decimal)
+- TRANSFORMER_DP_PERCENTAGE (Decimal)
+- OSD_ACCOUNTANT
+- OSD_CHIEF
+- OSD_MANAGER

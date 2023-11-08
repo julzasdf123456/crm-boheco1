@@ -191,7 +191,6 @@ class ServiceConnectionsController extends AppBaseController
                 $timeFrame->Status = $sc->Status;
                 $timeFrame->Notes = 'Data Updated';
                 $timeFrame->save();
-
                 
                 // SEND SMS
                 if ($sc->ContactNumber != null) {
@@ -1374,35 +1373,44 @@ class ServiceConnectionsController extends AppBaseController
 
     public function bomIndex() {
         $serviceConnections = DB::table('CRM_ServiceConnections')
-                    ->join('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
-                    ->join('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')                    
-                    ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')  
+                    ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+                    ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                    ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')                        
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_ServiceConnections.StationCrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
                     ->leftJoin('CRM_LargeLoadInspections', 'CRM_ServiceConnections.id', '=', 'CRM_LargeLoadInspections.ServiceConnectionId')
-                    ->where('CRM_ServiceConnections.Status', 'For BoM')
-                    ->where(function ($query) {
-                        $query->where('Trash', 'No')
-                            ->orWhereNull('Trash');
-                    })
                     ->select('CRM_ServiceConnections.id as id',
-                        'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
-                        'CRM_ServiceConnections.Status as Status', 
-                        'CRM_ServiceConnections.Sitio as Sitio', 
-                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
-                        'CRM_Towns.Town as Town',
-                        'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
-                        'CRM_Barangays.Barangay as Barangay',
-                        'CRM_LargeLoadInspections.Options')
+                                    'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                                    'CRM_ServiceConnections.Status as Status',
+                                    'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                                    'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                                    'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                                    'CRM_ServiceConnections.AccountCount as AccountCount',  
+                                    'CRM_ServiceConnections.Sitio as Sitio', 
+                                    'CRM_Towns.Town as Town',
+                                    'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                                    'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                                    'CRM_ServiceConnections.EnergizationOrderIssued as EnergizationOrderIssued', 
+                                    'CRM_ServiceConnections.StationCrewAssigned as StationCrewAssigned',
+                                    'CRM_ServiceConnectionCrew.StationName as StationName',
+                                    'CRM_ServiceConnectionCrew.CrewLeader as CrewLeader',
+                                    'CRM_ServiceConnectionCrew.Members as Members',
+                                    'CRM_ServiceConnections.Status', 
+                                    'CRM_LargeLoadInspections.Options',
+                                    'CRM_Barangays.Barangay as Barangay')
+                    ->whereRaw("CRM_ServiceConnections.Status IN ('Forwarded to Planning') AND (Trash IS NULL OR Trash='No')")
                     ->orderBy('CRM_ServiceConnections.ServiceAccountName')
                     ->get();
 
         /**
          * ASSESS PERMISSIONS
          */
-        if(Auth::user()->hasAnyPermission(['sc powerload update', 'sc powerload view', 'Super Admin'])) {
-            return view('/service_connections/bom_index', ['serviceConnections' => $serviceConnections]);
+        if(Auth::user()->hasAnyPermission(['sc powerload update', 'Super Admin'])) {
+            return view('/service_connections/bom_index', [
+                'serviceConnections' => $serviceConnections
+            ]);
         } else {
             return abort(403, "You're not authorized to view power load inspections.");
-        }         
+        }           
     }
 
     public function bomAssigning($scId) {
@@ -1713,6 +1721,8 @@ class ServiceConnectionsController extends AppBaseController
             ->orderBy('ConAssGrouping')
             ->get();
 
+        $totalTransactions = ServiceConnectionTotalPayments::where('ServiceConnectionId', $scId)->first();
+
         $billOfMaterialsSummary = BillsOfMaterialsSummary::where('ServiceConnectionId', $scId)->first();
         if ($billOfMaterialsSummary == null) {
             $billOfMaterialsSummary = new BillsOfMaterialsSummary;
@@ -1840,6 +1850,7 @@ class ServiceConnectionsController extends AppBaseController
                 'structures' => $structures,
                 'conAss' => $conAss,
                 'poles' => $poles,
+                'totalTransactions' => $totalTransactions,
             ]
         );
     }
@@ -4059,5 +4070,529 @@ class ServiceConnectionsController extends AppBaseController
             'totalTransactions' => $totalTransactions,
             'particularPayments' => $particularPayments,
         ]);
+    }
+
+    public function saveMaterialSummaryAmount(Request $request) {
+        $materialCost = $request['MaterialCost'];
+        $laborCost = $request['LaborCost'];
+        $contingencyCost = $request['ContingencyCost'];
+        $materialsVat = $request['MaterialsVAT'];
+        $transformerCost = $request['TransformerCost'];
+        $transformerVat = $request['TransformerVAT'];
+        $grandTotal = $request['BillOfMaterialsTotal'];
+        $ammortized = $request['IsAmmortized'];
+        $id = $request['ServiceConnectionId'];
+
+        // VALIDATE IF THERE IS AN EXISTING PAYMENT PROFILE FIRST
+        $order = ServiceConnectionTotalPayments::where('ServiceConnectionId', $id)->first();
+        $serviceConnection = ServiceConnections::find($id);
+
+        if ($order != null) {
+            // UPDATE PAYMENT ORDER
+            $order->MaterialCost = $materialCost;
+            $order->LaborCost = $laborCost;
+            $order->ContingencyCost = $contingencyCost;
+            $order->MaterialsVAT = $materialsVat;
+            $order->TransformerCost = $transformerCost;
+            $order->TransformerVAT = $transformerVat;
+            $order->BillOfMaterialsTotal = $grandTotal;
+            $order->save();
+        } else {
+            $order = new ServiceConnectionTotalPayments;
+            $order->id = IDGenerator::generateIDandRandString();
+            $order->ServiceConnectionId = $id;
+            $order->MaterialCost = $materialCost;
+            $order->LaborCost = $laborCost;
+            $order->ContingencyCost = $contingencyCost;
+            $order->MaterialsVAT = $materialsVat;
+            $order->TransformerCost = $transformerCost;
+            $order->TransformerVAT = $transformerVat;
+            $order->BillOfMaterialsTotal = $grandTotal;
+            $order->save();
+        }
+
+        // CREATE Timeframes
+        $timeFrame = new ServiceConnectionTimeframes;
+        $timeFrame->id = IDGenerator::generateID();
+        $timeFrame->ServiceConnectionId = $id;
+        $timeFrame->UserId = Auth::id();
+        $timeFrame->Status = 'Bill of Materials Computed';
+        $timeFrame->Notes = 'Installation and transformer fees added to this application';
+        $timeFrame->save();
+        
+        if ($ammortized == 'Yes') {
+            $serviceConnection->Status = 'Forwarded to Accounting';
+        } else {
+            $serviceConnection->Status = 'For Inspection';
+        }
+        $serviceConnection->save();
+
+        return response()->json($order, 200);
+    }
+
+    public function transformerAmmortizations(Request $request) {
+        $serviceConnections = DB::table('CRM_ServiceConnections')
+                    ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+                    ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                    ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')                        
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_ServiceConnections.StationCrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->leftJoin('CRM_LargeLoadInspections', 'CRM_ServiceConnections.id', '=', 'CRM_LargeLoadInspections.ServiceConnectionId')
+                    ->select('CRM_ServiceConnections.id as id',
+                                    'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                                    'CRM_ServiceConnections.Status as Status',
+                                    'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                                    'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                                    'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                                    'CRM_ServiceConnections.AccountCount as AccountCount',  
+                                    'CRM_ServiceConnections.Sitio as Sitio', 
+                                    'CRM_Towns.Town as Town',
+                                    'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                                    'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                                    'CRM_ServiceConnections.EnergizationOrderIssued as EnergizationOrderIssued', 
+                                    'CRM_ServiceConnections.StationCrewAssigned as StationCrewAssigned',
+                                    'CRM_ServiceConnectionCrew.StationName as StationName',
+                                    'CRM_ServiceConnectionCrew.CrewLeader as CrewLeader',
+                                    'CRM_ServiceConnectionCrew.Members as Members',
+                                    'CRM_ServiceConnections.Status', 
+                                    'CRM_LargeLoadInspections.Options',
+                                    'CRM_Barangays.Barangay as Barangay')
+                    ->whereRaw("CRM_ServiceConnections.Status IN ('Forwarded to Accounting') AND (Trash IS NULL OR Trash='No')")
+                    ->orderBy('CRM_ServiceConnections.ServiceAccountName')
+                    ->get();
+
+        /**
+         * ASSESS PERMISSIONS
+         */
+        if(Auth::user()->hasAnyPermission(['sc transformer ammortization', 'Super Admin'])) {
+            return view('/service_connections/transformer_ammortizations', [
+                'serviceConnections' => $serviceConnections
+            ]);
+        } else {
+            return abort(403, "You're not authorized to view power transformer ammortizations.");
+        }  
+    }
+
+    public function transformerAmmortizationsView($id) {
+        $serviceConnection = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+            ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_ServiceConnections.StationCrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+            ->select('CRM_ServiceConnections.id as id',
+                        'CRM_ServiceConnections.AccountCount as AccountCount', 
+                        'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                        'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                        'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                        'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.AccountOrganization as AccountOrganization', 
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.ConnectionApplicationType as ConnectionApplicationType',
+                        'CRM_ServiceConnections.MemberConsumerId as MemberConsumerId',
+                        'CRM_ServiceConnections.Status as Status',  
+                        'CRM_ServiceConnections.Notes as Notes', 
+                        'CRM_ServiceConnections.Office', 
+                        'CRM_ServiceConnections.LongSpan', 
+                        'CRM_ServiceConnections.AccountType AS AccountTypeRaw', 
+                        'CRM_ServiceConnections.ORNumber as ORNumber', 
+                        'CRM_ServiceConnections.ORDate', 
+                        'CRM_ServiceConnections.Sitio as Sitio', 
+                        'CRM_ServiceConnections.LoadCategory as LoadCategory', 
+                        'CRM_ServiceConnections.DateTimeOfEnergization as DateTimeOfEnergization', 
+                        'CRM_ServiceConnections.DateTimeLinemenArrived as DateTimeLinemenArrived', 
+                        'CRM_Towns.Town as Town',
+                        'CRM_Barangays.Barangay as Barangay',
+                        'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                        'CRM_ServiceConnectionCrew.StationName as StationName',
+                        'CRM_ServiceConnectionCrew.CrewLeader as CrewLeader',
+                        'CRM_ServiceConnectionCrew.Members as Members',
+                        'CRM_ServiceConnections.ElectricianId',
+                        'CRM_ServiceConnections.ElectricianName',
+                        'CRM_ServiceConnections.ElectricianAddress',
+                        'CRM_ServiceConnections.ElectricianContactNo',
+                        'CRM_ServiceConnections.ElectricianAcredited',
+                        'CRM_ServiceConnections.LinemanCrewExecuted',)
+        ->where('CRM_ServiceConnections.id', $id)
+        ->where(function ($query) {
+            $query->where('CRM_ServiceConnections.Trash', 'No')
+                ->orWhereNull('CRM_ServiceConnections.Trash');
+        })
+        ->first();
+
+        $totalTransactions = ServiceConnectionTotalPayments::where('ServiceConnectionId', $id)->first();
+
+        if(Auth::user()->hasAnyPermission(['Super Admin', 'sc transformer ammortization'])) {
+            return view('/service_connections/transformer_ammortizations_view', [
+                'serviceConnection' => $serviceConnection,
+                'totalTransactions' => $totalTransactions,
+            ]);
+        } else {
+            return abort(403, "Only finance employees are allowed to access this module.");
+        }        
+    }
+
+    public function saveTransformerAmmortization(Request $request) {
+        $id = $request['id'];
+        $transformerDownPayment = $request['TransformerDownPayment'];
+        $transformerDownPaymentPercentage = $request['TransformerDownPaymentPercentage'];
+        $transformerInterestPercentage = $request['TransformerInterestPercentage'];
+        $transformerReceivablesTotal = $request['TransformerReceivablesTotal'];
+        $transformerAmmortizationTerms = $request['TransformerAmmortizationTerms'];
+        $transformerAmmortizationStart = $request['TransformerAmmortizationStart'];
+
+        $serviceConnection = ServiceConnections::find($id);
+
+        $payment = ServiceConnectionTotalPayments::where('ServiceConnectionId', $id)->first();
+
+        if ($payment != null) {
+            $payment->TransformerDownPayment = $transformerDownPayment;
+            $payment->TransformerDownpaymentPercentage = $transformerDownPaymentPercentage;
+            $payment->TransformerInterestPercentage = $transformerInterestPercentage;
+            $payment->TransformerReceivablesTotal = $transformerReceivablesTotal;
+            $payment->TransformerAmmortizationTerms = $transformerAmmortizationTerms;
+            $payment->TransformerAmmortizationStart = $transformerAmmortizationStart;
+            $payment->save();
+        }
+
+        $serviceConnection->Status = 'For Inspection';
+        $serviceConnection->save();
+
+        // CREATE Timeframes
+        $timeFrame = new ServiceConnectionTimeframes;
+        $timeFrame->id = IDGenerator::generateID();
+        $timeFrame->ServiceConnectionId = $id;
+        $timeFrame->UserId = Auth::id();
+        $timeFrame->Status = 'Rent-to-Own Transformer Configured';
+        $timeFrame->Notes = 'Transformer ammortization downpaymet and schedule set.';
+        $timeFrame->save();
+
+        return response()->json($payment, 200);
+    }
+
+    public function printTransformerAmmortization($scId) {
+        $serviceConnection = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+            ->leftJoin('CRM_ServiceConnectionCrew', 'CRM_ServiceConnections.StationCrewAssigned', '=', 'CRM_ServiceConnectionCrew.id')
+            ->select('CRM_ServiceConnections.id as id',
+                        'CRM_ServiceConnections.AccountCount as AccountCount', 
+                        'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                        'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                        'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                        'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.AccountOrganization as AccountOrganization', 
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.ConnectionApplicationType as ConnectionApplicationType',
+                        'CRM_ServiceConnections.MemberConsumerId as MemberConsumerId',
+                        'CRM_ServiceConnections.Status as Status',  
+                        'CRM_ServiceConnections.Notes as Notes', 
+                        'CRM_ServiceConnections.Office', 
+                        'CRM_ServiceConnections.LongSpan', 
+                        'CRM_ServiceConnections.AccountType AS AccountTypeRaw', 
+                        'CRM_ServiceConnections.ORNumber as ORNumber', 
+                        'CRM_ServiceConnections.ORDate', 
+                        'CRM_ServiceConnections.Sitio as Sitio', 
+                        'CRM_ServiceConnections.LoadCategory as LoadCategory', 
+                        'CRM_ServiceConnections.DateTimeOfEnergization as DateTimeOfEnergization', 
+                        'CRM_ServiceConnections.DateTimeLinemenArrived as DateTimeLinemenArrived', 
+                        'CRM_Towns.Town as Town',
+                        'CRM_Barangays.Barangay as Barangay',
+                        'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                        'CRM_ServiceConnectionCrew.StationName as StationName',
+                        'CRM_ServiceConnectionCrew.CrewLeader as CrewLeader',
+                        'CRM_ServiceConnectionCrew.Members as Members',
+                        'CRM_ServiceConnections.ElectricianId',
+                        'CRM_ServiceConnections.ElectricianName',
+                        'CRM_ServiceConnections.ElectricianAddress',
+                        'CRM_ServiceConnections.ElectricianContactNo',
+                        'CRM_ServiceConnections.ElectricianAcredited',
+                        'CRM_ServiceConnections.LinemanCrewExecuted',)
+        ->where('CRM_ServiceConnections.id', $scId)
+        ->where(function ($query) {
+            $query->where('CRM_ServiceConnections.Trash', 'No')
+                ->orWhereNull('CRM_ServiceConnections.Trash');
+        })
+        ->first(); 
+
+        $totalTransactions = ServiceConnectionTotalPayments::where('ServiceConnectionId', $scId)->first();
+
+        return view('/service_connections/print_transformer_ammortization', [
+            'serviceConnection' => $serviceConnection,
+            'totalTransactions' => $totalTransactions,
+        ]);
+    }
+
+    public function forwardRemittance(Request $request) {
+        $scId = $request['ServiceConnectionId'];
+
+        $serviceConnection = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+            ->select('CRM_ServiceConnections.id as id',
+                        'CRM_ServiceConnections.AccountCount as AccountCount', 
+                        'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                        'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                        'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                        'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.AccountOrganization as AccountOrganization', 
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.ConnectionApplicationType as ConnectionApplicationType',
+                        'CRM_ServiceConnections.Status as Status',  
+                        'CRM_ServiceConnections.Notes as Notes', 
+                        'CRM_ServiceConnections.AccountType AS AccountTypeRaw', 
+                        'CRM_ServiceConnections.ORNumber as ORNumber', 
+                        'CRM_ServiceConnections.ORDate', 
+                        'CRM_ServiceConnections.Sitio as Sitio', 
+                        'CRM_ServiceConnections.LoadCategory as LoadCategory', 
+                        'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                        'CRM_Towns.Town as Town',
+                        'CRM_Barangays.Barangay as Barangay',)
+        ->where('CRM_ServiceConnections.id', $scId)
+        ->first(); 
+
+        $totalTransactions = ServiceConnectionTotalPayments::where('ServiceConnectionId', $scId)->first();
+
+        if ($totalTransactions != null) {
+            $qId = $scId . '-S';
+
+            /**
+             * CRM QUEUE
+             */
+            $queue = new CRMQueue;
+            $queue->id = $qId;
+            $queue->ConsumerName = $serviceConnection->ServiceAccountName;
+            $queue->ConsumerAddress = ServiceConnections::getAddress($serviceConnection);
+            $queue->TransactionPurpose = 'Service Connection Fees';
+            $queue->SourceId = $scId;
+            $queue->SubTotal = $totalTransactions->SubTotal;
+            $queue->VAT = $totalTransactions->TotalVat;
+            $queue->Total = $totalTransactions->Total;
+            $queue->save();
+
+            /**
+             * CRM QUEUE DETAILS
+             */
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() . "1";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'Electrician Share';
+            $queuDetails->GLCode = '12910201000';
+            $queuDetails->Total = $totalTransactions->LaborCharge;
+            $queuDetails->save();
+
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() . "2";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'BOHECO I Share';
+            $queuDetails->GLCode = '44040100000';
+            $queuDetails->Total = $totalTransactions->BOHECOShare;
+            $queuDetails->save();
+
+            // BILL & ENERGY DEPOSIT
+            if (ServiceConnections::isResidentials($serviceConnection->AccountType)) {
+                // BILL DEPOSIT
+                $queuDetails = new CRMDetails;
+                $queuDetails->id = IDGenerator::generateID() . "3";
+                $queuDetails->ReferenceNo = $qId;
+                $queuDetails->Particular = 'Bill Deposit';
+                $queuDetails->GLCode = '21720110002';
+                $queuDetails->Total = $totalTransactions->BillDeposit;
+                $queuDetails->save();
+            } else {
+                // ENERGY DEPOSIT
+                $queuDetails = new CRMDetails;
+                $queuDetails->id = IDGenerator::generateID() . "4";
+                $queuDetails->ReferenceNo = $qId;
+                $queuDetails->Particular = 'Energy Deposit';
+                $queuDetails->GLCode = '21720110001';
+                $queuDetails->Total = $totalTransactions->BillDeposit;
+                $queuDetails->save();
+            }
+
+            // 2307 2%
+            if ($totalTransactions->Form2307TwoPercent != null && $totalTransactions->Form2307TwoPercent > 0) {
+                $queuDetails = new CRMDetails;
+                $queuDetails->id = IDGenerator::generateID() . "3";
+                $queuDetails->ReferenceNo = $qId;
+                $queuDetails->Particular = 'Prepayments - Others 2307';
+                $queuDetails->GLCode = '12910111002';
+                $queuDetails->Total = '-' . $totalTransactions->Form2307TwoPercent;
+                $queuDetails->save();
+            }
+
+            // 2307 5%
+            if ($totalTransactions->Form2307FivePercent != null && $totalTransactions->Form2307FivePercent > 0) {
+                $queuDetails = new CRMDetails;
+                $queuDetails->id = IDGenerator::generateID() . "4";
+                $queuDetails->ReferenceNo = $qId;
+                $queuDetails->Particular = 'EVAT 2306';
+                $queuDetails->GLCode = '22420414002';
+                $queuDetails->Total = '-' . $totalTransactions->Form2307FivePercent;
+                $queuDetails->save();
+            }
+
+            // OTHER PAYABLES
+            $serviceConnectionTransactions = DB::table('CRM_ServiceConnectionParticularPaymentsTransactions')
+                ->leftJoin('CRM_ServiceConnectionPaymentParticulars', 'CRM_ServiceConnectionParticularPaymentsTransactions.Particular', '=', 'CRM_ServiceConnectionPaymentParticulars.id')
+                ->select(
+                    'CRM_ServiceConnectionParticularPaymentsTransactions.Amount',
+                    'CRM_ServiceConnectionPaymentParticulars.Particular',
+                    'CRM_ServiceConnectionPaymentParticulars.AccountNumber',
+                )
+                ->where('ServiceConnectionId', $scId)
+                ->get();
+            
+            $i=5;
+            foreach ($serviceConnectionTransactions as $item) {
+                $queuDetails = new CRMDetails;
+                $queuDetails->id = IDGenerator::generateID() + $i;
+                $queuDetails->ReferenceNo = $qId;
+                $queuDetails->Particular = $item->Particular;
+                $queuDetails->GLCode = $item->AccountNumber;
+                $queuDetails->Total = $item->Amount;
+                $queuDetails->save();
+                $i++;
+            }
+
+            // TOTAL VAT
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() + ($i+1);
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'EVAT';
+            $queuDetails->GLCode = '22420414001';
+            $queuDetails->Total = $totalTransactions->TotalVat;
+            $queuDetails->save();
+
+            // CREATE Timeframes
+            $timeFrame = new ServiceConnectionTimeframes;
+            $timeFrame->id = IDGenerator::generateID();
+            $timeFrame->ServiceConnectionId = $scId;
+            $timeFrame->UserId = Auth::id();
+            $timeFrame->Status = 'Remittance Forwarded to Cashier';
+            $timeFrame->Notes = 'Remittance Forwarded to Cashier Manually';
+            $timeFrame->save();
+
+            $totalTransactions->RemittanceForwarded = 'Yes';
+            $totalTransactions->save();
+
+            $queuesZero = CRMDetails::whereRaw("Total=0")->delete();
+        }
+
+        return response()->json($totalTransactions, 200);
+    }
+
+    public function forwardInstallationFees(Request $request) {
+        $scId = $request['ServiceConnectionId'];
+
+        $serviceConnection = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+            ->select('CRM_ServiceConnections.id as id',
+                        'CRM_ServiceConnections.AccountCount as AccountCount', 
+                        'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                        'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                        'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                        'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.AccountOrganization as AccountOrganization', 
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.ConnectionApplicationType as ConnectionApplicationType',
+                        'CRM_ServiceConnections.Status as Status',  
+                        'CRM_ServiceConnections.Notes as Notes', 
+                        'CRM_ServiceConnections.AccountType AS AccountTypeRaw', 
+                        'CRM_ServiceConnections.ORNumber as ORNumber', 
+                        'CRM_ServiceConnections.ORDate', 
+                        'CRM_ServiceConnections.Sitio as Sitio', 
+                        'CRM_ServiceConnections.LoadCategory as LoadCategory', 
+                        'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                        'CRM_Towns.Town as Town',
+                        'CRM_Barangays.Barangay as Barangay',)
+        ->where('CRM_ServiceConnections.id', $scId)
+        ->first(); 
+
+        $totalTransactions = ServiceConnectionTotalPayments::where('ServiceConnectionId', $scId)->first();
+
+        CRMQueue::saveInstallationFees($serviceConnection, $totalTransactions);
+
+        return response()->json($totalTransactions, 200);
+    }
+
+    public function forwardTransformerFees(Request $request) {
+        $scId = $request['ServiceConnectionId'];
+
+        $serviceConnection = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+            ->select('CRM_ServiceConnections.id as id',
+                        'CRM_ServiceConnections.AccountCount as AccountCount', 
+                        'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                        'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                        'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                        'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.AccountOrganization as AccountOrganization', 
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.ConnectionApplicationType as ConnectionApplicationType',
+                        'CRM_ServiceConnections.Status as Status',  
+                        'CRM_ServiceConnections.Notes as Notes', 
+                        'CRM_ServiceConnections.AccountType AS AccountTypeRaw', 
+                        'CRM_ServiceConnections.ORNumber as ORNumber', 
+                        'CRM_ServiceConnections.ORDate', 
+                        'CRM_ServiceConnections.Sitio as Sitio', 
+                        'CRM_ServiceConnections.LoadCategory as LoadCategory', 
+                        'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                        'CRM_Towns.Town as Town',
+                        'CRM_Barangays.Barangay as Barangay',)
+        ->where('CRM_ServiceConnections.id', $scId)
+        ->first(); 
+
+        $totalTransactions = ServiceConnectionTotalPayments::where('ServiceConnectionId', $scId)->first();
+
+        CRMQueue::saveTransformerFees($serviceConnection, $totalTransactions);
+
+        return response()->json($totalTransactions, 200);
+    }
+
+    public function forwardAllFees(Request $request) {
+        $scId = $request['ServiceConnectionId'];
+
+        $serviceConnection = DB::table('CRM_ServiceConnections')
+            ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+            ->select('CRM_ServiceConnections.id as id',
+                        'CRM_ServiceConnections.AccountCount as AccountCount', 
+                        'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                        'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                        'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                        'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.AccountOrganization as AccountOrganization', 
+                        'CRM_ServiceConnections.AccountApplicationType as AccountApplicationType', 
+                        'CRM_ServiceConnections.ConnectionApplicationType as ConnectionApplicationType',
+                        'CRM_ServiceConnections.Status as Status',  
+                        'CRM_ServiceConnections.Notes as Notes', 
+                        'CRM_ServiceConnections.AccountType AS AccountTypeRaw', 
+                        'CRM_ServiceConnections.ORNumber as ORNumber', 
+                        'CRM_ServiceConnections.ORDate', 
+                        'CRM_ServiceConnections.Sitio as Sitio', 
+                        'CRM_ServiceConnections.LoadCategory as LoadCategory', 
+                        'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                        'CRM_Towns.Town as Town',
+                        'CRM_Barangays.Barangay as Barangay',)
+        ->where('CRM_ServiceConnections.id', $scId)
+        ->first(); 
+
+        $totalTransactions = ServiceConnectionTotalPayments::where('ServiceConnectionId', $scId)->first();
+
+        CRMQueue::saveAllFees($serviceConnection, $totalTransactions);
+
+        return response()->json($totalTransactions, 200);
     }
 }

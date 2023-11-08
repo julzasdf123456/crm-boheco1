@@ -166,6 +166,28 @@ use Illuminate\Support\Facades\Auth;
             </li>
             @endcanany
 
+            @canany(['Super Admin', 'sc powerload update'])
+            <li class="nav-item">
+                <a href="{{ route('serviceConnections.bom-index') }}"
+                class="nav-link {{ Request::is('serviceConnections.bom-index') ? 'active' : '' }}">
+                    <i class="fas fa-charging-station nav-icon text-warning"></i>
+                    <p>Power Load Applications
+                    </p>
+                </a>
+            </li>
+            @endcanany
+
+            @canany(['Super Admin', 'sc powerload update', 'sc transformer ammortization'])
+            <li class="nav-item">
+                <a href="{{ route('serviceConnections.transformer-ammortizations') }}"
+                class="nav-link {{ Request::is('serviceConnections.transformer-ammortizations') ? 'active' : '' }}">
+                    <i class="fas fa-circle nav-icon text-warning"></i>
+                    <p>Transformer Ammortizations
+                    </p>
+                </a>
+            </li>
+            @endcanany
+
             @canany(['Super Admin', 'update metering data', 'sc update energization'])
             <li class="nav-item">
                 <a href="{{ route('serviceConnections.energization') }}"

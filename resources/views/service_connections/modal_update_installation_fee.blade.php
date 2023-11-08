@@ -1,57 +1,126 @@
 {{-- MODAL UPDATE READING FOR ZERO READINGS --}}
 <div class="modal fade" id="modal-installation-fee" aria-hidden="true" style="display: none;">
    <div class="modal-dialog modal-lg">
-       <div class="modal-content">
-           <div class="modal-header">
-               <div>
-                   <h4>Installation Fees (BoM)</h4>
+      <div class="modal-content">
+         <div class="modal-header">
+            <div>
+                  <h4>Installation Fees (BoM)</h4>
+            </div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <table class="table table-sm table-hover">
+               <tbody>
+                  <tr>
+                     <td class="text-muted">Materials Total</td>
+                     <td class="text-right">
+                        <strong>{{ $totalTransactions != null ? number_format($totalTransactions->MaterialCost, 2) : 0 }}</strong>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td class="text-muted">Labor Cost</td>
+                     <td class="text-right">
+                        <strong>{{ $totalTransactions != null ? number_format($totalTransactions->LaborCost, 2) : 0 }}</strong>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td class="text-muted">Contingency, Handling, etc.</td>
+                     <td class="text-right">
+                        <strong>{{ $totalTransactions != null ? number_format($totalTransactions->ContingencyCost, 2) : 0 }}</strong>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td class="text-muted">Materials VAT (12%)</td>
+                     <td class="text-right">
+                        <strong>{{ $totalTransactions != null ? number_format($totalTransactions->MaterialsVAT, 2) : 0 }}</strong>
+                     </td>
+                  </tr>
+                  @php
+                     $materialsTotal = $totalTransactions != null ? ($totalTransactions->MaterialCost + $totalTransactions->LaborCost + $totalTransactions->ContingencyCost + $totalTransactions->MaterialsVAT) : 0;
+                  @endphp
+                  <tr>
+                     <td class="text-muted"><strong>Total Installation Fee</strong></td>
+                     <td class="text-right">
+                        <strong>{{ $totalTransactions != null ? number_format($materialsTotal, 2) : 0 }}</strong>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+            <div class="divider"></div>
+            <div style="width: 100%; margin-bottom: 10px;">
+               <div class="col-lg-6 custom-control custom-switch">
+                  <input type="checkbox" {{ $totalTransactions != null && $totalTransactions->InstallationPartial ? 'checked' : '' }} class="custom-control-input" id="PromisoryToggle">
+                  <label class="custom-control-label" for="PromisoryToggle" id="PromisoryToggleLabel">If Installation Fee has a Promisory Note</label>
                </div>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                   <span aria-hidden="true">×</span>
-               </button>
-           </div>
-           <div class="modal-body">
-            <span class="text-muted"><i>If Transformer is paid in full together with the installation fee.</i></span>
-               <div class="form-group row">
-                   <label for="InstallationFee" class="col-lg-6">Installation Fee</label>
-                   <input type="number" id="InstallationFee" class="col-lg-6 form-control form-control-sm text-right" step="any" autofocus>
-               </div>
-               <div class="form-group row">
-                  <label for="LaborCost" class="col-lg-6">Labor Cost & Contingencies</label>
-                  <input type="number" id="LaborCost" class="col-lg-6 form-control form-control-sm text-right" step="any">
-               </div>
-               <div class="form-group row">
-                  <label for="VAT" class="col-lg-6">12% EVAT</label>
-                  <input type="number" id="VAT" class="col-lg-6 form-control form-control-sm text-right" step="any">
-               </div>
+            </div>
+            <div class="form-group row">
+               <label for="DownPaymentPercentage" class="col-lg-6">Down Payment Percentage</label>
+               <input type="number" id="DownPaymentPercentage" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->InstallationFeeDownPaymentPercentage ? $totalTransactions->InstallationFeeDownPaymentPercentage : env('INSTALLATION_FEE_PARTIAL_DP_PERCENTAGE') }}" disabled>
+            </div>
 
-               <div class="divider"></div>
-               <span class="text-muted"><i>If Installation Fee has a Promisory Note.</i></span>
-               <div class="form-group row">
-                  <label for="InstallationFeePartial" class="col-lg-6">Installation Fee Partial</label>
-                  <input type="number" id="InstallationFeePartial" class="col-lg-6 form-control form-control-sm text-right" step="any">
-               </div>
+            <div class="form-group row">
+               <label for="DownPaymentAmount" class="col-lg-6">Down Payment Amount</label>
+               <input type="number" id="DownPaymentAmount" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->InstallationPartial ? $totalTransactions->InstallationPartial : null }}" disabled>
+            </div>
 
-               <div class="divider"></div>
-               <span class="text-muted"><i>If Transformer is ammortized (Skip this if transformer is paid in full).</i></span>
-               <div class="form-group row">
-                  <label for="TransformerDownpayment" class="col-lg-6">Transformer Downpayment</label>
-                  <input type="number" id="TransformerDownpayment" class="col-lg-6 form-control form-control-sm text-right" step="any">
-               </div>
-               <div class="form-group row">
-                  <label for="TransformerVAT" class="col-lg-6">Transformer Full VAT</label>
-                  <input type="number" id="TransformerVAT" class="col-lg-6 form-control form-control-sm text-right" step="any">
-               </div>
+            <div class="form-group row">
+               <label for="Balance" class="col-lg-6">Balance</label>
+               <input type="number" id="Balance" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->InstallationFeeBalance ? $totalTransactions->InstallationFeeBalance : null }}" disabled>
+            </div>
 
-               <div class="divider"></div>
-               <div class="form-group row">
-                  <label for="Total" class="col-lg-6">BOM TOTAL</label>
-                  <h2 id="Total" class="col-lg-6 text-danger text-right">P 0.0</h2>
-               </div>
-           </div>
-           <div class="modal-footer">
-               <button type="button" class="btn btn-primary" id="save"><i class="fas fa-save ico-tab-mini"></i>Save</button>
-           </div>
+            <div class="form-group row">
+               <label for="Terms" class="col-lg-6">Terms (in Months)</label>
+               <input type="number" id="Terms" class="col-lg-6 form-control form-control-sm text-right" step="any"  value="{{ $totalTransactions != null && $totalTransactions->InstallationFeeTerms ? $totalTransactions->InstallationFeeTerms : 1 }}" disabled>
+            </div>
+
+            <div class="form-group row">
+               <label for="TermAmount" class="col-lg-6">Term Amount Per Month</label>
+               <input type="number" id="TermAmount" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->InstallationFeeTermAmountPerMonth ? $totalTransactions->InstallationFeeTermAmountPerMonth : null }}" disabled>
+            </div>
+
+            {{-- MATERIALS WITHHOLDING --}}
+            <div class="divider"></div>
+            <span class="text-muted"><i>Withholding Taxes For Installation Fee (Materials VAT)</i></span>
+            <div class="form-group row">
+               <div class="col-lg-6 custom-control custom-switch">
+                  <input type="checkbox" {{ $totalTransactions != null && $totalTransactions->WithholdingTwoPercent != null && $totalTransactions->WithholdingTwoPercent > 0 ? 'checked' : '' }} class="custom-control-input" id="WithholdingTwoPercent">
+                  <label class="custom-control-label" for="WithholdingTwoPercent" id="WithholdingTwoPercentLabel">Installation WT 2%</label>
+              </div>
+               <input type="number" id="WithholdingTwoPercentAmount" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->WithholdingTwoPercent ? $totalTransactions->WithholdingTwoPercent : null }}" readonly>
+            </div>
+
+            <div class="form-group row">
+               <div class="col-lg-6 custom-control custom-switch">
+                  <input type="checkbox" {{ $totalTransactions != null && $totalTransactions->WithholdingFivePercent != null && $totalTransactions->WithholdingFivePercent > 0  ? 'checked' : '' }} class="custom-control-input" id="WithholdingFivePercent">
+                  <label class="custom-control-label" for="WithholdingFivePercent" id="WithholdingFivePercentLabel">Installation WT 5%</label>
+              </div>
+               <input type="number" id="WithholdingFivePercentAmount" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->WithholdingFivePercent ? $totalTransactions->WithholdingFivePercent : null }}" readonly>
+            </div>
+
+            {{-- TRANSFORMER WITHOLDING WITHHOLDING --}}
+            <div class="divider"></div>
+            <span class="text-muted"><i>Withholding Taxes For Transformer (Transformer VAT = {{ $totalTransactions != null ? number_format($totalTransactions->TransformerVAT, 2) : 0 }})</i></span>
+            <div class="form-group row">
+               <div class="col-lg-6 custom-control custom-switch">
+                  <input type="checkbox" {{ $totalTransactions != null && $totalTransactions->TransformerTwoPercentWT != null && $totalTransactions->TransformerTwoPercentWT > 0 ? 'checked' : '' }} class="custom-control-input" id="TransformerTwoPercentWT">
+                  <label class="custom-control-label" for="TransformerTwoPercentWT" id="TransformerTwoPercentWTLabel">Transformer WT 2%</label>
+              </div>
+               <input type="number" id="TransformerTwoPercentWTAmount" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->TransformerTwoPercentWT ? $totalTransactions->TransformerTwoPercentWT : null }}" readonly>
+            </div>
+
+            <div class="form-group row">
+               <div class="col-lg-6 custom-control custom-switch">
+                  <input type="checkbox" {{ $totalTransactions != null && $totalTransactions->TransformerFivePercentWT != null && $totalTransactions->TransformerFivePercentWT > 0  ? 'checked' : '' }} class="custom-control-input" id="TransformerFivePercentWT">
+                  <label class="custom-control-label" for="TransformerFivePercentWT" id="TransformerFivePercentWTLabel">Transformer WT 5%</label>
+              </div>
+               <input type="number" id="TransformerFivePercentWTAmount" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->TransformerFivePercentWT ? $totalTransactions->TransformerFivePercentWT : null }}" readonly>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="save"><i class="fas fa-download ico-tab-mini"></i>Save and Confirm Payment</button>
+         </div>
        </div>
    </div>
 </div>
@@ -59,16 +128,70 @@
 @push('page_scripts')
    <script>
       $(document).ready(function() {
-         $('#InstallationFee').keyup(function(e) {
-            getTotal()
+         $('#PromisoryToggle').on('change', function(e) {
+            if (e.target.checked) {
+               $('#DownPaymentPercentage').prop('disabled', false)
+               $('#DownPaymentAmount').prop('disabled', false)
+               $('#Balance').prop('disabled', false)
+               $('#Terms').prop('disabled', false)
+               $('#TermAmount').prop('disabled', false)
+               computePromisory()
+            } else {
+               $('#DownPaymentPercentage').prop('disabled', true)
+               $('#DownPaymentAmount').prop('disabled', true)
+               $('#Balance').prop('disabled', true)
+               $('#Terms').prop('disabled', true)
+               $('#TermAmount').prop('disabled', true)
+               clearFields()
+            }
          })
 
-         $('#LaborCost').keyup(function(e) {
-            getTotal()
+         $('#WithholdingTwoPercent').on('change', function(e) {
+            if (e.target.checked) {
+              getTwoPercentMaterials()
+            } else {
+               $('#WithholdingTwoPercentAmount').val("")
+            }
          })
 
-         $('#VAT').keyup(function(e) {
-            getTotal()
+         $('#WithholdingFivePercent').on('change', function(e) {
+            if (e.target.checked) {
+              getFivePercentMaterials()
+            } else {
+               $('#WithholdingFivePercentAmount').val('')
+            }
+         })
+
+         $('#TransformerTwoPercentWT').on('change', function(e) {
+            if (e.target.checked) {
+              getTwoPercentTransformer()
+            } else {
+               $('#TransformerTwoPercentWTAmount').val("")
+            }
+         })
+
+         $('#TransformerFivePercentWT').on('change', function(e) {
+            if (e.target.checked) {
+              getFivePercentTransformer()
+            } else {
+               $('#TransformerFivePercentWTAmount').val('')
+            }
+         })
+
+         $('#DownPaymentPercentage').on('change', function() {
+            computePromisory()
+         })
+
+         $('#DownPaymentPercentage').on('keyup', function() {
+            computePromisory()
+         })
+
+         $('#Terms').on('change', function() {
+            computePromisory()
+         })
+
+         $('#Terms').on('keyup', function() {
+            computePromisory()
          })
 
          $('#save').on('click', function() {
@@ -77,14 +200,20 @@
                type : 'GET',
                data : {
                   ServiceConnectionId : "{{ $serviceConnections->id }}",
-                  InstallationFee : jQuery.isEmptyObject($('#InstallationFee').val()) ? 0 : $('#InstallationFee').val(),
-                  LaborCost : jQuery.isEmptyObject($('#LaborCost').val()) ? 0 : $('#LaborCost').val(),
-                  Evat : jQuery.isEmptyObject($('#VAT').val()) ? 0 : $('#VAT').val(),
+                  WithholdingTwoPercent : jQuery.isEmptyObject($('#WithholdingTwoPercentAmount').val()) ? null : $('#WithholdingTwoPercentAmount').val(),
+                  WithholdingFivePercent  : jQuery.isEmptyObject($('#WithholdingFivePercentAmount').val()) ? null : $('#WithholdingFivePercentAmount').val(),
+                  TransformerTwoPercentWT : jQuery.isEmptyObject($('#TransformerTwoPercentWTAmount').val()) ? null : $('#TransformerTwoPercentWTAmount').val(),
+                  TransformerFivePercentWT  : jQuery.isEmptyObject($('#TransformerFivePercentWTAmount').val()) ? null : $('#TransformerFivePercentWTAmount').val(),
+                  InstallationFeeDownPaymentPercentage  : jQuery.isEmptyObject($('#DownPaymentPercentage').val()) ? null : $('#DownPaymentPercentage').val(),
+                  InstallationPartial  : jQuery.isEmptyObject($('#DownPaymentAmount').val()) ? null : $('#DownPaymentAmount').val(),
+                  InstallationFeeBalance  : jQuery.isEmptyObject($('#Balance').val()) ? null : $('#Balance').val(),
+                  InstallationFeeTerms  : jQuery.isEmptyObject($('#Terms').val()) ? null : $('#Terms').val(),
+                  InstallationFeeTermAmountPerMonth  : jQuery.isEmptyObject($('#TermAmount').val()) ? null : $('#TermAmount').val(),
                },
                success : function(res) {
                   Toast.fire({
                      icon : 'success',
-                     text : 'Installation Fee Added!'
+                     text : 'Quotation Modified!'
                   })
                   location.reload()
                },
@@ -98,14 +227,53 @@
          })
       })
 
-      function getTotal() {
-         var installationFee = jQuery.isEmptyObject($('#InstallationFee').val()) ? 0 :  parseFloat($('#InstallationFee').val())
-         var laborCost = jQuery.isEmptyObject($('#LaborCost').val()) ? 0 : parseFloat($('#LaborCost').val())
-         var vat = jQuery.isEmptyObject($('#VAT').val()) ? 0 :  parseFloat($('#VAT').val())
+      function computePromisory() {
+         var percentage = parseFloat($('#DownPaymentPercentage').val())
+         var materialsTotal = "{{ $materialsTotal }}"
+         materialsTotal = parseFloat(materialsTotal)
 
-         var total = installationFee + laborCost + vat
+         var dpAmount = percentage * materialsTotal
+         var balance = materialsTotal - dpAmount
+         var terms = jQuery.isEmptyObject($('#Terms').val()) ? 1 : parseInt($('#Terms').val())
+         var termAmount = balance / terms
 
-         $('#Total').text('₱ ' + Number(total).toLocaleString(2))
+         $('#DownPaymentAmount').val(Math.round((dpAmount + Number.EPSILON) * 100) / 100)
+         $('#Balance').val(Math.round((balance + Number.EPSILON) * 100) / 100)
+         $('#TermAmount').val(Math.round((termAmount + Number.EPSILON) * 100) / 100)
+      }
+
+      function clearFields() {
+         $('#DownPaymentAmount').val("")
+         $('#Balance').val("")
+         $('#TermAmount').val("")
+      }
+
+      function getTwoPercentMaterials() {
+         var materialsVat = "{{ $totalTransactions != null ? $totalTransactions->MaterialsVAT : 0 }}"
+
+         var vatables = parseFloat(materialsVat)
+         $('#WithholdingTwoPercentAmount').val(Math.round(((vatables * (2/12)) + Number.EPSILON) * 100) / 100)
+      }
+
+      function getFivePercentMaterials() {
+         var materialsVat = "{{ $totalTransactions != null ? $totalTransactions->MaterialsVAT : 0 }}"
+
+         var vatables = parseFloat(materialsVat)
+         $('#WithholdingFivePercentAmount').val(Math.round(((vatables * (5/12)) + Number.EPSILON) * 100) / 100)
+      }
+
+      function getTwoPercentTransformer() {
+         var materialsVat = "{{ $totalTransactions != null ? $totalTransactions->TransformerVAT : 0 }}"
+
+         var vatables = parseFloat(materialsVat)
+         $('#TransformerTwoPercentWTAmount').val(Math.round(((vatables * (2/12)) + Number.EPSILON) * 100) / 100)
+      }
+
+      function getFivePercentTransformer() {
+         var materialsVat = "{{ $totalTransactions != null ? $totalTransactions->TransformerVAT : 0 }}"
+
+         var vatables = parseFloat(materialsVat)
+         $('#TransformerFivePercentWTAmount').val(Math.round(((vatables * (5/12)) + Number.EPSILON) * 100) / 100)
       }
    </script>    
 @endpush

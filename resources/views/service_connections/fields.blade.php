@@ -55,12 +55,16 @@ use App\Models\IDGenerator;
 
                     <div class="radio-group-horizontal-sm">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="AccountApplicationType" value="Permanent" checked>
-                            <label class="form-check-label">Permanent</label>
+                            <input class="form-check-input" type="radio" id="permanent" name="AccountApplicationType" value="Permanent" checked>
+                            <label class="form-check-label" for="permanent">Permanent</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="AccountApplicationType" value="Temporary">
-                            <label class="form-check-label">Temporary</label>
+                            <input class="form-check-input" type="radio" id="temporary" name="AccountApplicationType" value="Temporary">
+                            <label class="form-check-label" for="temporary">Temporary</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="temporary-to-permanent" name="AccountApplicationType" value="Temporary to Permanent">
+                            <label class="form-check-label" for="temporary-to-permanent">Temporary to Permanent</label>
                         </div>
                     </div>                    
                 </div>
@@ -73,16 +77,27 @@ use App\Models\IDGenerator;
             $(document).ready(function(){
                 $('#duration').hide();
                 $('#TemporaryDurationInMonths').val('');
+                $('#existing-acct-no').hide();
+                $('#ExistingAccountNumber').val('');
             });
             $("input[name='AccountApplicationType']").change(function() {
-                if (this.value == 'Permanent') {
-                    // alert('Permanent');
-                    $('#duration').hide();
-                    $('#TemporaryDurationInMonths').val('');
-                } else {
+                if (this.value == 'Temporary') {
                     // alert('Temporary');
                     $('#duration').show();
                     $('#TemporaryDurationInMonths').val('3');
+                    $('#existing-acct-no').hide();
+                    $('#ExistingAccountNumber').val('');
+                } else if (this.value == 'Temporary to Permanent') {
+                    $('#duration').hide();
+                    $('#TemporaryDurationInMonths').val('');
+                    $('#existing-acct-no').show();
+                    $('#ExistingAccountNumber').val('');
+                } else {
+                    // alert('Permanent');
+                    $('#duration').hide();
+                    $('#TemporaryDurationInMonths').val('');
+                    $('#existing-acct-no').hide();
+                    $('#ExistingAccountNumber').val('');
                 }
             });
         </script>
@@ -101,6 +116,24 @@ use App\Models\IDGenerator;
                         <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                     </div>
                     {!! Form::text('TemporaryDurationInMonths', null, ['class' => 'form-control form-control-sm','maxlength' => 255,'maxlength' => 255]) !!}
+                </div>
+            </div>
+        </div> 
+    </div>
+
+    {{-- ExistingAccountNumber Field --}}
+    <div class="form-group col-sm-12" id="existing-acct-no">
+        <div class="row">
+            <div class="col-lg-3 col-md-5">
+                {!! Form::label('ExistingAccountNumber', 'Existing Account Number') !!}
+            </div>
+    
+            <div class="col-lg-9 col-md-7">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    </div>
+                    {!! Form::text('ExistingAccountNumber', null, ['class' => 'form-control form-control-sm','maxlength' => 255,'maxlength' => 255]) !!}
                 </div>
             </div>
         </div> 

@@ -11,7 +11,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h4 class="m-0">Summary</h4>
+                    <h4 class="m-0">Bill of Materials Summary</h4>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -23,12 +23,12 @@
         </div>
     </div>
 
-    <span style="margin-bottom: 10px;">
+    {{-- <span style="margin-bottom: 10px;">
         <a href="{{ route('serviceConnections.forward-to-verficaation', [$serviceConnection->id]) }}" class="btn btn-success">Finish <i class="fas fa-check-circle"></i></a> 
         <i class="text-muted" style="margin-left: 15px;">Finish and forward to Verification</i>
     </span>
 
-    <div class="divider"></div>
+    <div class="divider"></div> --}}
 
     <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
         <li class="nav-item">
@@ -42,7 +42,7 @@
         {{-- Bills of Materials --}}
         <div class="tab-pane fade active show" id="materials" role="tabpanel" aria-labelledby="custom-content-below-home-tab">
             <div class="row">
-                <div class="col-md-12 col-lg-12">
+                {{-- <div class="col-md-12 col-lg-12">
                     <div class="row">
                         <div class="col-lg-3 col-md-4">
                             
@@ -56,86 +56,96 @@
                             </div>
                         </div>
                     </div>                    
-                </div>
+                </div> --}}
 
-                <div class="col-lg-3 col-md-4">
-                    <div class="card card-outline card-primary">
-                        {!! Form::model($billOfMaterialsSummary, ['route' => ['billsOfMaterialsSummaries.update', $billOfMaterialsSummary->id], 'method' => 'patch']) !!}
+                <div class="col-lg-4 col-md-6">
+                    <div class="card card-outline card-primary shadow-none">
 
-                        {{-- HIDDEN INPUTS --}}
-                        <input type="hidden" name="ServiceConnectionId" value="{{ $serviceConnection->id }}">
                         <div class="card-header">
-                            <span class="card-title">Settings</span>
+                            <span class="card-title">Payment Summary</span>
 
                             <div class="card-tools">
-                                <a href="{{ route('billOfMaterialsMatrices.download-bill-of-materials', [$serviceConnection->id]) }}" class="btn btn-tool text-success" title="Download Excel File"><i class="fas fa-download"></i></a>
+                                <a href="{{-- route('billOfMaterialsMatrices.download-bill-of-materials', [$serviceConnection->id]) --}}" class="btn btn-tool text-success" title="Download Excel File"><i class="fas fa-download"></i></a>
                                 <button class="btn btn-tool" title="Print"><i class="fas fa-print"></i></button>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <table class="table table-sm">
+                        <div class="card-body table-resposive p-0">
+                            <table class="table table-sm table-borderless table-hover">
                                 <tbody>
                                     <tr>
+                                        <td class="text-muted">Material Cost</td>
                                         <td>
-                                            <div class="form-group">
-                                                {!! Form::checkbox('ExcludeTransformerLaborCost', 'Yes', $billOfMaterialsSummary->ExcludeTransformerLaborCost=='Yes' ? true : false) !!}
-                                                {!! Form::label('ExcludeTransformerLaborCost', 'Exclude Transformer Labor Cost') !!}
-                                            </div>
-                                        </td>                                
-                                    </tr>
-                                    {{-- <tr>
-                                        <td>
-                                            <div class="form-group">
-                                                <label for="TransformerChangedPrice">Transformer Price</label>
-                                                <input type="text" class="form-control" id="TransformerChangedPrice" name="TransformerChangedPrice">
-                                            </div>
-                                        </td>                                
-                                    </tr> --}}
-                                    @if ($serviceConnection->AccountApplicationType == 'Temporary')
-                                        <tr>
-                                            <td>
-                                                <div class="form-group">
-                                                    <label for="MonthDuration">Duration (in months)</label>
-                                                    <input type="number" class="form-control" id="MonthDuration" name="MonthDuration" value="{{ $serviceConnection->TemporaryDurationInMonths }}">
-                                                </div>
-                                            </td>                                
-                                        </tr>
-                                    @endif
-                                    <tr>
-                                        <td>
-                                            <div class="form-group">
-                                                <label for="TransformerLaborCostPercentage">Transformer Labor Cost (%)</label>
-                                                <input type="number" step=".001" class="form-control" id="TransformerLaborCostPercentage" name="TransformerLaborCostPercentage" value="{{ $billOfMaterialsSummary->TransformerLaborCostPercentage }}">
-                                            </div>
-                                        </td>                                
+                                            <input type="number" class="form-control form-control-sm text-right" id="MaterialCost" placeholder="Material Cost Amount" autofocus value="{{ $totalTransactions != null ? $totalTransactions->MaterialCost : 0 }}">
+                                        </td>
                                     </tr>
                                     <tr>
+                                        <td class="text-muted">Labor Cost</td>
                                         <td>
-                                            <div class="form-group">
-                                                <label for="MaterialLaborCostPercentage">Materials Labor Cost (%)</label>
-                                                <input type="number" step=".001" class="form-control" id="MaterialLaborCostPercentage" name="MaterialLaborCostPercentage" value="{{ $billOfMaterialsSummary->MaterialLaborCostPercentage }}">
-                                            </div>
-                                        </td>                                
+                                            <input type="number" class="form-control form-control-sm text-right" id="LaborCost" placeholder="Labor Cost Amount" autofocus value="{{ $totalTransactions != null ? $totalTransactions->LaborCost : 0 }}">
+                                        </td>
                                     </tr>
                                     <tr>
+                                        <td class="text-muted">Contngcy., Handling, etc.</td>
                                         <td>
-                                            <div class="form-group">
-                                                <label for="HandlingCostPercentage">Handling and etc. Cost (%)</label>
-                                                <input type="number" step=".001" class="form-control" id="HandlingCostPercentage" name="HandlingCostPercentage" value="{{ $billOfMaterialsSummary->HandlingCostPercentage }}">
-                                            </div>
-                                        </td>                                
+                                            <input type="number" class="form-control form-control-sm text-right" id="ContingencyCost" placeholder="Other Cost Amount" autofocus value="{{ $totalTransactions != null ? $totalTransactions->ContingencyCost : 0 }}">
+                                        </td>
                                     </tr>
-                                </tbody>                        
+                                    <tr>
+                                        <td class="text-muted"><strong>Materials VAT (12%)</strong></td>
+                                        <td>
+                                            <input type="number" class="form-control form-control-sm text-right" id="MaterialsVAT" placeholder="Materials VAT" autofocus value="{{ $totalTransactions != null ? $totalTransactions->MaterialsVAT : 0 }}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-info"><strong>Sub-Total</strong></td>
+                                        <td>
+                                            <input type="number" class="form-control form-control-sm text-right" id="MaterialsSubTotal" placeholder="Materials Sub-Total" autofocus>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-top: 1px solid #dbdbdb;">
+                                        <td class="text-muted">Transformer Full Amount</td>
+                                        <td>
+                                            <input type="number" class="form-control form-control-sm text-right" id="TransformerCost" placeholder="Transformer Amount" autofocus autofocus value="{{ $totalTransactions != null ? $totalTransactions->TransformerCost : 0 }}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted"><strong>Transformer VAT (12%)</strong></td>
+                                        <td>
+                                            <input type="number" class="form-control form-control-sm text-right" id="TransformerVAT" placeholder="Transformer VAT" autofocus autofocus value="{{ $totalTransactions != null ? $totalTransactions->TransformerVAT : 0 }}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Transformer is Ammortized</td>
+                                        <td class="text-right">
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="TransformerAmmortized" {{ $totalTransactions != null ? ($totalTransactions->TransformerAmmortizationTerms != null ? 'checked' : '') : '' }}>
+                                                <label class="custom-control-label" for="TransformerAmmortized" id="TransformerAmmortizedLabel">No</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-info"><strong>Sub-Total</strong></td>
+                                        <td>
+                                            <input type="number" class="form-control form-control-sm text-right" id="TransformerSubTotal" placeholder="Transformer Sub-Total" autofocus>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-top: 1px solid #dbdbdb;">
+                                        <td class="text-danger"><strong>Grand Total</strong></td>
+                                        <td>
+                                            <input type="number" style="font-weight: bold;" class="form-control form-control-sm text-right text-danger" id="GrandTotal" placeholder="Grand Total" autofocus>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-top: 1px solid #dbdbdb;" class="text-right">
+                                        <td colspan="2">
+                                            <button id="save-btn" class="btn btn-primary btn-sm">Save <i style="margin-left: 10px;" class="fas fa-download"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
-                            
-                        </div>
-                        <div class="card-footer">
-                            {!! Form::submit('Apply', ['class' => 'btn btn-sm btn-primary']) !!}
-                        </div>
-                        {!! Form::close() !!}
+                        </div>                        
                     </div>
 
-                    <div class="card">
+                    <div class="card shadow-none card-disabled">
                         <div class="card-header">
                             <span class="card-title">Structures in this BoM</span>
                         </div>
@@ -161,7 +171,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-9 col-md-8">
+                <div class="col-lg-8 col-md-6">
                     <div class="row invoice-info">
                         <div class="col-sm-4 invoice-col">
                             <address>
@@ -349,3 +359,144 @@
     </div>    
 </div>
 @endsection
+
+@push('page_scripts')
+    <script>
+        $(document).ready(function() {
+            showTotals()
+
+            $('#MaterialCost').on('keyup', function() {
+                showTotals()
+            })
+
+            $('#MaterialCost').on('change', function() {
+                showTotals()
+            })
+
+            $('#LaborCost').on('keyup', function() {
+                showTotals()
+            })
+
+            $('#LaborCost').on('change', function() {
+                showTotals()
+            })
+
+            $('#ContingencyCost').on('keyup', function() {
+                showTotals()
+            })
+
+            $('#ContingencyCost').on('change', function() {
+                showTotals()
+            })
+
+            $('#TransformerCost').on('keyup', function() {
+                showTotals()
+            })
+
+            $('#TransformerCost').on('change', function() {
+                showTotals()
+            })
+
+            $('#TransformerAmmortized').on('change', function(e) {
+                if (e.target.checked) {
+                    $('#TransformerAmmortizedLabel').text('Yes').addClass('text-success')
+                } else {
+                    $('#TransformerAmmortizedLabel').text('No').removeClass('text-success')
+                }
+            })
+
+            $('#save-btn').on('click', function() {
+                Swal.fire({
+                    title: 'Confirm Save?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    denyButtonText: `Cancel`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url : "{{ route('serviceConnections.save-material-summary-amount') }}",
+                            type : "GET",
+                            data : {
+                                MaterialCost : $('#MaterialCost').val(),
+                                LaborCost : $('#LaborCost').val(),
+                                ContingencyCost : $('#ContingencyCost').val(),
+                                MaterialsVAT : $('#MaterialsVAT').val(),
+                                TransformerCost : $('#TransformerCost').val(),
+                                TransformerVAT : $('#TransformerVAT').val(),
+                                BillOfMaterialsTotal : $('#GrandTotal').val(),
+                                IsAmmortized : $('#TransformerAmmortized').prop('checked') ? 'Yes' : 'No',
+                                ServiceConnectionId : "{{ $serviceConnection->id }}"
+                            },
+                            success : function(res) {
+                                Toast.fire({
+                                    icon : 'success',
+                                    text : 'Material Summary Saved!'
+                                })
+                                window.location.href = "{{ url('/serviceConnections') }}/{{ $serviceConnection->id }}"
+                            },
+                            error : function(err) {
+                                Swal.fire({
+                                    icon : 'error',
+                                    text : 'Error saving material summary!'
+                                })
+                            }
+                        })
+                    }
+                })
+            })
+        })
+
+        function getMaterialsVat() {
+            var materialCost = jQuery.isEmptyObject($('#MaterialCost').val()) ? 0 : parseFloat($('#MaterialCost').val())
+            var laborCost = jQuery.isEmptyObject($('#LaborCost').val()) ? 0 : parseFloat($('#LaborCost').val())
+            var contingencyCost = jQuery.isEmptyObject($('#ContingencyCost').val()) ? 0 : parseFloat($('#ContingencyCost').val())
+
+            var total = materialCost + laborCost + contingencyCost
+
+            return Math.round(((total * .12) + Number.EPSILON) * 100) / 100
+        }
+
+        function getMaterialsSubTotal() {
+            var materialCost = jQuery.isEmptyObject($('#MaterialCost').val()) ? 0 : parseFloat($('#MaterialCost').val())
+            var laborCost = jQuery.isEmptyObject($('#LaborCost').val()) ? 0 : parseFloat($('#LaborCost').val())
+            var contingencyCost = jQuery.isEmptyObject($('#ContingencyCost').val()) ? 0 : parseFloat($('#ContingencyCost').val())
+            var materialsVat = jQuery.isEmptyObject($('#MaterialsVAT').val()) ? 0 : parseFloat($('#MaterialsVAT').val())
+
+            var total = materialCost + laborCost + contingencyCost + materialsVat
+
+            return Math.round((total + Number.EPSILON) * 100) / 100
+        }
+
+        function getTransformerVat() {
+            var transformerCost = jQuery.isEmptyObject($('#TransformerCost').val()) ? 0 : parseFloat($('#TransformerCost').val())
+
+            return Math.round(((transformerCost * .12) + Number.EPSILON) * 100) / 100
+        }
+
+        function getTransformerSubTotal() {
+            var transformerCost = jQuery.isEmptyObject($('#TransformerCost').val()) ? 0 : parseFloat($('#TransformerCost').val())
+            var transformerVat = jQuery.isEmptyObject($('#TransformerVAT').val()) ? 0 : parseFloat($('#TransformerVAT').val())
+
+            var total = transformerCost + transformerVat
+
+            return Math.round((total + Number.EPSILON) * 100) / 100
+        }
+
+        function getGrandTotal() {
+            var materialsTotal = getMaterialsSubTotal()
+            var transformerTotal = getTransformerSubTotal()
+
+            var total = materialsTotal + transformerTotal
+
+            return Math.round((total + Number.EPSILON) * 100) / 100
+        }
+
+        function showTotals() {
+            $('#MaterialsVAT').val(getMaterialsVat())
+            $('#MaterialsSubTotal').val(getMaterialsSubTotal())
+            $('#TransformerVAT').val(getTransformerVat())
+            $('#TransformerSubTotal').val(getTransformerSubTotal())
+            $('#GrandTotal').val(getGrandTotal())
+        }
+    </script>
+@endpush

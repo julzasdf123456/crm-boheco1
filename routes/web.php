@@ -175,6 +175,15 @@ Route::get('/service_connections/approved-change-names', [ServiceConnectionsCont
 Route::get('/service_connections/change-account-name', [ServiceConnectionsController::class, 'changeAccountName'])->name('serviceConnections.change-account-name');
 Route::get('/service_connections/print-change-name/{id}', [ServiceConnectionsController::class, 'printChangeName'])->name('serviceConnections.print-change-name');
 Route::get('/service_connections/print-quotation-form-separate-installation-fee/{id}', [ServiceConnectionsController::class, 'printQuotationFormSeparateInstallationFee'])->name('serviceConnections.print-quotation-form-separate-installation-fee');
+Route::get('/service_connections/save-material-summary-amount', [ServiceConnectionsController::class, 'saveMaterialSummaryAmount'])->name('serviceConnections.save-material-summary-amount');
+Route::get('/service_connections/transformer-ammortizations', [ServiceConnectionsController::class, 'transformerAmmortizations'])->name('serviceConnections.transformer-ammortizations');
+Route::get('/service_connections/transformer-ammortizations-view/{id}', [ServiceConnectionsController::class, 'transformerAmmortizationsView'])->name('serviceConnections.transformer-ammortizations-view');
+Route::get('/service_connections/save-transformer-ammortization', [ServiceConnectionsController::class, 'saveTransformerAmmortization'])->name('serviceConnections.save-transformer-ammortization');
+Route::get('/service_connections/print-transformer-ammortization/{id}', [ServiceConnectionsController::class, 'printTransformerAmmortization'])->name('serviceConnections.print-transformer-ammortization');
+Route::get('/service_connections/forward-remittance', [ServiceConnectionsController::class, 'forwardRemittance'])->name('serviceConnections.forward-remittance');
+Route::get('/service_connections/forward-installation-fees', [ServiceConnectionsController::class, 'forwardInstallationFees'])->name('serviceConnections.forward-installation-fees');
+Route::get('/service_connections/forward-transformer-fees', [ServiceConnectionsController::class, 'forwardTransformerFees'])->name('serviceConnections.forward-transformer-fees');
+Route::get('/service_connections/forward-all-fees', [ServiceConnectionsController::class, 'forwardAllFees'])->name('serviceConnections.forward-all-fees');
 Route::resource('serviceConnections', App\Http\Controllers\ServiceConnectionsController::class);
 
 

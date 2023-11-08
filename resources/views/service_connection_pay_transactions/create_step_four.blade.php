@@ -108,7 +108,7 @@ $id = IDGenerator::generateID();
                             <tr id="{{ $item->id }}">
                                 <td>{{ $item->Material }}</td>
                                 <td>
-                                    <input type="number" onkeyup="computeLaborCharge('{{ $item->id }}')" step="any" class="form-control form-control-sm text-right" value="{{ $item->Qty != null ? $item->Qty : ($item->Material=='Service Entrance' | $item->Material=='Street Light' ? 0 : $item->Qty) }}" name="{{ $item->id }}Quantity" id="{{ $item->id }}Quantity">
+                                    <input type="number" onchange="computeLaborCharge('{{ $item->id }}')" onkeyup="computeLaborCharge('{{ $item->id }}')" step="any" class="form-control form-control-sm text-right" value="{{ $item->Qty != null ? $item->Qty : ($item->Material=='Service Entrance' | $item->Material=='Street Light' ? 0 : $item->Qty) }}" name="{{ $item->id }}Quantity" id="{{ $item->id }}Quantity">
                                 </td>
                                 <td style="width: 120px;">
                                     <input type="number" step="any" class="form-control form-control-sm text-right" id="{{ $item->id }}Charge" value="{{ $item->Rate }}" disabled>
@@ -507,6 +507,10 @@ $id = IDGenerator::generateID();
             })
 
             $('#DemandFactor').on('change', function(){
+                getOverAllTotal()
+            }) 
+
+            $('#DemandFactor').on('keyup', function(){
                 getOverAllTotal()
             }) 
 

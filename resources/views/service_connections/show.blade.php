@@ -10,13 +10,59 @@ use Illuminate\Support\Facades\Auth;
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-12">  
-                    <div class="progress" style="height: 5px;">
-                        <div class="progress-bar progress-bar-striped {{ ServiceConnections::getBgStatus($serviceConnections->Status) }}" role="progressbar" style="width: {{ ServiceConnections::getProgressStatus($serviceConnections->Status) }}%" aria-valuenow="{{ ServiceConnections::getProgressStatus($serviceConnections->Status) }}" aria-valuemin="0" aria-valuemax="10"></div>
-                    </div>                  
-                    <span class="badge {{ ServiceConnections::getBgStatus($serviceConnections->Status) }}"><strong>{{ $serviceConnections->Status }}</strong></span>
-                </div> 
+            <div>                            
+                @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Service Connection Assessor'])) 
+                    <a href="{{ route('serviceConnections.edit', [$serviceConnections->id]) }}" class="btn btn-tool text-warning" title="Edit service connection details">
+                        <i class="fas fa-pen"></i>
+                    </a>
+                    @if ($totalTransactions != null)
+                        @if ($totalTransactions->Notes == null && $serviceConnections->ORNumber == null) 
+                            <a href="{{ route('serviceConnectionPayTransactions.create-step-four', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Update service connection payment">
+                            <i class="fas fa-dollar-sign"></i></a>
+                        @else
+                            @if (Auth::user()->hasAnyRole(['Administrator'])) 
+                                <a href="{{ route('serviceConnectionPayTransactions.create-step-four', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Update service connection payment">
+                                <i class="fas fa-dollar-sign"></i></a>
+                            @endif
+                        @endif
+
+                        <a href="{{ route('serviceConnections.print-invoice', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Print Payment Slip">
+                            <i class="fas fa-comments-dollar"></i>
+                        </a>  
+
+                        {{-- INSTALLATION FEE - PLANNING --}}
+                        <button onclick="showBomModal()" class="btn btn-tool" style="color: #ff7b00;" title="Update Installation Fee (BoM Figure)"><i class="fas fa-coins"></i></button>
+                        @if ($serviceConnections->LoadCategory >= .25)
+                            <a href="{{ route('serviceConnections.print-quotation-form', [$serviceConnections->id]) }}" class="btn btn-tool" style="color: #ff7b00;" title="Print Quotation with Embedded Installation Fee">
+                                <i class="fas fa-file-contract"></i>
+                            </a> 
+
+                            <a href="{{ route('serviceConnections.print-quotation-form-separate-installation-fee', [$serviceConnections->id]) }}" class="btn btn-tool" style="color: #ff1e00;" title="Print Quotation with Separate Installation Fee">
+                                <i class="fas fa-file-contract"></i>
+                            </a>
+                        @endif
+                    @else
+                        <a href="{{ route('serviceConnectionPayTransactions.create-step-four', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Update service connection payment">
+                            <i class="fas fa-dollar-sign"></i></a>
+                    @endif
+
+                    @if ($serviceConnectionInspections != null)
+                    <a href="{{ route('serviceConnectionInspections.edit', [$serviceConnectionInspections->id]) }}" class="btn btn-tool text-primary" title="Update Verification/Inspection Details">
+                        <i class="fas fa-clipboard-check"></i>
+                    </a>
+                    @endif
+
+                    {{-- CHANGE NAME --}}
+                    @if ($serviceConnections->ConnectionApplicationType == 'Change Name')
+                        <a href="{{ route('serviceConnections.print-change-name', [$serviceConnections->id]) }}" class="btn btn-tool text-info" title="Print change name certificate">
+                            <i class="fas fa-file-invoice"></i>
+                        </a>  
+                    @endif
+                    <a class="btn btn-tool text-info" href="{{ route('serviceConnections.assess-checklists', [$serviceConnections->id]) }}" title="Update requirements"><i class="fas fa-check-circle"></i></a>
+                    <a href="{{ route('serviceConnections.move-to-trash', [$serviceConnections->id]) }}" class="btn btn-tool text-danger" title="Move to trash">
+                        <i class="fas fa-trash"></i>
+                    </a>  
+                @endif
             </div>
         </div>
     </section>
@@ -25,62 +71,17 @@ use Illuminate\Support\Facades\Auth;
         <div class="row">
             <div class="col-md-4 col-lg-4">
                 {{-- APPLICATON DETAILS --}}
-                <div class="card {{ is_numeric($serviceConnections->LoadCategory) && floatval($serviceConnections->LoadCategory) >= 15 ? 'card-danger' : 'card-primary' }} card-outline shadow-none">
-                    <div class="card-header border-0">
-                        <div class="card-tools">                            
-                            @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Service Connection Assessor'])) 
-                                <a href="{{ route('serviceConnections.edit', [$serviceConnections->id]) }}" class="btn btn-tool text-warning" title="Edit service connection details">
-                                    <i class="fas fa-pen"></i>
-                                </a>
-                                @if ($totalTransactions != null)
-                                    @if ($totalTransactions->Notes == null && $serviceConnections->ORNumber == null) 
-                                        <a href="{{ route('serviceConnectionPayTransactions.create-step-four', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Update service connection payment">
-                                        <i class="fas fa-dollar-sign"></i></a>
-                                    @else
-                                        @if (Auth::user()->hasAnyRole(['Administrator'])) 
-                                            <a href="{{ route('serviceConnectionPayTransactions.create-step-four', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Update service connection payment">
-                                            <i class="fas fa-dollar-sign"></i></a>
-                                        @endif
-                                    @endif
-
-                                    <a href="{{ route('serviceConnections.print-invoice', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Print Payment Slip">
-                                        <i class="fas fa-comments-dollar"></i>
-                                    </a>  
-
-                                    {{-- INSTALLATION FEE - PLANNING --}}
-                                    <button onclick="showBomModal()" class="btn btn-tool" style="color: #ff7b00;" title="Update Installation Fee (BoM Figure)"><i class="fas fa-coins"></i></button>
-                                    @if ($serviceConnections->LoadCategory >= .25)
-                                        <a href="{{ route('serviceConnections.print-quotation-form', [$serviceConnections->id]) }}" class="btn btn-tool" style="color: #ff7b00;" title="Print Quotation with Embedded Installation Fee">
-                                            <i class="fas fa-file-contract"></i>
-                                        </a> 
-
-                                        <a href="{{ route('serviceConnections.print-quotation-form-separate-installation-fee', [$serviceConnections->id]) }}" class="btn btn-tool" style="color: #ff1e00;" title="Print Quotation with Separate Installation Fee">
-                                            <i class="fas fa-file-contract"></i>
-                                        </a>
-                                    @endif
-                                @else
-                                    <a href="{{ route('serviceConnectionPayTransactions.create-step-four', [$serviceConnections->id]) }}" class="btn btn-tool text-success" title="Update service connection payment">
-                                        <i class="fas fa-dollar-sign"></i></a>
-                                @endif
-
-                                @if ($serviceConnectionInspections != null)
-                                <a href="{{ route('serviceConnectionInspections.edit', [$serviceConnectionInspections->id]) }}" class="btn btn-tool text-primary" title="Update Verification/Inspection Details">
-                                    <i class="fas fa-clipboard-check"></i>
-                                </a>
-                                @endif
-
-                                {{-- CHANGE NAME --}}
-                                @if ($serviceConnections->ConnectionApplicationType == 'Change Name')
-                                    <a href="{{ route('serviceConnections.print-change-name', [$serviceConnections->id]) }}" class="btn btn-tool text-info" title="Print change name certificate">
-                                        <i class="fas fa-file-invoice"></i>
-                                    </a>  
-                                @endif
-                                <a class="btn btn-tool text-info" href="{{ route('serviceConnections.assess-checklists', [$serviceConnections->id]) }}" title="Update requirements"><i class="fas fa-check-circle"></i></a>
-                                <a href="{{ route('serviceConnections.move-to-trash', [$serviceConnections->id]) }}" class="btn btn-tool text-danger" title="Move to trash">
-                                    <i class="fas fa-trash"></i>
-                                </a>  
-                            @endif
+                <div class="card shadow-none">
+                    <div class="card-header">
+                        <div class="row mb-2">
+                            <div class="col-sm-12">  
+                                <div class="progress" style="height: 5px;">
+                                    <div class="progress-bar progress-bar-striped {{ ServiceConnections::getBgStatus($serviceConnections->Status) }}" role="progressbar" style="width: {{ ServiceConnections::getProgressStatus($serviceConnections->Status) }}%" aria-valuenow="{{ ServiceConnections::getProgressStatus($serviceConnections->Status) }}" aria-valuemin="0" aria-valuemax="10"></div>
+                                </div>                  
+                                <span style="margin-top: 5px;" class="badge {{ ServiceConnections::getBgStatus($serviceConnections->Status) }}"><strong>{{ $serviceConnections->Status }}</strong></span>
+                            </div> 
                         </div>
+                        
                     </div>
                     <div class="card-body box-profile">
                         <div class="text-center">
@@ -95,47 +96,49 @@ use Illuminate\Support\Facades\Auth;
                             @endif
                         </p>
 
-                        <hr>
-
-                        <strong><i class="far fa-calendar mr-1"></i> Date of Application</strong>
-                        <p class="text-muted">{{ date('F d, Y', strtotime($serviceConnections->DateOfApplication)) }}</p>
-
-                        <hr>                        
-
-                        <strong><i class="fas fa-map-marker-alt mr-1"></i> Address</strong>
-                        <p class="text-muted">{{ ServiceConnections::getAddress($serviceConnections) }}</p>
-
-                        <hr>
-
-                        <strong><i class="fas fa-phone mr-1"></i> Contact Info</strong>
-                        <p class="text-muted">{{ ServiceConnections::getContactInfo($serviceConnections) }}</p>
-
-                        <hr>
-
-                        <strong><i class="fas fa-search-plus mr-1"></i> Account Count</strong>
-                        <p class="text-muted">{{ $serviceConnections->AccountCount }}</p>
-
-                        <hr>
-
-                        <strong><i class="fas fa-code-branch mr-1"></i> Account Type</strong>
-                        <p class="text-muted">{{ $serviceConnections->AccountType }}</p>
-
-                        <hr>
-
-                        <strong><i class="fas fa-code-branch mr-1"></i> Application Type</strong>
-                        <p class="text-muted">{{ $serviceConnections->ConnectionApplicationType }}</p>
-
-                        <hr>
-
-                        <strong><i class="fas fa-file-alt mr-1"></i> Notes</strong>
-                        <p class="text-muted">{{ $serviceConnections->Notes}}</p>
-
-                        <hr>
-
-                        <strong><i class="fas fa-warehouse mr-1"></i> Office Registered</strong>
-                        <p class="text-muted">{{ $serviceConnections->Office}}</p>
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td><strong><i class="far fa-calendar mr-1"></i> Date of Application</strong></td>
+                                    <td>{{ date('F d, Y', strtotime($serviceConnections->DateOfApplication)) }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><i class="fas fa-map-marker-alt mr-1"></i> Address</strong></td>
+                                    <td>{{ ServiceConnections::getAddress($serviceConnections) }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><i class="fas fa-phone mr-1"></i> Contact Info</strong></td>
+                                    <td>{{ ServiceConnections::getContactInfo($serviceConnections) }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><i class="fas fa-search-plus mr-1"></i> Account Count</strong></td>
+                                    <td>{{ $serviceConnections->AccountCount }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><i class="fas fa-code-branch mr-1"></i> Account Type</strong></td>
+                                    <td>{{ $serviceConnections->AccountType }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><i class="fas fa-info-circle mr-1"></i> Load (kVA)</strong></td>
+                                    <td>{{ $serviceConnections->LoadCategory }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><i class="fas fa-code-branch mr-1"></i> Application Type</strong></td>
+                                    <td>{{ $serviceConnections->ConnectionApplicationType }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><i class="fas fa-warehouse mr-1"></i> Office Registered</strong></td>
+                                    <td>{{ $serviceConnections->Office}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><i class="fas fa-file-alt mr-1"></i> Notes/Remarks</strong></td>
+                                    <td>{{ $serviceConnections->Notes}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
 
                         @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers'])) 
+                            <hr>
                             <button id="override" class="btn btn-danger btn-sm float-right" style="margin-left: 10px;">Override Status</button>
                             <select name="Status" id="Status" class="form-control form-control-sm float-right" style="width: 200px;">
                                 <option {{ $serviceConnections->Status=="Approved" ? 'selected' : '' }} value="Approved">Approved</option>
@@ -144,34 +147,85 @@ use Illuminate\Support\Facades\Auth;
                                 <option {{ $serviceConnections->Status=="Downloaded by Crew" ? 'selected' : '' }} value="Downloaded by Crew">Downloaded by Crew</option>
                                 <option {{ $serviceConnections->Status=="Energized" ? 'selected' : '' }} value="Energized">Energized</option>
                                 <option {{ $serviceConnections->Status=="For Inspection" ? 'selected' : '' }} value="For Inspection">For Inspection</option>
-                                <option {{ $serviceConnections->Status=="Forwarded To Planning" ? 'selected' : '' }} value="Forwarded To Planning">Forwarded To Planning</option>
+                                <option {{ $serviceConnections->Status=="Forwarded To Planning" ? 'selected' : '' }} value="Forwarded to Planning">Forwarded To Planning</option>
+                                <option {{ $serviceConnections->Status=="Forwarded to Accounting" ? 'selected' : '' }} value="Forwarded to Accounting">Forwarded to Accounting</option>
                             </select>
                         @endif
                         
                     </div>
-                    <div class="card-footer">
-                        @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Service Connection Assessor']))
-                            @if ($serviceConnections->MemberConsumerId != null)
-                                {{-- <a class="btn btn-success btn-xs" href="{{ route('memberConsumers.print-membership-application', [$serviceConnections->MemberConsumerId]) }}" title="Print Application Form">
-                                    <i class="fas fa-print"> </i> Membership Form
-                                </a> --}}
-                                {{-- <a href="{{ route('memberConsumers.print-certificate', [$serviceConnections->MemberConsumerId]) }}" class="btn btn-xs btn-warning" title="Print Certificate"><i class="fas fa-print"></i>
-                                    Certificate
-                                </a> --}}
-                            @endif 
-                            
-                            {{-- <a class="btn btn-primary btn-xs" href="{{ route('serviceConnections.print-service-connection-application', [$serviceConnections->id]) }}" title="Print Service Connection Application">
-                                <i class="fas fa-print"> </i> Application Form
-                            </a> --}}
-
-                            {{-- <a class="btn btn-danger btn-xs" href="{{ route('serviceConnections.print-service-connection-contract', [$serviceConnections->id]) }}" class="text-danger" title="Print Service Connection Contract">
-                                <i class="fas fa-print"> </i> Contract
-                            </a>                         --}}
-                        @endif
-                    </div>
                 </div> 
+
+                @if ($totalTransactions != null)
+                    {{-- PAYMENT FORWARDING --}}
+                    @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Power Load Personnel'])) 
+                        <div class="card shadow-none">
+                            <div class="card-header">
+                                <span class="card-title"><i class="fas fa-shield-alt ico-tab"></i>Cashier Queue Payment Forwarder</span>
+                            </div>
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover table-sm table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td>Remittance Fees</td>
+                                            <td class="text-right">{{ $totalTransactions != null ? (is_numeric($totalTransactions->Total) ? number_format($totalTransactions->Total, 2) : '0.00') : '0.00' }}</td>
+                                            <td class="text-right">
+                                                @if ($totalTransactions != null && $totalTransactions->RemittanceForwarded=='Yes')
+                                                    <span class="badge bg-success"><i class="fas fa-check-circle"></i> Forwarded</span>
+                                                @else
+                                                    <button id="forward-remittance" class="btn btn-xs btn-primary">Forward <i class="fas fa-arrow-right"></i></button>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @php
+                                            $materialsTotal = $totalTransactions != null ? ($totalTransactions->MaterialCost + $totalTransactions->LaborCost + $totalTransactions->ContingencyCost + $totalTransactions->MaterialsVAT) : 0;
+                                        @endphp
+                                        @if ($materialsTotal > 0)
+                                            <tr>
+                                                <td>Installation Fees</td>
+                                                @php
+                                                    $materialsTotal = $totalTransactions != null ? ($totalTransactions->MaterialCost + $totalTransactions->LaborCost + $totalTransactions->ContingencyCost + $totalTransactions->MaterialsVAT) : 0;
+                                                @endphp
+                                                <td class="text-right">{{ number_format($materialsTotal, 2) }}</td>
+                                                <td class="text-right">
+                                                    @if ($totalTransactions != null && $totalTransactions->InstallationForwarded=='Yes')
+                                                        <span class="badge bg-success"><i class="fas fa-check-circle"></i> Forwarded</span>
+                                                    @else
+                                                        <button id="forward-installation-fees" class="btn btn-xs btn-primary">Forward <i class="fas fa-arrow-right"></i></button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
+                                        
+                                        @if ($totalTransactions != null && $totalTransactions->TransformerCost > 0)
+                                            <tr>
+                                                <td>Transformer Fees</td>
+                                                <td class="text-right">{{ $totalTransactions != null ? (is_numeric($totalTransactions->TransformerCost) ? number_format($totalTransactions->TransformerCost, 2) : '0.00') : '0.00' }}</td>
+                                                <td class="text-right">
+                                                    @if ($totalTransactions != null && $totalTransactions->TransformerForwarded=='Yes')
+                                                        <span class="badge bg-success"><i class="fas fa-check-circle"></i> Forwarded</span>
+                                                    @else
+                                                        <button id="forward-transformer-fees" class="btn btn-xs btn-primary">Forward <i class="fas fa-arrow-right"></i></button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
+                                        
+                                    </tbody>
+                                </table>
+
+                                @if ($totalTransactions != null && ($totalTransactions->TransformerForwarded!='Yes' | $totalTransactions->InstallationForwarded!='Yes' | $totalTransactions->RemittanceForwarded!='Yes'))
+                                    <div class="divider"></div>
+                                    <button id="forward-all" class="btn btn-sm btn-primary float-right">Forward All to Cashier <i class="fas fa-arrow-right"></i></button>
+                                @endif
+                                
+                            </div>
+                        </div>
+                    @endif
+                @endif
+                
             </div>
 
+            {{-- TABS --}}
             <div class="col-md-8 col-lg-8">
                 <div class="card">
                     <div class="card-header p-2">
@@ -280,7 +334,137 @@ use Illuminate\Support\Facades\Auth;
                 })
             })
 
-            
+            $('#forward-remittance').on('click', function() {
+                Swal.fire({
+                    title: "Forward Remittance to Cashier?",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    denyButtonText: `No`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url : "{{ route('serviceConnections.forward-remittance') }}",
+                            type : "GET",
+                            data : {
+                                ServiceConnectionId : "{{ $serviceConnections->id }}",
+                            },
+                            success : function(res) {
+                                Toast.fire({
+                                    icon : 'success',
+                                    text : 'Remittance fees forwarded to cashier!'
+                                })
+                                location.reload()
+                            },
+                            error : function(err) {
+                                Swal.fire({
+                                    icon : 'error',
+                                    text : 'Error forwarding remittance!'
+                                })
+                                console.log(err)
+                            }
+                        })
+                    }
+                });
+            })
+
+            $('#forward-installation-fees').on('click', function() {
+                Swal.fire({
+                    title: "Forward Installation Fees to Cashier?",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    denyButtonText: `No`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url : "{{ route('serviceConnections.forward-installation-fees') }}",
+                            type : "GET",
+                            data : {
+                                ServiceConnectionId : "{{ $serviceConnections->id }}",
+                            },
+                            success : function(res) {
+                                Toast.fire({
+                                    icon : 'success',
+                                    text : 'Installation fees forwarded to cashier!'
+                                })
+                                location.reload()
+                            },
+                            error : function(err) {
+                                Swal.fire({
+                                    icon : 'error',
+                                    text : 'Error forwarding installation fees!'
+                                })
+                                console.log(err)
+                            }
+                        })
+                    }
+                });
+            })
+
+            $('#forward-transformer-fees').on('click', function() {
+                Swal.fire({
+                    title: "Forward Transformer Fees to Cashier?",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    denyButtonText: `No`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url : "{{ route('serviceConnections.forward-transformer-fees') }}",
+                            type : "GET",
+                            data : {
+                                ServiceConnectionId : "{{ $serviceConnections->id }}",
+                            },
+                            success : function(res) {
+                                Toast.fire({
+                                    icon : 'success',
+                                    text : 'Transformer fees forwarded to cashier!'
+                                })
+                                location.reload()
+                            },
+                            error : function(err) {
+                                Swal.fire({
+                                    icon : 'error',
+                                    text : 'Error forwarding transformer fees!'
+                                })
+                                console.log(err)
+                            }
+                        })
+                    }
+                });
+            })
+
+            $('#forward-all').on('click', function() {
+                Swal.fire({
+                    title: "Forward All Unforwarded Fees to Cashier for Payment?",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    denyButtonText: `No`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url : "{{ route('serviceConnections.forward-all-fees') }}",
+                            type : "GET",
+                            data : {
+                                ServiceConnectionId : "{{ $serviceConnections->id }}",
+                            },
+                            success : function(res) {
+                                Toast.fire({
+                                    icon : 'success',
+                                    text : 'All fees forwarded to cashier!'
+                                })
+                                location.reload()
+                            },
+                            error : function(err) {
+                                Swal.fire({
+                                    icon : 'error',
+                                    text : 'Error forwarding all fees!'
+                                })
+                                console.log(err)
+                            }
+                        })
+                    }
+                });
+            })
         });
 
         function showBomModal() {

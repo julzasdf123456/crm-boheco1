@@ -211,7 +211,7 @@ class ServiceConnectionChecklistsController extends AppBaseController
 
         // CREATE Timeframes
         $timeFrame = new ServiceConnectionTimeframes;
-        $timeFrame->id = IDGenerator::generateID();
+        $timeFrame->id = IDGenerator::generateID() . "1";
         $timeFrame->ServiceConnectionId = $id;
         $timeFrame->UserId = Auth::id();
         $timeFrame->Status = 'Requirements Updated';
@@ -226,7 +226,7 @@ class ServiceConnectionChecklistsController extends AppBaseController
 
             // CREATE Timeframes
             $timeFrame = new ServiceConnectionTimeframes;
-            $timeFrame->id = IDGenerator::generateID();
+            $timeFrame->id = IDGenerator::generateID() . "2";
             $timeFrame->ServiceConnectionId = $id;
             $timeFrame->UserId = Auth::id();
             $timeFrame->Status = 'Requirements Completed';
@@ -243,28 +243,42 @@ class ServiceConnectionChecklistsController extends AppBaseController
                 $serviceConnection->save();
                 return redirect(route('serviceConnections.change-name-payment', [$id]));
             } else {
-                if ($inspection != null) {
+                if (floatval($serviceConnection->LoadCategory) >= 15) {
+                    $serviceConnection->Status = 'Forwarded to Planning';
+                    $serviceConnection->save();
+
                     return redirect(route('serviceConnections.show', [$id]));
                 } else {
-                    return redirect(route('serviceConnectionInspections.create-step-two', [$id]));
-                } 
+                    if ($inspection != null) {
+                        return redirect(route('serviceConnections.show', [$id]));
+                    } else {
+                        return redirect(route('serviceConnectionInspections.create-step-two', [$id]));
+                    } 
+                }                
             }       
         } else {
-            // IF REQUIREMENTS AIN'T COMPLETE
-            
-            // CREATE Timeframes
-            $timeFrame = new ServiceConnectionTimeframes;
-            $timeFrame->id = IDGenerator::generateID();
-            $timeFrame->ServiceConnectionId = $id;
-            $timeFrame->UserId = Auth::id();
-            $timeFrame->Status = 'Incomplete Requirements';
-            $timeFrame->Notes = 'Only submitted ' . $reqSubmitted;
-            $timeFrame->save();
+            if (floatval($serviceConnection->LoadCategory) >= 15) {
+                $serviceConnection->Status = 'Forwarded to Planning';
+                $serviceConnection->save();
 
-            $serviceConnection->Status = 'Incomplete Requirements';
-            $serviceConnection->save();
+                return redirect(route('serviceConnections.show', [$id]));
+            } else { 
+                // IF REQUIREMENTS AIN'T COMPLETE
+                
+                // CREATE Timeframes
+                $timeFrame = new ServiceConnectionTimeframes;
+                $timeFrame->id = IDGenerator::generateID() . "3";
+                $timeFrame->ServiceConnectionId = $id;
+                $timeFrame->UserId = Auth::id();
+                $timeFrame->Status = 'Incomplete Requirements';
+                $timeFrame->Notes = 'Only submitted ' . $reqSubmitted;
+                $timeFrame->save();
 
-            return redirect(route('serviceConnections.show', [$id]));
+                $serviceConnection->Status = 'Incomplete Requirements';
+                $serviceConnection->save();
+
+                return redirect(route('serviceConnections.show', [$id]));
+            }
         }
     }
 

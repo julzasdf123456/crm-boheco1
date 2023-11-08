@@ -17,6 +17,7 @@ use App\Models\MemberConsumerChecklistsRep;
 use App\Models\TransactionDetails;
 use App\Models\TransactionIndex;
 use App\Models\ServiceConnections;
+use App\Models\CRMQueue;
 use App\Exports\DynamicExport;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -177,6 +178,27 @@ class MemberConsumersController extends AppBaseController
                 $input['ORDate'] = $input['DateApplied'];
                 $memberConsumers = $this->memberConsumersRepository->update($request->all(), $mco->Id);
 
+                $memberConsumers = DB::table('CRM_MemberConsumers')
+                            ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                            ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                            ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                            ->select('CRM_MemberConsumers.Id as ConsumerId',
+                                    'CRM_MemberConsumers.MembershipType as MembershipType', 
+                                    'CRM_MemberConsumers.FirstName as FirstName', 
+                                    'CRM_MemberConsumers.MiddleName as MiddleName', 
+                                    'CRM_MemberConsumers.LastName as LastName', 
+                                    'CRM_MemberConsumers.OrganizationName as OrganizationName', 
+                                    'CRM_MemberConsumers.Suffix as Suffix', 
+                                    'CRM_MemberConsumers.Sitio as Sitio', 
+                                    'CRM_MemberConsumerTypes.*',
+                                    'CRM_Towns.Town as Town',
+                                    'CRM_Barangays.Barangay as Barangay')
+                            ->where('CRM_MemberConsumers.Id', $mco->Id)
+                            ->first();
+
+                // SAVE TO CRM QUEUE
+                CRMQueue::saveMembershipFee($memberConsumers, floatval($input['MembershipFee']), floatval($input['PrimerFee']));
+
                 if ($input['CivilStatus'] == 'Married') {
                     return redirect(route('memberConsumerSpouses.create', [$mco->Id]));
                 } else {
@@ -190,6 +212,27 @@ class MemberConsumersController extends AppBaseController
                 $input['LastName'] = strtoupper($input['LastName']);
                 $input['ORDate'] = $input['DateApplied'];
                 $memberConsumers = $this->memberConsumersRepository->create($input);
+
+                $memberConsumers = DB::table('CRM_MemberConsumers')
+                            ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                            ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
+                            ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                            ->select('CRM_MemberConsumers.Id as ConsumerId',
+                                    'CRM_MemberConsumers.MembershipType as MembershipType', 
+                                    'CRM_MemberConsumers.FirstName as FirstName', 
+                                    'CRM_MemberConsumers.MiddleName as MiddleName', 
+                                    'CRM_MemberConsumers.LastName as LastName', 
+                                    'CRM_MemberConsumers.OrganizationName as OrganizationName', 
+                                    'CRM_MemberConsumers.Suffix as Suffix', 
+                                    'CRM_MemberConsumers.Sitio as Sitio', 
+                                    'CRM_MemberConsumerTypes.*',
+                                    'CRM_Towns.Town as Town',
+                                    'CRM_Barangays.Barangay as Barangay')
+                            ->where('CRM_MemberConsumers.Id', $input['Id'])
+                            ->first();
+
+                // SAVE TO CRM QUEUE
+                CRMQueue::saveMembershipFee($memberConsumers, floatval($input['MembershipFee']), floatval($input['PrimerFee']));
 
                 Flash::success('Member Consumers saved successfully.');
 
@@ -213,7 +256,7 @@ class MemberConsumersController extends AppBaseController
                 } else {
                     // return redirect(route('memberConsumers.assess-checklists', [$input['Id']]));
                     // return redirect(route('serviceConnections.create_new', [$memberConsumers->Id]));
-                    return redirect(route('memberConsumers.show', [$memberConsumers->Id]));
+                    return redirect(route('memberConsumers.show', [$memberConsumers->ConsumerId]));
                 }
             }
         } else {

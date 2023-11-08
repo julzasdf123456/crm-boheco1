@@ -204,7 +204,7 @@ class TicketsController extends AppBaseController
 
             // RECONNECTION FEE
             $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->id = IDGenerator::generateID() . "1";
             $queuDetails->ReferenceNo = $qId;
             $queuDetails->Particular = 'Reconnection Fee';
             $queuDetails->GLCode = '43040500000';
@@ -213,7 +213,7 @@ class TicketsController extends AppBaseController
 
             // METER SEAL FEE
             $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->id = IDGenerator::generateID() . "2";
             $queuDetails->ReferenceNo = $qId;
             $queuDetails->Particular = 'Meter Seal';
             $queuDetails->GLCode = '43040500000';
@@ -222,7 +222,7 @@ class TicketsController extends AppBaseController
 
             // EVAT
             $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->id = IDGenerator::generateID() . "3";
             $queuDetails->ReferenceNo = $qId;
             $queuDetails->Particular = 'EVAT';
             $queuDetails->GLCode = '22420414001';
@@ -258,7 +258,7 @@ class TicketsController extends AppBaseController
 
             // RECONNECTION FEE
             $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->id = IDGenerator::generateID() . "1";
             $queuDetails->ReferenceNo = $qId;
             $queuDetails->Particular = 'Reconnection Fee';
             $queuDetails->GLCode = '43040500000';
@@ -267,7 +267,7 @@ class TicketsController extends AppBaseController
 
             // EVAT
             $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->id = IDGenerator::generateID() . "2";
             $queuDetails->ReferenceNo = $qId;
             $queuDetails->Particular = 'EVAT';
             $queuDetails->GLCode = '22420414001';
@@ -290,7 +290,7 @@ class TicketsController extends AppBaseController
 
             // SERVICE FEE
             $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->id = IDGenerator::generateID() . "1";
             $queuDetails->ReferenceNo = $qId;
             $queuDetails->Particular = 'Service Fee';
             $queuDetails->GLCode = '43040500000';
@@ -299,7 +299,7 @@ class TicketsController extends AppBaseController
 
             // EVAT
             $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->id = IDGenerator::generateID() . "2";
             $queuDetails->ReferenceNo = $qId;
             $queuDetails->Particular = 'EVAT';
             $queuDetails->GLCode = '22420414001';
@@ -2679,7 +2679,7 @@ class TicketsController extends AppBaseController
 
             // RECONNECTION FEE
             $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->id = IDGenerator::generateID() . "1";
             $queuDetails->ReferenceNo = $qId;
             $queuDetails->Particular = 'Transfer Fee';
             $queuDetails->GLCode = '43040500000';
@@ -2688,7 +2688,7 @@ class TicketsController extends AppBaseController
 
             // EVAT
             $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID();
+            $queuDetails->id = IDGenerator::generateID() . "2";
             $queuDetails->ReferenceNo = $qId;
             $queuDetails->Particular = 'EVAT';
             $queuDetails->GLCode = '22420414001';

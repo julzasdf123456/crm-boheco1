@@ -99,7 +99,12 @@ class ServiceConnectionMtrTrnsfrmr extends Model
         'TransformerOwnership',
         'TransformerBrand',
         'TypeOfMetering',
-        'TransformerNumber'
+        'TransformerNumber',
+        'CoreLoss',
+        'Item1',
+        'Item2',
+        'Item3',
+        'Item4',
     ];
 
     /**
@@ -142,7 +147,12 @@ class ServiceConnectionMtrTrnsfrmr extends Model
         'TransformerOwnership' => 'string',
         'TransformerBrand' => 'string',
         'TypeOfMetering' => 'string',
-        'TransformerNumber' => 'string'
+        'TransformerNumber' => 'string',
+        'CoreLoss' => 'string',
+        'Item1' => 'string',
+        'Item2' => 'string',
+        'Item3' => 'string',
+        'Item4' => 'string',
     ];
 
     /**
@@ -187,7 +197,12 @@ class ServiceConnectionMtrTrnsfrmr extends Model
         'created_at' => 'nullable',
         'updated_at' => 'nullable',
         'TypeOfMetering' => 'nullable|string',
-        'TransformerNumber' => 'string|nullable'
+        'TransformerNumber' => 'string|nullable',
+        'CoreLoss' => 'nullable|string',
+        'Item1' => 'nullable|string',
+        'Item2' => 'nullable|string',
+        'Item3' => 'nullable|string',
+        'Item4' => 'nullable|string',
     ];
 
     

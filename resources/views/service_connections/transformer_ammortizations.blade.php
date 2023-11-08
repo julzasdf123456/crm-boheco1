@@ -10,12 +10,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h4 class="m-0">Bill of Materials Assigning</h4>
+                    <h4 class="m-0">Transformer Ammortization Applications</h4>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/">Bill of Materials Assigning</a></li>
+                        <li class="breadcrumb-item"><a href="/">Transformer Ammortization Applications</a></li>
                     </ol>
                 </div>
             </div>
@@ -26,7 +26,7 @@
         <div class="col-lg-12 col-md-12">
             <div class="card shadow-none">
                 <div class="card-header border-0">
-                  <h3 class="card-title">Applications for Quotation and BoM Assigning</h3>
+                  <h3 class="card-title">Applications for Transformer Ammortization</h3>
                   {{-- <div class="card-tools">
                     <a href="#" class="btn btn-tool btn-sm">
                       <i class="fas fa-download"></i>
@@ -68,7 +68,7 @@
                                             @else
                                                 <a href="{{ route('serviceConnections.largeload-predefined-materials', [$item->id, $item->Options]) }}" class="text-danger" title="Assign Structure and Bill of Materials"><i class="fas fa-edit"></i></a>
                                             @endif                                             --}}
-                                            <a class="btn btn-success btn-sm" href="{{ route('serviceConnections.quotation-summary', [$item->id]) }}">Proceed <i class="fas fa-arrow-right"></i></a>
+                                            <a class="btn btn-success btn-sm" href="{{ route('serviceConnections.transformer-ammortizations-view', [$item->id]) }}">Proceed <i class="fas fa-arrow-right"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach                                
