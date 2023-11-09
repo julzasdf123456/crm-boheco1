@@ -78,51 +78,51 @@ You can also check out our other paid products on [CodeCanyon](https://codecanyo
 - In UsersController.authenticate(), update the permissions
 
 ### Additional Roles
-- Finance
+- Finance (ok)
 
 ### Additional Permissions
-- sc transformer ammortization
+- sc transformer ammortization (ok)
 
 ### Additional Columns
 - `CRM_ServiceConnections` 
-    1. ExistingAccountNumber
+    1. ExistingAccountNumber  (ok)
 
 - `CRM_ServiceConnectionTotalPayments`
-    1.  MaterialCost
-    2.  LaborCost
-    3.  ContingencyCost
-    4.  MaterialsVAT
-    5.  TransformerCost
-    6.  TransformerVAT
-    7.  TransformerDownpaymentPercentage
-    8.  BillOfMaterialsTotal
-    9.  InstallationFeeCanBePaid
-    10.  InstallationFeeORNumber
-    11.  InstallationFeeORDate
-    12.  TransformerReceivablesTotal
-    13.  TransformerAmmortizationTerms
-    14.  TransformerAmmortizationStart
-    15.  TransformerORDate
-    16.  TransformerORNumber
-    17.  TransformerInterestPercentage
-    18.  WithholdingTwoPercent
-    19.  WithholdingFivePercent
-    20.  InstallationFeeDownPaymentPercentage
-    21.  InstallationFeeBalance
-    22.  InstallationFeeTerms
-    23.  InstallationFeeTermAmountPerMonth
-    24.  RemittanceForwarded
-    25.  InstallationForwarded
-    26.  TransformerForwarded
-    27.  TransformerTwoPercentWT
-    28.  TransformerFivePercentWT
+    1.  MaterialCost  (ok)
+    2.  LaborCost  (ok)
+    3.  ContingencyCost  (ok)
+    4.  MaterialsVAT  (ok)
+    5.  TransformerCost  (ok)
+    6.  TransformerVAT  (ok)
+    7.  TransformerDownpaymentPercentage  (ok)
+    8.  BillOfMaterialsTotal  (ok)
+    9.  InstallationFeeCanBePaid  (ok)
+    10.  InstallationFeeORNumber  (ok)
+    11.  InstallationFeeORDate  (ok)
+    12.  TransformerReceivablesTotal  (ok)
+    13.  TransformerAmmortizationTerms  (ok)
+    14.  TransformerAmmortizationStart  (ok)
+    15.  TransformerORDate  (ok)
+    16.  TransformerORNumber  (ok)
+    17.  TransformerInterestPercentage  (ok)
+    18.  WithholdingTwoPercent  (ok)
+    19.  WithholdingFivePercent  (ok)
+    20.  InstallationFeeDownPaymentPercentage  (ok)
+    21.  InstallationFeeBalance  (ok)
+    22.  InstallationFeeTerms  (ok)
+    23.  InstallationFeeTermAmountPerMonth  (ok)
+    24.  RemittanceForwarded  (ok)
+    25.  InstallationForwarded  (ok)
+    26.  TransformerForwarded  (ok)
+    27.  TransformerTwoPercentWT  (ok)
+    28.  TransformerFivePercentWT  (ok)
 
 - `CRM_ServiceConnectionMeterAndTransformer`
-    1.  CoreLoss
-    2.  Item1
-    3.  Item2
-    4.  Item3
-    5.  Item4
+    1.  CoreLoss (ok)
+    2.  Item1 (ok)
+    3.  Item2 (ok)
+    4.  Item3 (ok)
+    5.  Item4 (ok)
 
 ### New .env Config Variables
 - TRANSFORMER_INTEREST_PERCENTAGE (Decimal)

@@ -246,6 +246,24 @@
                 </div> 
             </div>
 
+            <!-- Transformerrating Field -->
+            <div class="form-group col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-5">
+                        {!! Form::label('CoreLoss', 'Coreloss') !!}
+                    </div>
+
+                    <div class="col-lg-9 col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
+                            </div>
+                            {!! Form::number('CoreLoss', null, ['class' => 'form-control', 'step' = 'any', 'placeholder' => 'Coreloss']) !!}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
             <!-- Transformerownership Field -->
             <div class="form-group col-sm-12">
                 <div class="row">
