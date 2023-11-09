@@ -251,7 +251,7 @@ class MiscellaneousApplicationsController extends AppBaseController
         $queue->id = $queueId;
         $queue->ConsumerName = $miscellaneousApplications->ConsumerName;
         $queue->ConsumerAddress = MiscellaneousApplications::getAddress($miscellaneousApplications);
-        $queue->TransactionPurpose = 'Service Connection Fees';
+        $queue->TransactionPurpose = 'Service Drop Wire Payment';
         $queue->SourceId = $miscellaneousApplications->id;
         $queue->SubTotal = floatval($input['ServiceDropLength']) * floatval($input['PricePerQuantity']);
         $queue->VAT = $input['VAT'];
