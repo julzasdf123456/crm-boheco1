@@ -258,7 +258,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
                             </div>
-                            {!! Form::number('CoreLoss', null, ['class' => 'form-control', 'step' = 'any', 'placeholder' => 'Coreloss']) !!}
+                            {!! Form::number('CoreLoss', null, ['class' => 'form-control', 'step' => 'any', 'placeholder' => 'Coreloss']) !!}
                         </div>
                     </div>
                 </div> 

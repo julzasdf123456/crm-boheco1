@@ -78,55 +78,13 @@ You can also check out our other paid products on [CodeCanyon](https://codecanyo
 - In UsersController.authenticate(), update the permissions
 
 ### Additional Roles
-- Finance (ok)
 
 ### Additional Permissions
-- sc transformer ammortization (ok)
+
+### Additional Tables
+1. CRM_MiscellaneousApplications
+2. CRM_MiscellaneousPayments
 
 ### Additional Columns
-- `CRM_ServiceConnections` 
-    1. ExistingAccountNumber  (ok)
-
-- `CRM_ServiceConnectionTotalPayments`
-    1.  MaterialCost  (ok)
-    2.  LaborCost  (ok)
-    3.  ContingencyCost  (ok)
-    4.  MaterialsVAT  (ok)
-    5.  TransformerCost  (ok)
-    6.  TransformerVAT  (ok)
-    7.  TransformerDownpaymentPercentage  (ok)
-    8.  BillOfMaterialsTotal  (ok)
-    9.  InstallationFeeCanBePaid  (ok)
-    10.  InstallationFeeORNumber  (ok)
-    11.  InstallationFeeORDate  (ok)
-    12.  TransformerReceivablesTotal  (ok)
-    13.  TransformerAmmortizationTerms  (ok)
-    14.  TransformerAmmortizationStart  (ok)
-    15.  TransformerORDate  (ok)
-    16.  TransformerORNumber  (ok)
-    17.  TransformerInterestPercentage  (ok)
-    18.  WithholdingTwoPercent  (ok)
-    19.  WithholdingFivePercent  (ok)
-    20.  InstallationFeeDownPaymentPercentage  (ok)
-    21.  InstallationFeeBalance  (ok)
-    22.  InstallationFeeTerms  (ok)
-    23.  InstallationFeeTermAmountPerMonth  (ok)
-    24.  RemittanceForwarded  (ok)
-    25.  InstallationForwarded  (ok)
-    26.  TransformerForwarded  (ok)
-    27.  TransformerTwoPercentWT  (ok)
-    28.  TransformerFivePercentWT  (ok)
-
-- `CRM_ServiceConnectionMeterAndTransformer`
-    1.  CoreLoss (ok)
-    2.  Item1 (ok)
-    3.  Item2 (ok)
-    4.  Item3 (ok)
-    5.  Item4 (ok)
 
 ### New .env Config Variables
-- TRANSFORMER_INTEREST_PERCENTAGE (Decimal)
-- TRANSFORMER_DP_PERCENTAGE (Decimal)
-- OSD_ACCOUNTANT
-- OSD_CHIEF
-- OSD_MANAGER

@@ -12,6 +12,7 @@ use App\Http\Controllers\TicketsController;
 use App\Http\Controllers\ServiceAccountsController;
 use App\Http\Controllers\DisconnectionDataController;
 use App\Http\Controllers\AdministrativeController;
+use App\Http\Controllers\MiscellaneousApplicationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -857,3 +858,11 @@ Route::resource('sites', App\Http\Controllers\SitesController::class)->middlewar
 
 
 Route::resource('additionalConsumptions', App\Http\Controllers\AdditionalConsumptionsController::class);
+
+
+Route::get('/miscellaneous_applications/service-drop-purchasing', [MiscellaneousApplicationsController::class, 'serviceDropPurchasing'])->name('miscellaneousApplications.service-drop-purchasing');
+Route::get('/miscellaneous_applications/create-service-drop-purchasing', [MiscellaneousApplicationsController::class, 'createServiceDropPurchasing'])->name('miscellaneousApplications.create-service-drop-purchasing');
+Route::resource('miscellaneousApplications', MiscellaneousApplicationsController::class);
+
+
+Route::resource('miscellaneousPayments', App\Http\Controllers\MiscellaneousPaymentsController::class);

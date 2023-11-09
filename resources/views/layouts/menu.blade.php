@@ -689,6 +689,43 @@ use Illuminate\Support\Facades\Auth;
     
 @endcanany
 
+{{-- MISCELLANEOUS APPLICATIONS --}}
+@canany(['Super Admin', 'sc view', 'ticket view'])
+    <li class="nav-item has-treeview {{ Auth::user()->hasAnyRole(['Service Connection Assessor']) ? 'menu-open' : '' }}">
+        <a href="#" class="nav-link">
+            <i class="fas fa-circle nav-icon"></i>
+            <p>
+                Miscellaneous Applications
+                <i class="fas fa-angle-left right"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview">
+            @canany(['Super Admin', 'sc view'])
+                <li class="nav-item">
+                    <a href="{{ route('miscellaneousApplications.service-drop-purchasing') }}"
+                       class="nav-link {{ Request::is('miscellaneousApplications.service-drop-purchasing*') ? 'active' : '' }}">
+                       <i class="fas fa-circle nav-icon"></i>
+                        <p>Purchase of Service Drop</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('miscellaneousApplications.index') }}"
+                       class="nav-link {{ Request::is('miscellaneousApplications*') ? 'active' : '' }}">
+                       <i class="fas fa-circle nav-icon"></i>
+                        <p>Transformer Testing</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('miscellaneousApplications.index') }}"
+                       class="nav-link {{ Request::is('miscellaneousApplications*') ? 'active' : '' }}">
+                       <i class="fas fa-circle nav-icon"></i>
+                        <p>Disco Application</p>
+                    </a>
+                </li>
+            @endcanany
+        </ul>
+    </li>
+@endcanany
 {{-- DAMAGE ASSESSMENT --}}
 {{-- @canany(['Super Admin', 'view damage monitor'])
     <li class="nav-item">
@@ -1416,5 +1453,8 @@ use Illuminate\Support\Facades\Auth;
         </a>
     </li>
 @endcan
+
+
+
 
 
