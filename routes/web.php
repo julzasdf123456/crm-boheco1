@@ -862,6 +862,8 @@ Route::resource('additionalConsumptions', App\Http\Controllers\AdditionalConsump
 
 Route::get('/miscellaneous_applications/service-drop-purchasing', [MiscellaneousApplicationsController::class, 'serviceDropPurchasing'])->name('miscellaneousApplications.service-drop-purchasing');
 Route::get('/miscellaneous_applications/create-service-drop-purchasing', [MiscellaneousApplicationsController::class, 'createServiceDropPurchasing'])->name('miscellaneousApplications.create-service-drop-purchasing');
+Route::post('/miscellaneous_applications/store-service-drop-purchase', [MiscellaneousApplicationsController::class, 'storeServiceDropPurchase'])->name('miscellaneousApplications.store-service-drop-purchase');
+Route::get('/miscellaneous_applications/service-drop-purchasing-view/{id}', [MiscellaneousApplicationsController::class, 'serviceDropPurchasingView'])->name('miscellaneousApplications.service-drop-purchasing-view');
 Route::resource('miscellaneousApplications', MiscellaneousApplicationsController::class);
 
 

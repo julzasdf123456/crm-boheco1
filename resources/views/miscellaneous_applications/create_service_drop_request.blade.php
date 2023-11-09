@@ -27,7 +27,8 @@
                 <span class="card-title"><i class="fas fa-info-circle ico-tab"></i>Form</span>
             </div>
             <div class="card-body">
-                <form class="row" method="POST">
+                <form class="row" method="POST" action="{{ route('miscellaneousApplications.store-service-drop-purchase') }}">
+                    @csrf
                     <input type="hidden" name="id" value="{{ IDGenerator::generateID() }}">
                     <input type="hidden" name="Application" value="Service Drop Purchase">
                     <input type="hidden" name="Status" value="Received">

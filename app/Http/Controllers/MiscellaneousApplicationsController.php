@@ -9,9 +9,11 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use App\Models\Towns;
 use App\Models\MiscellaneousPayments;
+use App\Models\MiscellaneousApplications;
 use App\Models\IDGenerator;
 use App\Models\CRMQueue;
 use App\Models\CRMDetails;
+use App\Models\TicketLogs;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Flash;
@@ -163,8 +165,45 @@ class MiscellaneousApplicationsController extends AppBaseController
     }
 
     public function serviceDropPurchasing(Request $request) {
-        return view('/miscellaneous_applications/service_drop_purchasing', [
+        $searchParams = $request['searchParams'];
 
+        if ($searchParams != null) {
+            $miscellaneousApplications = DB::table('CRM_MiscellaneousApplications')
+                ->leftJoin('CRM_Towns', 'CRM_MiscellaneousApplications.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_Barangays', 'CRM_MiscellaneousApplications.Barangay', '=', 'CRM_Barangays.id')
+                ->select('CRM_MiscellaneousApplications.id',
+                    'CRM_MiscellaneousApplications.ConsumerName',
+                    'CRM_MiscellaneousApplications.Sitio',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'CRM_MiscellaneousApplications.TotalAmount',
+                    'CRM_MiscellaneousApplications.created_at',
+                    'CRM_MiscellaneousApplications.ServiceDropLength',
+                    'CRM_MiscellaneousApplications.TotalAmount',
+                )
+                ->whereRaw("CRM_MiscellaneousApplications.ConsumerName LIKE '%" . $searchParams . "%'")
+                ->orderByDesc('CRM_MiscellaneousApplications.created_at')
+                ->paginate(25);
+        } else {
+            $miscellaneousApplications = DB::table('CRM_MiscellaneousApplications')
+                ->leftJoin('CRM_Towns', 'CRM_MiscellaneousApplications.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_Barangays', 'CRM_MiscellaneousApplications.Barangay', '=', 'CRM_Barangays.id')
+                ->select('CRM_MiscellaneousApplications.id',
+                    'CRM_MiscellaneousApplications.ConsumerName',
+                    'CRM_MiscellaneousApplications.Sitio',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'CRM_MiscellaneousApplications.TotalAmount',
+                    'CRM_MiscellaneousApplications.created_at',
+                    'CRM_MiscellaneousApplications.ServiceDropLength',
+                    'CRM_MiscellaneousApplications.TotalAmount',
+                )
+                ->orderByDesc('CRM_MiscellaneousApplications.created_at')
+                ->paginate(25);
+        }
+
+        return view('/miscellaneous_applications/service_drop_purchasing', [
+            'miscellaneousApplications' => $miscellaneousApplications,
         ]);
     }
 
@@ -181,8 +220,6 @@ class MiscellaneousApplicationsController extends AppBaseController
 
         $miscellaneousApplications = $this->miscellaneousApplicationsRepository->create($input);
 
-        $miscellaneousApplications = 
-
         // SAVE Miscellaneous Payments
         $miscPayments = new MiscellaneousPayments;
         $miscPayments->id = IDGenerator::generateIDandRandString();
@@ -195,16 +232,101 @@ class MiscellaneousApplicationsController extends AppBaseController
         $miscPayments->Amount = $input['TotalAmount'];
         $miscPayments->save();
 
+        $miscellaneousApplications = DB::table('CRM_MiscellaneousApplications')
+            ->leftJoin('CRM_Towns', 'CRM_MiscellaneousApplications.Town', '=', 'CRM_Towns.id')
+            ->leftJoin('CRM_Barangays', 'CRM_MiscellaneousApplications.Barangay', '=', 'CRM_Barangays.id')
+            ->select('CRM_MiscellaneousApplications.id',
+                'CRM_MiscellaneousApplications.ConsumerName',
+                'CRM_MiscellaneousApplications.Sitio',
+                'CRM_Towns.Town',
+                'CRM_Barangays.Barangay',
+                'CRM_MiscellaneousApplications.TotalAmount',
+            )
+            ->where('CRM_MiscellaneousApplications.id', $input['id'])
+            ->first();
+
         $queueId = $input['id'] . '-SDW';
         $queue = new CRMQueue;
         $queue->id = $queueId;
         $queue->ConsumerName = $miscellaneousApplications->ConsumerName;
-        $queue->ConsumerAddress = ServiceConnections::getAddress($serviceConnection);
+        $queue->ConsumerAddress = MiscellaneousApplications::getAddress($miscellaneousApplications);
         $queue->TransactionPurpose = 'Service Connection Fees';
-        $queue->SourceId = $scId;
-        $queue->SubTotal = $totalTransactions->SubTotal;
-        $queue->VAT = $totalTransactions->TotalVat;
-        $queue->Total = $totalTransactions->Total;
+        $queue->SourceId = $miscellaneousApplications->id;
+        $queue->SubTotal = floatval($input['ServiceDropLength']) * floatval($input['PricePerQuantity']);
+        $queue->VAT = $input['VAT'];
+        $queue->Total = $input['TotalAmount'];
         $queue->save();
+
+        /**
+         * CRM QUEUE DETAILS
+         */
+        $queuDetails = new CRMDetails;
+        $queuDetails->id = IDGenerator::generateID() . "1";
+        $queuDetails->ReferenceNo = $queueId;
+        $queuDetails->Particular = $miscPayments->Description . ' - ' . $input['ServiceDropLength'] . ' mtrs';
+        $queuDetails->GLCode = $miscPayments->GLCode;
+        $queuDetails->Total = $queue->SubTotal;
+        $queuDetails->save();
+
+        $queuDetails = new CRMDetails;
+        $queuDetails->id = IDGenerator::generateID() . "2";
+        $queuDetails->ReferenceNo = $queueId;
+        $queuDetails->Particular = 'EVAT';
+        $queuDetails->GLCode = '22420414001';
+        $queuDetails->Total = $queue->VAT;
+        $queuDetails->save();
+
+        // CREATE LOG
+        $ticketLog = new TicketLogs;
+        $ticketLog->id = IDGenerator::generateID() . '1';
+        $ticketLog->TicketId = $miscellaneousApplications->id;
+        $ticketLog->Log = "Received";
+        $ticketLog->UserId = Auth::id();
+        $ticketLog->save();
+
+        // CREATE LOG
+        $ticketLog = new TicketLogs;
+        $ticketLog->id = IDGenerator::generateID() . '2';
+        $ticketLog->TicketId = $miscellaneousApplications->id;
+        $ticketLog->Log = "SDW Request Forwarded to Cashier";
+        $ticketLog->UserId = Auth::id();
+        $ticketLog->save();
+
+        return redirect(route('miscellaneousApplications.service-drop-purchasing'));
+    }
+
+    public function serviceDropPurchasingView($id) {
+        $miscellaneousApplication = DB::table('CRM_MiscellaneousApplications')
+                ->leftJoin('CRM_Towns', 'CRM_MiscellaneousApplications.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_Barangays', 'CRM_MiscellaneousApplications.Barangay', '=', 'CRM_Barangays.id')
+                ->leftJoin('users', 'CRM_MiscellaneousApplications.UserId', '=', 'users.id')
+                ->select('CRM_MiscellaneousApplications.id',
+                    'CRM_MiscellaneousApplications.ConsumerName',
+                    'CRM_MiscellaneousApplications.Sitio',
+                    'CRM_Towns.Town',
+                    'CRM_Barangays.Barangay',
+                    'CRM_MiscellaneousApplications.Status',
+                    'CRM_MiscellaneousApplications.created_at',
+                    'CRM_MiscellaneousApplications.ServiceDropLength',
+                    'CRM_MiscellaneousApplications.TotalAmount',
+                    'users.name'
+                )
+                ->whereRaw("CRM_MiscellaneousApplications.id='" . $id . "'")
+                ->first();
+
+        $miscellaneousPayment = MiscellaneousPayments::where('MiscellaneousId', $id)->first();
+
+        $logs = DB::table('CRM_TicketLogs')
+            ->leftJoin('users', 'CRM_TicketLogs.UserId', '=', 'users.id')
+            ->where('TicketId', $id)
+            ->select('CRM_TicketLogs.*', 'users.name')
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('/miscellaneous_applications/service_drop_purchasing_view', [
+            'miscellaneousApplication' => $miscellaneousApplication,
+            'miscellaneousPayment' => $miscellaneousPayment,
+            'logs' => $logs,
+        ]);
     }
 }
