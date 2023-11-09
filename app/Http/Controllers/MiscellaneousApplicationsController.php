@@ -181,7 +181,7 @@ class MiscellaneousApplicationsController extends AppBaseController
                     'CRM_MiscellaneousApplications.ServiceDropLength',
                     'CRM_MiscellaneousApplications.TotalAmount',
                 )
-                ->whereRaw("CRM_MiscellaneousApplications.ConsumerName LIKE '%" . $searchParams . "%'")
+                ->whereRaw("CRM_MiscellaneousApplications.ConsumerName LIKE '%" . $searchParams . "%' AND Status NOT IN ('Trash')")
                 ->orderByDesc('CRM_MiscellaneousApplications.created_at')
                 ->paginate(25);
         } else {
@@ -198,6 +198,7 @@ class MiscellaneousApplicationsController extends AppBaseController
                     'CRM_MiscellaneousApplications.ServiceDropLength',
                     'CRM_MiscellaneousApplications.TotalAmount',
                 )
+                ->whereRaw("Status NOT IN ('Trash')")
                 ->orderByDesc('CRM_MiscellaneousApplications.created_at')
                 ->paginate(25);
         }
@@ -327,6 +328,18 @@ class MiscellaneousApplicationsController extends AppBaseController
             'miscellaneousApplication' => $miscellaneousApplication,
             'miscellaneousPayment' => $miscellaneousPayment,
             'logs' => $logs,
+        ]);
+    }
+
+    public function transformerTesting() {
+        return view('/miscellaneous_applications/transformer_testing', [
+
+        ]);
+    }
+
+    public function discoApplication() {
+        return view('/miscellaneous_applications/disco_application', [
+
         ]);
     }
 }

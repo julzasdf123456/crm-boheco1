@@ -709,15 +709,15 @@ use Illuminate\Support\Facades\Auth;
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('miscellaneousApplications.index') }}"
-                       class="nav-link {{ Request::is('miscellaneousApplications*') ? 'active' : '' }}">
+                    <a href="{{ route('miscellaneousApplications.transformer-testing') }}"
+                       class="nav-link {{ Request::is('miscellaneousApplications.transformer-testing*') ? 'active' : '' }}">
                        <i class="fas fa-circle nav-icon"></i>
                         <p>Transformer Testing</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('miscellaneousApplications.index') }}"
-                       class="nav-link {{ Request::is('miscellaneousApplications*') ? 'active' : '' }}">
+                    <a href="{{ route('miscellaneousApplications.disco-application') }}"
+                       class="nav-link {{ Request::is('miscellaneousApplications.disco-application*') ? 'active' : '' }}">
                        <i class="fas fa-circle nav-icon"></i>
                         <p>Disco Application</p>
                     </a>

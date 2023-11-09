@@ -864,6 +864,8 @@ Route::get('/miscellaneous_applications/service-drop-purchasing', [Miscellaneous
 Route::get('/miscellaneous_applications/create-service-drop-purchasing', [MiscellaneousApplicationsController::class, 'createServiceDropPurchasing'])->name('miscellaneousApplications.create-service-drop-purchasing');
 Route::post('/miscellaneous_applications/store-service-drop-purchase', [MiscellaneousApplicationsController::class, 'storeServiceDropPurchase'])->name('miscellaneousApplications.store-service-drop-purchase');
 Route::get('/miscellaneous_applications/service-drop-purchasing-view/{id}', [MiscellaneousApplicationsController::class, 'serviceDropPurchasingView'])->name('miscellaneousApplications.service-drop-purchasing-view');
+Route::get('/miscellaneous_applications/transformer-testing', [MiscellaneousApplicationsController::class, 'transformerTesting'])->name('miscellaneousApplications.transformer-testing');
+Route::get('/miscellaneous_applications/disco-application', [MiscellaneousApplicationsController::class, 'discoApplication'])->name('miscellaneousApplications.disco-application');
 Route::resource('miscellaneousApplications', MiscellaneousApplicationsController::class);
 
 
