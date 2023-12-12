@@ -781,6 +781,7 @@ Route::resource('accountMasters', App\Http\Controllers\AccountMasterController::
 Route::resource('barangayProxies', App\Http\Controllers\BarangayProxiesController::class);
 
 
+Route::get('/pre_reg_entries/print', [App\Http\Controllers\PreRegEntriesController::class, 'printAll'])->name('preRegEntries.print');
 Route::resource('preRegEntries', App\Http\Controllers\PreRegEntriesController::class);
 
 

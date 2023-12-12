@@ -175,4 +175,17 @@ class PreRegEntriesController extends AppBaseController
 
         return redirect(route('preRegEntries.index'));
     }
+
+    public function printAll() {
+        $data = DB::connection('sqlsrvagma')
+                        ->table('Entries')
+                        ->whereRaw("Year='2023'")
+                        ->select('*')
+                        ->orderBy('AccountNumber')
+                        ->get();
+
+        return view('/pre_reg_entries/print', [
+            'data' => $data,
+        ]);
+    }
 }

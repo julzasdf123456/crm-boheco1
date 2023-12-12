@@ -26,6 +26,7 @@
                         </div>
                         <div class="col-md-3">
                             {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
+                            <a href="{{ route('preRegEntries.print') }}" class="btn btn-warning">Print All</a>
                         </div>
                     </div>
                 {!! Form::close() !!}

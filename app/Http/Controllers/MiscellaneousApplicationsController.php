@@ -225,8 +225,8 @@ class MiscellaneousApplicationsController extends AppBaseController
         $miscPayments = new MiscellaneousPayments;
         $miscPayments->id = IDGenerator::generateIDandRandString();
         $miscPayments->MiscellaneousId = $miscellaneousApplications->id;
-        $miscPayments->GLCode = '27220905000';
-        $miscPayments->Description = 'Service Drop Wire';
+        $miscPayments->GLCode = '23220905000';
+        $miscPayments->Description = 'Cash - Service Drop Wire';
         $miscPayments->Unit = 'meters';
         $miscPayments->Quantity = $input['ServiceDropLength'];
         $miscPayments->PricePerQuantity = $input['PricePerQuantity'];
