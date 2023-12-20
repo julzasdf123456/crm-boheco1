@@ -383,6 +383,9 @@ class MemberConsumersController extends AppBaseController
             return redirect(route('memberConsumers.index'));
         }
 
+        // SAVE TO CRM QUEUE
+        CRMQueue::saveMembershipFee($memberConsumers, floatval($input['MembershipFee']), floatval($input['PrimerFee']));
+
         $memberConsumers = $this->memberConsumersRepository->update($request->all(), $id);
 
         Flash::success('Member Consumers updated successfully.');
