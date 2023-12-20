@@ -384,7 +384,7 @@ class MemberConsumersController extends AppBaseController
         }
 
         // SAVE TO CRM QUEUE
-        CRMQueue::saveMembershipFee($memberConsumers, floatval($input['MembershipFee']), floatval($input['PrimerFee']));
+        CRMQueue::saveMembershipFee($memberConsumers, floatval($request['MembershipFee']), floatval($request['PrimerFee']));
 
         $memberConsumers = $this->memberConsumersRepository->update($request->all(), $id);
 
