@@ -441,7 +441,7 @@
     </div> 
 </div>
 
-@if ($cond == 'new')
+@if ($cond == 'new' | Auth::user()->hasAnyRole(['Administrator']))
     <!-- MEMBERHSIP FEE Field -->
     <div class="form-group col-sm-12">
         <div class="divider"></div>
