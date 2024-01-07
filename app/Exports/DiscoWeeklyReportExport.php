@@ -16,7 +16,7 @@ use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 use App\Models\Towns;
 use App\Models\DisconnectionSchedules;
 
-class DiscoWeeklyReportExport implements ShouldAutoSize, WithColumnFormatting, WithEvents {
+class DiscoWeeklyReportExport implements ShouldAutoSize, WithColumnFormatting, WithEvents, WithStyles {
 
     private $data, $from, $to;
 
@@ -40,6 +40,17 @@ class DiscoWeeklyReportExport implements ShouldAutoSize, WithColumnFormatting, W
             'K' => NumberFormat::FORMAT_TEXT,
             'L' => NumberFormat::FORMAT_TEXT,
             'M' => NumberFormat::FORMAT_TEXT,
+        ];
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        return [
+            // Style the first row as bold text.
+            'A1:P8' => [
+                'font' => ['bold' => true],
+                'alignment' => ['horizontal' => 'center'],
+            ],
         ];
     }
 
@@ -112,7 +123,7 @@ class DiscoWeeklyReportExport implements ShouldAutoSize, WithColumnFormatting, W
                     $event->sheet->setCellValue('M' . $row, strtoupper(date('F d, Y', strtotime($value->Day))));
                     $event->sheet->setCellValue('N' . $row, intval($value->WithRemarks) + intval($value->Unfinished));
                     $event->sheet->setCellValue('O' . $row, $value->RemarksPoll);
-                    $event->sheet->setCellValue('P' . $row, $value->Unfinished);
+                    $event->sheet->setCellValue('P' . $row, $value->Unfinished . ' - Unfinished');
 
                     $row++;
                 }
