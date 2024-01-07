@@ -114,28 +114,28 @@
                                             <td style="border-top: 1px solid #333333;" class="text-right">Sub-Total</td>  
                                             <td style="border-top: 1px solid #333333;"></td>
                                             <td style="border-top: 1px solid #333333;"></td>
-                                            <td style="border-top: 1px solid #333333;" class="text-right">{{ number_format($totalTransactions->MaterialCost, 2) }}</td>  
+                                            <td style="border-top: 1px solid #333333;" class="text-right">{{ $totalTransactions!= null && $totalTransactions->MaterialCost != null ? number_format($totalTransactions->MaterialCost, 2) : 0 }}</td>  
                                         </tr>  
                                         <tr>
                                             <td></td>
                                             <td class="text-right">Labor Cost</td>  
                                             <td></td>
                                             <td></td>
-                                            <td class="text-right">{{ number_format($totalTransactions->LaborCost, 2) }}</td>  
+                                            <td class="text-right">{{ $totalTransactions!= null && $totalTransactions->LaborCost ? number_format($totalTransactions->LaborCost, 2) : 0 }}</td>  
                                         </tr>
                                         <tr>
                                             <td></td>
                                             <td class="text-right">Contengency, Engineering & Handling, Etc.</td>  
                                             <td></td>
                                             <td></td>
-                                            <td class="text-right">{{ number_format($totalTransactions->ContingencyCost, 2) }}</td> 
+                                            <td class="text-right">{{ $totalTransactions!= null && $totalTransactions->ContingencyCost ? number_format($totalTransactions->ContingencyCost, 2) : 0 }}</td> 
                                         </tr>  
                                         <tr>
                                             <td></td>
                                             <td class="text-right">EVAT (12%)</td>  
                                             <td></td>
                                             <td></td>
-                                            <td class="text-right">{{ number_format($totalTransactions->MaterialsVAT, 2) }}</td> 
+                                            <td class="text-right">{{ $totalTransactions!= null && $totalTransactions->MaterialsVAT ? number_format($totalTransactions->MaterialsVAT, 2) : 0 }}</td> 
                                         </tr>
                                         <tr>
                                             @php
@@ -152,21 +152,21 @@
                                             <td class="text-right">Transformer Cost</td>  
                                             <td></td>
                                             <td></td>
-                                            <td class="text-right">{{ number_format($totalTransactions->TransformerCost, 2) }}</td>  
+                                            <td class="text-right">{{ $totalTransactions!= null && $totalTransactions->TransformerCost ? number_format($totalTransactions->TransformerCost, 2) : 0 }}</td>  
                                         </tr>  
                                         <tr>
                                             <td></td>
                                             <td class="text-right">EVAT (12%)</td>  
                                             <td></td>
                                             <td></td>
-                                            <td class="text-right">{{ number_format($totalTransactions->TransformerVAT, 2) }}</td> 
+                                            <td class="text-right">{{ $totalTransactions!= null && $totalTransactions->TransformerVAT ? number_format($totalTransactions->TransformerVAT, 2) : 0 }}</td> 
                                         </tr> 
                                         <tr>
                                             <th></th>
                                             <th class="text-right">Overall Total</th>  
                                             <th></th>
                                             <th></th>
-                                            <th class="text-right">{{ number_format($totalTransactions->BillOfMaterialsTotal, 2) }}</th> 
+                                            <th class="text-right">{{ $totalTransactions!= null && $totalTransactions->BillOfMaterialsTotal ? number_format($totalTransactions->BillOfMaterialsTotal, 2) : 0 }}</th> 
                                         </tr>                       
                                     </tbody>
                                 </table>
