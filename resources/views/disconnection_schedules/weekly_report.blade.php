@@ -1,5 +1,6 @@
 @php
     use App\Models\DisconnectionSchedules;
+    use App\Models\Towns;
 @endphp
 
 @extends('layouts.app')
@@ -70,7 +71,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 140px;" class="text-center" rowspan="2"><strong>Date</strong></td>
-                                <td class="text-center" rowspan="2"><strong>Location</strong></td>
+                                <td  style="width: 140px;"class="text-center" rowspan="2"><strong>Location</strong></td>
                                 <td style="min-width: 80px; max-width: 190px;" class="text-center" rowspan="2"><strong>Blocks</strong></td>
                                 <td class="text-center" rowspan="2"><strong>No. of Accounts<br>for Disco</strong></td>
                                 <td class="text-center" colspan="2"><strong>No. Paid</strong></td>
@@ -93,7 +94,7 @@
                                 @endphp
                                 <tr>
                                     <td><strong>{{ date('M d, Y', strtotime($item->Day)) }}</strong></td>
-                                    <td></td>
+                                    <td>{{ Towns::parseTownCode(substr($item->Blocks, 0, 2)) }}</td>
                                     <td>{{ $item->Blocks }}</td>
                                     <td>{{ $item->Accounts }}</td>
                                     <td>{{ $item->BillsTotal }}</td>

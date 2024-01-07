@@ -65,5 +65,59 @@ class Towns extends Model
         'updated_at' => 'nullable'
     ];
 
-    
+    public static function parseTownCode($townCode) {
+        if($townCode === "02") {
+            return "CLARIN";
+        } elseif($townCode === "01") {
+            return "TUBIGON";
+        } elseif($townCode === "08") {
+            return "INABANGA";
+        } elseif($townCode === "03") {
+            return "SAGBAYAN";
+        } elseif($townCode === "07") {
+            return "LOON";
+        } elseif($townCode === "13") {
+            return "MARIBOJOC";
+        } elseif($townCode === "22") {
+            return "BALILIHAN";
+        } elseif($townCode === "04") {
+            return "CATIGBIAN";
+        } elseif($townCode === "05") {
+            return "SAN ISIDRO";
+        } elseif($townCode === "24") {
+            return "CORELLA";
+        } elseif($townCode === "18") {
+            return "CORTES";
+        } elseif($townCode === "25") {
+            return "SEVILLA";
+        } elseif($townCode === "21") {
+            return "SIKATUNA";
+        } elseif($townCode === "12") {
+            return "ANTEQUERA";
+        } elseif($townCode === "06") {
+            return "CALAPE";
+        } elseif($townCode === "23") {
+            return "ALBUR";
+        } elseif($townCode === "14") {
+            return "BACLAYON";
+        } elseif($townCode === "16") {
+            return "DAUIS";
+        } elseif($townCode === "17") {
+            return "PANGLAO";
+        } elseif($townCode === "20") {
+            return "DIMIAO";
+        } elseif($townCode === "26") {
+            return "LILA";
+        } elseif($townCode === "15") {
+            return "LOAY";
+        } elseif($townCode === "19") {
+            return "LOBOC";
+        } elseif($townCode === "10") {
+            return "BATUAN";
+        } elseif($townCode === "11") {
+            return "BILAR";
+        } elseif($townCode === "09") {
+            return "CARMEN";
+        }
+    }
 }
