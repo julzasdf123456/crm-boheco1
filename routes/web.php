@@ -826,6 +826,7 @@ Route::get("/disconnection_schedules/get-schedules-collection-calendar-data", [D
 Route::get("/disconnection_schedules/add-payment-notes", [DisconnectionSchedulesController::class, 'addPaymentNotes'])->name("disconnectionSchedules.add-payment-notes");
 Route::get("/disconnection_schedules/weekly-report", [DisconnectionSchedulesController::class, 'weeklyReport'])->name("disconnectionSchedules.weekly-report");
 Route::get("/disconnection_schedules/download-weekly-report/{from}/{to}", [DisconnectionSchedulesController::class, 'downloadWeeklyReport'])->name("disconnectionSchedules.download-weekly-report");
+Route::get("/disconnection_schedules/get-disco-data-from-status", [DisconnectionSchedulesController::class, 'getDiscoDataFromStatus'])->name("disconnectionSchedules.get-disco-data-from-status");
 Route::resource('disconnectionSchedules', DisconnectionSchedulesController::class);
 
 

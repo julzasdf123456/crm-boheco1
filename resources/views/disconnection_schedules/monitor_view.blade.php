@@ -29,10 +29,10 @@
                   <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Amount Collected</p>
                   <h2 class="text-primary text-center">{{ $totalCollection != null && is_numeric($totalCollection->PaidAmount) ? number_format($totalCollection->PaidAmount, 2) : '0' }}</h2>
 
-                  <div class="divider"></div>
+                  {{-- <div class="divider"></div>
 
-                  <p style="margin: 0; padding: 0;" class="text-muted text-center">Collection Count</p>
-                  <h2 class="text-primary text-center">{{ $totalCollection != null ? $totalCollection->PaidCount : '0' }}</h2>
+                  <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Accounts</p>
+                  <h2 class="text-primary text-center">{{ $totalCollection != null ? $totalCollection->PaidCount : '0' }}</h2> --}}
                </div>
 
                <div class="col-lg-10">
@@ -41,33 +41,20 @@
                         @foreach ($poll as $item)
                            @if ($item->Status != null)
                               <td class="text-center text-muted">{{ $item->Status }}</td>
-                           @endif                           
+                           @endif                  
                         @endforeach
+                        <td class="text-center text-muted"><strong>TOTAL ACCOUNTS</strong></td>     
                      </tr>
                      <tr>
                         @foreach ($poll as $item)
                            @if ($item->Status != null)
-                              <td class="text-center text-success"><h2>{{ $item->TotalCount }}</h2></td>
-                           @endif                           
+                              <td onclick="showModal(`{{ $item->Status }}`)" class="text-center text-success poll"><h2>{{ $item->TotalCount }}</h2></td>
+                           @endif        
                         @endforeach
+                        <td class="text-center text-primary"><h2><strong>{{ $totalAccounts->TotalCount }}</strong></h2></td>     
                      </tr>
                   </table>
                </div>
-{{-- 
-               <div class="col-lg-3">
-                  <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Disconnected</p>
-                  <h2 class="text-danger text-center">{{ $poll != null && is_numeric($poll->Disconnected) ? number_format($poll->Disconnected) : '0' }}</h2>
-               </div>
-
-               <div class="col-lg-3">
-                  <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Paid</p>
-                  <h2 class="text-success text-center">{{ $poll != null && is_numeric($poll->Paid) ? number_format($poll->Paid) : '0' }}</h2>
-               </div>
-
-               <div class="col-lg-3">
-                  <p style="margin: 0; padding: 0;" class="text-muted text-center">Uncollected</p>
-                  <h2 class="text-warning text-center">{{ $poll != null && is_numeric($poll->Promised) ? number_format($poll->Promised) : '0' }}</h2>
-               </div> --}}
             </div>
          </div>
       </div>
@@ -149,6 +136,8 @@
          </div>
       </div>
    </div>
+
+   @include('disconnection_schedules.modal_view_poll')
 </div>
 @endsection
 
@@ -185,6 +174,10 @@
                "autoWidth": true,
                "responsive": false,
             });
+
+            $('td.poll').hover(function() {
+               $(this).css('cursor', 'pointer')
+            })
         })
 
         /**
@@ -285,5 +278,26 @@
             })
         }
         
+        function showModal(status) {
+            $('#modal-disco-poll').modal('show')
+            $('#results-table tbody tr').remove()
+            $.ajax({
+               url : "{{ route('disconnectionSchedules.get-disco-data-from-status') }}",
+               type : 'GET',
+               data : {
+                  Status : status,
+                  ScheduleId : "{{ $disconnectionSchedules->id }}"
+               },
+               success : function(res) {
+                  $('#results-table tbody').append(res)
+               },
+               error : function(err) {
+                  Toast.fire({
+                     icon : 'error',
+                     text : 'Error fetching data'
+                  })
+               }
+            })
+        }
     </script>
 @endpush

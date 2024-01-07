@@ -702,19 +702,20 @@ class DisconnectionSchedulesController extends AppBaseController
             ->table('DisconnectionData')
             ->whereRaw("ScheduleId='" . $disconnectionSchedules->id . "'")
             ->select(
-                'Status',
-                DB::raw("COUNT(Status) AS TotalCount")
+                DB::raw("ISNULL(Status, 'Unfinished') AS Status"),
+                DB::raw("COUNT(DISTINCT AccountNumber) AS TotalCount")
             )
             ->groupBy('Status')
             ->orderBy('Status')
             ->get();
-
+        
         return view('/disconnection_schedules/monitor_view', [
             'disconnectionSchedules' => $disconnectionSchedules,
             'routes' => $routes,
             'data' => $data,
             'totalCollection' => $totalCollection,
-            'poll' => $poll
+            'poll' => $poll,
+            'totalAccounts' => DB::connection("sqlsrvbilling")->table('DisconnectionData')->where('ScheduleId', $disconnectionSchedules->id)->select(DB::raw("COUNT(DISTINCT ACcountNumber) AS TotalCount"))->first()
         ]);
     }
 
@@ -811,5 +812,58 @@ class DisconnectionSchedulesController extends AppBaseController
         $export = new DiscoWeeklyReportExport($data, $from, $to);
 
         return Excel::download($export, 'Disconnection-Weekly-Report.xlsx');
+    }
+
+    public function getDiscoDataFromStatus(Request $request) {
+        $status = $request['Status'];
+        $schedId = $request['ScheduleId'];
+
+        if ($status == 'Unfinished') {
+            $data = DB::connection("sqlsrvbilling")
+                ->table('DisconnectionData')
+                ->where('ScheduleId', $schedId)
+                ->whereNull('Status')
+                ->select(
+                    'AccountNumber',
+                    'ConsumerName',
+                    'ConsumerAddress',
+                    DB::raw("SUM(NetAmount) AS TotalAmountDue"),
+                    'Status'
+                )
+                ->groupBy('AccountNumber', 'ConsumerName', 'ConsumerAddress', 'Status')
+                ->orderBy('AccountNumber')
+                ->get();
+        } else {
+            $data = DB::connection("sqlsrvbilling")
+                ->table('DisconnectionData')
+                ->where('ScheduleId', $schedId)
+                ->where('Status', $status)
+                ->select(
+                    'AccountNumber',
+                    'ConsumerName',
+                    'ConsumerAddress',
+                    DB::raw("SUM(NetAmount) AS TotalAmountDue"),
+                    'Status'
+                )
+                ->groupBy('AccountNumber', 'ConsumerName', 'ConsumerAddress', 'Status')
+                ->orderBy('AccountNumber')
+                ->get();
+        }
+        
+        $output = "";
+        $i = 1;
+        foreach($data as $item) {
+            $output .= "<tr>
+                            <td>" . $i . "</td>
+                            <td>" . $item->AccountNumber . "</td>
+                            <td>" . $item->ConsumerName . "</td>
+                            <td>" . $item->ConsumerAddress . "</td>
+                            <td class='text-right'>" . (number_format($item->TotalAmountDue, 2)) . "</td>
+                            <td>" . $item->Status . "</td>
+                        </tr>";
+            $i++;
+        }
+
+        return response()->json($output, 200);
     }
 }

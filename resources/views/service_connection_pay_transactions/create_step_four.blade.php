@@ -796,7 +796,8 @@ $id = IDGenerator::generateID();
                                 parseFloat($('#AverageRate').val())                                
             }
 
-            return Math.floor(billDeposit / 100) * 100
+            // return Math.floor(billDeposit / 100) * 100
+            return billDeposit
         }
 
         // GET OVER ALL TOTAL

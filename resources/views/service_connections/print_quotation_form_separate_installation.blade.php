@@ -15,11 +15,11 @@
         margin: 0px !important;
         padding: 0px !important;
         font-family: sans-serif;
-        font-size: .9em;
+        font-size: 1.08em;
     }
 
     td, th {
-      font-size: .9em;
+      font-size: 1.05em;
     }
     
     table {
@@ -154,6 +154,8 @@
 			<div class="col-md-12">
 				<h4 class="no-line-spacing center-text"><strong>{{ strtoupper(env('APP_COMPANY')) }}</strong></h4>
 				<p class="no-line-spacing center-text">{{ env('APP_ADDRESS') }}</p>
+                
+                <span style="position: fixed; top: 10px; right: 10px;">{!! QrCode::size(56)->generate($serviceConnections->id) !!}</span>
 			</div>
 		</div>
 
