@@ -55,7 +55,7 @@
                         <div class="form-group col-lg-3">
                             <label for="">Action</label><br>
                             <button type="submit" class="btn btn-primary btn-sm" title="Show Results"><i class="fas fa-check-circle ico-tab-mini"></i>View</button>
-                            {{-- <button type="submit" class="btn btn-link text-success" title="Download in Excel File"><i class="fas fa-file-download"></i></button> --}}
+                            <button id="download" class="btn btn-sm btn-success" title="Download in Excel File"><i class="fas fa-file-download ico-tab-mini"></i>Download</button>
                         </div>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                                     <td>{{ Towns::parseTownCode(substr($item->Blocks, 0, 2)) }}</td>
                                     <td>{{ $item->Blocks }}</td>
                                     <td>{{ $item->Accounts }}</td>
-                                    <td>{{ $item->BillsTotal }}</td>
+                                    <td>{{ $item->BillsPaid }}</td>
                                     <td>{{ $item->BillsPaid }}</td>                                    
                                     <td>{{ $item->Disconnected }}</td>                                 
                                     <td>{{ $item->WithRemarks }}</td>                                 
@@ -118,7 +118,13 @@
 
 @push('page_scripts')
     <script>
-        
+        $(document).ready(function() {
+            $('#download').click(function(e) {
+                e.preventDefault();
+
+                window.location.href = "{{ url('/disconnection_schedules/download-weekly-report') }}/" + $('#From').val() + "/" + $('#To').val()
+            })
+        })
     </script>
 @endpush
 
