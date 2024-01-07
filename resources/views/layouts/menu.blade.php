@@ -1110,6 +1110,13 @@ use Illuminate\Support\Facades\Auth;
             <i class="fas fa-check nav-icon text-primary"></i><p>Monitor</p>
         </a>
     </li>
+
+    <li class="nav-item">
+        <a href="{{ route('disconnectionSchedules.weekly-report') }}"
+           class="nav-link {{ Request::is('disconnectionSchedules.weekly-report*') ? 'active' : '' }}">
+            <i class="fas fa-list nav-icon text-primary"></i><p>Weekly Report</p>
+        </a>
+    </li>
 @endcanany
 
 <!-- TELLERING MENU -->

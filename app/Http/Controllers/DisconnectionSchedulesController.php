@@ -757,4 +757,33 @@ class DisconnectionSchedulesController extends AppBaseController
 
         return response()->json('ok', 200);
     }
+
+    public function weeklyReport(Request $request) {
+        $from = $request['From'];
+        $to = $request['To'];
+
+        $data = DB::connection('sqlsrvbilling')
+            ->table('DisconnectionSchedules')
+            ->whereRaw("Day BETWEEN '" . $from . "' AND '" . $to . "'")
+            ->select(
+                'Day',
+                'DisconnectorName',
+                DB::raw("(SELECT SUBSTRING((SELECT ',' + Route AS 'data()' FROM DisconnectionRoutes WHERE ScheduleId=DisconnectionSchedules.id GROUP BY Route FOR XML PATH('')), 2 , 9999)) As Blocks"),
+                DB::raw("(SELECT COUNT(DISTINCT AccountNumber) FROM DisconnectionData WHERE ScheduleId=DisconnectionSchedules.id) AS Accounts"),
+                DB::raw("(SELECT COUNT(AccountNumber) FROM DisconnectionData WHERE ScheduleId=DisconnectionSchedules.id) AS BillsTotal"),
+                DB::raw("(SELECT COUNT(AccountNumber) FROM DisconnectionData WHERE ScheduleId=DisconnectionSchedules.id AND (PaidAmount IS NOT NULL AND PaidAmount > 0)) AS BillsPaid"),
+                DB::raw("(SELECT COUNT(DISTINCT AccountNumber) FROM DisconnectionData WHERE ScheduleId=DisconnectionSchedules.id AND Status='Disconnected') AS Disconnected"),
+                DB::raw("(SELECT COUNT(DISTINCT AccountNumber) FROM DisconnectionData WHERE ScheduleId=DisconnectionSchedules.id AND Notes IS NOT NULL) AS WithRemarks"),
+                DB::raw("(SELECT COUNT(DISTINCT AccountNumber) FROM DisconnectionData WHERE ScheduleId=DisconnectionSchedules.id AND Status IS NULL) AS Unfinished"),
+                DB::raw("(SELECT COUNT(DISTINCT AccountNumber) FROM DisconnectionData WHERE ScheduleId=DisconnectionSchedules.id AND Status IS NOT NULL) AS Finished"),
+                DB::raw("(SELECT SUBSTRING((SELECT ';' + TRY_CAST(COUNT(AccountNumber) AS VARCHAR(30)) + ' - ' + Status AS 'data()' FROM DisconnectionData WHERE Status NOT IN ('Paid', 'Disconnected') AND ScheduleId=DisconnectionSchedules.id GROUP BY Status FOR XML PATH('')), 2 , 9999)) As RemarksPoll"),
+            )
+            ->orderBy('Day')
+            ->orderBy('Blocks')
+            ->get();
+
+        return view('/disconnection_schedules/weekly_report', [
+            'data' => $data,
+        ]);
+    }
 }
