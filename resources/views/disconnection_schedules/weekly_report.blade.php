@@ -69,16 +69,17 @@
                     <table class="table table-hover table-sm table-bordered">
                         <thead>
                             <tr>
-                                <td class="text-center" rowspan="2"><strong>Date</strong></td>
+                                <td style="width: 140px;" class="text-center" rowspan="2"><strong>Date</strong></td>
                                 <td class="text-center" rowspan="2"><strong>Location</strong></td>
-                                <td class="text-center" rowspan="2"><strong>Blocks</strong></td>
+                                <td style="min-width: 80px; max-width: 190px;" class="text-center" rowspan="2"><strong>Blocks</strong></td>
                                 <td class="text-center" rowspan="2"><strong>No. of Accounts<br>for Disco</strong></td>
                                 <td class="text-center" colspan="2"><strong>No. Paid</strong></td>
                                 <td class="text-center" rowspan="2"><strong>No. of<br>Disconnected</strong></td>
                                 <td class="text-center" rowspan="2"><strong>Accts. w/ Remarks</strong></td>
                                 <td class="text-center" rowspan="2"><strong>Unfinished</strong></td>
-                                <td class="text-center" rowspan="2"><strong>% Accomplished</strong></td>
-                                <td class="text-center" rowspan="2"><strong>Crew</strong></td>
+                                <td style="width: 100px;" class="text-center" rowspan="2"><strong>% Accomplished</strong></td>
+                                <td style="width: 170px;" class="text-center" rowspan="2"><strong>Crew</strong></td>
+                                <td class="text-center" rowspan="2"><strong>Remarks Poll</strong></td>
                             </tr>
                             <tr>
                                 <td class="text-center"><strong>Bills</strong></td>
@@ -87,6 +88,9 @@
                         </thead>
                         <tbody>
                             @foreach ($data as $item)
+                                @php
+                                    $percent = DisconnectionSchedules::getPercent($item->Finished, $item->Accounts);
+                                @endphp
                                 <tr>
                                     <td><strong>{{ date('M d, Y', strtotime($item->Day)) }}</strong></td>
                                     <td></td>
@@ -97,8 +101,9 @@
                                     <td>{{ $item->Disconnected }}</td>                                 
                                     <td>{{ $item->WithRemarks }}</td>                                 
                                     <td>{{ $item->Unfinished }}</td>                               
-                                    <td>{{ DisconnectionSchedules::getPercent($item->Finished, $item->Accounts) }}</td>                               
-                                    <td>{{ $item->DisconnectorName }}</td>  
+                                    <td class="{{ $percent > 0 ? 'text-success' : 'text-muted' }}"><strong>{{ $percent }} %</strong></td>                               
+                                    <td>{{ strtoupper($item->DisconnectorName) }}</td>                       
+                                    <td>{{ $item->RemarksPoll }}</td>  
                                 </tr>
                             @endforeach
                         </tbody>

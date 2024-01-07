@@ -115,13 +115,13 @@ class DisconnectionSchedules extends Model
 
     public static function getPercent($dividend, $divisor) {
         if ($dividend == 0) {
-            return '0 %';
+            return 0;
         } else {
             if ($divisor == 0) {
-                return '0 %';
+                return 0;
             } else {
                 $quotient = $dividend / $divisor;
-                return round($quotient * 100, 2) . ' %';
+                return round($quotient * 100, 2);
             }
         }
     }
