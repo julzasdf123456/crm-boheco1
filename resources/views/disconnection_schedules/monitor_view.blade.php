@@ -29,10 +29,13 @@
                   <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Amount Collected</p>
                   <h2 class="text-primary text-center">{{ $totalCollection != null && is_numeric($totalCollection->PaidAmount) ? number_format($totalCollection->PaidAmount, 2) : '0' }}</h2>
 
-                  {{-- <div class="divider"></div>
+                  <div class="divider"></div>
 
-                  <p style="margin: 0; padding: 0;" class="text-muted text-center">Total Accounts</p>
-                  <h2 class="text-primary text-center">{{ $totalCollection != null ? $totalCollection->PaidCount : '0' }}</h2> --}}
+                  <ul>
+                     @foreach ($routes as $item)
+                        <li><strong>Block {{ $item->Route }}</strong><span class="text-muted"> ({{ $item->SequenceFrom }} - {{ $item->SequenceTo }})</span></li>
+                     @endforeach
+                  </ul>
                </div>
 
                <div class="col-lg-10">
