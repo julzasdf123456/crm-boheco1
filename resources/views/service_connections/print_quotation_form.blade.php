@@ -228,12 +228,72 @@
                @endphp
             @endforeach
 
+            {{-- INSTALLATION FEE --}}
+            @php
+                $materials = $totalTransactions != null ? ($totalTransactions->MaterialCost + $totalTransactions->LaborCost + $totalTransactions->ContingencyCost) : 0;
+                $materialsVat = $totalTransactions != null ? ($totalTransactions->MaterialsVAT) : 0;
+                $materialsTotal = $totalTransactions != null ? ($totalTransactions->MaterialCost + $totalTransactions->LaborCost + $totalTransactions->ContingencyCost + $totalTransactions->MaterialsVAT) : 0;
+                $instBalanceTotal = 0;
+            @endphp
+            {{-- IF HAS INSTALLATION FEE PARTIAL/DOWNPAYMENT --}}
+            @if ($totalTransactions != null && $totalTransactions->InstallationPartial != null && $totalTransactions->InstallationPartial > 0) 
+                <tr>
+                    <td class="border-side center-text">{{ ServiceConnections::numberToRomanRepresentation($i) }}</td>
+                    <td class="border-side">INSTALLATION FEE</td>
+                    <td class="border-side right-text">{{ 0 }}</td>
+                    <td class="border-side right-text">{{ 0 }}</td>
+                    <td class="border-side right-text">{{ 0 }}</td>
+                </tr>
+                <tr>
+                    <td class="border-side center-text">{{ ServiceConnections::numberToRomanRepresentation($i+1) }}</td>
+                    <td class="border-side">INST. FEE DOWNPAYMENT (+ TOTAL VAT)</td>
+                    <td class="border-side right-text">{{ number_format($totalTransactions->InstallationPartial - $totalTransactions->MaterialsVAT, 2) }}</td>
+                    <td class="border-side right-text">{{ number_format($totalTransactions->MaterialsVAT, 2) }}</td>
+                    <td class="border-side right-text">{{ number_format($totalTransactions->InstallationPartial, 2) }}</td>
+                </tr>
+                <tr>
+                    <td class="border-side center-text">{{ ServiceConnections::numberToRomanRepresentation($i+2) }}</td>
+                    <td class="border-side">INST. FEE BALANCE ({{ $totalTransactions->InstallationFeeTerms }} MO. RECEIVABLE)</td>
+                    <td class="border-side right-text">{{ number_format($totalTransactions->InstallationFeeTermAmountPerMonth, 2) }} x{{ $totalTransactions->InstallationFeeTerms }}</td>
+                    <td class="border-side right-text">0</td>
+                    <td class="border-side right-text">{{ number_format($totalTransactions->InstallationFeeBalance, 2) }}</td>
+                </tr>
+
+                @php
+                    $instBalanceTotal = floatval($totalTransactions->InstallationFeeBalance);
+                    $i = $i+2;
+                @endphp
+            @else
+                <tr>
+                    <td class="border-side center-text">{{ ServiceConnections::numberToRomanRepresentation($i) }}</td>
+                    <td class="border-side">INSTALLATION FEE</td>
+                    <td class="border-side right-text">{{ number_format($materials, 2) }}</td>
+                    <td class="border-side right-text">{{ number_format($materialsVat, 2) }}</td>
+                    <td class="border-side right-text">{{ number_format($materialsTotal, 2) }}</td>
+                </tr>
+            @endif
+
+            {{-- TRANSFOrmer --}}
+            @php
+                $transformerTotal = $totalTransactions != null ? ($totalTransactions->TransformerCost + $totalTransactions->TransformerVAT) : 0;
+                $transformerVat = $totalTransactions != null ? ($totalTransactions->TransformerVAT) : 0;
+                $transformer = $totalTransactions != null ? ($totalTransactions->TransformerCost) : 0;
+                $i = $i+1;
+            @endphp
+            <tr>
+                <td class="border-side center-text">{{ ServiceConnections::numberToRomanRepresentation($i) }}</td>
+                <td class="border-side">TRANSFORMER</td>
+                <td class="border-side right-text">{{ number_format($totalTransactions->TransformerCost, 2) }}</td>
+                <td class="border-side right-text">{{ number_format($totalTransactions->TransformerVAT, 2) }}</td>
+                <td class="border-side right-text">{{ number_format($transformerTotal, 2) }}</td>
+            </tr>
+
             <tr>
                <th class="border"></th>
                <th class="border center-text">TOTAL</th>
-               <th class="border right-text">{{ number_format($others + $remittance + $deposit, 2) }}</th>
-               <th class="border right-text">{{ number_format($othersVat + $vat + $depositVat, 2) }}</th>
-               <th class="border right-text">{{ number_format($othersTotal + $remittanceTotal + $depositTotal, 2) }}</th>
+               <th class="border right-text">{{ number_format(($others + $remittance + $deposit + $transformer + $materials) - $instBalanceTotal, 2) }}</th>
+               <th class="border right-text">{{ number_format($othersVat + $vat + $depositVat + $transformerVat + $materialsVat, 2) }}</th>
+               <th class="border right-text">{{ number_format(($othersTotal + $remittanceTotal + $depositTotal + $transformerTotal + $materialsTotal) - $instBalanceTotal, 2) }}</th>
             </tr>
          </table>
       </div>

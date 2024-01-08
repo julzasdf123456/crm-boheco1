@@ -38,6 +38,8 @@
                      </td>
                   </tr>
                   @php
+                     $materials = $totalTransactions != null ? ($totalTransactions->MaterialCost + $totalTransactions->LaborCost + $totalTransactions->ContingencyCost) : 0;
+                     $materialsVat = $totalTransactions != null ? ($totalTransactions->MaterialsVAT) : 0;
                      $materialsTotal = $totalTransactions != null ? ($totalTransactions->MaterialCost + $totalTransactions->LaborCost + $totalTransactions->ContingencyCost + $totalTransactions->MaterialsVAT) : 0;
                   @endphp
                   <tr>
@@ -229,11 +231,13 @@
 
       function computePromisory() {
          var percentage = parseFloat($('#DownPaymentPercentage').val())
-         var materialsTotal = "{{ $materialsTotal }}"
-         materialsTotal = parseFloat(materialsTotal)
+         var materials = "{{ $materials }}"
+         var vat = "{{ $materialsVat }}"
+         materials = parseFloat(materials)
+         vat = parseFloat(vat)
 
-         var dpAmount = percentage * materialsTotal
-         var balance = materialsTotal - dpAmount
+         var dpAmount = (percentage * materials) + vat
+         var balance = materials - (percentage * materials)
          var terms = jQuery.isEmptyObject($('#Terms').val()) ? 1 : parseInt($('#Terms').val())
          var termAmount = balance / terms
 
