@@ -390,9 +390,26 @@
                 @endphp
             @endif
 
+            {{-- WITHOLDING 1% TOTAL --}}
+            @php
+                $wtOnePercent = $totalTransactions != null ? ($totalTransactions->WithholdingTwoPercent + $totalTransactions->TransformerTwoPercentWT) : 0;
+            @endphp
+            @if ($wtOnePercent != null && $wtOnePercent != 0)
+                <tr>
+                    <td class="border-side center-text">{{ ServiceConnections::numberToRomanRepresentation($i+1) }}</td>
+                    <td class="border-side">1% (MATERIALS & TRANSFORMER)</td>
+                    <td class="border-side right-text">{{ 0 }}</td>
+                    <td class="border-side right-text">{{ 0 }}</td>
+                    <td class="border-side right-text">- {{ number_format($wtOnePercent, 2) }}</td>
+                </tr>
+                @php
+                    $i = $i+1;
+                @endphp
+            @endif
+
             {{-- WITHOLDING 2% TOTAL --}}
             @php
-                $wtTwoPercent = $totalTransactions != null ? ($totalTransactions->From2307TwoPercent + $totalTransactions->WithholdingTwoPercent + $totalTransactions->TransformerTwoPercentWT) : 0;
+                $wtTwoPercent = $totalTransactions != null ? ($totalTransactions->From2307TwoPercent + $totalTransactions->Item1) : 0;
                 $wtFivePercent = $totalTransactions != null ? ($totalTransactions->From2307FivePercent + $totalTransactions->WithholdingFivePercent + $totalTransactions->TransformerFivePercentWT) : 0;
             @endphp
             @if ($wtTwoPercent != null && $wtTwoPercent != 0)
@@ -426,7 +443,7 @@
                <th class="border center-text">TOTAL</th>
                <th class="border right-text">{{ number_format($others + $remittance + $deposit + $transformer, 2) }}</th>
                <th class="border right-text">{{ number_format($othersVat + $vat + $depositVat + $transformerVat, 2) }}</th>
-               <th class="border right-text">{{ number_format(($othersTotal + $remittanceTotal + $depositTotal + $transformerTotal) - ($wtTwoPercent + $wtFivePercent), 2) }}</th>
+               <th class="border right-text">{{ number_format(($othersTotal + $remittanceTotal + $depositTotal + $transformerTotal) - ($wtTwoPercent + $wtFivePercent + $wtOnePercent), 2) }}</th>
             </tr>
          </table>
       </div>

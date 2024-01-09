@@ -557,6 +557,7 @@ class ServiceConnectionPayTransactionController extends AppBaseController
         $installationPartial = $request['InstallationPartial'];  
         $installationFeeBalance = $request['InstallationFeeBalance'];  
         $installationFeeTerms = $request['InstallationFeeTerms'];  
+        $item1 = $request['Item1'];  
         $installationFeeTermAmountPerMonth = $request['InstallationFeeTermAmountPerMonth'];  
         $transformerTwoPercentWT = $request['TransformerTwoPercentWT'];
         $transformerFivePercentWT = $request['TransformerFivePercentWT'];
@@ -586,98 +587,9 @@ class ServiceConnectionPayTransactionController extends AppBaseController
             $totalTransactions->InstallationFeeTermAmountPerMonth = $installationFeeTermAmountPerMonth;
             $totalTransactions->TransformerTwoPercentWT = $transformerTwoPercentWT;
             $totalTransactions->TransformerFivePercentWT = $transformerFivePercentWT;
+            $totalTransactions->Item1 = $item1;
             $totalTransactions->save();
         }
-
-        // $id = $scId . "-I";
-
-        // // DELETE FIRST
-        // $queueDetails = CRMDetails::where('GLCode', '23100000000')->where('ReferenceNo', $id)->first();
-        // if ($queueDetails != null) {
-        //     $queueDetails->delete();
-        // }
-
-        // $queueDetails = CRMDetails::where('GLCode', '43040500000')->where('ReferenceNo', $id)->first();
-        // if ($queueDetails != null) {
-        //     $queueDetails->delete();
-        // }
-
-        // $queueDetails = CRMDetails::where('GLCode', '51250400000')->where('ReferenceNo', $id)->first();
-        // if ($queueDetails != null) {
-        //     $queueDetails->delete();
-        // }
-
-        // /**
-        //  * ADD TO CRM QUEUES FIRST
-        //  */
-        // $queue = CRMQueue::where('id', $id)->first();
-        // if ($queue != null) {
-        //     $subTotal = floatval($queue->SubTotal);
-        //     $vat = floatval($queue->VAT);
-        //     $total = floatval($queue->Total);
-
-        //     $subTotal = $subTotal + $installationFee + floatval($laborCost);
-        //     $vat = $vat + floatval($evat);
-        //     $total = $total + $installationFee + floatval($laborCost) + floatval($evat);
-
-        //     $queue->SubTotal = $subTotal;
-        //     $queue->VAT = $vat;
-        //     $queue->Total = $total;
-        //     $queue->save();
-        // } else {
-        //     $subTotal = $installationFee + floatval($laborCost);
-        //     $total = $subTotal + $evat;
-
-        //     $queue = new CRMQueue;
-        //     $queue->id = $id;
-        //     $queue->ConsumerName = $serviceConnection->ServiceAccountName;
-        //     $queue->ConsumerAddress = ServiceConnections::getAddress($serviceConnection);
-        //     $queue->TransactionPurpose = 'Installation Fees';
-        //     $queue->SourceId = $scId;
-        //     $queue->SubTotal = $subTotal;
-        //     $queue->VAT = $evat;
-        //     $queue->Total = $total;
-        //     $queue->save();
-        // }
-
-        // // INSTALLATION FEE
-        // $queuDetails = new CRMDetails;
-        // $queuDetails->id = IDGenerator::generateID() + "1";
-        // $queuDetails->ReferenceNo = $id;
-        // $queuDetails->Particular = ServiceConnections::getInstallationFeeDescription($installationFee);
-        // $queuDetails->GLCode = ServiceConnections::getInstallationFeeCode($installationFee);
-        // $queuDetails->Total = $installationFee;
-        // $queuDetails->save();
-
-        // // INSTALLATION FEE
-        // $queuDetails = new CRMDetails;
-        // $queuDetails->id = IDGenerator::generateID() + "2";
-        // $queuDetails->ReferenceNo = $id;
-        // $queuDetails->Particular = 'Overhead Line Expenses';
-        // $queuDetails->GLCode = '51250400000';
-        // $queuDetails->Total = $laborCost;
-        // $queuDetails->save();
-
-        // // VAT
-        // $queueDetails = CRMDetails::where('GLCode', '22420414001')->where('ReferenceNo', $id)->first();
-        // if ($queueDetails != null) {
-        //     $vat = floatval($queueDetails->Total);
-        //     $totalVat = $vat + floatval($evat);
-        //     $queueDetails->Total = round($totalVat, 2);
-        //     $queueDetails->save();
-        // } else {
-        //     $queuDetails = new CRMDetails;
-        //     $queuDetails->id = IDGenerator::generateID() + "2";
-        //     $queuDetails->ReferenceNo = $id;
-        //     $queuDetails->Particular = 'EVAT';
-        //     $queuDetails->GLCode = '22420414001';
-        //     $queuDetails->Total = $evat;
-        //     $queuDetails->save();
-        // }
-
-        // // DELETE IF VALUE IS ZERO
-        // $queuesZero = CRMDetails::whereRaw("Total=0")->delete();
-        // $queuesZero->delete();
 
         return response()->json('ok', 200);
     }

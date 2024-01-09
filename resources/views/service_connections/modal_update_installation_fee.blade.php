@@ -82,16 +82,39 @@
                <input type="number" id="TermAmount" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->InstallationFeeTermAmountPerMonth ? $totalTransactions->InstallationFeeTermAmountPerMonth : null }}" disabled>
             </div>
 
+            {{-- MATERIALS WITHHOLDING 1% and 2% --}}
+            <div class="divider"></div>
+            <div class="form-group row">
+               <div class="col-lg-12 custom-control custom-switch">
+                  <input type="checkbox" {{ $totalTransactions != null && $totalTransactions->WithholdingTwoPercent != null && $totalTransactions->WithholdingTwoPercent > 0 ? 'checked' : '' }} class="custom-control-input" id="MaterialsWTSwitch">
+                  <label class="custom-control-label" for="MaterialsWTSwitch" id="MaterialsWTSwitchLabel">Withholding Taxes For Materials (1% for Mat., 2% for Labor & Svcs.)</label>
+              </div>
+            </div>
+
+            <div class="form-group row">
+               <div class="col-lg-6">
+                  <label>Materials 1%</label>
+              </div>
+               <input type="number" id="MaterialsOnePercent" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->WithholdingTwoPercent ? $totalTransactions->WithholdingTwoPercent : null }}" readonly>
+            </div>
+
+            <div class="form-group row">
+               <div class="col-lg-6">
+                  <label>Transformer 1%</label>
+              </div>
+               <input type="number" id="TransformerOnePercent" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->TransformerTwoPercentWT ? $totalTransactions->TransformerTwoPercentWT : null }}" readonly>
+            </div>
+
+            <div class="form-group row">
+               <div class="col-lg-6">
+                  <label>Labor & Services 2%</label>
+              </div>
+               <input type="number" id="LaborTwoPercent" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->Item1 ? $totalTransactions->Item1 : null }}" readonly>
+            </div>
+
             {{-- MATERIALS WITHHOLDING --}}
             <div class="divider"></div>
             <span class="text-muted"><i>Withholding Taxes For Installation Fee (Materials VAT)</i></span>
-            <div class="form-group row">
-               <div class="col-lg-6 custom-control custom-switch">
-                  <input type="checkbox" {{ $totalTransactions != null && $totalTransactions->WithholdingTwoPercent != null && $totalTransactions->WithholdingTwoPercent > 0 ? 'checked' : '' }} class="custom-control-input" id="WithholdingTwoPercent">
-                  <label class="custom-control-label" for="WithholdingTwoPercent" id="WithholdingTwoPercentLabel">Installation WT 2%</label>
-              </div>
-               <input type="number" id="WithholdingTwoPercentAmount" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->WithholdingTwoPercent ? $totalTransactions->WithholdingTwoPercent : null }}" readonly>
-            </div>
 
             <div class="form-group row">
                <div class="col-lg-6 custom-control custom-switch">
@@ -104,14 +127,7 @@
             {{-- TRANSFORMER WITHOLDING WITHHOLDING --}}
             <div class="divider"></div>
             <span class="text-muted"><i>Withholding Taxes For Transformer (Transformer VAT = {{ $totalTransactions != null ? number_format($totalTransactions->TransformerVAT, 2) : 0 }})</i></span>
-            <div class="form-group row">
-               <div class="col-lg-6 custom-control custom-switch">
-                  <input type="checkbox" {{ $totalTransactions != null && $totalTransactions->TransformerTwoPercentWT != null && $totalTransactions->TransformerTwoPercentWT > 0 ? 'checked' : '' }} class="custom-control-input" id="TransformerTwoPercentWT">
-                  <label class="custom-control-label" for="TransformerTwoPercentWT" id="TransformerTwoPercentWTLabel">Transformer WT 2%</label>
-              </div>
-               <input type="number" id="TransformerTwoPercentWTAmount" class="col-lg-6 form-control form-control-sm text-right" step="any" value="{{ $totalTransactions != null && $totalTransactions->TransformerTwoPercentWT ? $totalTransactions->TransformerTwoPercentWT : null }}" readonly>
-            </div>
-
+           
             <div class="form-group row">
                <div class="col-lg-6 custom-control custom-switch">
                   <input type="checkbox" {{ $totalTransactions != null && $totalTransactions->TransformerFivePercentWT != null && $totalTransactions->TransformerFivePercentWT > 0  ? 'checked' : '' }} class="custom-control-input" id="TransformerFivePercentWT">
@@ -148,11 +164,15 @@
             }
          })
 
-         $('#WithholdingTwoPercent').on('change', function(e) {
+         $('#MaterialsWTSwitch').on('change', function(e) {
             if (e.target.checked) {
-              getTwoPercentMaterials()
+               getOnePercentMaterials()
+               getOnePercentTransformer()
+               getTwoPercentLabor()
             } else {
-               $('#WithholdingTwoPercentAmount').val("")
+               $('#MaterialsOnePercent').val("")
+               $('#TransformerOnePercent').val("")
+               $('#LaborTwoPercent').val("")
             }
          })
 
@@ -161,14 +181,6 @@
               getFivePercentMaterials()
             } else {
                $('#WithholdingFivePercentAmount').val('')
-            }
-         })
-
-         $('#TransformerTwoPercentWT').on('change', function(e) {
-            if (e.target.checked) {
-              getTwoPercentTransformer()
-            } else {
-               $('#TransformerTwoPercentWTAmount').val("")
             }
          })
 
@@ -202,9 +214,10 @@
                type : 'GET',
                data : {
                   ServiceConnectionId : "{{ $serviceConnections->id }}",
-                  WithholdingTwoPercent : jQuery.isEmptyObject($('#WithholdingTwoPercentAmount').val()) ? null : $('#WithholdingTwoPercentAmount').val(),
+                  WithholdingTwoPercent : jQuery.isEmptyObject($('#MaterialsOnePercent').val()) ? null : $('#MaterialsOnePercent').val(),
                   WithholdingFivePercent  : jQuery.isEmptyObject($('#WithholdingFivePercentAmount').val()) ? null : $('#WithholdingFivePercentAmount').val(),
-                  TransformerTwoPercentWT : jQuery.isEmptyObject($('#TransformerTwoPercentWTAmount').val()) ? null : $('#TransformerTwoPercentWTAmount').val(),
+                  TransformerTwoPercentWT : jQuery.isEmptyObject($('#TransformerOnePercent').val()) ? null : $('#TransformerOnePercent').val(),
+                  Item1 : jQuery.isEmptyObject($('#LaborTwoPercent').val()) ? null : $('#LaborTwoPercent').val(),
                   TransformerFivePercentWT  : jQuery.isEmptyObject($('#TransformerFivePercentWTAmount').val()) ? null : $('#TransformerFivePercentWTAmount').val(),
                   InstallationFeeDownPaymentPercentage  : jQuery.isEmptyObject($('#DownPaymentPercentage').val()) ? null : $('#DownPaymentPercentage').val(),
                   InstallationPartial  : jQuery.isEmptyObject($('#DownPaymentAmount').val()) ? null : $('#DownPaymentAmount').val(),
@@ -252,11 +265,28 @@
          $('#TermAmount').val("")
       }
 
-      function getTwoPercentMaterials() {
-         var materialsVat = "{{ $totalTransactions != null ? $totalTransactions->MaterialsVAT : 0 }}"
 
-         var vatables = parseFloat(materialsVat)
-         $('#WithholdingTwoPercentAmount').val(Math.round(((vatables * (2/12)) + Number.EPSILON) * 100) / 100)
+
+      function getOnePercentMaterials() {
+         var materials = "{{ $totalTransactions != null ? $totalTransactions->MaterialCost : 0 }}"
+
+         var vatables = parseFloat(materials)
+         $('#MaterialsOnePercent').val(Math.round(((vatables * (.01)) + Number.EPSILON) * 100) / 100)
+      }
+
+      function getOnePercentTransformer() {
+         var transformer = "{{ $totalTransactions != null ? $totalTransactions->TransformerCost : 0 }}"
+
+         var vatables = parseFloat(transformer)
+         $('#TransformerOnePercent').val(Math.round(((vatables * (.01)) + Number.EPSILON) * 100) / 100)
+      }
+
+      function getTwoPercentLabor() {
+         var labor = "{{ $totalTransactions != null ? $totalTransactions->LaborCost : 0 }}"
+         var contingency = "{{ $totalTransactions != null ? $totalTransactions->ContingencyCost : 0 }}"
+
+         var vatables = parseFloat(labor) + parseFloat(contingency)
+         $('#LaborTwoPercent').val(Math.round(((vatables * (2/12)) + Number.EPSILON) * 100) / 100)
       }
 
       function getFivePercentMaterials() {
@@ -264,13 +294,6 @@
 
          var vatables = parseFloat(materialsVat)
          $('#WithholdingFivePercentAmount').val(Math.round(((vatables * (5/12)) + Number.EPSILON) * 100) / 100)
-      }
-
-      function getTwoPercentTransformer() {
-         var materialsVat = "{{ $totalTransactions != null ? $totalTransactions->TransformerVAT : 0 }}"
-
-         var vatables = parseFloat(materialsVat)
-         $('#TransformerTwoPercentWTAmount').val(Math.round(((vatables * (2/12)) + Number.EPSILON) * 100) / 100)
       }
 
       function getFivePercentTransformer() {

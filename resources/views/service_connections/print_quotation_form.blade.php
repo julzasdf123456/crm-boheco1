@@ -283,7 +283,7 @@
                 <tr>
                     <td class="border-bottom center-text">{{ ServiceConnections::numberToRomanRepresentation($i+4) }}</td>
                     <td class="border-bottom">INST. FEE BALANCE ({{ $totalTransactions->InstallationFeeTerms }} MO. RECEIVABLE)</td>
-                    <td class="border-bottom right-text">{{ number_format($totalTransactions->InstallationFeeTermAmountPerMonth, 2) }} x{{ $totalTransactions->InstallationFeeTerms }}</td>
+                    <td class="border-bottom right-text">* {{ number_format($totalTransactions->InstallationFeeTermAmountPerMonth, 2) }} x{{ $totalTransactions->InstallationFeeTerms }}</td>
                     <td class="border-bottom right-text">0</td>
                     <td class="border-bottom right-text">* -{{ number_format($totalTransactions->InstallationFeeBalance, 2) }}</td>
                 </tr>
@@ -364,10 +364,26 @@
                 @endphp
             @endif
             
+            {{-- WITHOLDING 1% TOTAL --}}
+            @php
+                $wtOnePercent = $totalTransactions != null ? ($totalTransactions->WithholdingTwoPercent + $totalTransactions->TransformerTwoPercentWT) : 0;
+            @endphp
+            @if ($wtOnePercent != null && $wtOnePercent != 0)
+                <tr>
+                    <td class="border-side center-text">{{ ServiceConnections::numberToRomanRepresentation($i+1) }}</td>
+                    <td class="border-side">1% (MATERIALS & TRANSFORMER)</td>
+                    <td class="border-side right-text">{{ 0 }}</td>
+                    <td class="border-side right-text">{{ 0 }}</td>
+                    <td class="border-side right-text">- {{ number_format($wtOnePercent, 2) }}</td>
+                </tr>
+                @php
+                    $i = $i+1;
+                @endphp
+            @endif
 
             {{-- WITHOLDING 2% TOTAL --}}
             @php
-                $wtTwoPercent = $totalTransactions != null ? ($totalTransactions->From2307TwoPercent + $totalTransactions->WithholdingTwoPercent + $totalTransactions->TransformerTwoPercentWT) : 0;
+                $wtTwoPercent = $totalTransactions != null ? ($totalTransactions->From2307TwoPercent + $totalTransactions->Item1) : 0;
                 $wtFivePercent = $totalTransactions != null ? ($totalTransactions->From2307FivePercent + $totalTransactions->WithholdingFivePercent + $totalTransactions->TransformerFivePercentWT) : 0;
             @endphp
             @if ($wtTwoPercent != null && $wtTwoPercent != 0)
@@ -383,6 +399,7 @@
                 @endphp
             @endif
             
+            {{-- WITHOLDING 5% TOTAL --}}
             @if ($wtFivePercent != null && $wtFivePercent != 0)
                 <tr>
                     <td class="border-side center-text">{{ ServiceConnections::numberToRomanRepresentation($i+1) }}</td>
@@ -401,7 +418,7 @@
                <th class="border center-text">TOTAL</th>
                <th class="border right-text">{{ number_format(($others + $remittance + $deposit + $transformer + $materials), 2) }}</th>
                <th class="border right-text">{{ number_format($othersVat + $vat + $depositVat + $transformerVat + $materialsVat, 2) }}</th>
-               <th class="border right-text">{{ number_format(($othersTotal + $remittanceTotal + $depositTotal + $transformerTotal + $materialsTotal) - ($instBalanceTotal + $wtTwoPercent + $wtFivePercent), 2) }}</th>
+               <th class="border right-text">{{ number_format(($othersTotal + $remittanceTotal + $depositTotal + $transformerTotal + $materialsTotal) - ($instBalanceTotal + $wtTwoPercent + $wtFivePercent + $wtOnePercent), 2) }}</th>
             </tr>
          </table>
       </div>

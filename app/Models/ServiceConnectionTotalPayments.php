@@ -72,7 +72,7 @@ class ServiceConnectionTotalPayments extends Model
         'TransformerORDate',
         'TransformerORNumber',
         'TransformerInterestPercentage',
-        'WithholdingTwoPercent', // MATERIALS
+        'WithholdingTwoPercent', // MATERIALS 1%
         'WithholdingFivePercent', // MATERIALS
         'InstallationFeeDownPaymentPercentage',
         'InstallationFeeBalance',
@@ -82,8 +82,13 @@ class ServiceConnectionTotalPayments extends Model
         'RemittanceForwarded',
         'InstallationForwarded',
         'TransformerForwarded',
-        'TransformerTwoPercentWT',
+        'TransformerTwoPercentWT', // Transformers 1%
         'TransformerFivePercentWT',
+        'Item1', // LABOR WT 2%
+        'Item2',
+        'Item3',
+        'Item4',
+        'Item5',
     ];
 
     /**
@@ -137,6 +142,11 @@ class ServiceConnectionTotalPayments extends Model
         'TransformerForwarded' => 'string',
         'TransformerTwoPercentWT' => 'string',
         'TransformerFivePercentWT' => 'string',
+        'Item1' => 'string',
+        'Item2' => 'string',
+        'Item3' => 'string',
+        'Item4' => 'string',
+        'Item5' => 'string',
     ];
 
     /**
@@ -192,6 +202,11 @@ class ServiceConnectionTotalPayments extends Model
         'TransformerForwarded' => 'nullable|string',
         'TransformerTwoPercentWT' => 'nullable|string',
         'TransformerFivePercentWT' => 'nullable|string',
+        'Item1' => 'null|string',
+        'Item2' => 'null|string',
+        'Item3' => 'null|string',
+        'Item4' => 'null|string',
+        'Item5' => 'null|string',
     ];
 
     
