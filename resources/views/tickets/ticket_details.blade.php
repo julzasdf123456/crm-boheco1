@@ -11,6 +11,10 @@
                         <h3>{{ $tickets->ConsumerName }}</h3>
                     </div>
                     <div class="col-lg-3">
+                        {{-- VALIDATE CRM QUEUE --}}
+                        @if (Auth::user()->hasAnyRole(['Administrator'])) 
+                            <button title="Revalidate to Cashier Queue for payment" onclick="revalidateCashierQueue(`{{ $tickets->id }}`)" class="btn btn-tool text-danger float-right"><i class="fas fa-check"></i></button>
+                        @endif
                         {!! Form::open(['route' => ['tickets.destroy', $tickets->id], 'method' => 'delete', 'style' => 'width: 30px; display: inline;']) !!}                
                         {!! Form::button('<i class="fas fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-tool text-danger float-right', 'onclick' => "return confirm('Are you sure you want to delete this ticket?')"]) !!}                
                         {!! Form::close() !!}
@@ -264,3 +268,30 @@
         </div>
     </div>
 </div>
+
+@push('page_scripts')
+    <script>
+        function revalidateCashierQueue(id) {
+            $.ajax({
+                url : "{{ route('tickets.revalidate-queue') }}",
+                type : 'GET',
+                data : {
+                    id : id,
+                },
+                success : function(res) {
+                    Toast.fire({
+                        icon : 'success',
+                        text : 'Queue revalidated'
+                    })
+                },
+                error : function(err) {
+                    Swal.fire({
+                        icon : 'error',
+                        text : 'Error revalidating queue'
+                    })
+                }
+            })
+        }
+    </script>
+    
+@endpush

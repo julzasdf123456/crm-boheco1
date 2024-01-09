@@ -463,6 +463,7 @@ Route::get('/tickets/not-executed', [TicketsController::class, 'notExecuted'])->
 Route::get('/tickets/print-not-executed/{from}/{to}/{area}', [TicketsController::class, 'printNotExecuted'])->name('tickets.print-not-executed');
 Route::get('/tickets/print-change-meter-accomplished/{from}/{to}', [TicketsController::class, 'printChangeMeterAccomplished'])->name('tickets.print-change-meter-accomplished');
 Route::get('/tickets/print-change-meters/{from}/{to}/{office}', [TicketsController::class, 'printChangeMeters'])->name('tickets.print-change-meters');
+Route::get('/tickets/revalidate-queue', [TicketsController::class, 'revalidateQueue'])->name('tickets.revalidate-queue');
 Route::resource('tickets', TicketsController::class);
 
 
