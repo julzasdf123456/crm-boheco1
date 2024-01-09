@@ -374,6 +374,10 @@
                     $i = $i+4;
                 @endphp
             @else
+                @php                    
+                    $transformer = $totalTransactions != null ? ($totalTransactions->TransformerCost) : 0;    
+                    $transformerTotal = $totalTransactions != null ? ($totalTransactions->TransformerCost + $totalTransactions->TransformerVAT) : 0;
+                @endphp
                 <tr>
                     <td class="border-side center-text">{{ ServiceConnections::numberToRomanRepresentation($i) }}</td>
                     <td class="border-side">TRANSFORMER</td>
@@ -382,8 +386,6 @@
                     <td class="border-side right-text">{{ number_format($transformerTotal, 2) }}</td>
                 </tr>
                 @php
-                    $transformer = $totalTransactions != null ? ($totalTransactions->TransformerCost) : 0;    
-                    $transformerTotal = $totalTransactions != null ? ($totalTransactions->TransformerCost + $totalTransactions->TransformerVAT) : 0;
                     $i = $i+1;
                 @endphp
             @endif
