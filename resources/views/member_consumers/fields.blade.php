@@ -441,45 +441,43 @@
     </div> 
 </div>
 
-@if ($cond == 'new')
-    <!-- MEMBERHSIP FEE Field -->
-    <div class="form-group col-sm-12">
-        <div class="divider"></div>
-        <p class="no-pads text-muted"><i>Membership Fees</i></p>
-        <div class="row">
-            <div class="col-lg-3 col-md-5">
-                {!! Form::label('MembershipFee', 'Membership Fee') !!}
-            </div>
+<!-- MEMBERHSIP FEE Field -->
+<div class="form-group col-sm-12">
+    <div class="divider"></div>
+    <p class="no-pads text-muted"><i>Membership Fees</i></p>
+    <div class="row">
+        <div class="col-lg-3 col-md-5">
+            {!! Form::label('MembershipFee', 'Membership Fee') !!}
+        </div>
 
-            <div class="col-lg-9 col-md-7">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                    </div>
-                    {!! Form::number('MembershipFee', 5, ['class' => 'form-control form-control-sm text-right','step' => 'any',  'placeholder' => 'Membership Fee']) !!}
+        <div class="col-lg-9 col-md-7">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                 </div>
+                {!! Form::number('MembershipFee', 5, ['class' => 'form-control form-control-sm text-right','step' => 'any',  'placeholder' => 'Membership Fee']) !!}
             </div>
-        </div> 
-    </div>
+        </div>
+    </div> 
+</div>
 
-    <!-- PRIMER FEE Field -->
-    <div class="form-group col-sm-12">
-        <div class="row">
-            <div class="col-lg-3 col-md-5">
-                {!! Form::label('PrimerFee', 'Primer Fee') !!}
-            </div>
+<!-- PRIMER FEE Field -->
+<div class="form-group col-sm-12">
+    <div class="row">
+        <div class="col-lg-3 col-md-5">
+            {!! Form::label('PrimerFee', 'Primer Fee') !!}
+        </div>
 
-            <div class="col-lg-9 col-md-7">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                    </div>
-                    {!! Form::number('PrimerFee', 0, ['class' => 'form-control form-control-sm text-right', 'step' => 'any',  'placeholder' => 'Primer Fee']) !!}
+        <div class="col-lg-9 col-md-7">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                 </div>
+                {!! Form::number('PrimerFee', 0, ['class' => 'form-control form-control-sm text-right', 'step' => 'any',  'placeholder' => 'Primer Fee']) !!}
             </div>
-        </div> 
-    </div>
-@endif
+        </div>
+    </div> 
+</div>
 
 <!-- HIDDEN INPUTS -->
 {{-- <input type="hidden" name="DateApplied" value="<?= date('Y-m-d') ?>"> --}}
