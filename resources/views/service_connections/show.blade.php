@@ -184,8 +184,9 @@ use Illuminate\Support\Facades\Auth;
                                                 <td>Installation Fees</td>
                                                 @php
                                                     $materialsTotal = $totalTransactions != null ? ($totalTransactions->MaterialCost + $totalTransactions->LaborCost + $totalTransactions->ContingencyCost + $totalTransactions->MaterialsVAT) : 0;
+                                                    $pn = $totalTransactions != null ? ($totalTransactions->InstallationFeeBalance != null && $totalTransactions->InstallationFeeBalance > 0 ? $totalTransactions->InstallationFeeBalance : 0) : 0;
                                                 @endphp
-                                                <td class="text-right">{{ number_format($materialsTotal, 2) }}</td>
+                                                <td class="text-right">{{ number_format($materialsTotal - $pn, 2) }}</td>
                                                 <td class="text-right">
                                                     @if ($totalTransactions != null && $totalTransactions->InstallationForwarded=='Yes')
                                                         <span class="badge bg-success"><i class="fas fa-check-circle"></i> Forwarded</span>

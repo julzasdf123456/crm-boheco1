@@ -320,6 +320,13 @@ class ServiceConnectionPayTransactionController extends AppBaseController
 
         $total = ServiceConnectionTotalPayments::where('ServiceConnectionId', $scId)->first();
 
+        $request['SubTotal'] = isset($request['SubTotal']) ? (is_numeric($request['SubTotal']) ? round(floatval($request['SubTotal']), 2) : 0) : 0;
+        $request['Form2307TwoPercent'] = isset($request['Form2307TwoPercent']) ? (is_numeric($request['Form2307TwoPercent']) ? round(floatval($request['Form2307TwoPercent']), 2) : 0) : 0;
+        $request['Form2307FivePercent'] = isset($request['Form2307FivePercent']) ? (is_numeric($request['Form2307FivePercent']) ? round(floatval($request['Form2307FivePercent']), 2) : 0) : 0;
+        $request['TotalVat'] = isset($request['TotalVat']) ? (is_numeric($request['TotalVat']) ? round(floatval($request['TotalVat']), 2) : 0) : 0;
+        $request['Total'] = isset($request['Total']) ? (is_numeric($request['Total']) ? round(floatval($request['Total']), 2) : 0) : 0;
+        $request['BillDeposit'] = isset($request['BillDeposit']) ? (is_numeric($request['BillDeposit']) ? round(floatval($request['BillDeposit']), 2) : 0) : 0;
+
         if ($total != null) {
             $total->SubTotal = $request['SubTotal'];
             $total->Form2307TwoPercent = $request['Form2307TwoPercent'];
