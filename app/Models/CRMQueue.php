@@ -232,7 +232,7 @@ class CRMQueue extends Model
 
             // IF HAS WITHHOlDINGS
             if ($totalTransactions->WithholdingTwoPercent != null && $totalTransactions->WithholdingTwoPercent > 0) {
-                // 2%
+                // 1%
                 $queuDetails = new CRMDetails;
                 $queuDetails->id = IDGenerator::generateID() . "5";
                 $queuDetails->ReferenceNo = $qId;
@@ -241,6 +241,19 @@ class CRMQueue extends Model
                 $queuDetails->Total = '-' . $totalTransactions->WithholdingTwoPercent;
                 $queuDetails->save();
                 $overAllTotal += -floatval($totalTransactions->WithholdingTwoPercent);
+            }
+
+            
+            if ($totalTransactions->Item1 != null && $totalTransactions->Item1 > 0) {
+                // 2%
+                $queuDetails = new CRMDetails;
+                $queuDetails->id = IDGenerator::generateID() . "9";
+                $queuDetails->ReferenceNo = $qId;
+                $queuDetails->Particular = 'Prepayments - Others 2307';
+                $queuDetails->GLCode = '12910111002';
+                $queuDetails->Total = '-' . $totalTransactions->Item1;
+                $queuDetails->save();
+                $overAllTotal += -floatval($totalTransactions->Item1);
             }
 
             if ($totalTransactions->WithholdingFivePercent != null && $totalTransactions->WithholdingFivePercent > 0) {
@@ -560,6 +573,18 @@ class CRMQueue extends Model
                     $queuDetails->Total = '-' . $totalTransactions->WithholdingTwoPercent;
                     $queuDetails->save();
                     $overAllTotal += -floatval($totalTransactions->WithholdingTwoPercent);
+                }
+
+                if ($totalTransactions->Item1 != null && $totalTransactions->Item1 > 0) {
+                    // 2%
+                    $queuDetails = new CRMDetails;
+                    $queuDetails->id = IDGenerator::generateID() . "35";
+                    $queuDetails->ReferenceNo = $qId;
+                    $queuDetails->Particular = 'Prepayments - Others 2307';
+                    $queuDetails->GLCode = '12910111002';
+                    $queuDetails->Total = '-' . $totalTransactions->Item1;
+                    $queuDetails->save();
+                    $overAllTotal += -floatval($totalTransactions->Item1);
                 }
 
                 if ($totalTransactions->WithholdingFivePercent != null && $totalTransactions->WithholdingFivePercent > 0) {
