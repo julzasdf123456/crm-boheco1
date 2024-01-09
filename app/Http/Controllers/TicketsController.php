@@ -507,6 +507,7 @@ class TicketsController extends AppBaseController
         $ticketLog->UserId = Auth::id();
         $ticketLog->save();
 
+        /*
         $ticket = DB::table('CRM_Tickets')
             ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
             ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
@@ -644,7 +645,7 @@ class TicketsController extends AppBaseController
             $queuDetails->Total = 3.6;
             $queuDetails->save();
         }
-
+        **/
         return redirect(route('tickets.show', [$tickets->id]));
     }
 
