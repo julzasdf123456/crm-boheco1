@@ -132,7 +132,7 @@ class CRMQueue extends Model
         // MEMBERSHIP FEE
         if ($membershipFee != null && $membershipFee > 0) {
             $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID() . "1";
+            $queuDetails->id = IDGenerator::generateID() . "41";
             $queuDetails->ReferenceNo = $queueId;
             $queuDetails->Particular = 'Membership fee';
             $queuDetails->GLCode = '31030100000';
@@ -145,7 +145,7 @@ class CRMQueue extends Model
         // MEMBERSHIP FEE
         if ($primerFee != null && $primerFee > 0) {
             $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID() . "2";
+            $queuDetails->id = IDGenerator::generateID() . "52";
             $queuDetails->ReferenceNo = $queueId;
             $queuDetails->Particular = 'Primer-Charges 1';
             $queuDetails->GLCode = '53050200000';
@@ -153,7 +153,7 @@ class CRMQueue extends Model
             $queuDetails->save();
 
             $queuDetails = new CRMDetails;
-            $queuDetails->id = IDGenerator::generateID() . "3";
+            $queuDetails->id = IDGenerator::generateID() . "63";
             $queuDetails->ReferenceNo = $queueId;
             $queuDetails->Particular = 'EVAT';
             $queuDetails->GLCode = '22420414001';
