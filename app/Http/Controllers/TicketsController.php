@@ -162,7 +162,7 @@ class TicketsController extends AppBaseController
             $tickets->save();
         }
 
-        Flash::success('Tickets saved successfully.');
+        // Flash::success('Tickets saved successfully.');
 
         // CREATE LOG
         $ticketLog = new TicketLogs;
@@ -172,23 +172,23 @@ class TicketsController extends AppBaseController
         $ticketLog->UserId = Auth::id();
         $ticketLog->save();
 
+        $ticket = DB::table('CRM_Tickets')
+            ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
+            ->where('CRM_Tickets.id', $tickets->id)
+            ->select('CRM_Tickets.id',
+                'CRM_Tickets.AccountNumber',
+                'CRM_Tickets.ConsumerName',
+                'CRM_Towns.Town',
+                'CRM_Barangays.Barangay',
+                'CRM_Tickets.Sitio',
+                )
+            ->first();
+
         // CREATE PAYMENT MODULE
         // RECONNECTIONS        
-        if ($tickets->Ticket == Tickets::getReconnection() | $tickets->Ticket == '1686701994992') {
+        if ($tickets->Ticket === Tickets::getReconnection() | $tickets->Ticket === '1686701994992') {
             // RECONNECTION DELINQUENCY OR POWER RESTORATION
-            $ticket = DB::table('CRM_Tickets')
-                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
-                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
-                ->where('CRM_Tickets.id', $tickets->id)
-                ->select('CRM_Tickets.id',
-                    'CRM_Tickets.AccountNumber',
-                    'CRM_Tickets.ConsumerName',
-                    'CRM_Towns.Town',
-                    'CRM_Barangays.Barangay',
-                    'CRM_Tickets.Sitio',
-                    )
-                ->first();
-
             $qId = IDGenerator::generateID();
 
             $queue = new CRMQueue;
@@ -228,21 +228,8 @@ class TicketsController extends AppBaseController
             $queuDetails->GLCode = '22420414001';
             $queuDetails->Total = 6;
             $queuDetails->save();
-        } elseif ($tickets->Ticket == '1668541254429') {
+        } elseif ($tickets->Ticket === '1668541254429') {
             // RECONNECTION VOLUNTARY
-            $ticket = DB::table('CRM_Tickets')
-                ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
-                ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
-                ->where('CRM_Tickets.id', $tickets->id)
-                ->select('CRM_Tickets.id',
-                    'CRM_Tickets.AccountNumber',
-                    'CRM_Tickets.ConsumerName',
-                    'CRM_Towns.Town',
-                    'CRM_Barangays.Barangay',
-                    'CRM_Tickets.Sitio',
-                    )
-                ->first();
-
             $qId = IDGenerator::generateID();
 
             $queue = new CRMQueue;
@@ -273,7 +260,7 @@ class TicketsController extends AppBaseController
             $queuDetails->GLCode = '22420414001';
             $queuDetails->Total = 3.6;
             $queuDetails->save();
-        } elseif ($tickets->Ticket == '1668541254416') {
+        } elseif ($tickets->Ticket === '1668541254416') {
             // CLEARING
             $qId = IDGenerator::generateID();
 
@@ -520,7 +507,136 @@ class TicketsController extends AppBaseController
         $ticketLog->UserId = Auth::id();
         $ticketLog->save();
 
-        Flash::success('Tickets updated successfully.');
+        $ticket = DB::table('CRM_Tickets')
+            ->leftJoin('CRM_Barangays', 'CRM_Tickets.Barangay', '=', 'CRM_Barangays.id')
+            ->leftJoin('CRM_Towns', 'CRM_Tickets.Town', '=', 'CRM_Towns.id')
+            ->where('CRM_Tickets.id', $tickets->id)
+            ->select('CRM_Tickets.id',
+                'CRM_Tickets.AccountNumber',
+                'CRM_Tickets.ConsumerName',
+                'CRM_Towns.Town',
+                'CRM_Barangays.Barangay',
+                'CRM_Tickets.Sitio',
+                )
+            ->first();
+
+        // CREATE PAYMENT MODULE
+        // RECONNECTIONS        
+        if ($tickets->Ticket === Tickets::getReconnection() | $tickets->Ticket === '1686701994992') {
+            $qExist = CRMQueue::where('SourceId', $tickets->id)->first();
+            CRMDetails::where('ReferenceNo', $qExist->id)->delete();
+            $qExist->delete();
+            // RECONNECTION DELINQUENCY OR POWER RESTORATION
+            $qId = IDGenerator::generateID();
+
+            $queue = new CRMQueue;
+            $queue->id = $qId;
+            $queue->ConsumerName = $ticket->ConsumerName;
+            $queue->ConsumerAddress = Tickets::getAddress($ticket);
+            $queue->TransactionPurpose = 'Reconnection';
+            $queue->SourceId = $ticket->id;
+            $queue->SubTotal = 50;
+            $queue->VAT = 6;
+            $queue->Total = 56;
+            $queue->save();
+
+            // RECONNECTION FEE
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() . "1";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'Reconnection Fee';
+            $queuDetails->GLCode = '43040500000';
+            $queuDetails->Total = 30;
+            $queuDetails->save();
+
+            // METER SEAL FEE
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() . "2";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'Meter Seal';
+            $queuDetails->GLCode = '43040500000';
+            $queuDetails->Total = 20;
+            $queuDetails->save();
+
+            // EVAT
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() . "3";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'EVAT';
+            $queuDetails->GLCode = '22420414001';
+            $queuDetails->Total = 6;
+            $queuDetails->save();
+        } elseif ($tickets->Ticket === '1668541254429') {
+            $qExist = CRMQueue::where('SourceId', $tickets->id)->first();
+            CRMDetails::where('ReferenceNo', $qExist->id)->delete();
+            $qExist->delete();
+            // RECONNECTION VOLUNTARY
+            $qId = IDGenerator::generateID();
+
+            $queue = new CRMQueue;
+            $queue->id = $qId;
+            $queue->ConsumerName = $ticket->ConsumerName;
+            $queue->ConsumerAddress = Tickets::getAddress($ticket);
+            $queue->TransactionPurpose = 'Reconnection';
+            $queue->SourceId = $ticket->id;
+            $queue->SubTotal = 30;
+            $queue->VAT = 3.6;
+            $queue->Total = 33.6;
+            $queue->save();
+
+            // RECONNECTION FEE
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() . "1";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'Reconnection Fee';
+            $queuDetails->GLCode = '43040500000';
+            $queuDetails->Total = 30;
+            $queuDetails->save();
+
+            // EVAT
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() . "2";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'EVAT';
+            $queuDetails->GLCode = '22420414001';
+            $queuDetails->Total = 3.6;
+            $queuDetails->save();
+        } elseif ($tickets->Ticket === '1668541254416') {
+            $qExist = CRMQueue::where('SourceId', $tickets->id)->first();
+            CRMDetails::where('ReferenceNo', $qExist->id)->delete();
+            $qExist->delete();
+            // CLEARING
+            $qId = IDGenerator::generateID();
+
+            $queue = new CRMQueue;
+            $queue->id = $qId;
+            $queue->ConsumerName = $ticket->ConsumerName;
+            $queue->ConsumerAddress = Tickets::getAddress($ticket);
+            $queue->TransactionPurpose = 'Line Clearing';
+            $queue->SourceId = $ticket->id;
+            $queue->SubTotal = 30;
+            $queue->VAT = 3.6;
+            $queue->Total = 33.6;
+            $queue->save();
+
+            // SERVICE FEE
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() . "1";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'Service Fee';
+            $queuDetails->GLCode = '43040500000';
+            $queuDetails->Total = 30;
+            $queuDetails->save();
+
+            // EVAT
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() . "2";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'EVAT';
+            $queuDetails->GLCode = '22420414001';
+            $queuDetails->Total = 3.6;
+            $queuDetails->save();
+        }
 
         return redirect(route('tickets.show', [$tickets->id]));
     }
