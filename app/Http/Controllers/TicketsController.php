@@ -524,8 +524,11 @@ class TicketsController extends AppBaseController
         // RECONNECTIONS        
         if ($tickets->Ticket === Tickets::getReconnection() | $tickets->Ticket === '1686701994992') {
             $qExist = CRMQueue::where('SourceId', $tickets->id)->first();
-            CRMDetails::where('ReferenceNo', $qExist->id)->delete();
-            $qExist->delete();
+            if ($qExist != null) {
+                CRMDetails::where('ReferenceNo', $qExist->id)->delete();
+                $qExist->delete();
+            }            
+            
             // RECONNECTION DELINQUENCY OR POWER RESTORATION
             $qId = IDGenerator::generateID();
 
@@ -568,8 +571,10 @@ class TicketsController extends AppBaseController
             $queuDetails->save();
         } elseif ($tickets->Ticket === '1668541254429') {
             $qExist = CRMQueue::where('SourceId', $tickets->id)->first();
-            CRMDetails::where('ReferenceNo', $qExist->id)->delete();
-            $qExist->delete();
+            if ($qExist != null) {
+                CRMDetails::where('ReferenceNo', $qExist->id)->delete();
+                $qExist->delete();
+            }
             // RECONNECTION VOLUNTARY
             $qId = IDGenerator::generateID();
 
@@ -603,8 +608,10 @@ class TicketsController extends AppBaseController
             $queuDetails->save();
         } elseif ($tickets->Ticket === '1668541254416') {
             $qExist = CRMQueue::where('SourceId', $tickets->id)->first();
-            CRMDetails::where('ReferenceNo', $qExist->id)->delete();
-            $qExist->delete();
+            if ($qExist != null) {
+                CRMDetails::where('ReferenceNo', $qExist->id)->delete();
+                $qExist->delete();
+            }
             // CLEARING
             $qId = IDGenerator::generateID();
 
