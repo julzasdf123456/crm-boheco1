@@ -81,6 +81,28 @@ class ElectriciansController extends AppBaseController
     public function show($id)
     {
         $electricians = $this->electriciansRepository->find($id);
+        $serviceConnections = DB::table('CRM_ServiceConnections')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_ServiceConnectionMeterAndTransformer', 'CRM_ServiceConnections.id', '=', 'CRM_ServiceConnectionMeterAndTransformer.ServiceConnectionId')
+                ->select('CRM_ServiceConnections.id as id',
+                                'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                                'CRM_ServiceConnections.Status as Status',
+                                'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                                'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                                'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                                'CRM_ServiceConnections.AccountCount as AccountCount',  
+                                'CRM_ServiceConnections.ConnectionApplicationType',
+                                'CRM_ServiceConnections.Office',
+                                'CRM_ServiceConnections.Sitio as Sitio', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_ServiceConnections.ORNumber',
+                                'CRM_ServiceConnections.LoadCategory',
+                                'CRM_Barangays.Barangay as Barangay',
+                                'CRM_ServiceConnectionMeterAndTransformer.MeterSerialNumber')
+                ->whereRaw("ConnectionApplicationType NOT IN ('Relocation') AND (CRM_ServiceConnections.Trash='NO' OR CRM_ServiceConnections.Trash IS NULL) AND ElectricianId='" . $id . "'")
+                ->orderByDesc('CRM_ServiceConnections.created_at')
+                ->paginate(50);
 
         if (empty($electricians)) {
             Flash::error('Electricians not found');
@@ -88,7 +110,10 @@ class ElectriciansController extends AppBaseController
             return redirect(route('electricians.index'));
         }
 
-        return view('electricians.show')->with('electricians', $electricians);
+        return view('electricians.show', [
+            'electricians' => $electricians,
+            'serviceConnections' => $serviceConnections
+        ]);
     }
 
     /**
