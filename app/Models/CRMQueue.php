@@ -105,7 +105,7 @@ class CRMQueue extends Model
     }
 
     public static function saveMembershipFee($membershipObject, $membershipFee, $primerFee) {
-        $queueId = $membershipObject->Id . '-M';
+        $queueId = IDGenerator::generateID() . '-M';
 
         // DELETE CRM DETAILS FIRST
         CRMDetails::where('ReferenceNo', $queueId)->delete();
