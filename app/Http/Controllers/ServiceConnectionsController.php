@@ -3312,6 +3312,15 @@ class ServiceConnectionsController extends AppBaseController
         ServiceConnections::where('id', $id)
             ->update(['ORNumber' => $or, 'ORDate' => $orDate]);
 
+        // CREATE Timeframes
+        $timeFrame = new ServiceConnectionTimeframes;
+        $timeFrame->id = IDGenerator::generateID();
+        $timeFrame->ServiceConnectionId = $id;
+        $timeFrame->UserId = Auth::id();
+        $timeFrame->Status = 'OR Number Updated';
+        $timeFrame->Notes = 'OR Number updated with OR ' . $or;
+        $timeFrame->save();
+
 
         return response()->json('ok', 200);
     }
