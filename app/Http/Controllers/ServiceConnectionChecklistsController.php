@@ -243,7 +243,7 @@ class ServiceConnectionChecklistsController extends AppBaseController
                 $serviceConnection->save();
                 return redirect(route('serviceConnections.change-name-payment', [$id]));
             } else {
-                if (floatval($serviceConnection->LoadCategory) >= 15) {
+                if (floatval($serviceConnection->LoadCategory) >= 15 || $serviceConnection->AccountApplicationType=='Temporary') {
                     $serviceConnection->Status = 'Forwarded to Planning';
                     $serviceConnection->save();
 
@@ -257,7 +257,7 @@ class ServiceConnectionChecklistsController extends AppBaseController
                 }                
             }       
         } else {
-            if (floatval($serviceConnection->LoadCategory) >= 15) {
+            if (floatval($serviceConnection->LoadCategory) >= 15 || $serviceConnection->AccountApplicationType=='Temporary') {
                 $serviceConnection->Status = 'Forwarded to Planning';
                 $serviceConnection->save();
 
