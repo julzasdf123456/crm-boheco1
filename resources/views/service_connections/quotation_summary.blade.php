@@ -178,7 +178,8 @@
                                 Date : <strong>{{ date('F d, Y') }}</strong><br>
                                 Project Name: <strong>{{ $serviceConnection->ServiceAccountName }}</strong><br>
                                 Project Address: <strong>{{ ServiceConnections::getAddress($serviceConnection) }}</strong><br>
-                                Project Load in kVA: <strong>{{ $serviceConnection->LoadCategory }}</strong><br>
+                                Project Load: <strong>{{ $serviceConnection->LoadCategory }} kVA</strong><br>
+                                Application Type: <strong>{{ $serviceConnection->AccountApplicationType }} kVA</strong><br>
                             </address>
                         </div>
                     </div>
