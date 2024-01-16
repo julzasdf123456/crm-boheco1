@@ -180,6 +180,7 @@
                                 Project Address: <strong>{{ ServiceConnections::getAddress($serviceConnection) }}</strong><br>
                                 Project Load: <strong>{{ $serviceConnection->LoadCategory }} kVA</strong><br>
                                 Application Type: <strong>{{ $serviceConnection->AccountApplicationType }}</strong><br>
+                                Account Type: <strong>{{ $serviceConnection->AccountType }}</strong><br>
                             </address>
                         </div>
                     </div>
