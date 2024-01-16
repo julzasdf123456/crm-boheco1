@@ -59,8 +59,8 @@
                 </div> --}}
 
                 <div class="col-lg-4 col-md-6">
+                    {{-- PAYMENT SUMMARY --}}
                     <div class="card card-outline card-primary shadow-none">
-
                         <div class="card-header">
                             <span class="card-title">Payment Summary</span>
 
@@ -178,6 +178,7 @@
                                 Date : <strong>{{ date('F d, Y') }}</strong><br>
                                 Project Name: <strong>{{ $serviceConnection->ServiceAccountName }}</strong><br>
                                 Project Address: <strong>{{ ServiceConnections::getAddress($serviceConnection) }}</strong><br>
+                                Project Load in kVA: <strong>{{ $serviceConnection->LoadCategory }}</strong><br>
                             </address>
                         </div>
                     </div>
