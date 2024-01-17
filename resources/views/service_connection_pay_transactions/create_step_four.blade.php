@@ -365,7 +365,7 @@ $id = IDGenerator::generateID();
 
             <div class="card-footer">
                 <button id="save-payment" class="btn btn-primary btn-sm"><i class="fas fa-check-circle ico-tab-mini"></i>Submit</button>
-                <a href="{{ route('serviceConnections.show', [$serviceConnection->id]) }}" class="btn btn-default btn-sm"><i class="fas fa-check-circle ico-tab-mini"></i>Skip</a>
+                <a href="{{ route('serviceConnections.show', [$serviceConnection->id]) }}" class="btn btn-default btn-sm"><i class="fas fa-sign-out-alt ico-tab-mini"></i>Skip</a>
 
                 <div id="loader" class="spinner-border gone text-success float-right" role="status">
                     <span class="sr-only">Loading...</span>
