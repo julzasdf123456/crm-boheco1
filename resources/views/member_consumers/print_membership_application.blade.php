@@ -185,5 +185,5 @@ p {
     
     window.setTimeout(function(){
         window.history.go(-1)
-    }, 800);
+    }, 3800);
 </script>
