@@ -241,9 +241,7 @@
 </div>
 @else 
 <p class="text-center"><i>No inspection data found! Consumer has not completed the minimum requirements required.</i></p>
-    @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Inspector', 'Service Connection Assessor'])) 
-        {{-- <a href="{{ route('serviceConnectionInspections.create-step-two', [$serviceConnections->id]) }}" class="btn btn-primary btn-sm" title="Add Verification Details"><i class="fas fa-pen ico-tab"></i>Create Verification</a> --}}
-    @endif
+    <a href="{{ route('serviceConnectionInspections.create-step-two', [$serviceConnections->id]) }}" class="btn btn-primary btn-sm" title="Add Verification Details"><i class="fas fa-pen ico-tab"></i>Create Verification</a>
 @endif
 
 @push('page_scripts')
