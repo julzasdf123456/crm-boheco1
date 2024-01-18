@@ -642,52 +642,53 @@ class DisconnectionSchedulesController extends AppBaseController
                     ->get();
         } else {
             $i = 1;
-        $query = "";
-        foreach($routes as $item) {
-            if ($item->SequenceFrom == null | $item->SequenceTo == null) {
-                if ($i < count($routes)) {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "') OR ";
+            $query = "";
+            foreach($routes as $item) {
+                if ($item->SequenceFrom == null | $item->SequenceTo == null) {
+                    if ($i < count($routes)) {
+                        $query .= " (AccountMaster.Route='" . $item->Route . "') OR ";
+                    } else {
+                        $query .= " (AccountMaster.Route='" . $item->Route . "') ";
+                    }                
                 } else {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "') ";
-                }                
-            } else {
-                if ($i < count($routes)) {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.SequenceNumber BETWEEN '" . $item->SequenceFrom . "' AND '" . $item->SequenceTo . "') ) OR ";
-                } else {
-                    $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.SequenceNumber BETWEEN '" . $item->SequenceFrom . "' AND '" . $item->SequenceTo . "') ) ";
-                }
-            } 
-            $i++;
-        }
+                    if ($i < count($routes)) {
+                        $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.SequenceNumber BETWEEN '" . $item->SequenceFrom . "' AND '" . $item->SequenceTo . "') ) OR ";
+                    } else {
+                        $query .= " (AccountMaster.Route='" . $item->Route . "' AND (AccountMaster.SequenceNumber BETWEEN '" . $item->SequenceFrom . "' AND '" . $item->SequenceTo . "') ) ";
+                    }
+                } 
+                $i++;
+            }
 
-        $data = DB::connection("sqlsrvbilling")
-                    ->table('Bills')
-                    ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
-                    ->whereRaw("Bills.ServicePeriodEnd<='" . $disconnectionSchedules->ServicePeriodEnd . "' AND (" . $query . ") AND GETDATE() > DueDate AND 
-                        (AccountMaster.AccountStatus IN ('ACTIVE') OR AccountMaster.AccountNumber IN (SELECT AccountNumber FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND Status='Disconnected'))
-                        AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE Teller NOT IN ('" . $disconnectionSchedules->DisconnectorName . "') AND AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd)")
-                    ->select(
-                        'Bills.AccountNumber',
-                        'Bills.ServicePeriodEnd',
-                        'PowerKWH',
-                        'AccountMaster.ConsumerName',
-                        'AccountMaster.ConsumerAddress',
-                        'AccountMaster.MeterNumber',
-                        'Bills.NetAmount',
-                        'AccountMaster.AccountStatus',
-                        'AccountMaster.ConsumerType',
-                        DB::raw("'' AS Notes"),
-                        DB::raw("(SELECT TOP 1 Status FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd) AS Status"),
-                        DB::raw("(SELECT TOP 1 PaidAmount FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd) AS AmountPaid"),
-                        DB::raw("(SELECT TOP 1 DisconnectionDate FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd) AS DisconnectionDate"),
-                    )
-                    ->orderBy('Bills.AccountNumber')
-                    ->get();
-                    
-            $data = $data->toArray();
-            usort($data, function($a, $b) {
-                return strcmp($b->Status, $a->Status);
-            });
+            $data = DB::connection("sqlsrvbilling")
+                        ->table('Bills')
+                        ->leftJoin('AccountMaster', 'Bills.AccountNumber', '=', 'AccountMaster.AccountNumber')
+                        ->whereRaw("Bills.ServicePeriodEnd<='" . $disconnectionSchedules->ServicePeriodEnd . "' AND (" . $query . ") AND GETDATE() > DueDate AND 
+                            (AccountMaster.AccountStatus IN ('ACTIVE') OR AccountMaster.AccountNumber IN (SELECT AccountNumber FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND Status='Disconnected'))
+                            AND Bills.AccountNumber NOT IN (SELECT AccountNumber FROM PaidBills WHERE Teller NOT IN ('" . $disconnectionSchedules->DisconnectorName . "') AND AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd)")
+                        ->select(
+                            'Bills.AccountNumber',
+                            'Bills.ServicePeriodEnd',
+                            'PowerKWH',
+                            'AccountMaster.ConsumerName',
+                            'AccountMaster.ConsumerAddress',
+                            'AccountMaster.MeterNumber',
+                            'Bills.NetAmount',
+                            DB::raw("'' AS LastReading"),
+                            'AccountMaster.AccountStatus',
+                            'AccountMaster.ConsumerType',
+                            DB::raw("'' AS Notes"),
+                            DB::raw("(SELECT TOP 1 Status FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd) AS Status"),
+                            DB::raw("(SELECT TOP 1 PaidAmount FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd) AS AmountPaid"),
+                            DB::raw("(SELECT TOP 1 DisconnectionDate FROM DisconnectionData WHERE ScheduleId='" . $disconnectionSchedules->id . "' AND AccountNumber=Bills.AccountNumber AND ServicePeriodEnd=Bills.ServicePeriodEnd) AS DisconnectionDate"),
+                        )
+                        ->orderBy('Bills.AccountNumber')
+                        ->get();
+                        
+                $data = $data->toArray();
+                usort($data, function($a, $b) {
+                    return strcmp($b->Status, $a->Status);
+                });
         }
 
         $totalCollection = DB::connection("sqlsrvbilling")
