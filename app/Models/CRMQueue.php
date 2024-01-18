@@ -429,28 +429,29 @@ class CRMQueue extends Model
                 $queuDetails->save();
                 $overAllTotal += floatval($totalTransactions->BOHECOShare);
 
-                // BILL & ENERGY DEPOSIT
-                if (ServiceConnections::isResidentials($serviceConnection->AccountType)) {
-                    // BILL DEPOSIT
-                    $queuDetails = new CRMDetails;
-                    $queuDetails->id = IDGenerator::generateID() . "3";
-                    $queuDetails->ReferenceNo = $qId;
-                    $queuDetails->Particular = 'Bill Deposit';
-                    $queuDetails->GLCode = '21720110002';
-                    $queuDetails->Total = $totalTransactions->BillDeposit;
-                    $queuDetails->save();
-                    $overAllTotal += floatval($totalTransactions->BillDeposit);
-                } else {
-                    // ENERGY DEPOSIT
-                    $queuDetails = new CRMDetails;
-                    $queuDetails->id = IDGenerator::generateID() . "4";
-                    $queuDetails->ReferenceNo = $qId;
-                    $queuDetails->Particular = 'Energy Deposit';
-                    $queuDetails->GLCode = '21720110001';
-                    $queuDetails->Total = $totalTransactions->BillDeposit;
-                    $queuDetails->save();
-                    $overAllTotal += floatval($totalTransactions->BillDeposit);
-                }
+                // BILL AND ENERGY DEPOSIT IS FOR AR ONLY
+                // // BILL & ENERGY DEPOSIT
+                // if (ServiceConnections::isResidentials($serviceConnection->AccountType)) {
+                //     // BILL DEPOSIT
+                //     $queuDetails = new CRMDetails;
+                //     $queuDetails->id = IDGenerator::generateID() . "3";
+                //     $queuDetails->ReferenceNo = $qId;
+                //     $queuDetails->Particular = 'Bill Deposit';
+                //     $queuDetails->GLCode = '21720110002';
+                //     $queuDetails->Total = $totalTransactions->BillDeposit;
+                //     $queuDetails->save();
+                //     $overAllTotal += floatval($totalTransactions->BillDeposit);
+                // } else {
+                //     // ENERGY DEPOSIT
+                //     $queuDetails = new CRMDetails;
+                //     $queuDetails->id = IDGenerator::generateID() . "4";
+                //     $queuDetails->ReferenceNo = $qId;
+                //     $queuDetails->Particular = 'Energy Deposit';
+                //     $queuDetails->GLCode = '21720110001';
+                //     $queuDetails->Total = $totalTransactions->BillDeposit;
+                //     $queuDetails->save();
+                //     $overAllTotal += floatval($totalTransactions->BillDeposit);
+                // }
 
                 // 2307 2%
                 if ($totalTransactions->Form2307TwoPercent != null && $totalTransactions->Form2307TwoPercent > 0) {
@@ -683,7 +684,6 @@ class CRMQueue extends Model
             $timeFrame->Notes = 'All Fees Forwarded to Cashier Manually';
             $timeFrame->save();
 
-            
             $totalTransactions->save();
 
             $queuesZero = CRMDetails::whereRaw("Total=0")->delete();

@@ -197,15 +197,15 @@
                <th class="border">TOTAL<br>AMOUNT</th>
             </tr>
             <tr>
-               <td class="border-side center-text">I</td>
-               <td class="border-side">ENERGY DEPOSIT *</td>
-               <td class="border-side right-text">{{is_numeric($totalTransactions->BillDeposit) ? number_format($totalTransactions->BillDeposit, 2) : '0.00' }}</td>
-               <td class="border-side right-text">{{is_numeric($totalTransactions->BillDeposit) ? number_format(floatval($totalTransactions->BillDeposit) * .12, 2) : '0.00' }}</td>
-               <td class="border-side right-text">{{is_numeric($totalTransactions->BillDeposit) ? number_format(floatval($totalTransactions->BillDeposit) + (floatval($totalTransactions->BillDeposit) * .12), 2) : '0.00' }}</td>
+               <td class="border center-text">I</td>
+               <td class="border">ENERGY DEPOSIT (AR Only) *</td>
+               <td class="border right-text">{{is_numeric($totalTransactions->BillDeposit) ? number_format($totalTransactions->BillDeposit, 2) : '0.00' }}</td>
+               <td class="border right-text">0</td>
+               <td class="border right-text">{{is_numeric($totalTransactions->BillDeposit) ? number_format(floatval($totalTransactions->BillDeposit), 2) : '0.00' }}</td>
             </tr>
             @php
                $deposit = is_numeric($totalTransactions->BillDeposit) ? floatval($totalTransactions->BillDeposit) : 0;
-               $depositVat = is_numeric($totalTransactions->BillDeposit) ? (floatval($totalTransactions->BillDeposit) * .12) : 0;
+               $depositVat = 0;
                $depositTotal = $deposit + $depositVat;
 
                $remittance = (floatval($totalTransactions->LaborCharge) + floatval($totalTransactions->BOHECOShare));
@@ -383,8 +383,8 @@
 
             {{-- WITHOLDING 2% TOTAL --}}
             @php
-                $wtTwoPercent = $totalTransactions != null ? ($totalTransactions->From2307TwoPercent + $totalTransactions->Item1) : 0;
-                $wtFivePercent = $totalTransactions != null ? ($totalTransactions->From2307FivePercent + $totalTransactions->WithholdingFivePercent + $totalTransactions->TransformerFivePercentWT) : 0;
+                $wtTwoPercent = $totalTransactions != null ? ($totalTransactions->Form2307TwoPercent + $totalTransactions->Item1) : 0;
+                $wtFivePercent = $totalTransactions != null ? ($totalTransactions->Form2307FivePercent + $totalTransactions->WithholdingFivePercent + $totalTransactions->TransformerFivePercentWT) : 0;
             @endphp
             @if ($wtTwoPercent != null && $wtTwoPercent != 0)
                 <tr>
@@ -414,8 +414,15 @@
             @endif
 
             <tr>
+                <th class="border"></th>
+                <td class="border center-text">TOTAL WITHOUT DEPOSITS</td>
+                <td class="border right-text">{{ number_format(($others + $remittance + $transformer + $materials), 2) }}</td>
+                <td class="border right-text">{{ number_format($othersVat + $vat + $depositVat + $transformerVat + $materialsVat, 2) }}</td>
+                <td class="border right-text">{{ number_format(($othersTotal + $remittanceTotal + $transformerTotal + $materialsTotal) - ($instBalanceTotal + $wtTwoPercent + $wtFivePercent + $wtOnePercent), 2) }}</td>
+             </tr>
+            <tr>
                <th class="border"></th>
-               <th class="border center-text">TOTAL</th>
+               <th class="border center-text">OVERALL TOTAL</th>
                <th class="border right-text">{{ number_format(($others + $remittance + $deposit + $transformer + $materials), 2) }}</th>
                <th class="border right-text">{{ number_format($othersVat + $vat + $depositVat + $transformerVat + $materialsVat, 2) }}</th>
                <th class="border right-text">{{ number_format(($othersTotal + $remittanceTotal + $depositTotal + $transformerTotal + $materialsTotal) - ($instBalanceTotal + $wtTwoPercent + $wtFivePercent + $wtOnePercent), 2) }}</th>

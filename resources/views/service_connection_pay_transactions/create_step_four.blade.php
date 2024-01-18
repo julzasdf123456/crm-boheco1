@@ -807,16 +807,16 @@ $id = IDGenerator::generateID();
                 if (bohecoShareOnly) {
                     overAllSubTotal = getBOHECOIShare() + serviceConnectionFees + getBillDepositNormal() + calculateTableColumnRaw('particulars_table', 1)
                     witholdableVat = (getBOHECOIShare() * .12) + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
-                    overAllVat = (getBOHECOIShare() * .12) + (getBillDepositNormal() * .12) + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
+                    overAllVat = (getBOHECOIShare() * .12) + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
                 } else {
                     overAllSubTotal = getTotalLaborCharge() + getBOHECOIShare() + serviceConnectionFees + getBillDepositNormal() + calculateTableColumnRaw('particulars_table', 1)
                     witholdableVat = getTotalLaborVat() + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
-                    overAllVat = getTotalLaborVat() + (getBillDepositNormal() * .12) + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
+                    overAllVat = getTotalLaborVat() + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
                 }                
             } else {
                 overAllSubTotal = serviceConnectionFees + getBillDepositNormal() + calculateTableColumnRaw('particulars_table', 1)
                 witholdableVat = (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
-                overAllVat = (getBillDepositNormal() * .12) + (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
+                overAllVat = (serviceConnectionFees * .12) + calculateVatTableColumnRaw('particulars_table', 2)
             }
 
             // 2%
