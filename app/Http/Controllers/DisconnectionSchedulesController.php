@@ -634,6 +634,7 @@ class DisconnectionSchedulesController extends AppBaseController
                         'AccountMaster.ConsumerType',
                         "DisconnectionData.Status",
                         "DisconnectionData.Notes",
+                        "DisconnectionData.LastReading",
                         "DisconnectionData.PaidAmount as AmountPaid",
                         "DisconnectionData.DisconnectionDate",
                     )
