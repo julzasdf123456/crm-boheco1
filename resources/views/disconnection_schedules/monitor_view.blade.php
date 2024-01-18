@@ -84,6 +84,7 @@
                   <th>Account<br>Status <i class="fas fa-sort float-right text-muted"></i></th>
                   <th>Amount Due <i class="fas fa-sort float-right text-muted"></i></th>
                   <th>Disconnection<br>Assessment <i class="fas fa-sort float-right text-muted"></i></th>
+                  <th>Last Reading <i class="fas fa-sort float-right text-muted"></i></th>
                   <th>Remarks <i class="fas fa-sort float-right text-muted"></i></th>
                   <th>Amount Paid <i class="fas fa-sort float-right text-muted"></i></th>
                   <th>Date<br>Acted <i class="fas fa-sort float-right text-muted"></i></th>
@@ -114,6 +115,7 @@
                         <td>{{ $item->AccountStatus }}</td>
                         <td class="text-right text-danger"><strong>{{ is_numeric($item->NetAmount) ? number_format($item->NetAmount, 2) : 0 }}</strong></td>
                         <td class="text-center"><span class="badge {{ DisconnectionSchedules::bgStatus($item->Status) }}">{{ $item->Status }}</span></td>
+                        <td>{{ $item->LastReading }}</td>
                         <td>{{ $item != null && $item->Notes != null ? $item->Notes : '-' }}</td>
                         <td class="text-right text-primary"><strong>{{ is_numeric($item->AmountPaid) ? number_format($item->AmountPaid, 2) : 0 }}</strong></td>
                         <td>{{ $item->DisconnectionDate != null ? date('M d, Y h:i A', strtotime($item->DisconnectionDate)) : '' }}</td>
