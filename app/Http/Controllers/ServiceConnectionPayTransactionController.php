@@ -477,25 +477,25 @@ class ServiceConnectionPayTransactionController extends AppBaseController
                 $queuDetails->save();
 
                 // BILL & ENERGY DEPOSIT
-                if (ServiceConnections::isResidentials($serviceConnection->AccountType)) {
-                    // BILL DEPOSIT
-                    $queuDetails = new CRMDetails;
-                    $queuDetails->id = IDGenerator::generateID() + "3";
-                    $queuDetails->ReferenceNo = $qId;
-                    $queuDetails->Particular = 'Bill Deposit';
-                    $queuDetails->GLCode = '21720110002';
-                    $queuDetails->Total = $request['BillDeposit'];
-                    $queuDetails->save();
-                } else {
-                    // ENERGY DEPOSIT
-                    $queuDetails = new CRMDetails;
-                    $queuDetails->id = IDGenerator::generateID() + "4";
-                    $queuDetails->ReferenceNo = $qId;
-                    $queuDetails->Particular = 'Energy Deposit';
-                    $queuDetails->GLCode = '21720110001';
-                    $queuDetails->Total = $request['BillDeposit'];
-                    $queuDetails->save();
-                }
+                // if (ServiceConnections::isResidentials($serviceConnection->AccountType)) {
+                //     // BILL DEPOSIT
+                //     $queuDetails = new CRMDetails;
+                //     $queuDetails->id = IDGenerator::generateID() + "3";
+                //     $queuDetails->ReferenceNo = $qId;
+                //     $queuDetails->Particular = 'Bill Deposit';
+                //     $queuDetails->GLCode = '21720110002';
+                //     $queuDetails->Total = $request['BillDeposit'];
+                //     $queuDetails->save();
+                // } else {
+                //     // ENERGY DEPOSIT
+                //     $queuDetails = new CRMDetails;
+                //     $queuDetails->id = IDGenerator::generateID() + "4";
+                //     $queuDetails->ReferenceNo = $qId;
+                //     $queuDetails->Particular = 'Energy Deposit';
+                //     $queuDetails->GLCode = '21720110001';
+                //     $queuDetails->Total = $request['BillDeposit'];
+                //     $queuDetails->save();
+                // }
 
                 // 2307 2%
                 if ($request['Form2307TwoPercent'] != null && floatval($request['Form2307TwoPercent']) > 0) {
