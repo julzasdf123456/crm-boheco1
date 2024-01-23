@@ -317,4 +317,8 @@ class TicketsController extends Controller {
 
         return response()->json($crews, 200);
     }
+
+    public function testConnection(Request $request) {
+        return response()->json('ok', 200);
+    }
 }

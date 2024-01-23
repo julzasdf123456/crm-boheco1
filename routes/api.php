@@ -51,6 +51,7 @@ Route::get('get-all-crew', [OtherData::class, 'getAllCrew']);
 Route::post('login', [UserController::class, 'login']);
 
 // TICKETS
+Route::get('test-connection', [TicketsController::class, 'testConnection']);
 Route::get('get-ticket-types', [TicketrepositoriesController::class, 'getTicketTypes']);
 Route::get('get-downloadable-tickets', [TicketsController::class, 'getDownloadableTickets']);
 Route::get('update-downloaded-tickets-status', [TicketsController::class, 'updateDownloadedTicketsStatus']);
