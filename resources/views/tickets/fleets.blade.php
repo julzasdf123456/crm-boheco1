@@ -24,7 +24,7 @@
             container: 'map', // container ID
             style: 'mapbox://styles/mapbox/satellite-v9',
             center: [123.977243, 9.949143], // starting position [lng, lat], , 
-            zoom: 18 // starting zoom
+            zoom: 12 // starting zoom
         });
 
         var markers = []
