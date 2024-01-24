@@ -19,6 +19,7 @@
     <script>
         $('body').addClass('sidebar-collapse')
 
+        var fleets = []
         mapboxgl.accessToken = 'pk.eyJ1IjoianVsemxvcGV6IiwiYSI6ImNqZzJ5cWdsMjJid3Ayd2xsaHcwdGhheW8ifQ.BcTcaOXmXNLxdO3wfXaf5A';
             const map = new mapboxgl.Map({
             container: 'map', // container ID
@@ -33,10 +34,13 @@
             
         })
 
-        function getFletData() {
+        function getFletData(crewId, background, foreground) {
             $.ajax({
                 url : "{{ route('tickets.get-fleet-data') }}",
                 type : "GET",
+                data : {
+                    CrewId : crewId,
+                },
                 success : function(res) {
                     var coordinates = []
 
@@ -50,46 +54,38 @@
                             coordinates.push([longi, lat])
 
                             if (index == 0) {
-                                // remove markers
                                 if (markers.length > 0) {
-                                    for (x=0; x<markers.length; x++) {
-                                        markers[x].remove()
-                                    }
-                                    console.log('markers removed')
+                                    markers[crewId].remove()
                                 }
-
                                 // ADD MARKER ON LAST COORDINATE
                                 const el = document.createElement('div');
                                 el.className = 'marker';
                                 el.id = res[index]['CrewId'];
                                 el.title = res[index]['StationName']
-                                el.innerHTML += '<i class="fas fa-car" style="font-size: 2.5em; color: #ffffff; margin-left: 8px; margin-top: 8px;"></i>'
-                                el.style.backgroundColor = `#0ac1d1`;    
+                                el.innerHTML += '<i class="fas fa-car" style="font-size: 2.5em; color: ' + foreground + '; margin-left: 8px; margin-top: 8px;"></i>'
+                                el.style.backgroundColor = background;    
                                 el.style.margin = `auto`
-                                el.style.cssText = `width: 53px; height: 53px; background-color: #0ac1d1; border-radius: 50%; border: 4px solid #ffffff;`
+                                el.style.cssText = `width: 53px; height: 53px; background-color: ` + background + `; border-radius: 50%; border: 4px solid ` + foreground + `;`
 
                                 marker = new mapboxgl.Marker(el)
                                         .setLngLat([longi, lat])
                                         .addTo(map);
 
-                                markers.push(marker)
+                                markers[crewId] = marker
                             }
                         })
 
                         // remove layer and source
-                        if (!jQuery.isEmptyObject(map.getLayer('route'))) {
-                            map.removeLayer('route')
-                            console.log('layer removed')
+                        if (!jQuery.isEmptyObject(map.getLayer('route' + crewId))) {
+                            map.removeLayer('route' + crewId)
                         }
 
-                        if (!jQuery.isEmptyObject(map.getSource('route'))) {
-                            map.removeSource('route')
-                            console.log('source removed')
+                        if (!jQuery.isEmptyObject(map.getSource('route' + crewId))) {
+                            map.removeSource('route' + crewId)
                         }
-                        console.log('data removed')
 
                         // add to map
-                        map.addSource('route', {
+                        map.addSource('route' + crewId, {
                             'type': 'geojson',
                             'data': {
                                 'type': 'Feature',
@@ -102,16 +98,16 @@
                         })
 
                         map.addLayer({
-                            'id': 'route',
+                            'id': 'route' + crewId,
                             'type': 'line',
-                            'source': 'route',
+                            'source': 'route' + crewId,
                             'layout': {
                                 'line-join': 'round',
                                 'line-cap': 'round'
                             },
                             'paint': {
-                                'line-color': '#eb7d34',
-                                'line-width': 10
+                                'line-color': background,
+                                'line-width': 8
                             }
                         })
                     }
@@ -126,11 +122,97 @@
             })
         }
 
+        function getFleets() {
+            $.ajax({
+                url : "{{ route('tickets.get-fleets') }}",
+                type : "GET",
+                success : function(res) {
+                    if (!jQuery.isEmptyObject(res)) {
+                        $.each(res, function(index, element) {
+                            fleets.push(res[index]['CrewId'])
+                        })
+                    }
+                },
+                error : function(err) {
+                    Toast.fire({
+                        icon : 'error',
+                        text : 'Error getting fleets'
+                    })
+                }
+            })
+        }
+
         map.on('load', () => {
-            setInterval(() => {
-                getFletData()
-            }, 5000);
+            getFleets()
             
+            var cols = [
+                '#00edc6', 
+                '#ed0096',
+                '#5115ab',
+                '#bab211',
+                '#1680a1',
+                '#a11632',
+                '#de5e02',
+                '#07b81f',
+                '#9c1f59',
+                '#1f789c',
+                '#578720',
+                '#872c20',
+                '#00edc6', 
+                '#ed0096',
+                '#5115ab',
+                '#bab211',
+                '#1680a1',
+                '#a11632',
+                '#de5e02',
+                '#07b81f',
+                '#9c1f59',
+                '#1f789c',
+                '#578720',
+                '#872c20',
+                '#00edc6', 
+                '#ed0096',
+                '#5115ab',
+                '#bab211',
+                '#1680a1',
+                '#a11632',
+                '#de5e02',
+                '#07b81f',
+                '#9c1f59',
+                '#1f789c',
+                '#578720',
+                '#872c20',
+                '#00edc6', 
+                '#ed0096',
+                '#5115ab',
+                '#bab211',
+                '#1680a1',
+                '#a11632',
+                '#de5e02',
+                '#07b81f',
+                '#9c1f59',
+                '#1f789c',
+                '#578720',
+                '#872c20',
+                '#00edc6', 
+                '#ed0096',
+                '#5115ab',
+                '#bab211',
+                '#1680a1',
+                '#a11632',
+                '#de5e02',
+                '#07b81f',
+                '#9c1f59',
+                '#1f789c',
+                '#578720',
+                '#872c20',
+            ]
+
+            setInterval(() => {
+                for(let i=0; i<fleets.length; i++) {
+                    getFletData(fleets[i], cols[i], '#fff')
+                }
+            }, 5000);            
         })
     </script>
 @endpush

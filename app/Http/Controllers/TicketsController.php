@@ -5844,12 +5844,27 @@ class TicketsController extends AppBaseController
         ]);
     }
 
-    public function getFleetData(Request $request) {
+    public function getFleets(Request $request) {
         $date = date('Y-m-d');
 
         $data = DB::table('Fleets_Tracks')
-            ->leftJoin('CRM_ServiceConnectionCrew', 'Fleets_Tracks.CrewId', '=', 'CRM_ServiceConnectionCrew.id')
             ->whereRaw("TRY_CAST(Fleets_Tracks.created_at AS DATE)='" . $date . "'")
+            ->select(
+                'CrewId',
+            )
+            ->groupBy('CrewId')
+            ->get();
+
+        return response()->json($data);
+    }
+
+    public function getFleetData(Request $request) {
+        $date = date('Y-m-d');
+        $crew = $request['CrewId'];
+
+        $data = DB::table('Fleets_Tracks')
+            ->leftJoin('CRM_ServiceConnectionCrew', 'Fleets_Tracks.CrewId', '=', 'CRM_ServiceConnectionCrew.id')
+            ->whereRaw("TRY_CAST(Fleets_Tracks.created_at AS DATE)='" . $date . "' AND Fleets_Tracks.CrewId='" . $crew . "'")
             ->select('Fleets_Tracks.Coordinates',
                 'Fleets_Tracks.CrewId',
                 'CRM_ServiceConnectionCrew.StationName',
