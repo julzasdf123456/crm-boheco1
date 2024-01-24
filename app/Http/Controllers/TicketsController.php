@@ -5837,4 +5837,26 @@ class TicketsController extends AppBaseController
 
         return response()->json($ticket, 200);
     }
+
+    public function fleets(Request $request) {
+        return view('/tickets/fleets', [
+
+        ]);
+    }
+
+    public function getFleetData(Request $request) {
+        $date = date('Y-m-d');
+
+        $data = DB::table('Fleets_Tracks')
+            ->leftJoin('CRM_ServiceConnectionCrew', 'Fleets_Tracks.CrewId', '=', 'CRM_ServiceConnectionCrew.id')
+            ->whereRaw("TRY_CAST(Fleets_Tracks.created_at AS DATE)='" . $date . "'")
+            ->select('Fleets_Tracks.Coordinates',
+                'Fleets_Tracks.CrewId',
+                'CRM_ServiceConnectionCrew.StationName',
+            )
+            ->orderByDesc('Fleets_Tracks.created_at')
+            ->get();
+
+        return response()->json($data);
+    }
 }

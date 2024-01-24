@@ -691,6 +691,17 @@ use Illuminate\Support\Facades\Auth;
 
 {{-- MISCELLANEOUS APPLICATIONS --}}
 @canany(['Super Admin', 'sc view', 'ticket view'])
+<li class="nav-item">
+    <a href="{{ route('tickets.fleets') }}"
+       class="nav-link {{ Request::is('tickets.fleets*') ? 'active' : '' }}">
+       <i class="fas fa-car nav-icon"></i>
+        <p>Fleet Monitor</p>
+    </a>
+</li>
+@endcanany
+
+{{-- MISCELLANEOUS APPLICATIONS --}}
+@canany(['Super Admin', 'sc view', 'ticket view'])
     <li class="nav-item has-treeview {{ Auth::user()->hasAnyRole(['Service Connection Assessor']) ? 'menu-open' : '' }}">
         <a href="#" class="nav-link">
             <i class="fas fa-circle nav-icon"></i>
