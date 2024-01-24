@@ -5,9 +5,39 @@
 @extends('layouts.app')
 
 @section('content')
+<div id="map" style="width: 100%; height: 99vh; position: fixed; top: 0;"></div>
+
 <div class="row">
-    <div class="col-lg-12">
-        <div id="map" style="width: 100%; height: 95vh;"></div>
+    <div class="col-lg-2 col-md-4" style="margin-top: 10px; margin-left: 10px;">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title"><i class="fas fa-cogs ico-tab"></i>Options</span>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <span class="text-muted">Department</span>
+                        <select id="Department" class="form-control">
+                            <option value="All">ALL</option>
+                            <option value="ESD">ESD</option>
+                            <option value="SEEAD">SEEAD</option>
+                            <option value="OGM">OGM</option>
+                            <option value="ISD">ISD</option>
+                            <option value="OSD">OSD</option>
+                            <option value="PGD">PGD</option>
+                        </select>
+
+                        <span class="text-muted">Crew</span>
+                        <select id="Crew" class="form-control">
+                            <option value="All">ALL</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
     
@@ -20,6 +50,8 @@
         $('body').addClass('sidebar-collapse')
 
         var fleets = []
+        var department = 'All'
+        var crew = 'All'
         mapboxgl.accessToken = 'pk.eyJ1IjoianVsemxvcGV6IiwiYSI6ImNqZzJ5cWdsMjJid3Ayd2xsaHcwdGhheW8ifQ.BcTcaOXmXNLxdO3wfXaf5A';
             const map = new mapboxgl.Map({
             container: 'map', // container ID
@@ -122,14 +154,32 @@
             })
         }
 
-        function getFleets() {
+        function getFleets(department, crewId, reloadCrews) {
             $.ajax({
                 url : "{{ route('tickets.get-fleets') }}",
                 type : "GET",
+                data : {
+                    Department : department,
+                    CrewId : crewId,
+                },
                 success : function(res) {
+                    clearDisplays()
+
+                    fleets = []
+
+                    if (reloadCrews) {                            
+                        $('#Crew option').remove()
+                        $('#Crew').append("<option value='All'>ALL</option>")
+                    }
+                    
                     if (!jQuery.isEmptyObject(res)) {
+
                         $.each(res, function(index, element) {
-                            fleets.push(res[index]['CrewId'])
+                            fleets.push(res[index]['CrewId'])   
+                            
+                            if (reloadCrews) {
+                                $('#Crew').append("<option value='" + res[index]['CrewId'] + "'>" + res[index]['StationName'] + "</option>")
+                            }
                         })
                     }
                 },
@@ -143,7 +193,7 @@
         }
 
         map.on('load', () => {
-            getFleets()
+            getFleets(department, crew, true)
             
             var cols = [
                 '#00edc6', 
@@ -212,7 +262,32 @@
                 for(let i=0; i<fleets.length; i++) {
                     getFletData(fleets[i], cols[i], '#fff')
                 }
-            }, 5000);            
+            }, 5000);  
+            
+            $('#Department').on('change', function() {
+                getFleets(this.value, 'All', true)
+            })
+
+            $('#Crew').on('change', function() {
+                getFleets($('#Department').val(), this.value, false)
+            })
         })
+
+        function clearDisplays() {
+            for(let i=0; i<fleets.length; i++) {
+                markers[fleets[i]].remove()
+                // remove layer and source
+                if (!jQuery.isEmptyObject(map.getLayer('route' + fleets[i]))) {
+                    map.removeLayer('route' + fleets[i])
+                }
+
+                if (!jQuery.isEmptyObject(map.getSource('route' + fleets[i]))) {
+                    map.removeSource('route' + fleets[i])
+                }
+            }
+
+            $('.marker').remove()
+        }
+
     </script>
 @endpush

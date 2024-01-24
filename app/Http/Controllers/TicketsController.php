@@ -5846,14 +5846,54 @@ class TicketsController extends AppBaseController
 
     public function getFleets(Request $request) {
         $date = date('Y-m-d');
+        $department = $request['Department'];
+        $crewId = $request['CrewId'];
 
-        $data = DB::table('Fleets_Tracks')
-            ->whereRaw("TRY_CAST(Fleets_Tracks.created_at AS DATE)='" . $date . "'")
-            ->select(
-                'CrewId',
-            )
-            ->groupBy('CrewId')
-            ->get();
+        if ($department == 'All') {
+            if ($crewId == 'All') {
+                $data = DB::table('Fleets_Tracks')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'Fleets_Tracks.CrewId', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->whereRaw("TRY_CAST(Fleets_Tracks.created_at AS DATE)='" . $date . "'")
+                    ->select(
+                        'StationName',
+                        'CrewId',
+                    )
+                    ->groupBy('CrewId', 'StationName')
+                    ->get();
+            } else {
+                $data = DB::table('Fleets_Tracks')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'Fleets_Tracks.CrewId', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->whereRaw("TRY_CAST(Fleets_Tracks.created_at AS DATE)='" . $date . "' AND Fleets_Tracks.CrewId='" . $crewId . "'")
+                    ->select(
+                        'StationName',
+                        'CrewId',
+                    )
+                    ->groupBy('CrewId', 'StationName')
+                    ->get();
+            }            
+        } else {
+            if ($crewId == 'All') {
+                $data = DB::table('Fleets_Tracks')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'Fleets_Tracks.CrewId', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->whereRaw("TRY_CAST(Fleets_Tracks.created_at AS DATE)='" . $date . "' AND CRM_ServiceConnectionCrew.Office='" . $department . "'")
+                    ->select(
+                        'StationName',
+                        'Fleets_Tracks.CrewId',
+                    )
+                    ->groupBy('Fleets_Tracks.CrewId', 'StationName')
+                    ->get();
+            } else {
+                $data = DB::table('Fleets_Tracks')
+                    ->leftJoin('CRM_ServiceConnectionCrew', 'Fleets_Tracks.CrewId', '=', 'CRM_ServiceConnectionCrew.id')
+                    ->whereRaw("TRY_CAST(Fleets_Tracks.created_at AS DATE)='" . $date . "' AND CRM_ServiceConnectionCrew.Office='" . $department . "' AND Fleets_Tracks.CrewId='" . $crewId . "'")
+                    ->select(
+                        'StationName',
+                        'Fleets_Tracks.CrewId',
+                    )
+                    ->groupBy('Fleets_Tracks.CrewId', 'StationName')
+                    ->get();
+            }            
+        }        
 
         return response()->json($data);
     }
@@ -5861,6 +5901,7 @@ class TicketsController extends AppBaseController
     public function getFleetData(Request $request) {
         $date = date('Y-m-d');
         $crew = $request['CrewId'];
+        $department = $request['Department'];
 
         $data = DB::table('Fleets_Tracks')
             ->leftJoin('CRM_ServiceConnectionCrew', 'Fleets_Tracks.CrewId', '=', 'CRM_ServiceConnectionCrew.id')
