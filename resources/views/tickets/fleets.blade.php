@@ -86,11 +86,6 @@
                             coordinates.push([longi, lat])
 
                             if (index == 0) {
-                                if (markers.length > 0) {
-                                    for(let i=0; i<markers.length; i++) {
-                                        markers[i].remove()
-                                    }
-                                }
                                 // ADD MARKER ON LAST COORDINATE
                                 const el = document.createElement('div');
                                 el.className = 'marker';
@@ -276,6 +271,12 @@
         })
 
         function clearDisplays() {
+            if (markers.length > 0) {
+                for(let i=0; i<markers.length; i++) {
+                    markers[i].remove()
+                }
+            }
+
             for(let i=0; i<fleets.length; i++) {
                 // markers[fleets[i]].remove()
                 // remove layer and source
@@ -288,7 +289,7 @@
                 }
             }
 
-            $('.marker').remove()
+            // $('.marker').remove()
         }
 
     </script>
