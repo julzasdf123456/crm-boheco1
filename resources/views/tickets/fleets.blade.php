@@ -87,7 +87,9 @@
 
                             if (index == 0) {
                                 if (markers.length > 0) {
-                                    markers[crewId].remove()
+                                    for(let i=0; i<markers.length; i++) {
+                                        markers[i].remove()
+                                    }
                                 }
                                 // ADD MARKER ON LAST COORDINATE
                                 const el = document.createElement('div');
@@ -103,7 +105,7 @@
                                         .setLngLat([longi, lat])
                                         .addTo(map);
 
-                                markers[crewId] = marker
+                                markers.push(marker)
                             }
                         })
 
@@ -275,7 +277,7 @@
 
         function clearDisplays() {
             for(let i=0; i<fleets.length; i++) {
-                markers[fleets[i]].remove()
+                // markers[fleets[i]].remove()
                 // remove layer and source
                 if (!jQuery.isEmptyObject(map.getLayer('route' + fleets[i]))) {
                     map.removeLayer('route' + fleets[i])
