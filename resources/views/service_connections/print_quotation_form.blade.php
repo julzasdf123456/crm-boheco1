@@ -477,7 +477,12 @@
          <br>
          <br>  
          <h4 class="no-line-spacing center-text">{{ strtoupper(Auth::user()->name) }}</h4>
-         <p class="no-line-spacing center-text">Service Connection Clerk</p>
+         @if (Auth::id() === '1700017433598')
+            <p class="no-line-spacing center-text">Chief, Cons. Svc. & Power Use Division</p>
+         @else
+            <p class="no-line-spacing center-text">Service Connection Clerk</p>
+         @endif
+         
       </div>
 
       <div class="col-md-6">
