@@ -292,6 +292,47 @@ class TicketsController extends AppBaseController
             $queuDetails->GLCode = '22420414001';
             $queuDetails->Total = 3.6;
             $queuDetails->save();
+        } elseif ($tickets->Ticket === '1668541254430') {
+            // RECONNECTION - PILFERAGE
+            $qId = IDGenerator::generateID();
+
+            $queue = new CRMQueue;
+            $queue->id = $qId;
+            $queue->ConsumerName = $ticket->ConsumerName;
+            $queue->ConsumerAddress = Tickets::getAddress($ticket);
+            $queue->TransactionPurpose = 'Reconnection - Pilferage';
+            $queue->SourceId = $ticket->id;
+            $queue->SubTotal = 120;
+            $queue->VAT = 14.4;
+            $queue->Total = 134.4;
+            $queue->save();
+
+            // RECONNECTION FEE
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() . "1";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'Reconnection Fee';
+            $queuDetails->GLCode = '43040500000';
+            $queuDetails->Total = 100;
+            $queuDetails->save();
+
+            // METER SEAL FEE
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() . "2";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'Meter Seal';
+            $queuDetails->GLCode = '43040500000';
+            $queuDetails->Total = 20;
+            $queuDetails->save();
+
+            // EVAT
+            $queuDetails = new CRMDetails;
+            $queuDetails->id = IDGenerator::generateID() . "3";
+            $queuDetails->ReferenceNo = $qId;
+            $queuDetails->Particular = 'EVAT';
+            $queuDetails->GLCode = '22420414001';
+            $queuDetails->Total = 14.4;
+            $queuDetails->save();
         }
 
         // SEND SMS
