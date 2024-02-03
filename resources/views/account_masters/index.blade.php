@@ -3,6 +3,10 @@
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
+            <div class="spinner-border text-primary float-right gone" id="loader" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            <button class="btn btn-xs btn-primary float-right" onclick="generateUniqueID()">Generate</button>
             <a href="{{ route('serviceAccounts.accounts-map-view') }}" class="btn btn-xs btn-warning float-right"><i class="fas fa-map-marker-alt ico-tab-mini"></i>Go to Map View</a>
             {!! Form::open(['route' => 'accountMasters.index', 'method' => 'GET']) !!}
                 <div class="row mb-2">
@@ -87,6 +91,29 @@
                 }
             });
         })
+
+        function generateUniqueID() {
+            $('#loader').removeClass('gone')
+            $.ajax({
+                url : "{{ route('accountMasters.generate-unique-id') }}",
+                type : "GET",
+                success : function(res) {
+                    Toast.fire({
+                        icon : 'success',
+                        text : 'generated!'
+                    })
+                    $('#loader').addClass('gone')
+                },
+                error : function(err) {
+                    Swal.fire({
+                        icon : 'error',
+                        text : 'generation error!'
+                    })
+                    console.log(err)
+                    ('#loader').addClass('gone')
+                }
+            })
+        }
     </script>
 @endpush
 

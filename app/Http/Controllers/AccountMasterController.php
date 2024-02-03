@@ -609,4 +609,27 @@ class AccountMasterController extends AppBaseController
             'serviceConnections' => $serviceConnections,
         ]);
     }
+
+    public function generateUniqueID(Request $request) {
+        set_time_limit(10000);
+
+        $accounts = DB::connection('sqlsrvbilling')
+            ->table('AccountMaster')
+            ->whereRaw("UniqueID IS NULL")
+            ->orderBy('AccountNumber')
+            ->get();
+
+        $startVal = 1610000000000;
+        foreach($accounts as $item) {
+            $account = AccountMaster::where('AccountNumber', $item->AccountNumber)->first();
+
+            if ($account != null) {
+                $account->UniqueID = $startVal;
+                $account->save();
+            }
+            $startVal++;
+        }
+
+        return response()->json('ok', 200);
+    }
 }

@@ -779,6 +779,7 @@ Route::get('/account_masters/abrupt-increase-decrease', [App\Http\Controllers\Ac
 Route::get('/account_masters/get-abrupt-increase-decrease', [App\Http\Controllers\AccountMasterController::class, 'getAbruptIncreaseDecrease'])->name('accountMasters.get-abrupt-increase-decrease');
 Route::get('/account_masters/check-left-available-account-numbers', [App\Http\Controllers\AccountMasterController::class, 'getLeftAvailableAccountNumbers'])->name('accountMasters.check-left-available-account-numbers');
 Route::get('/account_masters/print-sdir/{office}', [App\Http\Controllers\AccountMasterController::class, 'printSDIR'])->name('accountMasters.print-sdir');
+Route::get('/account_masters/generate-unique-id', [App\Http\Controllers\AccountMasterController::class, 'generateUniqueID'])->name('accountMasters.generate-unique-id');
 Route::resource('accountMasters', App\Http\Controllers\AccountMasterController::class);
 
 
