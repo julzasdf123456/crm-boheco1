@@ -3337,7 +3337,8 @@ class ServiceConnectionsController extends AppBaseController
                 ->select(
                     'id',
                     'Town',
-                    DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND ConnectionApplicationType NOT IN('Change Name')) AS TotalApplicants"),
+                    DB::raw("(SELECT COUNT(s.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
+                        WHERE s.Town=CRM_Towns.id AND (s.DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR Trash='No') AND ConnectionApplicationType NOT IN('Change Name') AND i.id IS NOT NULL) AS TotalApplicants"),
                     DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
                         WHERE s.Town=CRM_Towns.id AND (s.DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status='Approved' AND ConnectionApplicationType NOT IN('Change Name') AND i.id IS NOT NULL) AS ApprovedThisMonth"),
                     DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
