@@ -3388,18 +3388,17 @@ class ServiceConnectionsController extends AppBaseController
         if (isset($month)) {
             $data = DB::table('CRM_Towns')
                 ->select(
-                    'id',
                     'Town',
                     DB::raw("(SELECT COUNT(s.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
-                        WHERE s.Town=CRM_Towns.id AND (s.DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR Trash='No') AND ConnectionApplicationType NOT IN('Change Name') AND i.id IS NOT NULL) AS TotalApplicants"),
+                    WHERE s.Town=CRM_Towns.id AND (s.DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR Trash='No') AND ConnectionApplicationType NOT IN('Change Name') AND i.id IS NOT NULL) AS TotalApplicants"),
+                DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
+                    WHERE s.Town=CRM_Towns.id AND (s.DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status='Approved' AND ConnectionApplicationType NOT IN('Change Name') AND i.id IS NOT NULL) AS ApprovedThisMonth"),
+                DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
+                    WHERE s.Town=CRM_Towns.id AND (s.DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status IN ('FOR INSPECTION', 'Re-Inspection') AND ConnectionApplicationType NOT IN('Change Name') AND i.id IS NOT NULL) AS ForInspectionThisMonth"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Status IN ('Energized', 'Closed')) AS ExecutedThisMonth"),
                     DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
-                        WHERE s.Town=CRM_Towns.id AND (s.DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status='Approved' AND ConnectionApplicationType NOT IN('Change Name') AND i.id IS NOT NULL) AS ApprovedThisMonth"),
-                    DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
-                        WHERE s.Town=CRM_Towns.id AND (s.DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status IN ('FOR INSPECTION', 'Re-Inspection') AND ConnectionApplicationType NOT IN('Change Name') AND i.id IS NOT NULL) AS ForInspectionThisMonth"),
-                    DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (DateOfApplication BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Status IN ('Energized', 'Closed') AND ConnectionApplicationType NOT IN('Change Name')) AS ExecutedThisMonth"),
-                    DB::raw("(SELECT COUNT(i.id) FROM CRM_ServiceConnections s LEFT JOIN CRM_ServiceConnectionInspections i ON s.id=i.ServiceConnectionId 
-                        WHERE s.Town=CRM_Towns.id AND i.DateOfVerification IS NOT NULL AND (TRY_CAST(i.DateOfVerification AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status='Approved' AND ConnectionApplicationType NOT IN('Change Name')) AS TotalInspections"),
-                    DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (TRY_CAST(DateTimeOfEnergization AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND ConnectionApplicationType NOT IN('Change Name')) AS TotalEnergizations"),
+                        WHERE s.Town=CRM_Towns.id AND i.DateOfVerification IS NOT NULL AND (TRY_CAST(i.DateOfVerification AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND (s.Trash IS NULL OR s.Trash='No') AND i.Status='Approved') AS TotalInspections"),
+                    DB::raw("(SELECT COUNT(id) FROM CRM_ServiceConnections WHERE Town=CRM_Towns.id AND (TRY_CAST(DateTimeOfEnergization AS DATE) BETWEEN '" . $from . "' AND '" . $to . "') AND (Trash IS NULL OR Trash='No') AND Status IN ('Energized', 'Closed')) AS TotalEnergizations"),
                 )
                 ->orderBy('Town')
                 ->get();
