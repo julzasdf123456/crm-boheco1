@@ -243,7 +243,7 @@
             // UPDATE CREATED AT
             $('#update-created-at').on('click', function() {
                 $.ajax({
-                    url : '/tickets/update-date-filed',
+                    url : '{{ url("/tickets/update-date-filed") }}',
                     type : 'POST',
                     data : {
                         _token : "{{ csrf_token() }}",
@@ -254,7 +254,7 @@
                         location.reload();
                     },
                     error : function(error) {
-                        alert(error);
+                        // alert(error);
                     }
                 })
             });
@@ -262,7 +262,7 @@
             // UPDATE SENT TO LINEMAN
             $('#update-lenman-sent').on('click', function() {
                 $.ajax({
-                    url : '/tickets/update-date-downloaded',
+                    url : '{{ url("/tickets/update-date-downloaded") }}',
                     type : 'POST',
                     data : {
                         _token : "{{ csrf_token() }}",
@@ -273,7 +273,7 @@
                         location.reload();
                     },
                     error : function(error) {
-                        alert(error);
+                        // alert(error);
                     }
                 })
             });
@@ -281,7 +281,7 @@
             // UPDATE LINEMAN ARRIVED ON SITE
             $('#update-lenman-arrival').on('click', function() {
                 $.ajax({
-                    url : '/tickets/update-date-arrival',
+                    url : '{{ url("/tickets/update-date-arrival") }}',
                     type : 'POST',
                     data : {
                         _token : "{{ csrf_token() }}",
@@ -292,7 +292,7 @@
                         location.reload();
                     },
                     error : function(error) {
-                        alert(error);
+                        // alert(error);
                     }
                 })
             });
@@ -300,7 +300,7 @@
             // UPDATE EXECUTION STATUS
             $('#update-execution').on('click', function() {
                 $.ajax({
-                    url : '/tickets/update-execution',
+                    url : '{{ url("/tickets/update-execution") }}',
                     type : 'POST',
                     data : {
                         _token : "{{ csrf_token() }}",
@@ -320,7 +320,7 @@
                         
                     },
                     error : function(error) {
-                        alert(error);
+                        // alert(error);
                     }
                 })
             });
