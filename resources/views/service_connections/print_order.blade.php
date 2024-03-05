@@ -211,7 +211,7 @@
                 </div>
                 <div class="col-md-10">
                     <p class="underlined no-line-spacing">: -</p>
-                    <p class="underlined no-line-spacing">: {{ $serviceConnectionInspections != null ? $serviceConnectionInspections->SDWLengthAsInstalled . 'meters (Size: ' . $serviceConnectionInspections->SDWSizeAsInstalled . ')' : '' }}</p>
+                    <p class="underlined no-line-spacing">: {{ $serviceConnectionInspections != null ? $serviceConnectionInspections->SDWLengthAsInstalled . ' meters (Size: ' . $serviceConnectionInspections->SDWSizeAsInstalled . ')' : '' }}</p>
                     <p class="underlined no-line-spacing">: {{ $serviceConnection->AccountType }}</p>
                     <p class="underlined no-line-spacing">: {{ $serviceConnection->ElectricianName }}</p>
                     <p class="underlined no-line-spacing">: {{ $inspector != null ? $inspector->name : '-' }}</p>
