@@ -13,10 +13,13 @@
                     <h4 class="m-0">Meter Assigning</h4>
                 </div>
                 <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item active">Meter Assigning</li>
-                    </ol>
+                    <form action="{{ route('serviceConnectionMtrTrnsfrmrs.assigning') }}" method="GET">
+                        <button type="submit" class="float-right btn btn-sm btn-primary">Filter</button>
+                        <select name="Options" id="Options" class="form-control form-control-sm float-right" style="width: 250px; margin-right: 10px;">
+                            <option value="All" {{ isset($_GET['Options']) && $_GET['Options']=='All' ? 'selected' : '' }}>All New Applications</option>
+                            <option value="WithOR" {{ isset($_GET['Options']) && $_GET['Options']=='WithOR' ? 'selected' : '' }}>With OR Only</option>
+                        </select>
+                    </form>
                 </div>
             </div>
         </div>
@@ -47,6 +50,7 @@
                                     <th>Service Account Name</th>
                                     <th>Address</th>
                                     <th>Account Type</th>
+                                    <th>ORNumber</th>
                                     <th width="35"></th>
                                 </tr>
                             </thead>
@@ -57,6 +61,7 @@
                                         <td>{{ $item->ServiceAccountName }}</td>
                                         <td>{{ ServiceConnections::getAddress($item) }}</td>
                                         <td>{{ $item->AccountType }}</td>
+                                        <td>{{ $item->ORNumber }}</td>
                                         <td>
                                             @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Metering Personnel', 'Energization Clerk'])) 
                                                 <a href="{{ route('serviceConnectionMtrTrnsfrmrs.create-step-three', [$item->id]) }}" class="text-muted" title="Proceed Assigning"> <i class="fas fa-arrow-alt-circle-right"></i> </a>

@@ -268,9 +268,11 @@ class ServiceConnectionMtrTrnsfrmrController extends AppBaseController
         }         
     }
 
-    public function assigning() {
+    public function assigning(Request $request) {
+        $options = $request['Options'];
         if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Metering Personnel'])) {
-            $serviceConnections = DB::table('CRM_ServiceConnections')
+            if ($options == 'All') {
+                $serviceConnections = DB::table('CRM_ServiceConnections')
                         ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
                         ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
                         ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
@@ -282,6 +284,8 @@ class ServiceConnectionMtrTrnsfrmrController extends AppBaseController
                                         'CRM_ServiceConnections.EmailAddress as EmailAddress',  
                                         'CRM_ServiceConnections.AccountCount as AccountCount',  
                                         'CRM_ServiceConnections.Sitio as Sitio', 
+                                        'CRM_ServiceConnections.ORNumber', 
+                                        'CRM_ServiceConnections.ORDate', 
                                         'CRM_Towns.Town as Town',
                                         'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
                                         'CRM_Barangays.Barangay as Barangay')
@@ -292,6 +296,32 @@ class ServiceConnectionMtrTrnsfrmrController extends AppBaseController
                         })
                         ->orderBy('CRM_ServiceConnections.ServiceAccountName')
                         ->get();
+            } else {
+                $serviceConnections = DB::table('CRM_ServiceConnections')
+                ->leftJoin('CRM_Barangays', 'CRM_ServiceConnections.Barangay', '=', 'CRM_Barangays.id')                    
+                ->leftJoin('CRM_Towns', 'CRM_ServiceConnections.Town', '=', 'CRM_Towns.id')
+                ->leftJoin('CRM_ServiceConnectionAccountTypes', 'CRM_ServiceConnections.AccountType', '=', 'CRM_ServiceConnectionAccountTypes.id')
+                ->select('CRM_ServiceConnections.id as id',
+                                'CRM_ServiceConnections.ServiceAccountName as ServiceAccountName',
+                                'CRM_ServiceConnections.Status as Status',
+                                'CRM_ServiceConnections.DateOfApplication as DateOfApplication', 
+                                'CRM_ServiceConnections.ContactNumber as ContactNumber', 
+                                'CRM_ServiceConnections.EmailAddress as EmailAddress',  
+                                'CRM_ServiceConnections.AccountCount as AccountCount',  
+                                'CRM_ServiceConnections.Sitio as Sitio', 
+                                'CRM_ServiceConnections.ORNumber', 
+                                'CRM_ServiceConnections.ORDate', 
+                                'CRM_Towns.Town as Town',
+                                'CRM_ServiceConnectionAccountTypes.AccountType as AccountType',
+                                'CRM_Barangays.Barangay as Barangay')
+                ->whereRaw("CRM_ServiceConnections.ORNumber IS NOT NULL AND CRM_ServiceConnections.id NOT IN (SELECT ServiceConnectionId FROM CRM_ServiceConnectionMeterAndTransformer) AND CRM_ServiceConnections.created_at > '2023-02-28' AND ConnectionApplicationType NOT IN ('Relocation')")
+                ->where(function ($query) {
+                    $query->where('CRM_ServiceConnections.Trash', 'No')
+                        ->orWhereNull('CRM_ServiceConnections.Trash');
+                })
+                ->orderBy('CRM_ServiceConnections.ServiceAccountName')
+                ->get();
+            }
 
             return view('/service_connection_mtr_trnsfrmrs/assigning', ['serviceConnections' => $serviceConnections]);
         } else {
