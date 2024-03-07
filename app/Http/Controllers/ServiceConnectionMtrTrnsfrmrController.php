@@ -319,6 +319,7 @@ class ServiceConnectionMtrTrnsfrmrController extends AppBaseController
                     $query->where('CRM_ServiceConnections.Trash', 'No')
                         ->orWhereNull('CRM_ServiceConnections.Trash');
                 })
+                ->orderByDesc('CRM_ServiceConnections.ORDate')
                 ->orderBy('CRM_ServiceConnections.ServiceAccountName')
                 ->get();
             }

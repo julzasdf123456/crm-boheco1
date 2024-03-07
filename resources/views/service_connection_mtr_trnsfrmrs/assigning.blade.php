@@ -51,6 +51,7 @@
                                     <th>Address</th>
                                     <th>Account Type</th>
                                     <th>ORNumber</th>
+                                    <th>OR Date</th>
                                     <th width="35"></th>
                                 </tr>
                             </thead>
@@ -62,6 +63,7 @@
                                         <td>{{ ServiceConnections::getAddress($item) }}</td>
                                         <td>{{ $item->AccountType }}</td>
                                         <td>{{ $item->ORNumber }}</td>
+                                        <td>{{ $item->ORDate != null ? date('F d, Y', strtotime($item->ORDate)) : '-' }}</td>
                                         <td>
                                             @if (Auth::user()->hasAnyRole(['Administrator', 'Heads and Managers', 'Metering Personnel', 'Energization Clerk'])) 
                                                 <a href="{{ route('serviceConnectionMtrTrnsfrmrs.create-step-three', [$item->id]) }}" class="text-muted" title="Proceed Assigning"> <i class="fas fa-arrow-alt-circle-right"></i> </a>
