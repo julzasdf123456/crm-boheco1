@@ -270,6 +270,39 @@ use App\Models\IDGenerator;
             </div>
         </div>  
     </div>
+
+    <!-- Accountapplicationtype Field -->
+    <div class="form-group col-sm-12">
+        <div class="row">
+            <div class="col-lg-3 col-md-5">
+                {!! Form::label('AccountApplicationType', 'Application Type') !!} <span class="text-danger"><strong> *</strong></span>
+            </div>
+
+            <div class="col-lg-9 col-md-7"> 
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-code-branch"></i></span>
+                    </div>
+
+                    <div class="radio-group-horizontal-sm">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="permanent" name="AccountApplicationType" value="Permanent" {{ $serviceConnections != null && $serviceConnections->AccountApplicationType=='Permanent' ? 'checked' : '' }}>
+                            <label class="form-check-label" for="permanent">Permanent</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="temporary" name="AccountApplicationType" value="Temporary" {{ $serviceConnections != null && $serviceConnections->AccountApplicationType=='Temporary' ? 'checked' : '' }}>
+                            <label class="form-check-label" for="temporary">Temporary</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="temporary-to-permanent" name="AccountApplicationType" value="Temporary to Permanent" {{ $serviceConnections != null && $serviceConnections->AccountApplicationType=='Temporary to Permanent' ? 'checked' : '' }}>
+                            <label class="form-check-label" for="temporary-to-permanent">Temporary to Permanent</label>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>  
+    </div>
+
     <!-- Accountapplicationtype Field -->
     <div class="form-group col-sm-12">
         <div class="row">
