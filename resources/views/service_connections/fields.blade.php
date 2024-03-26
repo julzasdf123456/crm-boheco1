@@ -243,6 +243,37 @@ use App\Models\IDGenerator;
     </div>
 
 @else 
+    <!-- Connectionapplicationtype Field -->
+    <div class="form-group col-sm-12">
+        <div class="row">
+            <div class="col-lg-3 col-md-5">
+                {!! Form::label('ConnectionApplicationType', 'Application for: ') !!} <span class="text-danger"><strong> *</strong></span>
+            </div>
+
+            <div class="col-lg-9 col-md-7">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-code-branch"></i></span>
+                    </div>
+                    <div class="radio-group-horizontal-sm">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="ConnectionApplicationType" value="New Installation" {{ $serviceConnections != null && $serviceConnections->ConnectionApplicationType=='New Installation' ? 'checked' : '' }}>
+                            <label class="form-check-label">New Installation</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="ConnectionApplicationType" value="Rewiring" {{ $serviceConnections != null && $serviceConnections->ConnectionApplicationType=='Rewiring' ? 'checked' : '' }}>
+                            <label class="form-check-label">Rewiring</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="ConnectionApplicationType" value="Street Lighting" {{ $serviceConnections != null && $serviceConnections->ConnectionApplicationType=='Street Lighting' ? 'checked' : '' }}>
+                            <label class="form-check-label">Street Lighting</label>
+                        </div>
+                    </div>   
+                </div>
+            </div>
+        </div>  
+    </div>
+
     <!-- Accounttype Field -->
     <div class="form-group col-sm-12">
         <div class="row">
