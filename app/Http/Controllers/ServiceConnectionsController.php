@@ -591,7 +591,7 @@ class ServiceConnectionsController extends AppBaseController
                                     'CRM_MemberConsumerTypes.*',
                                     'CRM_Towns.Town as Town',
                                     'CRM_Barangays.Barangay as Barangay')
-                    ->whereRaw("(LastName LIKE '%" . $search . "%' OR FirstName LIKE '%" . $search . "%' OR MiddleName LIKE '%" . $search . "%' OR 
+                    ->whereRaw("CRM_MemberConsumers.ORNumber IS NOT NULL AND (LastName LIKE '%" . $search . "%' OR FirstName LIKE '%" . $search . "%' OR MiddleName LIKE '%" . $search . "%' OR 
                         OrganizationName LIKE '%" . $search . "%' OR CRM_MemberConsumers.Id LIKE '%" . $search . "%' 
                         OR CONCAT(LastName, ', ', FirstName) LIKE '%" . $search . "%' OR CONCAT(FirstName, ' ', LastName) LIKE '%" . $search . "%' 
                         OR CONCAT(LastName, ',', FirstName) LIKE '%" . $search . "%' OR CONCAT(FirstName, ',', LastName) LIKE '%" . $search . "%' ) AND Trashed IS NULL")
@@ -622,7 +622,7 @@ class ServiceConnectionsController extends AppBaseController
                                     'CRM_MemberConsumerTypes.*',
                                     'CRM_Towns.Town as Town',
                                     'CRM_Barangays.Barangay as Barangay')                                    
-                    ->whereRaw("Trashed IS NULL")
+                    ->whereRaw("CRM_MemberConsumers.ORNumber IS NOT NULL AND Trashed IS NULL")
                     ->orderByDesc('CRM_MemberConsumers.created_at')
                     ->paginate(25);
             }
