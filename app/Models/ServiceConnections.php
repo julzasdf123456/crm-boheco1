@@ -389,7 +389,7 @@ class ServiceConnections extends Model
     }
 
     public static function getPaymentParticularsExcemptions() {
-        return ['1686267638521', '1686267658287', '1683188551113'];
+        return ['1686267638521', '1686267658287', '1683188551113', '1713141155712'];
     }
 
     public static function savePowerLoadPaymentsToCashieringQueue($serviceConnection) {
