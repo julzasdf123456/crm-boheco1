@@ -615,10 +615,14 @@ $id = IDGenerator::generateID();
         function calculateTableColumn(table, index, display) {
             var total = 0;
             $('#' + table + ' tr').each(function() {
-                var value = parseFloat($('td', this).eq(index).text().replace(',', ''));
-                console.log(value);
-                if (!isNaN(value)) {
-                    total += parseFloat(value);
+                if ($('td', this).eq(0).text() === 'Previous Quotation Payment Deduction') {
+
+                } else {
+                    var value = parseFloat($('td', this).eq(index).text().replace(',', ''));
+                    console.log(value);
+                    if (!isNaN(value)) {
+                        total += parseFloat(value);
+                    }
                 }
             });
             $('#' + display).text(total.toLocaleString('en-US', {maximumFractionDigits:2}));
@@ -627,11 +631,16 @@ $id = IDGenerator::generateID();
         function calculateTableColumnRaw(table, index) {
             var total = 0;
             $('#' + table + ' tr').each(function() {
-                var value = parseFloat($('td', this).eq(index).text().replace(',', ''));
-                console.log(value);
-                if (!isNaN(value)) {
-                    total += parseFloat(value);
+                if ($('td', this).eq(0).text() === 'Previous Quotation Payment Deduction') {
+
+                } else {
+                    var value = parseFloat($('td', this).eq(index).text().replace(',', ''));
+                    console.log(value);
+                    if (!isNaN(value)) {
+                        total += parseFloat(value);
+                    }
                 }
+                
             });
             return total
         }
@@ -639,10 +648,14 @@ $id = IDGenerator::generateID();
         function calculateVatTableColumnRaw(table, index) {
             var total = 0;
             $('#' + table + ' tr').each(function() {
-                var value = parseFloat($('td', this).eq(index).text().replace(',', ''));
-                console.log(value);
-                if (!isNaN(value)) {
-                    total += parseFloat(value);
+                if ($('td', this).eq(0).text() === 'Previous Quotation Payment Deduction') {
+
+                } else {
+                    var value = parseFloat($('td', this).eq(index).text().replace(',', ''));
+                    console.log(value);
+                    if (!isNaN(value)) {
+                        total += parseFloat(value);
+                    }
                 }
             });
             return total
