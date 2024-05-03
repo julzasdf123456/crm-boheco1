@@ -36,7 +36,9 @@ class ElectriciansController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $electricians = $this->electriciansRepository->all();
+        $electricians = DB::table('CRM_Electricians')
+            ->orderBy('Name')
+            ->get();
 
         return view('electricians.index')
             ->with('electricians', $electricians);
