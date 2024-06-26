@@ -286,7 +286,8 @@
          var contingency = "{{ $totalTransactions != null ? $totalTransactions->ContingencyCost : 0 }}"
 
          var vatables = parseFloat(labor) + parseFloat(contingency)
-         $('#LaborTwoPercent').val(Math.round(((vatables * (2/12)) + Number.EPSILON) * 100) / 100)
+         // $('#LaborTwoPercent').val(Math.round(((vatables * (2/12)) + Number.EPSILON) * 100) / 100)
+         $('#LaborTwoPercent').val(Math.round(((vatables * (.02)) + Number.EPSILON) * 100) / 100)
       }
 
       function getFivePercentMaterials() {
