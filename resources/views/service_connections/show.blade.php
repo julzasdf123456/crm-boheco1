@@ -240,11 +240,12 @@ use Illuminate\Support\Facades\Auth;
                             <li class="nav-item"><a class="nav-link" href="#invoice" data-toggle="tab">
                                 <i class="fas fa-file-invoice-dollar"></i>
                                 Payment Invoice</a></li>
-                            @if (is_numeric($serviceConnections->LoadCategory) && floatval($serviceConnections->LoadCategory) >= 15)
+                            {{-- @if (is_numeric($serviceConnections->LoadCategory) && floatval($serviceConnections->LoadCategory) >= 15)
+                            
+                            @endif --}}
                             <li class="nav-item"><a class="nav-link" href="#bom" data-toggle="tab">
                                 <i class="fas fa-toolbox"></i>
                                 Bill of Materials</a></li>
-                            @endif
                             <li class="nav-item"><a class="nav-link" href="#requirements" data-toggle="tab">
                                 <i class="fas fa-info-circle"></i>
                                 Requirements & Crew</a></li>
