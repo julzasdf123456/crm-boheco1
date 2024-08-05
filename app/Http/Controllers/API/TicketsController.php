@@ -25,7 +25,7 @@ class TicketsController extends Controller {
     public function getDownloadableTickets(Request $request) {
         $tickets = Tickets::where('CrewAssigned', $request['CrewAssigned'])
             ->whereNotNull('CrewAssigned')
-            ->whereRaw("Status IN ('Acted', 'Received') AND (Trash IS NULL OR Trash='No')")
+            ->whereRaw("Status IN ('Acted', 'Received', 'Downloaded by Crew') AND (Trash IS NULL OR Trash='No')")
             ->get();
 
         if ($tickets) {
