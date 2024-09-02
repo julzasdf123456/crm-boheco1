@@ -81,7 +81,7 @@ class MemberConsumersController extends AppBaseController
                 ->paginate(50);
         } else {
             $data = DB::table('CRM_MemberConsumers')
-                ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
+                ->leftJoin(DB::raw("CRM_MemberConsumerTypes"), DB::raw("TRY_CAST(CRM_MemberConsumers.MembershipType AS VARCHAR(100))"), '=', DB::raw("TRY_CAST(CRM_MemberConsumerTypes.id AS VARCHAR(100))"))
                 ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
                 ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
                 ->select(
