@@ -84,7 +84,8 @@ class MemberConsumersController extends AppBaseController
                 ->leftJoin('CRM_MemberConsumerTypes', 'CRM_MemberConsumers.MembershipType', '=', 'CRM_MemberConsumerTypes.Id')
                 ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
                 ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
-                ->select('CRM_MemberConsumers.Id as ConsumerId',
+                ->select(
+                                DB::raw("TRY_CAST(CRM_MemberConsumers.Id AS VARCHAR) AS ConsumerId"),
                                 'CRM_MemberConsumers.MembershipType as MembershipType', 
                                 'CRM_MemberConsumers.FirstName as FirstName', 
                                 'CRM_MemberConsumers.MiddleName as MiddleName', 
