@@ -82,8 +82,8 @@ class MemberConsumersController extends AppBaseController
         } else {
             $data = DB::table('CRM_MemberConsumers')
                 ->leftJoin(DB::raw("CRM_MemberConsumerTypes"), DB::raw("TRY_CAST(CRM_MemberConsumers.MembershipType AS VARCHAR(100))"), '=', DB::raw("TRY_CAST(CRM_MemberConsumerTypes.id AS VARCHAR(100))"))
-                ->leftJoin('CRM_Barangays', 'CRM_MemberConsumers.Barangay', '=', 'CRM_Barangays.id')
-                ->leftJoin('CRM_Towns', 'CRM_MemberConsumers.Town', '=', 'CRM_Towns.id')
+                ->leftJoin(DB::raw("CRM_Barangays"), DB::raw("TRY_CAST(CRM_MemberConsumers.Barangay AS VARCHAR(100))"), '=', DB::raw("TRY_CAST(CRM_Barangays.id AS VARCHAR(100))"))
+                ->leftJoin(DB::raw("CRM_Towns"), DB::raw("TRY_CAST(CRM_MemberConsumers.Town AS VARCHAR(100))"), '=', DB::raw("TRY_CAST(CRM_Towns.id AS VARCHAR(100))"))
                 ->select(
                                 DB::raw("TRY_CAST(CRM_MemberConsumers.Id AS VARCHAR) AS ConsumerId"),
                                 'CRM_MemberConsumers.MembershipType as MembershipType', 
