@@ -182,7 +182,7 @@ use Illuminate\Support\Facades\Auth;
                 <a href="{{ route('serviceConnections.transformer-ammortizations') }}"
                 class="nav-link {{ Request::is('serviceConnections.transformer-ammortizations') ? 'active' : '' }}">
                     <i class="fas fa-circle nav-icon text-warning"></i>
-                    <p>Transformer Ammortizations
+                    <p>Transformer Amortizations
                     </p>
                 </a>
             </li>
@@ -1474,5 +1474,13 @@ use Illuminate\Support\Facades\Auth;
 
 
 
+
+
+<li class="nav-item">
+    <a href="{{ route('billsReadings.index') }}"
+       class="nav-link {{ Request::is('billsReadings*') ? 'active' : '' }}">
+        <p>Bills Readings</p>
+    </a>
+</li>
 
 

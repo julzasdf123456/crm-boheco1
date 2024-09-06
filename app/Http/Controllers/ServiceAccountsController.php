@@ -529,7 +529,7 @@ class ServiceAccountsController extends AppBaseController
                                 })  
                 ->whereIn('Status', ['Energized', 'Approved For Change Name'])
                 ->whereRaw("CRM_ServiceConnections.created_at > '2023-02-28' AND CRM_ServiceConnections.AccountType NOT IN " . ServiceConnections::getBapaAccountCodes() . " AND ConnectionApplicationType NOT IN ('Rewiring', 'Change Name')")
-                ->orderBy('CRM_ServiceConnections.ServiceAccountName')
+                ->orderBy('CRM_ServiceConnections.DateTimeOfEnergization')
                 ->get();
         } else {
             $serviceConnections = DB::table('CRM_ServiceConnections')
@@ -558,7 +558,7 @@ class ServiceAccountsController extends AppBaseController
                                 })  
                 ->whereIn('Status', ['Energized', 'Approved For Change Name'])
                 ->whereRaw("CRM_ServiceConnections.Office='" . $office . "' AND CRM_ServiceConnections.created_at > '2023-02-28' AND CRM_ServiceConnections.AccountType NOT IN " . ServiceConnections::getBapaAccountCodes() . " AND ConnectionApplicationType NOT IN ('Rewiring', 'Change Name')")
-                ->orderBy('CRM_ServiceConnections.ServiceAccountName')
+                ->orderBy('CRM_ServiceConnections.DateTimeOfEnergization')
                 ->get();
         }        
 

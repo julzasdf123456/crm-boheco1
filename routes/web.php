@@ -879,3 +879,6 @@ Route::resource('miscellaneousApplications', MiscellaneousApplicationsController
 
 
 Route::resource('miscellaneousPayments', App\Http\Controllers\MiscellaneousPaymentsController::class);
+
+
+Route::resource('billsReadings', App\Http\Controllers\BillsReadingsController::class);

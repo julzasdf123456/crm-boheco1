@@ -39,6 +39,7 @@ use App\Models\CRMQueue;
 use App\Models\CRMDetails;
 use App\Models\ChangeMeter;
 use App\Models\TempReadings;
+use App\Models\BillsReadings;
 use Flash;
 use Response;
 
@@ -3954,14 +3955,25 @@ class TicketsController extends AppBaseController
             $changeMeter->PullOutReading = is_numeric($ticket->CurrentMeterReading) ? $ticket->CurrentMeterReading : 0;
             $changeMeter->save();
 
+            // UPDATE LATEST TEMPREADING DATA
+            $tempReading = TempReadings::where("AccountNumber", $ticket->AccountNumber)
+                ->orderByDesc('ServicePeriodEnd')
+                ->first();
+
+            if ($tempReading != null) {
+                TempReadings::where("AccountNumber", $ticket->AccountNumber)
+                    ->update(['MeterNumber' => $meterNumber, 'PreviousReading' => 0]);
+            }
+
             // UPDATE LATEST READING DATA
-            $reading = TempReadings::where("AccountNumber", $ticket->AccountNumber)
+            $reading = BillsReadings::where("AccountNumber", $ticket->AccountNumber)
                 ->orderByDesc('ServicePeriodEnd')
                 ->first();
 
             if ($reading != null) {
-                TempReadings::where("AccountNumber", $ticket->AccountNumber)
-                    ->update(['MeterNumber' => $meterNumber, 'PreviousReading' => 0]);
+                BillsReadings::where("AccountNumber", $ticket->AccountNumber)
+                    ->where('ServicePeriodEnd', $reading->ServicePeriodEnd)
+                    ->update(['PowerReadings' => 0]);
             }
 
             // ADD ADDITIONAL KWH 
