@@ -67,7 +67,7 @@
                             <td>{{ $item->AccountType }} ({{ $item->Alias }})</td>
                             <td>{{ $item->ConnectionApplicationType }}</td>
                             <td>
-                                {{ date('M d, Y', strtotime($item->DateTimeOfEnergization)) }}
+                                {{ $item->DateTimeOfEnergization != null ? date('M d, Y', strtotime($item->DateTimeOfEnergization)) : '-' }}
                                 <br>
                                 @php
                                     $past = new \DateTime($item->DateTimeOfEnergization);
