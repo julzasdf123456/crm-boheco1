@@ -110,15 +110,13 @@ p {
 <div class="container form-margin wrapper" style="font-size: 1.15em !important;">
 	
 	<div class="content">
-        <img src="{{ URL::asset('imgs/company_logo.png'); }}" class="float-left" style="height: 55px;" alt="Image"> 
+        <img src="{{ URL::asset('imgs/company_logo.png'); }}" class="float-left" style="height: 40px;" alt="Image"> 
 		<p class="text-center">BOHOL I ELECTRIC COOPERATIVE, INC.</p>
 		<p class="text-center">Cabulijan, Tubigon. Bohol</p>
 
-		<br>
-		<p class="text-center"><strong>APPLICATION FOR MEMBERSHIP and FOR ELECTRIC SERVICE</strong></p>
+		<p class="text-center" style="margin-top: 15px;"><strong>APPLICATION FOR MEMBERSHIP and FOR ELECTRIC SERVICE</strong></p>
 
-		<br>
-		<p style="text-indent: 50px;">
+		<p style="text-indent: 50px;" style="margin-top: 15px;">
 			The undersigned (hereinafter called the ”APPLICANT”) hereby applies for membership in and agrees to purchase electric energy from the BOHOL I ELECTRIC COOPERATIVE,INC. (hereinafter called the “BOHECO I”) upon the following terms and conditions:
 		</p>
 
