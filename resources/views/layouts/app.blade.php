@@ -234,6 +234,15 @@
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
+
+            <li class="nav-item">
+                @if (env('APP_LOCATION') === 'MAIN OFFICE')
+                    <a href="http://192.168.10.48/crm-boheco1/public/index.php" class="btn btn-danger"><i class="fas fa-info-circle ico-tab-mini"></i>Try The New Version</a>
+                @else
+                    <a href="http://192.168.30.119/crm-boheco1/public/index.php" class="btn btn-danger"><i class="fas fa-info-circle ico-tab-mini"></i>Try The New Version</a>
+                @endif
+                
+            </li>
         </ul>
 
         <ul class="navbar-nav ml-auto">
