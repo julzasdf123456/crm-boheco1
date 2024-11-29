@@ -237,7 +237,7 @@
 
             <li class="nav-item">
                 @if (env('APP_LOCATION') === 'MAIN OFFICE')
-                    <a href="http://192.168.10.48/crm-boheco1/public/index.php" class="btn btn-danger"><i class="fas fa-info-circle ico-tab-mini"></i>Try The New Version</a>
+                    <a href="http://192.168.10.53/crm-boheco1/public/index.php" class="btn btn-danger"><i class="fas fa-info-circle ico-tab-mini"></i>Try The New Version</a>
                 @else
                     <a href="http://192.168.30.119/crm-boheco1/public/index.php" class="btn btn-danger"><i class="fas fa-info-circle ico-tab-mini"></i>Try The New Version</a>
                 @endif
