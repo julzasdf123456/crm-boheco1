@@ -271,7 +271,7 @@
                     data: {
                         ServiceConnectionId: "{{ $serviceConnections->id }}",
                         WithholdingTwoPercent: jQuery.isEmptyObject($('#MaterialsOnePercent')
-                        .val()) ? null : $('#MaterialsOnePercent').val(),
+                            .val()) ? null : $('#MaterialsOnePercent').val(),
                         WithholdingFivePercent: jQuery.isEmptyObject($(
                             '#WithholdingFivePercentAmount').val()) ? null : $(
                             '#WithholdingFivePercentAmount').val(),
@@ -333,7 +333,6 @@
             $('#Balance').val("")
             $('#TermAmount').val("")
         }
-
 
 
         function getOnePercentMaterials() {
