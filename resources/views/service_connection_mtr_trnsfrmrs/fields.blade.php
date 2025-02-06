@@ -16,45 +16,51 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
                             </div>
-                            {!! Form::select('MeterBrand', [
-                                '' => '',
-                                'ACCURA' => 'ACCURA',
-                                'ACLARA KV2C' => 'ACLARA KV2C',
-                                'AMERICO' => 'AMERICO',
-                                'BAZ' => 'BAZ',
-                                'CHINT' => 'CHINT',
-                                'EDMI MK10E' => 'EDMI MK10E',
-                                'EDMI MK6N' => 'EDMI MK6N',
-                                'EDMI MK6E' => 'EDMI MK6E',
-                                'EDMI MK7C' => 'EDMI MK7C',
-                                'ELETRA' => 'ELETRA',
-                                'EVER' => 'EVER',
-                                'FUJI' => 'FUJI',
-                                'GE' => 'GE',
-                                'GE I210' => 'GE I210',
-                                'GE KV2C' => 'GE KV2C',
-                                'GOLDSTAR' => 'GOLDSTAR',
-                                'HARBIN' => 'HARBIN',
-                                'HEAG' => 'HEAG',
-                                'INTECH' => 'INTECH', 
-                                'ITECHENE' => 'ITECHENE',
-                                'LANDIS' => 'LANDIS',
-                                'LANDIS FOCUS' => 'LANDIS FOCUS',
-                                'MITSUBISHI' => 'MITSUBISHI',
-                                'OEIC' => 'OEIC',
-                                'ORIENTAL' => 'ORIENTAL',
-                                'SAFARI' => 'SAFARI',
-                                'SANGAMO' => 'SANGOMO',
-                                'SUZSOU' => 'SUZSOU',
-                                'TATUNG' => 'TATUNG',
-                                'TECHEN' => 'TECHEN',
-                                'TOSHIBA' => 'TOSHIBA',
-                                'VIRAGO' => 'VIRAGO',
-                                'WARBURTON' => 'WARBURTON',
-                            ], null, ['class' => 'form-control']) !!}
+                            {!! Form::select(
+                                'MeterBrand',
+                                [
+                                    '' => '',
+                                    'ACCURA' => 'ACCURA',
+                                    'ACLARA KV2C' => 'ACLARA KV2C',
+                                    'AMERICO' => 'AMERICO',
+                                    'BAZ' => 'BAZ',
+                                    'CHINT' => 'CHINT',
+                                    'EDMI MK10E' => 'EDMI MK10E',
+                                    'EDMI MK6N' => 'EDMI MK6N',
+                                    'EDMI MK6E' => 'EDMI MK6E',
+                                    'EDMI MK7C' => 'EDMI MK7C',
+                                    'ELETRA' => 'ELETRA',
+                                    'EVER' => 'EVER',
+                                    'FUJI' => 'FUJI',
+                                    'GE' => 'GE',
+                                    'GE I210' => 'GE I210',
+                                    'GE KV2C' => 'GE KV2C',
+                                    'GOLDSTAR' => 'GOLDSTAR',
+                                    'HARBIN' => 'HARBIN',
+                                    'HEAG' => 'HEAG',
+                                    'INTECH' => 'INTECH',
+                                    'ITECHENE' => 'ITECHENE',
+                                    'LANDIS' => 'LANDIS',
+                                    'LANDIS FOCUS' => 'LANDIS FOCUS',
+                                    'MITSUBISHI' => 'MITSUBISHI',
+                                    'OEIC' => 'OEIC',
+                                    'ORIENTAL' => 'ORIENTAL',
+                                    'SAFARI' => 'SAFARI',
+                                    'SANGAMO' => 'SANGOMO',
+                                    'SUZSOU' => 'SUZSOU',
+                                    'TATUNG' => 'TATUNG',
+                                    'TECHEN' => 'TECHEN',
+                                    'TOSHIBA' => 'TOSHIBA',
+                                    'VIRAGO' => 'VIRAGO',
+                                    'VISION' => 'VISION',
+                                    'WARBURTON' => 'WARBURTON',
+                                ],
+                                null,
+                                ['class' => 'form-control'],
+                            ) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!-- Meterserialnumber Field -->
@@ -69,10 +75,15 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
                             </div>
-                            {!! Form::text('MeterSerialNumber', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150, 'placeholder' => 'Use QR or Barcode Scanner for faster encoding']) !!}
+                            {!! Form::text('MeterSerialNumber', null, [
+                                'class' => 'form-control',
+                                'maxlength' => 150,
+                                'maxlength' => 150,
+                                'placeholder' => 'Use QR or Barcode Scanner for faster encoding',
+                            ]) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!-- Metersealnumber Field -->
@@ -87,10 +98,15 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
                             </div>
-                            {!! Form::text('MeterSealNumber', null, ['class' => 'form-control','maxlength' => 200,'maxlength' => 200, 'placeholder' => 'Meter Seal Number']) !!}
+                            {!! Form::text('MeterSealNumber', null, [
+                                'class' => 'form-control',
+                                'maxlength' => 200,
+                                'maxlength' => 200,
+                                'placeholder' => 'Meter Seal Number',
+                            ]) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!-- Meterkwhstart Field -->
@@ -105,10 +121,15 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
                             </div>
-                            {!! Form::text('MeterKwhStart', null, ['class' => 'form-control','maxlength' => 200,'maxlength' => 200, 'placeholder' => 'This is for the reused meters']) !!}
+                            {!! Form::text('MeterKwhStart', null, [
+                                'class' => 'form-control',
+                                'maxlength' => 200,
+                                'maxlength' => 200,
+                                'placeholder' => 'This is for the reused meters',
+                            ]) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!-- Meterenclosuretype Field -->
@@ -123,10 +144,15 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
                             </div>
-                            {!! Form::select('MeterEnclosureType', ['' => 'n/a', 'Galvanized Iron' => 'Galvanized Iron', 'Plastic/Fiber Glass' => 'Plastic/Fiber Glass'], null, ['class' => 'form-control']) !!}
+                            {!! Form::select(
+                                'MeterEnclosureType',
+                                ['' => 'n/a', 'Galvanized Iron' => 'Galvanized Iron', 'Plastic/Fiber Glass' => 'Plastic/Fiber Glass'],
+                                null,
+                                ['class' => 'form-control'],
+                            ) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!-- Meterheight Field -->
@@ -141,10 +167,15 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
                             </div>
-                            {!! Form::text('MeterHeight', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20, 'placeholder' => 'Height in meters (m)']) !!}
+                            {!! Form::text('MeterHeight', null, [
+                                'class' => 'form-control',
+                                'maxlength' => 20,
+                                'maxlength' => 20,
+                                'placeholder' => 'Height in meters (m)',
+                            ]) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!-- Meternotes Field -->
@@ -159,10 +190,14 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
                             </div>
-                            {!! Form::textarea('MeterNotes', null, ['class' => 'form-control', 'placeholder' => 'Meter remarks', 'rows' => 1]) !!}
+                            {!! Form::textarea('MeterNotes', null, [
+                                'class' => 'form-control',
+                                'placeholder' => 'Meter remarks',
+                                'rows' => 1,
+                            ]) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
     </div>
@@ -186,10 +221,12 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
                             </div>
-                            {!! Form::select('TransformerBrand', ['EDMI' => 'EDMI', 'TECHINE' => 'TECHINE'], null, ['class' => 'form-control']) !!}
+                            {!! Form::select('TransformerBrand', ['EDMI' => 'EDMI', 'TECHINE' => 'TECHINE'], null, [
+                                'class' => 'form-control',
+                            ]) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!-- TransformerNumber Field -->
@@ -204,10 +241,15 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
                             </div>
-                            {!! Form::text('TransformerNumber', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150, 'placeholder' => 'Transformer Serial Number']) !!}
+                            {!! Form::text('TransformerNumber', null, [
+                                'class' => 'form-control',
+                                'maxlength' => 150,
+                                'maxlength' => 150,
+                                'placeholder' => 'Transformer Serial Number',
+                            ]) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!-- Transformerquantity Field -->
@@ -222,10 +264,15 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
                             </div>
-                            {!! Form::text('TransformerQuantity', null, ['class' => 'form-control','maxlength' => 20,'maxlength' => 20, 'placeholder' => 'Number of transformer installed']) !!}
+                            {!! Form::text('TransformerQuantity', null, [
+                                'class' => 'form-control',
+                                'maxlength' => 20,
+                                'maxlength' => 20,
+                                'placeholder' => 'Number of transformer installed',
+                            ]) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!-- Transformerrating Field -->
@@ -240,10 +287,15 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
                             </div>
-                            {!! Form::text('TransformerRating', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150, 'placeholder' => 'in kVA (Separate by comma if more than 1)']) !!}
+                            {!! Form::text('TransformerRating', null, [
+                                'class' => 'form-control',
+                                'maxlength' => 150,
+                                'maxlength' => 150,
+                                'placeholder' => 'in kVA (Separate by comma if more than 1)',
+                            ]) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!-- Transformerrating Field -->
@@ -261,7 +313,7 @@
                             {!! Form::number('CoreLoss', null, ['class' => 'form-control', 'step' => 'any', 'placeholder' => 'Coreloss']) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!-- Transformerownership Field -->
@@ -276,10 +328,15 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
                             </div>
-                            {!! Form::select('TransformerOwnership', [env('APP_COMPANY_ABRV') => env('APP_COMPANY_ABRV'), 'Privately Owned' => 'Privately Owned'], null, ['class' => 'form-control']) !!}
+                            {!! Form::select(
+                                'TransformerOwnership',
+                                [env('APP_COMPANY_ABRV') => env('APP_COMPANY_ABRV'), 'Privately Owned' => 'Privately Owned'],
+                                null,
+                                ['class' => 'form-control'],
+                            ) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!-- Transformerownershiptype Field -->
@@ -294,10 +351,12 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-charging-station"></i></span>
                             </div>
-                            {!! Form::select('TransformerOwnershipType', ['Shared' => 'Shared', 'Solo' => 'Solo'], null, ['class' => 'form-control']) !!}
+                            {!! Form::select('TransformerOwnershipType', ['Shared' => 'Shared', 'Solo' => 'Solo'], null, [
+                                'class' => 'form-control',
+                            ]) !!}
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
     </div>
@@ -321,17 +380,21 @@
 
                 <div class='radio-group-horizontal'>
                     <div class="form-check">
-                        <input class="form-check-input" id="direct" type="radio" name="TypeOfMetering" value="DIRECT"  {{ ($serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->TypeOfMetering=="DIRECT" ? "checked" : "") : "") }}>
+                        <input class="form-check-input" id="direct" type="radio" name="TypeOfMetering"
+                            value="DIRECT"
+                            {{ $serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->TypeOfMetering == 'DIRECT' ? 'checked' : '') : '' }}>
                         <label class="form-check-label">Direct</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" id="instrument_rated" type="radio" name="TypeOfMetering" value="INSTRUMENT RATED" {{ ($serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->TypeOfMetering=="INSTRUMENT RATED" ? "checked" : "") : "") }}>
+                        <input class="form-check-input" id="instrument_rated" type="radio" name="TypeOfMetering"
+                            value="INSTRUMENT RATED"
+                            {{ $serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->TypeOfMetering == 'INSTRUMENT RATED' ? 'checked' : '') : '' }}>
                         <label class="form-check-label">Instrument Rated (CT/PT)</label>
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
 @push('page_scripts')
     <script type="text/javascript">
@@ -339,7 +402,7 @@
             $('#direct_section').hide();
             $('#indirect_section').hide();
 
-            if($('#direct').is(':checked')) {
+            if ($('#direct').is(':checked')) {
                 $('#direct_section').show();
                 $('#indirect_section').hide();
             }
@@ -347,7 +410,7 @@
             if ($('#instrument_rated').is(':checked')) {
                 $('#indirect_section').show();
                 $('#direct_section').hide();
-            } 
+            }
 
             $('#direct').on('change', function() {
                 $('#direct_section').show();
@@ -363,7 +426,7 @@
                 // $('#InstrumentRatedCapacity2').prop('checked', false);
             });
 
-            $('#instrument_rated').on('change', function() {            
+            $('#instrument_rated').on('change', function() {
                 $('#indirect_section').show();
                 $('#direct_section').hide();
 
@@ -376,9 +439,8 @@
                 // $('#DirectRatedCapacity1').prop('checked', false);
                 // $('#DirectRatedCapacity2').prop('checked', false);
                 // $('#DirectRatedCapacity3').prop('checked', false);
-            });           
+            });
         });
-        
     </script>
 @endpush
 
@@ -397,21 +459,24 @@
 
                 <div class='radio-group-horizontal'>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" id="Phase1" name="Phase" value="ONE" {{ ($serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->Phase=="ONE" ? "checked" : "") : "") }}>
+                        <input class="form-check-input" type="radio" id="Phase1" name="Phase" value="ONE"
+                            {{ $serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->Phase == 'ONE' ? 'checked' : '') : '' }}>
                         <label class="form-check-label">One</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" id="Phase2" name="Phase" value="TWO" {{ ($serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->Phase=="TWO" ? "checked" : "") : "") }}>
+                        <input class="form-check-input" type="radio" id="Phase2" name="Phase" value="TWO"
+                            {{ $serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->Phase == 'TWO' ? 'checked' : '') : '' }}>
                         <label class="form-check-label">Two</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" id="Phase3" name="Phase" value="THREE" {{ ($serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->Phase=="THREE" ? "checked" : "") : "") }}>
+                        <input class="form-check-input" type="radio" id="Phase3" name="Phase" value="THREE"
+                            {{ $serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->Phase == 'THREE' ? 'checked' : '') : '' }}>
                         <label class="form-check-label">Three</label>
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
 
 <div id='direct_section' style="width: 100%;">
@@ -430,21 +495,27 @@
 
                     <div class='radio-group-horizontal'>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="DirectRatedCapacity1" name="DirectRatedCapacity" value="60A" {{ ($serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->DirectRatedCapacity=="60A" ? "checked" : "") : "") }}>
+                            <input class="form-check-input" type="radio" id="DirectRatedCapacity1"
+                                name="DirectRatedCapacity" value="60A"
+                                {{ $serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->DirectRatedCapacity == '60A' ? 'checked' : '') : '' }}>
                             <label class="form-check-label">60 A</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="DirectRatedCapacity2" name="DirectRatedCapacity" value="100A" {{ ($serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->DirectRatedCapacity=="100A" ? "checked" : "") : "") }}>
+                            <input class="form-check-input" type="radio" id="DirectRatedCapacity2"
+                                name="DirectRatedCapacity" value="100A"
+                                {{ $serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->DirectRatedCapacity == '100A' ? 'checked' : '') : '' }}>
                             <label class="form-check-label">100 A</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="DirectRatedCapacity3" name="DirectRatedCapacity" value="200A" {{ ($serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->DirectRatedCapacity=="200A" ? "checked" : "") : "") }}>
+                            <input class="form-check-input" type="radio" id="DirectRatedCapacity3"
+                                name="DirectRatedCapacity" value="200A"
+                                {{ $serviceConnectionMtrTrnsfrmr != null ? ($serviceConnectionMtrTrnsfrmr->DirectRatedCapacity == '200A' ? 'checked' : '') : '' }}>
                             <label class="form-check-label">200 A</label>
                         </div>
-                    </div>                
+                    </div>
                 </div>
             </div>
-        </div> 
+        </div>
     </div>
 </div>
 
@@ -464,17 +535,19 @@
 
                     <div class='radio-group-horizontal'>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="InstrumentRatedCapacity1" name="InstrumentRatedCapacity" value="FORM 3S">
+                            <input class="form-check-input" type="radio" id="InstrumentRatedCapacity1"
+                                name="InstrumentRatedCapacity" value="FORM 3S">
                             <label class="form-check-label">FORM 3S</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="InstrumentRatedCapacity2" name="InstrumentRatedCapacity" value="FORM 48E">
+                            <input class="form-check-input" type="radio" id="InstrumentRatedCapacity2"
+                                name="InstrumentRatedCapacity" value="FORM 48E">
                             <label class="form-check-label">FORM 48E</label>
                         </div>
-                    </div>                
+                    </div>
                 </div>
             </div>
-        </div> 
+        </div>
     </div>
 
     <!-- Instrumentratedlinetype Field -->
@@ -492,17 +565,19 @@
 
                     <div class='radio-group-horizontal'>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="InstrumentRatedLineType" value="PRIMARY">
+                            <input class="form-check-input" type="radio" name="InstrumentRatedLineType"
+                                value="PRIMARY">
                             <label class="form-check-label">PRIMARY</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="InstrumentRatedLineType" value="SECONDARY">
+                            <input class="form-check-input" type="radio" name="InstrumentRatedLineType"
+                                value="SECONDARY">
                             <label class="form-check-label">SECONDARY</label>
                         </div>
-                    </div>                
+                    </div>
                 </div>
             </div>
-        </div> 
+        </div>
     </div>
 
     <!-- TABLE FORM -->
@@ -516,13 +591,28 @@
         <tr>
             <th>CT Rated Capacity</th>
             <td>
-                {!! Form::select('CTPhaseA', ['' => '-', '15:5' => '15:5', '25:5' => '25:5', '50:5' => '50:5', '100:5' => '100:5'], null, ['class' => 'form-control']) !!}
+                {!! Form::select(
+                    'CTPhaseA',
+                    ['' => '-', '15:5' => '15:5', '25:5' => '25:5', '50:5' => '50:5', '100:5' => '100:5'],
+                    null,
+                    ['class' => 'form-control'],
+                ) !!}
             </td>
             <td>
-                {!! Form::select('CTPhaseB', ['' => '-', '15:5' => '15:5', '25:5' => '25:5', '50:5' => '50:5', '100:5' => '100:5'], null, ['class' => 'form-control']) !!}
+                {!! Form::select(
+                    'CTPhaseB',
+                    ['' => '-', '15:5' => '15:5', '25:5' => '25:5', '50:5' => '50:5', '100:5' => '100:5'],
+                    null,
+                    ['class' => 'form-control'],
+                ) !!}
             </td>
             <td>
-                {!! Form::select('CTPhaseC', ['' => '-', '15:5' => '15:5', '25:5' => '25:5', '50:5' => '50:5', '100:5' => '100:5'], null, ['class' => 'form-control']) !!}
+                {!! Form::select(
+                    'CTPhaseC',
+                    ['' => '-', '15:5' => '15:5', '25:5' => '25:5', '50:5' => '50:5', '100:5' => '100:5'],
+                    null,
+                    ['class' => 'form-control'],
+                ) !!}
             </td>
         </tr>
         <tr>
@@ -533,50 +623,45 @@
             <td>
                 {!! Form::select('PTPhaseB', ['' => '-', '8400:120' => '8400:120'], null, ['class' => 'form-control']) !!}
             </td>
-            <td> 
+            <td>
                 {!! Form::select('PTPhaseC', ['' => '-', '8400:120' => '8400:120'], null, ['class' => 'form-control']) !!}
             </td>
         </tr>
         <tr>
             <th>Brand</th>
             <td>
-                {!! Form::text('BrandPhaseA', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150]) !!}
+                {!! Form::text('BrandPhaseA', null, ['class' => 'form-control', 'maxlength' => 150, 'maxlength' => 150]) !!}
             </td>
             <td>
-                {!! Form::text('BrandPhaseB', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150]) !!}
+                {!! Form::text('BrandPhaseB', null, ['class' => 'form-control', 'maxlength' => 150, 'maxlength' => 150]) !!}
             </td>
             <td>
-                {!! Form::text('BrandPhaseC', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150]) !!}
+                {!! Form::text('BrandPhaseC', null, ['class' => 'form-control', 'maxlength' => 150, 'maxlength' => 150]) !!}
             </td>
         </tr>
         <tr>
             <th>Serial Number</th>
             <td>
-                {!! Form::text('SNPhaseA', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150]) !!}
+                {!! Form::text('SNPhaseA', null, ['class' => 'form-control', 'maxlength' => 150, 'maxlength' => 150]) !!}
             </td>
             <td>
-                {!! Form::text('SNPhaseB', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150]) !!}
+                {!! Form::text('SNPhaseB', null, ['class' => 'form-control', 'maxlength' => 150, 'maxlength' => 150]) !!}
             </td>
             <td>
-                {!! Form::text('SNPhaseC', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150]) !!}
+                {!! Form::text('SNPhaseC', null, ['class' => 'form-control', 'maxlength' => 150, 'maxlength' => 150]) !!}
             </td>
         </tr>
         <tr>
             <th>Security Seal No.</th>
             <td>
-                {!! Form::text('SecuritySealPhaseA', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150]) !!}
+                {!! Form::text('SecuritySealPhaseA', null, ['class' => 'form-control', 'maxlength' => 150, 'maxlength' => 150]) !!}
             </td>
             <td>
-                {!! Form::text('SecuritySealPhaseB', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150]) !!}
+                {!! Form::text('SecuritySealPhaseB', null, ['class' => 'form-control', 'maxlength' => 150, 'maxlength' => 150]) !!}
             </td>
             <td>
-                {!! Form::text('SecuritySealPhaseC', null, ['class' => 'form-control','maxlength' => 150,'maxlength' => 150]) !!}
+                {!! Form::text('SecuritySealPhaseC', null, ['class' => 'form-control', 'maxlength' => 150, 'maxlength' => 150]) !!}
             </td>
         </tr>
     </table>
 </div>
-
-
-
-
-
